@@ -250,6 +250,22 @@
         </header>
 
         <div class="settings-card card">
+          <form class="settings-section" id="form-profile">
+            <h3 class="settings-section-title">Profile</h3>
+            <div class="settings-fields">
+              <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" id="settings-displayname" placeholder="Display name" required autocomplete="name">
+              </div>
+              <div class="input-group">
+                <label>Username <span class="hint">(lowercase, no spaces)</span></label>
+                <input type="text" id="settings-username" placeholder="username" required pattern="[a-z0-9_]+" autocomplete="username">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+            <p class="form-error" id="settings-profile-error"></p>
+          </form>
+
           <div class="setting-row">
             <div class="setting-info">
               <div class="setting-name">Dark Mode</div>
@@ -303,6 +319,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260521-2"></script>
+  <script type="module" src="js/app.js?v=20260521-3"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 // Phase 1: Auth, Dashboard, Character Select, Presence
 // ============================================
 
-import { firebaseConfig, APP_CONFIG } from './config.js?v=20260521-2';
+import { firebaseConfig, APP_CONFIG } from './config.js?v=20260521-3';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
@@ -167,6 +167,24 @@ function formatAuthError(code, fallbackMessage = '') {
 function showFormError(errorEl, message) {
   if (errorEl) errorEl.textContent = message;
   toast(message, 'error', 7000);
+}
+
+function renderUserIdentity() {
+  const displayName = state.userData?.displayName || 'Player';
+  const username = state.userData?.username || 'player';
+  const avatar = state.userData?.avatarEmoji || '🌸';
+
+  const welcomeEl = $('dash-welcome');
+  const displayEl = $('dash-displayname');
+  const usernameEl = $('dash-username');
+  const avatarEl = $('dash-avatar');
+  const navNameEl = $('nav-name');
+
+  if (welcomeEl) welcomeEl.textContent = displayName;
+  if (displayEl) displayEl.textContent = displayName;
+  if (usernameEl) usernameEl.textContent = `@${username}`;
+  if (avatarEl) avatarEl.textContent = avatar;
+  if (navNameEl) navNameEl.textContent = displayName;
 }
 
 async function handleLogin(e) {
@@ -451,17 +469,7 @@ async function loadDashboard() {
     if (winsEl) winsEl.textContent = stats.duelsWon || 0;
     if (bestEl) bestEl.textContent = stats.highestSoloScore || 0;
 
-    const welcomeEl = $('dash-welcome');
-    const displayEl = $('dash-displayname');
-    const usernameEl = $('dash-username');
-    const avatarEl = $('dash-avatar');
-    const navNameEl = $('nav-name');
-
-    if (welcomeEl) welcomeEl.textContent = state.userData?.displayName || 'Player';
-    if (displayEl) displayEl.textContent = state.userData?.displayName || 'Player';
-    if (usernameEl) usernameEl.textContent = `@${state.userData?.username || 'player'}`;
-    if (avatarEl) avatarEl.textContent = state.userData?.avatarEmoji || '🌸';
-    if (navNameEl) navNameEl.textContent = state.userData?.displayName || 'Player';
+    renderUserIdentity();
 
     const usersSnap = await getDocs(collection(db, 'users'));
     usersSnap.forEach(u => {
@@ -612,6 +620,12 @@ function showSettings() {
   showScreen('screen-settings');
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = state.theme === 'dark';
+  const displayInput = $('settings-displayname');
+  const usernameInput = $('settings-username');
+  const errorEl = $('settings-profile-error');
+  if (displayInput) displayInput.value = state.userData?.displayName || '';
+  if (usernameInput) usernameInput.value = state.userData?.username || '';
+  if (errorEl) errorEl.textContent = '';
 }
 
 function showLeaderboard() {
@@ -644,6 +658,65 @@ function toggleTheme() {
 function toggleAudio() {
   state.audioEnabled = $('toggle-audio').checked;
   localStorage.setItem('hiraquest-audio', state.audioEnabled);
+}
+
+async function saveProfileSettings(e) {
+  e.preventDefault();
+  if (!state.user) return;
+
+  const displayName = $('settings-displayname').value.trim();
+  const username = $('settings-username').value.trim().toLowerCase();
+  const errorEl = $('settings-profile-error');
+  if (errorEl) errorEl.textContent = '';
+
+  if (!displayName) {
+    showFormError(errorEl, 'Display name is required.');
+    return;
+  }
+
+  if (!/^[a-z0-9_]+$/.test(username)) {
+    showFormError(errorEl, 'Username must be lowercase letters, numbers, or underscores only.');
+    return;
+  }
+
+  try {
+    showLoading(true);
+    const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
+    const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
+    const takenByOtherUser = usernameSnap.docs.some(docSnap => docSnap.id !== state.user.uid);
+
+    if (takenByOtherUser) {
+      showFormError(errorEl, 'Username already taken.');
+      return;
+    }
+
+    await withTimeout(updateProfile(state.user, { displayName }), 'Updating display name', 15000);
+    await withTimeout(setDoc(doc(db, 'users', state.user.uid), {
+      uid: state.user.uid,
+      username,
+      displayName,
+      email: state.user.email || '',
+      avatarEmoji: state.userData?.avatarEmoji || '🌸',
+      updatedAt: serverTimestamp()
+    }, { merge: true }), 'Saving profile', 15000);
+
+    state.userData = {
+      ...state.userData,
+      uid: state.user.uid,
+      username,
+      displayName,
+      email: state.user.email || '',
+      avatarEmoji: state.userData?.avatarEmoji || '🌸'
+    };
+
+    renderUserIdentity();
+    toast('Profile updated.', 'success');
+  } catch (err) {
+    console.error('Profile save failed:', err);
+    showFormError(errorEl, `Could not save profile: ${err.message}`);
+  } finally {
+    showLoading(false);
+  }
 }
 
 // ============================================
@@ -687,9 +760,11 @@ function attachListeners() {
 
   // Settings
   const btnSettingsBack = $('btn-settings-back');
+  const profileForm = $('form-profile');
   const toggleThemeEl = $('toggle-theme');
   const toggleAudioEl = $('toggle-audio');
   if (btnSettingsBack) btnSettingsBack.addEventListener('click', goHome);
+  if (profileForm) profileForm.addEventListener('submit', saveProfileSettings);
   if (toggleThemeEl) toggleThemeEl.addEventListener('change', toggleTheme);
   if (toggleAudioEl) toggleAudioEl.addEventListener('change', toggleAudio);
 
