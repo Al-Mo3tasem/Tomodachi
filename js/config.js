@@ -5,12 +5,12 @@
 // Do NOT share this file publicly.
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
+  apiKey: "AIzaSyA4GjLylUNt9Dihv0rIucMdlMFtFQhlewA",
   authDomain: "hiraquest.firebaseapp.com",
   projectId: "hiraquest",
   storageBucket: "hiraquest.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID_HERE"
+  messagingSenderId: "546831266198",
+  appId: "1:546831266198:web:fbde52e91547a64217adb7"
 };
 
 // App Settings
