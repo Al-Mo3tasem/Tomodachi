@@ -1,6 +1,5 @@
-# Never commit real config
-js/config.js
-config.js
+# Ignore local scratch config outside the app module
+/config.js
 
 # Never commit seed page after use
 seed.html
