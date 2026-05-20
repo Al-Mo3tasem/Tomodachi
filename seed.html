@@ -35,11 +35,13 @@
     import { firebaseConfig } from './js/config.js';
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
-    import { getFirestore, collection, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+    import { initializeFirestore, collection, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    const db = initializeFirestore(app, {
+      experimentalForceLongPolling: true
+    });
     const log = document.getElementById('log');
     const btn = document.getElementById('seedBtn');
 

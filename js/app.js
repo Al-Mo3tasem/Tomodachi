@@ -14,7 +14,7 @@ import {
   signOut
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 import {
-  getFirestore,
+  initializeFirestore,
   doc,
   getDoc,
   setDoc,
@@ -32,7 +32,9 @@ import {
 // ----- Initialize Firebase -----
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true
+});
 
 // ----- Global State -----
 const state = {
@@ -93,6 +95,47 @@ function withTimeout(promise, label, ms = 12000) {
       setTimeout(() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)} seconds.`)), ms);
     })
   ]);
+}
+
+function fallbackUserData(user) {
+  const emailName = user.email?.split('@')[0] || 'player';
+  return {
+    displayName: user.displayName || emailName,
+    username: emailName.toLowerCase().replace(/[^a-z0-9_]/g, '_'),
+    avatarEmoji: '🌸'
+  };
+}
+
+async function ensureUserProfile(user) {
+  const userRef = doc(db, 'users', user.uid);
+  const userDoc = await withTimeout(getDoc(userRef), 'Loading your profile', 15000);
+
+  if (userDoc.exists()) {
+    return userDoc.data();
+  }
+
+  const profile = {
+    uid: user.uid,
+    ...fallbackUserData(user),
+    email: user.email || '',
+    createdAt: serverTimestamp(),
+    status: 'offline'
+  };
+
+  await withTimeout(setDoc(userRef, profile, { merge: true }), 'Creating missing user profile', 15000);
+  await withTimeout(setDoc(doc(db, 'stats', user.uid), {
+    userId: user.uid,
+    totalGames: 0,
+    duelsWon: 0,
+    duelsLost: 0,
+    highestSoloScore: 0,
+    highestCoopScore: 0,
+    charactersMastered: [],
+    createdAt: serverTimestamp()
+  }, { merge: true }), 'Creating missing stats profile', 15000);
+
+  toast('Created your missing profile document.', 'success', 5000);
+  return profile;
 }
 
 // ============================================
@@ -682,24 +725,10 @@ async function init() {
         state.user = user;
 
         try {
-          const userDoc = await withTimeout(getDoc(doc(db, 'users', user.uid)), 'Loading your profile', 12000);
-          if (userDoc.exists()) {
-            state.userData = userDoc.data();
-          } else {
-            state.userData = {
-              displayName: user.displayName || user.email?.split('@')[0] || 'Player',
-              username: user.email?.split('@')[0] || 'player',
-              avatarEmoji: '🌸'
-            };
-            toast('Profile document is missing. Using a temporary local profile.', 'warning', 6000);
-          }
+          state.userData = await ensureUserProfile(user);
         } catch (err) {
           console.error('Profile load failed:', err);
-          state.userData = {
-            displayName: user.displayName || user.email?.split('@')[0] || 'Player',
-            username: user.email?.split('@')[0] || 'player',
-            avatarEmoji: '🌸'
-          };
+          state.userData = fallbackUserData(user);
           toast(`Could not load your profile: ${err.message}`, 'error', 8000);
         }
 
