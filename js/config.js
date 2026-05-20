@@ -6,9 +6,9 @@
 
 export const firebaseConfig = {
   apiKey: "AIzaSyA4GjLylUNt9Dihv0rIucMdlMFtFQhlewA",
-  authDomain: "hiraquest.firebaseapp.com",
-  projectId: "hiraquest",
-  storageBucket: "hiraquest.appspot.com",
+  authDomain: "hiraquest0.firebaseapp.com",
+  projectId: "hiraquest0",
+  storageBucket: "hiraquest0.firebasestorage.app",
   messagingSenderId: "546831266198",
   appId: "1:546831266198:web:fbde52e91547a64217adb7"
 };
