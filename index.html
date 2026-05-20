@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -25,14 +24,14 @@
         <h1 class="brand-title">HiraQuest</h1>
         <p class="brand-subtitle">Master Hiragana together</p>
       </div>
-      
+
       <div class="auth-card card-elevated">
-        <div class="auth-tabs">
-          <button class="auth-tab active" data-tab="login" onclick="app.switchAuthTab('login')">Sign In</button>
-          <button class="auth-tab" data-tab="register" onclick="app.switchAuthTab('register')">Create Account</button>
+        <div class="auth-tabs" id="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Create Account</button>
         </div>
-        
-        <form id="form-login" class="auth-form active" onsubmit="app.handleLogin(event)">
+
+        <form id="form-login" class="auth-form active" data-form="login">
           <div class="input-group">
             <label>Email</label>
             <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
@@ -44,16 +43,16 @@
           <button type="submit" class="btn btn-primary btn-full">Sign In</button>
           <p class="form-error" id="login-error"></p>
         </form>
-        
-        <form id="form-register" class="auth-form" onsubmit="app.handleRegister(event)">
+
+        <form id="form-register" class="auth-form" data-form="register">
           <div class="input-group">
             <label>Username <span class="hint">(lowercase, no spaces)</span></label>
-            <input type="text" id="reg-username" placeholder="alice" required 
+            <input type="text" id="reg-username" placeholder="almo3tasem" required
                    pattern="[a-z0-9_]+" autocomplete="username">
           </div>
           <div class="input-group">
             <label>Display Name</label>
-            <input type="text" id="reg-displayname" placeholder="Alice" required autocomplete="name">
+            <input type="text" id="reg-displayname" placeholder="Al Mo3tasem" required autocomplete="name">
           </div>
           <div class="input-group">
             <label>Email</label>
@@ -73,21 +72,21 @@
 
   <!-- ========== MAIN APP ========== -->
   <div id="app" class="app hidden">
-    
+
     <!-- Navigation -->
     <nav class="nav">
       <div class="nav-left">
-        <div class="nav-brand" onclick="app.goHome()">
+        <div class="nav-brand" id="nav-brand">
           <span class="nav-icon">🏯</span>
           <span class="nav-title">HiraQuest</span>
         </div>
       </div>
       <div class="nav-right">
-        <button class="nav-btn" onclick="app.showSettings()" title="Settings">⚙️</button>
+        <button class="nav-btn" id="btn-settings" title="Settings">⚙️</button>
         <div class="nav-user">
           <div class="presence-dot" id="nav-presence"></div>
           <span id="nav-name">Player</span>
-          <button class="btn btn-ghost btn-sm" onclick="app.logout()">Logout</button>
+          <button class="btn btn-ghost btn-sm" id="btn-logout">Logout</button>
         </div>
       </div>
     </nav>
@@ -140,7 +139,7 @@
               </div>
             </div>
             <div class="friend-actions">
-              <button class="btn btn-secondary btn-sm" onclick="app.inviteFriend()" id="btn-invite" disabled>Invite to Game</button>
+              <button class="btn btn-secondary btn-sm" id="btn-invite" disabled>Invite to Game</button>
             </div>
           </div>
 
@@ -148,7 +147,7 @@
           <div class="card modes-card">
             <h3 class="card-title">Game Modes</h3>
             <div class="modes-list">
-              <button class="mode-btn" onclick="app.goToSelect('zen')">
+              <button class="mode-btn" data-mode="zen">
                 <span class="mode-emoji">🧘</span>
                 <div class="mode-details">
                   <div class="mode-name">Zen Mode</div>
@@ -156,7 +155,7 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn" onclick="app.goToSelect('survival')">
+              <button class="mode-btn" data-mode="survival">
                 <span class="mode-emoji">🔥</span>
                 <div class="mode-details">
                   <div class="mode-name">Survival Rush</div>
@@ -164,7 +163,7 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn" onclick="app.goToSelect('duel')">
+              <button class="mode-btn" data-mode="duel">
                 <span class="mode-emoji">⚔️</span>
                 <div class="mode-details">
                   <div class="mode-name">Duel Mode</div>
@@ -172,7 +171,7 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn" onclick="app.goToSelect('coop')">
+              <button class="mode-btn" data-mode="coop">
                 <span class="mode-emoji">🤝</span>
                 <div class="mode-details">
                   <div class="mode-name">Sync Match</div>
@@ -189,7 +188,7 @@
             <div class="lb-preview" id="lb-preview">
               <p class="empty-state">Play games to see rankings!</p>
             </div>
-            <button class="btn btn-secondary btn-sm btn-full" onclick="app.showLeaderboard()">View Full Leaderboard</button>
+            <button class="btn btn-secondary btn-sm btn-full" id="btn-leaderboard">View Full Leaderboard</button>
           </div>
 
           <!-- Recent History -->
@@ -206,7 +205,7 @@
     <!-- ========== CHARACTER SELECT ========== -->
     <section id="screen-select" class="screen">
       <div class="container">
-        <button class="btn btn-ghost back-btn" onclick="app.goHome()">← Back to Dashboard</button>
+        <button class="btn btn-ghost back-btn" id="btn-select-back">← Back to Dashboard</button>
         <header class="page-header">
           <h1 class="page-title">Select Characters</h1>
           <p class="page-subtitle" id="select-subtitle">Choose which Hiragana to include</p>
@@ -217,22 +216,18 @@
           <div class="select-panel">
             <div class="panel-header">
               <h3>Premade Sets</h3>
-              <button class="btn btn-ghost btn-sm" onclick="app.selectAllSets()">Select All</button>
+              <button class="btn btn-ghost btn-sm" id="btn-select-all">Select All</button>
             </div>
-            <div class="sets-grid" id="sets-grid">
-              <!-- JS populates this -->
-            </div>
+            <div class="sets-grid" id="sets-grid"></div>
           </div>
 
           <!-- Custom Grid -->
           <div class="select-panel">
             <div class="panel-header">
               <h3>Custom Pick</h3>
-              <button class="btn btn-ghost btn-sm" onclick="app.clearCustom()">Clear</button>
+              <button class="btn btn-ghost btn-sm" id="btn-clear-custom">Clear</button>
             </div>
-            <div class="custom-grid" id="custom-grid">
-              <!-- JS populates this -->
-            </div>
+            <div class="custom-grid" id="custom-grid"></div>
           </div>
         </div>
 
@@ -241,7 +236,7 @@
             <span class="selection-count" id="selection-count">0 characters selected</span>
             <span class="selection-difficulty" id="selection-difficulty">Difficulty: 1.0x</span>
           </div>
-          <button class="btn btn-primary btn-lg" id="btn-start" onclick="app.startGame()" disabled>Start Game</button>
+          <button class="btn btn-primary btn-lg" id="btn-start" disabled>Start Game</button>
         </div>
       </div>
     </section>
@@ -249,11 +244,11 @@
     <!-- ========== SETTINGS ========== -->
     <section id="screen-settings" class="screen">
       <div class="container">
-        <button class="btn btn-ghost back-btn" onclick="app.goHome()">← Back</button>
+        <button class="btn btn-ghost back-btn" id="btn-settings-back">← Back</button>
         <header class="page-header">
           <h1 class="page-title">Settings</h1>
         </header>
-        
+
         <div class="settings-card card">
           <div class="setting-row">
             <div class="setting-info">
@@ -261,22 +256,22 @@
               <div class="setting-desc">Switch between light and dark themes</div>
             </div>
             <label class="toggle">
-              <input type="checkbox" id="toggle-theme" onchange="app.toggleTheme()">
+              <input type="checkbox" id="toggle-theme">
               <span class="toggle-slider"></span>
             </label>
           </div>
-          
+
           <div class="setting-row">
             <div class="setting-info">
               <div class="setting-name">Pronunciation Audio</div>
               <div class="setting-desc">Speak Hiragana aloud using browser TTS</div>
             </div>
             <label class="toggle">
-              <input type="checkbox" id="toggle-audio" checked onchange="app.toggleAudio()">
+              <input type="checkbox" id="toggle-audio" checked>
               <span class="toggle-slider"></span>
             </label>
           </div>
-          
+
           <div class="setting-row">
             <div class="setting-info">
               <div class="setting-name">Notifications</div>
@@ -297,7 +292,7 @@
         <div class="game-placeholder card">
           <h2>🚧 Game Mode Coming in Phase 2</h2>
           <p>This game mode is under construction.</p>
-          <button class="btn btn-primary" onclick="app.goHome()">Back to Dashboard</button>
+          <button class="btn btn-primary" id="btn-game-back">Back to Dashboard</button>
         </div>
       </div>
     </section>

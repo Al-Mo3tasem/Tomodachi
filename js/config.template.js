@@ -1,19 +1,19 @@
 // ============================================
-// HiraQuest Firebase Configuration
+// HiraQuest Firebase Config Template
 // ============================================
-// Replace the values below with your actual Firebase config from the console.
-// Do NOT share this file publicly.
+// 1. Copy this file to config.js
+// 2. Fill in your real values from Firebase Console
+// 3. NEVER commit config.js (it's gitignored)
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyA4GjLylUNt9Dihv0rIucMdlMFtFQhlewA",
+  apiKey: "YOUR_API_KEY_HERE",
   authDomain: "hiraquest.firebaseapp.com",
   projectId: "hiraquest",
   storageBucket: "hiraquest.appspot.com",
-  messagingSenderId: "546831266198",
-  appId: "1:546831266198:web:fbde52e91547a64217adb7"
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID_HERE"
 };
 
-// App Settings
 export const APP_CONFIG = {
   maxUsers: 2,
   defaultTheme: 'light',

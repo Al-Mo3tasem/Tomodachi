@@ -1,0 +1,6 @@
+# Never commit real config
+js/config.js
+config.js
+
+# Never commit seed page after use
+seed.html

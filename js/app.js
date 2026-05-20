@@ -1,6 +1,5 @@
-
 // ============================================
-// HiraQuest Main Application
+// HiraQuest Main Application - FIXED VERSION
 // Phase 1: Auth, Dashboard, Character Select, Presence
 // ============================================
 
@@ -49,33 +48,30 @@ const state = {
   theme: localStorage.getItem('hiraquest-theme') || APP_CONFIG.defaultTheme
 };
 
-// ----- DOM Cache -----
+// ----- DOM Helpers -----
 const $ = (id) => document.getElementById(id);
-const $$ = (sel) => document.querySelectorAll(sel);
-
-// ============================================
-// UI UTILITIES
-// ============================================
 
 function showScreen(id) {
-  $$('.screen').forEach(s => s.classList.remove('active'));
-  $(id).classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = $(id);
+  if (el) el.classList.add('active');
 }
 
 function showLoading(show) {
-  $('loading-overlay').classList.toggle('active', show);
+  const overlay = $('loading-overlay');
+  if (overlay) overlay.classList.toggle('active', show);
 }
 
 function toast(message, type = 'info', duration = 3000) {
   const container = $('toast-container');
+  if (!container) return;
+
   const toastEl = document.createElement('div');
   toastEl.className = 'toast';
-  
   const icons = { info: 'ℹ️', success: '✅', error: '❌', warning: '⚠️' };
   toastEl.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
-  
   container.appendChild(toastEl);
-  
+
   setTimeout(() => {
     toastEl.classList.add('leaving');
     setTimeout(() => toastEl.remove(), 300);
@@ -86,565 +82,589 @@ function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('hiraquest-theme', theme);
   state.theme = theme;
-  $('toggle-theme').checked = theme === 'dark';
+  const toggle = $('toggle-theme');
+  if (toggle) toggle.checked = theme === 'dark';
 }
 
 // ============================================
 // AUTHENTICATION
 // ============================================
 
-const Auth = {
-  async handleLogin(e) {
-    e.preventDefault();
-    const email = $('login-email').value.trim();
-    const password = $('login-password').value;
-    $('login-error').textContent = '';
-    
-    try {
-      showLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      // Success handled by onAuthStateChanged
-    } catch (err) {
-      $('login-error').textContent = this.formatAuthError(err.code);
-    } finally {
+function formatAuthError(code) {
+  const map = {
+    'auth/invalid-email': 'Invalid email address.',
+    'auth/user-disabled': 'This account has been disabled.',
+    'auth/user-not-found': 'No account found with this email.',
+    'auth/wrong-password': 'Incorrect password.',
+    'auth/email-already-in-use': 'An account already exists with this email.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/invalid-credential': 'Invalid email or password.',
+    'auth/too-many-requests': 'Too many attempts. Please try again later.'
+  };
+  return map[code] || `Authentication failed (${code}). Please try again.`;
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const email = $('login-email').value.trim();
+  const password = $('login-password').value;
+  const errorEl = $('login-error');
+  if (errorEl) errorEl.textContent = '';
+
+  try {
+    showLoading(true);
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    if (errorEl) errorEl.textContent = formatAuthError(err.code);
+    console.error('Login error:', err);
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const username = $('reg-username').value.trim().toLowerCase();
+  const displayName = $('reg-displayname').value.trim();
+  const email = $('reg-email').value.trim();
+  const password = $('reg-password').value;
+  const errorEl = $('register-error');
+  if (errorEl) errorEl.textContent = '';
+
+  if (!/^[a-z0-9_]+$/.test(username)) {
+    if (errorEl) errorEl.textContent = 'Username must be lowercase letters, numbers, or underscores only.';
+    return;
+  }
+
+  try {
+    showLoading(true);
+
+    // Check 2-user limit
+    const usersSnap = await getDocs(collection(db, 'users'));
+    if (usersSnap.size >= APP_CONFIG.maxUsers) {
+      if (errorEl) errorEl.textContent = 'HiraQuest is full! Only 2 accounts are allowed.';
       showLoading(false);
-    }
-  },
-
-  async handleRegister(e) {
-    e.preventDefault();
-    const username = $('reg-username').value.trim().toLowerCase();
-    const displayName = $('reg-displayname').value.trim();
-    const email = $('reg-email').value.trim();
-    const password = $('reg-password').value;
-    $('register-error').textContent = '';
-
-    // Validation
-    if (!/^[a-z0-9_]+$/.test(username)) {
-      $('register-error').textContent = 'Username must be lowercase letters, numbers, or underscores only.';
       return;
     }
 
-    try {
-      showLoading(true);
-
-      // Check 2-user limit
-      const usersSnap = await getDocs(collection(db, 'users'));
-      if (usersSnap.size >= APP_CONFIG.maxUsers) {
-        $('register-error').textContent = 'HiraQuest is full! Only 2 accounts are allowed.';
-        showLoading(false);
-        return;
-      }
-
-      // Check username uniqueness
-      const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
-      const usernameSnap = await getDocs(usernameQuery);
-      if (!usernameSnap.empty) {
-        $('register-error').textContent = 'Username already taken.';
-        showLoading(false);
-        return;
-      }
-
-      // Create auth account
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update auth profile
-      await updateProfile(cred.user, { displayName });
-
-      // Create user document
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        uid: cred.user.uid,
-        username,
-        displayName,
-        email,
-        avatarEmoji: username === 'alice' ? '🌸' : (username === 'bob' ? '🎮' : '🎯'),
-        createdAt: serverTimestamp(),
-        status: 'offline'
-      });
-
-      // Create stats document
-      await setDoc(doc(db, 'stats', cred.user.uid), {
-        userId: cred.user.uid,
-        totalGames: 0,
-        duelsWon: 0,
-        duelsLost: 0,
-        highestSoloScore: 0,
-        highestCoopScore: 0,
-        charactersMastered: [],
-        createdAt: serverTimestamp()
-      });
-
-      toast('Account created! Welcome to HiraQuest.', 'success');
-      
-    } catch (err) {
-      $('register-error').textContent = this.formatAuthError(err.code);
-    } finally {
+    // Check username uniqueness
+    const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
+    const usernameSnap = await getDocs(usernameQuery);
+    if (!usernameSnap.empty) {
+      if (errorEl) errorEl.textContent = 'Username already taken.';
       showLoading(false);
+      return;
     }
-  },
 
-  async logout() {
-    try {
-      // Set offline before logout
-      if (state.user) {
-        await setDoc(doc(db, 'presence', state.user.uid), {
-          status: 'offline',
-          lastSeen: serverTimestamp()
-        }, { merge: true });
-      }
-      await signOut(auth);
-    } catch (err) {
-      toast('Logout failed: ' + err.message, 'error');
-    }
-  },
+    // Create auth account
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName });
 
-  formatAuthError(code) {
-    const map = {
-      'auth/invalid-email': 'Invalid email address.',
-      'auth/user-disabled': 'This account has been disabled.',
-      'auth/user-not-found': 'No account found with this email.',
-      'auth/wrong-password': 'Incorrect password.',
-      'auth/email-already-in-use': 'An account already exists with this email.',
-      'auth/weak-password': 'Password must be at least 6 characters.',
-      'auth/invalid-credential': 'Invalid email or password.',
-      'auth/too-many-requests': 'Too many attempts. Please try again later.'
-    };
-    return map[code] || 'Authentication failed. Please try again.';
-  },
+    // Create user document
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      uid: cred.user.uid,
+      username,
+      displayName,
+      email,
+      avatarEmoji: '🌸',
+      createdAt: serverTimestamp(),
+      status: 'offline'
+    });
 
-  switchTab(tab) {
-    $$('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-    $$('.auth-form').forEach(f => f.classList.toggle('active', f.id === `form-${tab}`));
+    // Create stats document
+    await setDoc(doc(db, 'stats', cred.user.uid), {
+      userId: cred.user.uid,
+      totalGames: 0,
+      duelsWon: 0,
+      duelsLost: 0,
+      highestSoloScore: 0,
+      highestCoopScore: 0,
+      charactersMastered: [],
+      createdAt: serverTimestamp()
+    });
+
+    toast('Account created! Welcome to HiraQuest.', 'success');
+
+  } catch (err) {
+    if (errorEl) errorEl.textContent = formatAuthError(err.code);
+    console.error('Register error:', err);
+  } finally {
+    showLoading(false);
   }
-};
+}
 
-// Bind auth events
-window.app = window.app || {};
-app.handleLogin = Auth.handleLogin.bind(Auth);
-app.handleRegister = Auth.handleRegister.bind(Auth);
-app.logout = Auth.logout.bind(Auth);
-app.switchAuthTab = Auth.switchTab.bind(Auth);
+async function logout() {
+  try {
+    if (state.user) {
+      await setDoc(doc(db, 'presence', state.user.uid), {
+        status: 'offline',
+        lastSeen: serverTimestamp()
+      }, { merge: true });
+    }
+    await signOut(auth);
+  } catch (err) {
+    toast('Logout failed: ' + err.message, 'error');
+  }
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  document.querySelectorAll('.auth-form').forEach(f => {
+    f.classList.toggle('active', f.dataset.form === tab);
+  });
+}
 
 // ============================================
 // PRESENCE & FRIEND SYSTEM
 // ============================================
 
-const Presence = {
-  unsub: null,
+let presenceUnsub = null;
 
-  init() {
-    // Update my presence
-    if (state.user) {
-      setDoc(doc(db, 'presence', state.user.uid), {
-        userId: state.user.uid,
-        username: state.userData?.username,
-        displayName: state.userData?.displayName,
-        status: 'online',
-        lastSeen: serverTimestamp()
-      }, { merge: true });
+function initPresence() {
+  if (!state.user) return;
 
-      // Set offline on page unload
-      window.addEventListener('beforeunload', () => {
-        // Note: This is best-effort; may not always fire
-        setDoc(doc(db, 'presence', state.user.uid), {
-          status: 'offline',
-          lastSeen: serverTimestamp()
-        }, { merge: true });
-      });
-    }
+  setDoc(doc(db, 'presence', state.user.uid), {
+    userId: state.user.uid,
+    username: state.userData?.username,
+    displayName: state.userData?.displayName,
+    status: 'online',
+    lastSeen: serverTimestamp()
+  }, { merge: true });
 
-    // Listen for friend presence
-    this.unsub = onSnapshot(collection(db, 'presence'), (snap) => {
-      snap.forEach(docSnap => {
-        const data = docSnap.data();
-        if (docSnap.id !== state.user?.uid) {
-          state.friendPresence = data;
-          this.render();
-        }
-      });
-    });
-  },
+  window.addEventListener('beforeunload', () => {
+    setDoc(doc(db, 'presence', state.user.uid), {
+      status: 'offline',
+      lastSeen: serverTimestamp()
+    }, { merge: true });
+  });
 
-  render() {
-    const p = state.friendPresence;
-    if (!p) {
-      $('friend-status').innerHTML = `<span class="status-dot offline"></span><span class="status-text">Offline</span>`;
-      $('friend-name').textContent = 'Waiting for friend...';
-      $('btn-invite').disabled = true;
-      $('nav-presence').className = 'presence-dot';
-      return;
-    }
-
-    const isOnline = p.status === 'online' || p.status === 'in_game';
-    const dotClass = p.status === 'in_game' ? 'in-game' : (isOnline ? 'online' : 'offline');
-    const statusText = p.status === 'in_game' ? 'In Game' : (isOnline ? 'Online' : 'Offline');
-
-    $('friend-name').textContent = p.displayName || p.username || 'Friend';
-    $('friend-avatar').textContent = state.friend?.avatarEmoji || '🎮';
-    $('friend-status').innerHTML = `<span class="status-dot ${dotClass}"></span><span class="status-text">${statusText}</span>`;
-    $('btn-invite').disabled = !isOnline;
-
-    // Nav presence dot
-    $('nav-presence').className = `presence-dot ${dotClass}`;
-
-    // Toast when friend comes online
-    if (isOnline && $('toggle-notify')?.checked) {
-      const lastToast = sessionStorage.getItem('last-online-toast');
-      const now = Date.now();
-      if (!lastToast || (now - parseInt(lastToast)) > 60000) {
-        toast(`${p.displayName || p.username} is online!`, 'success');
-        sessionStorage.setItem('last-online-toast', now.toString());
+  presenceUnsub = onSnapshot(collection(db, 'presence'), (snap) => {
+    snap.forEach(docSnap => {
+      if (docSnap.id !== state.user?.uid) {
+        state.friendPresence = docSnap.data();
+        renderFriend();
       }
-    }
-  },
+    });
+  });
+}
 
-  cleanup() {
-    if (this.unsub) this.unsub();
+function renderFriend() {
+  const p = state.friendPresence;
+  const nameEl = $('friend-name');
+  const statusEl = $('friend-status');
+  const inviteBtn = $('btn-invite');
+  const navDot = $('nav-presence');
+
+  if (!p) {
+    if (nameEl) nameEl.textContent = 'Waiting for friend...';
+    if (statusEl) statusEl.innerHTML = `<span class="status-dot offline"></span><span class="status-text">Offline</span>`;
+    if (inviteBtn) inviteBtn.disabled = true;
+    if (navDot) navDot.className = 'presence-dot';
+    return;
   }
-};
+
+  const isOnline = p.status === 'online' || p.status === 'in_game';
+  const dotClass = p.status === 'in_game' ? 'in-game' : (isOnline ? 'online' : 'offline');
+  const statusText = p.status === 'in_game' ? 'In Game' : (isOnline ? 'Online' : 'Offline');
+
+  if (nameEl) nameEl.textContent = p.displayName || p.username || 'Friend';
+  if (statusEl) statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span><span class="status-text">${statusText}</span>`;
+  if (inviteBtn) inviteBtn.disabled = !isOnline;
+  if (navDot) navDot.className = `presence-dot ${dotClass}`;
+
+  if (isOnline) {
+    const lastToast = sessionStorage.getItem('last-online-toast');
+    const now = Date.now();
+    const notifyToggle = $('toggle-notify');
+    if ((!lastToast || (now - parseInt(lastToast)) > 60000) && notifyToggle && notifyToggle.checked) {
+      toast(`${p.displayName || p.username} is online!`, 'success');
+      sessionStorage.setItem('last-online-toast', now.toString());
+    }
+  }
+}
 
 // ============================================
-// CONTENT SETS (Character Data)
+// CONTENT SETS
 // ============================================
 
-const Content = {
-  async loadSets() {
-    try {
-      const snap = await getDocs(collection(db, 'content_sets'));
-      state.contentSets = [];
-      snap.forEach(docSnap => {
-        state.contentSets.push({ id: docSnap.id, ...docSnap.data() });
-      });
-      // Sort by order field
-      state.contentSets.sort((a, b) => (a.order || 0) - (b.order || 0));
-    } catch (err) {
-      console.error('Failed to load content sets:', err);
-      toast('Failed to load Hiragana sets.', 'error');
-    }
-  },
-
-  renderSets() {
-    const grid = $('sets-grid');
-    grid.innerHTML = '';
-
-    state.contentSets.forEach(set => {
-      const el = document.createElement('div');
-      el.className = 'set-item';
-      el.dataset.id = set.id;
-      el.onclick = () => app.toggleSet(set.id);
-
-      const chars = (set.characters || []).map(c => c.char).join(' ');
-
-      el.innerHTML = `
-        <div class="set-checkbox"></div>
-        <div class="set-info">
-          <div class="set-name">${set.name || set.id}</div>
-          <div class="set-chars">${chars}</div>
-        </div>
-        <div class="set-count">${set.characters?.length || 0}</div>
-      `;
-
-      grid.appendChild(el);
+async function loadContentSets() {
+  try {
+    const snap = await getDocs(collection(db, 'content_sets'));
+    state.contentSets = [];
+    snap.forEach(docSnap => {
+      state.contentSets.push({ id: docSnap.id, ...docSnap.data() });
     });
-
-    this.renderCustomGrid();
-  },
-
-  renderCustomGrid() {
-    const grid = $('custom-grid');
-    grid.innerHTML = '';
-
-    // Flatten all characters from all sets
-    const allChars = [];
-    state.contentSets.forEach(set => {
-      (set.characters || []).forEach(c => {
-        if (!allChars.find(x => x.char === c.char)) {
-          allChars.push({ ...c, setId: set.id });
-        }
-      });
-    });
-
-    allChars.forEach(c => {
-      const el = document.createElement('div');
-      el.className = 'char-tile';
-      el.dataset.char = c.char;
-      el.onclick = () => app.toggleChar(c.char);
-
-      el.innerHTML = `
-        <span class="jp">${c.char}</span>
-        <span class="romaji">${c.romaji}</span>
-      `;
-
-      grid.appendChild(el);
-    });
+    state.contentSets.sort((a, b) => (a.order || 0) - (b.order || 0));
+  } catch (err) {
+    console.error('Failed to load content sets:', err);
+    toast('Failed to load Hiragana sets. Make sure database is seeded.', 'error');
   }
-};
+}
+
+function renderSets() {
+  const grid = $('sets-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  state.contentSets.forEach(set => {
+    const el = document.createElement('div');
+    el.className = 'set-item';
+    el.dataset.id = set.id;
+    el.addEventListener('click', () => toggleSet(set.id));
+
+    const chars = (set.characters || []).map(c => c.char).join(' ');
+
+    el.innerHTML = `
+      <div class="set-checkbox"></div>
+      <div class="set-info">
+        <div class="set-name">${set.name || set.id}</div>
+        <div class="set-chars">${chars}</div>
+      </div>
+      <div class="set-count">${set.characters?.length || 0}</div>
+    `;
+    grid.appendChild(el);
+  });
+
+  renderCustomGrid();
+}
+
+function renderCustomGrid() {
+  const grid = $('custom-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const allChars = [];
+  state.contentSets.forEach(set => {
+    (set.characters || []).forEach(c => {
+      if (!allChars.find(x => x.char === c.char)) {
+        allChars.push({ ...c, setId: set.id });
+      }
+    });
+  });
+
+  allChars.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'char-tile';
+    el.dataset.char = c.char;
+    el.addEventListener('click', () => toggleChar(c.char));
+    el.innerHTML = `<span class="jp">${c.char}</span><span class="romaji">${c.romaji}</span>`;
+    grid.appendChild(el);
+  });
+}
 
 // ============================================
 // DASHBOARD
 // ============================================
 
-const Dashboard = {
-  async loadStats() {
-    if (!state.user) return;
-    try {
-      const statsDoc = await getDoc(doc(db, 'stats', state.user.uid));
-      const stats = statsDoc.exists() ? statsDoc.data() : {};
-      
-      $('stat-total').textContent = stats.totalGames || 0;
-      $('stat-wins').textContent = stats.duelsWon || 0;
-      $('stat-best').textContent = stats.highestSoloScore || 0;
-      
-      $('dash-welcome').textContent = state.userData?.displayName || 'Player';
-      $('dash-displayname').textContent = state.userData?.displayName || 'Player';
-      $('dash-username').textContent = `@${state.userData?.username || 'player'}`;
-      $('dash-avatar').textContent = state.userData?.avatarEmoji || '🌸';
-      $('nav-name').textContent = state.userData?.displayName || 'Player';
-      
-      // Load friend data
-      const usersSnap = await getDocs(collection(db, 'users'));
-      usersSnap.forEach(u => {
-        if (u.id !== state.user.uid) {
-          state.friend = u.data();
-        }
-      });
-      
-      Presence.render();
-      
-    } catch (err) {
-      console.error('Dashboard load error:', err);
-    }
-  },
+async function loadDashboard() {
+  if (!state.user) return;
+  try {
+    const statsDoc = await getDoc(doc(db, 'stats', state.user.uid));
+    const stats = statsDoc.exists() ? statsDoc.data() : {};
 
-  async loadHistory() {
-    try {
-      const q = query(
-        collection(db, 'game_sessions'),
-        where('players', 'array-contains', state.user.uid),
-        limit(5)
-      );
-      const snap = await getDocs(q);
-      const list = $('history-list');
-      
-      if (snap.empty) {
-        list.innerHTML = '<p class="empty-state">No games played yet.</p>';
-        return;
+    const totalEl = $('stat-total');
+    const winsEl = $('stat-wins');
+    const bestEl = $('stat-best');
+    if (totalEl) totalEl.textContent = stats.totalGames || 0;
+    if (winsEl) winsEl.textContent = stats.duelsWon || 0;
+    if (bestEl) bestEl.textContent = stats.highestSoloScore || 0;
+
+    const welcomeEl = $('dash-welcome');
+    const displayEl = $('dash-displayname');
+    const usernameEl = $('dash-username');
+    const avatarEl = $('dash-avatar');
+    const navNameEl = $('nav-name');
+
+    if (welcomeEl) welcomeEl.textContent = state.userData?.displayName || 'Player';
+    if (displayEl) displayEl.textContent = state.userData?.displayName || 'Player';
+    if (usernameEl) usernameEl.textContent = `@${state.userData?.username || 'player'}`;
+    if (avatarEl) avatarEl.textContent = state.userData?.avatarEmoji || '🌸';
+    if (navNameEl) navNameEl.textContent = state.userData?.displayName || 'Player';
+
+    const usersSnap = await getDocs(collection(db, 'users'));
+    usersSnap.forEach(u => {
+      if (u.id !== state.user.uid) {
+        state.friend = u.data();
       }
-      
-      list.innerHTML = '';
-      snap.forEach(docSnap => {
-        const data = docSnap.data();
-        const isDuel = data.gameType === 'duel';
-        const result = isDuel 
-          ? (data.winner === state.user.uid ? 'Victory' : 'Defeat')
-          : 'Completed';
-        const resultColor = result === 'Victory' ? 'var(--success)' : (result === 'Defeat' ? 'var(--danger)' : 'var(--accent)');
-        
-        const item = document.createElement('div');
-        item.style.cssText = 'padding: 12px 0; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;';
-        item.innerHTML = `
-          <div>
-            <div style="font-weight:600; font-size:0.9375rem;">${data.gameType?.toUpperCase()}</div>
-            <div style="font-size:0.75rem; color:var(--text-secondary);">${new Date(data.createdAt?.toDate?.() || Date.now()).toLocaleDateString()}</div>
-          </div>
-          <div style="font-weight:700; color:${resultColor}; font-size:0.875rem;">${result}</div>
-        `;
-        list.appendChild(item);
-      });
-    } catch (err) {
-      console.error('History load error:', err);
-    }
+    });
+
+    renderFriend();
+  } catch (err) {
+    console.error('Dashboard load error:', err);
   }
-};
+}
 
-// ============================================
-// CHARACTER SELECTION
-// ============================================
+async function loadHistory() {
+  try {
+    const q = query(
+      collection(db, 'game_sessions'),
+      where('players', 'array-contains', state.user.uid),
+      limit(5)
+    );
+    const snap = await getDocs(q);
+    const list = $('history-list');
+    if (!list) return;
 
-const Selection = {
-  updateUI() {
-    // Update set items
-    $$('.set-item').forEach(el => {
-      el.classList.toggle('selected', state.selectedSets.has(el.dataset.id));
-    });
-
-    // Update char tiles
-    $$('.char-tile').forEach(el => {
-      el.classList.toggle('selected', state.selectedChars.has(el.dataset.char));
-    });
-
-    // Update counts
-    const totalChars = state.selectedChars.size;
-    const multiplier = (totalChars / 5).toFixed(1);
-    
-    $('selection-count').textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
-    $('selection-difficulty').textContent = `Difficulty: ${multiplier}x`;
-    $('btn-start').disabled = totalChars === 0;
-  },
-
-  toggleSet(setId) {
-    const set = state.contentSets.find(s => s.id === setId);
-    if (!set) return;
-
-    if (state.selectedSets.has(setId)) {
-      // Deselect: remove set and its chars
-      state.selectedSets.delete(setId);
-      (set.characters || []).forEach(c => state.selectedChars.delete(c.char));
-    } else {
-      // Select: add set and its chars
-      state.selectedSets.add(setId);
-      (set.characters || []).forEach(c => state.selectedChars.add(c.char));
+    if (snap.empty) {
+      list.innerHTML = '<p class="empty-state">No games played yet.</p>';
+      return;
     }
 
-    this.updateUI();
-  },
+    list.innerHTML = '';
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const isDuel = data.gameType === 'duel';
+      const result = isDuel
+        ? (data.winner === state.user.uid ? 'Victory' : 'Defeat')
+        : 'Completed';
+      const color = result === 'Victory' ? 'var(--success)' : (result === 'Defeat' ? 'var(--danger)' : 'var(--accent)');
 
-  toggleChar(char) {
-    if (state.selectedChars.has(char)) {
-      state.selectedChars.delete(char);
-      // Check if this breaks any full set selection
-      state.contentSets.forEach(set => {
-        const setChars = (set.characters || []).map(c => c.char);
-        const hasAll = setChars.every(c => state.selectedChars.has(c));
-        if (!hasAll) state.selectedSets.delete(set.id);
-      });
-    } else {
-      state.selectedChars.add(char);
-      // Check if this completes any set
-      state.contentSets.forEach(set => {
-        const setChars = (set.characters || []).map(c => c.char);
-        const hasAll = setChars.every(c => state.selectedChars.has(c));
-        if (hasAll) state.selectedSets.add(set.id);
-      });
-    }
+      const item = document.createElement('div');
+      item.style.cssText = 'padding: 12px 0; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;';
+      item.innerHTML = `
+        <div>
+          <div style="font-weight:600; font-size:0.9375rem;">${(data.gameType || 'GAME').toUpperCase()}</div>
+          <div style="font-size:0.75rem; color:var(--text-secondary);">${new Date(data.createdAt?.toDate?.() || Date.now()).toLocaleDateString()}</div>
+        </div>
+        <div style="font-weight:700; color:${color}; font-size:0.875rem;">${result}</div>
+      `;
+      list.appendChild(item);
+    });
+  } catch (err) {
+    console.error('History load error:', err);
+  }
+}
 
-    this.updateUI();
-  },
+// ============================================
+// CHARACTER SELECTION LOGIC
+// ============================================
 
-  selectAllSets() {
+function updateSelectionUI() {
+  document.querySelectorAll('.set-item').forEach(el => {
+    el.classList.toggle('selected', state.selectedSets.has(el.dataset.id));
+  });
+  document.querySelectorAll('.char-tile').forEach(el => {
+    el.classList.toggle('selected', state.selectedChars.has(el.dataset.char));
+  });
+
+  const totalChars = state.selectedChars.size;
+  const multiplier = totalChars > 0 ? (totalChars / 5).toFixed(1) : '1.0';
+
+  const countEl = $('selection-count');
+  const diffEl = $('selection-difficulty');
+  const startBtn = $('btn-start');
+
+  if (countEl) countEl.textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
+  if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}x`;
+  if (startBtn) startBtn.disabled = totalChars === 0;
+}
+
+function toggleSet(setId) {
+  const set = state.contentSets.find(s => s.id === setId);
+  if (!set) return;
+
+  if (state.selectedSets.has(setId)) {
+    state.selectedSets.delete(setId);
+    (set.characters || []).forEach(c => state.selectedChars.delete(c.char));
+  } else {
+    state.selectedSets.add(setId);
+    (set.characters || []).forEach(c => state.selectedChars.add(c.char));
+  }
+  updateSelectionUI();
+}
+
+function toggleChar(char) {
+  if (state.selectedChars.has(char)) {
+    state.selectedChars.delete(char);
     state.contentSets.forEach(set => {
-      state.selectedSets.add(set.id);
-      (set.characters || []).forEach(c => state.selectedChars.add(c.char));
+      const setChars = (set.characters || []).map(c => c.char);
+      const hasAll = setChars.every(c => state.selectedChars.has(c));
+      if (!hasAll) state.selectedSets.delete(set.id);
     });
-    this.updateUI();
-  },
-
-  clearCustom() {
-    state.selectedSets.clear();
-    state.selectedChars.clear();
-    this.updateUI();
+  } else {
+    state.selectedChars.add(char);
+    state.contentSets.forEach(set => {
+      const setChars = (set.characters || []).map(c => c.char);
+      const hasAll = setChars.every(c => state.selectedChars.has(c));
+      if (hasAll) state.selectedSets.add(set.id);
+    });
   }
-};
+  updateSelectionUI();
+}
+
+function selectAllSets() {
+  state.contentSets.forEach(set => {
+    state.selectedSets.add(set.id);
+    (set.characters || []).forEach(c => state.selectedChars.add(c.char));
+  });
+  updateSelectionUI();
+}
+
+function clearCustom() {
+  state.selectedSets.clear();
+  state.selectedChars.clear();
+  updateSelectionUI();
+}
 
 // ============================================
 // ROUTER & NAVIGATION
 // ============================================
 
-const Router = {
-  goHome() {
-    showScreen('screen-dashboard');
-    Dashboard.loadStats();
-    Dashboard.loadHistory();
-  },
+function goHome() {
+  showScreen('screen-dashboard');
+  loadDashboard();
+  loadHistory();
+}
 
-  goToSelect(gameType) {
-    state.currentGameType = gameType;
-    const names = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
-    $('select-subtitle').textContent = `Choose Hiragana for ${names[gameType] || gameType}`;
-    showScreen('screen-select');
-    Content.renderSets();
-    Selection.updateUI();
-  },
+function goToSelect(gameType) {
+  state.currentGameType = gameType;
+  const names = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
+  const subEl = $('select-subtitle');
+  if (subEl) subEl.textContent = `Choose Hiragana for ${names[gameType] || gameType}`;
+  showScreen('screen-select');
+  renderSets();
+  updateSelectionUI();
+}
 
-  showSettings() {
-    showScreen('screen-settings');
-    $('toggle-theme').checked = state.theme === 'dark';
-  },
+function showSettings() {
+  showScreen('screen-settings');
+  const toggle = $('toggle-theme');
+  if (toggle) toggle.checked = state.theme === 'dark';
+}
 
-  showLeaderboard() {
-    toast('Full leaderboard coming in Phase 2!', 'info');
-  },
+function showLeaderboard() {
+  toast('Full leaderboard coming in Phase 2!', 'info');
+}
 
-  startGame() {
-    const chars = Array.from(state.selectedChars);
-    if (chars.length === 0) {
-      toast('Select at least one character!', 'warning');
-      return;
-    }
-    
-    // Phase 1 placeholder — just show the game screen
-    showScreen('screen-game');
-    toast(`${state.currentGameType} mode selected with ${chars.length} characters. Phase 2 will add the actual gameplay!`, 'success', 5000);
-  },
-
-  inviteFriend() {
-    if (!state.friendPresence || state.friendPresence.status !== 'online') {
-      toast('Your friend is not online right now.', 'warning');
-      return;
-    }
-    toast(`Invite sent to ${state.friendPresence.displayName || 'your friend'}! (Full invites in Phase 3)`, 'info');
-  },
-
-  toggleTheme() {
-    const newTheme = $('toggle-theme').checked ? 'dark' : 'light';
-    setTheme(newTheme);
-  },
-
-  toggleAudio() {
-    state.audioEnabled = $('toggle-audio').checked;
-    localStorage.setItem('hiraquest-audio', state.audioEnabled);
+function startGame() {
+  const chars = Array.from(state.selectedChars);
+  if (chars.length === 0) {
+    toast('Select at least one character!', 'warning');
+    return;
   }
-};
+  showScreen('screen-game');
+  toast(`${state.currentGameType} mode selected with ${chars.length} characters. Phase 2 will add the actual gameplay!`, 'success', 5000);
+}
 
-// Bind all router methods to window.app
-Object.assign(app, Router);
+function inviteFriend() {
+  if (!state.friendPresence || state.friendPresence.status !== 'online') {
+    toast('Your friend is not online right now.', 'warning');
+    return;
+  }
+  toast(`Invite sent to ${state.friendPresence.displayName || 'your friend'}! (Full invites in Phase 3)`, 'info');
+}
+
+function toggleTheme() {
+  const newTheme = $('toggle-theme').checked ? 'dark' : 'light';
+  setTheme(newTheme);
+}
+
+function toggleAudio() {
+  state.audioEnabled = $('toggle-audio').checked;
+  localStorage.setItem('hiraquest-audio', state.audioEnabled);
+}
+
+// ============================================
+// EVENT LISTENERS (All attached here - robust)
+// ============================================
+
+function attachListeners() {
+  // Auth tabs
+  document.querySelectorAll('.auth-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchAuthTab(btn.dataset.tab));
+  });
+
+  // Auth forms
+  const loginForm = $('form-login');
+  const registerForm = $('form-register');
+  if (loginForm) loginForm.addEventListener('submit', handleLogin);
+  if (registerForm) registerForm.addEventListener('submit', handleRegister);
+
+  // Nav
+  const navBrand = $('nav-brand');
+  const btnSettings = $('btn-settings');
+  const btnLogout = $('btn-logout');
+  if (navBrand) navBrand.addEventListener('click', goHome);
+  if (btnSettings) btnSettings.addEventListener('click', showSettings);
+  if (btnLogout) btnLogout.addEventListener('click', logout);
+
+  // Game mode buttons
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToSelect(btn.dataset.mode));
+  });
+
+  // Select screen
+  const btnSelectBack = $('btn-select-back');
+  const btnSelectAll = $('btn-select-all');
+  const btnClearCustom = $('btn-clear-custom');
+  const btnStart = $('btn-start');
+  if (btnSelectBack) btnSelectBack.addEventListener('click', goHome);
+  if (btnSelectAll) btnSelectAll.addEventListener('click', selectAllSets);
+  if (btnClearCustom) btnClearCustom.addEventListener('click', clearCustom);
+  if (btnStart) btnStart.addEventListener('click', startGame);
+
+  // Settings
+  const btnSettingsBack = $('btn-settings-back');
+  const toggleThemeEl = $('toggle-theme');
+  const toggleAudioEl = $('toggle-audio');
+  if (btnSettingsBack) btnSettingsBack.addEventListener('click', goHome);
+  if (toggleThemeEl) toggleThemeEl.addEventListener('change', toggleTheme);
+  if (toggleAudioEl) toggleAudioEl.addEventListener('change', toggleAudio);
+
+  // Game placeholder
+  const btnGameBack = $('btn-game-back');
+  if (btnGameBack) btnGameBack.addEventListener('click', goHome);
+
+  // Leaderboard
+  const btnLeaderboard = $('btn-leaderboard');
+  if (btnLeaderboard) btnLeaderboard.addEventListener('click', showLeaderboard);
+
+  // Invite
+  const btnInvite = $('btn-invite');
+  if (btnInvite) btnInvite.addEventListener('click', inviteFriend);
+}
 
 // ============================================
 // APP INITIALIZATION
 // ============================================
 
 async function init() {
-  // Apply saved theme
   setTheme(state.theme);
-  $('toggle-audio').checked = localStorage.getItem('hiraquest-audio') !== 'false';
+  const audioToggle = $('toggle-audio');
+  if (audioToggle) audioToggle.checked = localStorage.getItem('hiraquest-audio') !== 'false';
 
-  // Auth state listener
+  attachListeners();
+
   onAuthStateChanged(auth, async (user) => {
     showLoading(true);
     
     if (user) {
-      // Logged in
       state.user = user;
-      
-      // Load user data
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         state.userData = userDoc.data();
       }
       
-      // Hide auth, show app
       $('screen-auth').classList.remove('active');
-      $('app').classList.remove('hidden');
+      const appEl = $('app');
+      if (appEl) appEl.classList.remove('hidden');
       
-      // Init presence
-      Presence.init();
-      
-      // Load content
-      await Content.loadSets();
-      
-      // Go to dashboard
-      Router.goHome();
-      
+      initPresence();
+      await loadContentSets();
+      goHome();
       toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
       
     } else {
-      // Logged out
       state.user = null;
       state.userData = null;
-      Presence.cleanup();
+      if (presenceUnsub) presenceUnsub();
       
-      $('app').classList.add('hidden');
-      $('screen-auth').classList.add('active');
+      const appEl = $('app');
+      if (appEl) appEl.classList.add('hidden');
+      const authScreen = $('screen-auth');
+      if (authScreen) authScreen.classList.add('active');
       showScreen('screen-auth');
     }
     
@@ -652,11 +672,4 @@ async function init() {
   });
 }
 
-// Start
 init();
-
-// Expose selection methods
-app.toggleSet = Selection.toggleSet.bind(Selection);
-app.toggleChar = Selection.toggleChar.bind(Selection);
-app.selectAllSets = Selection.selectAllSets.bind(Selection);
-app.clearCustom = Selection.clearCustom.bind(Selection);
