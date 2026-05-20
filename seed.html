@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HiraQuest - Database Setup</title>
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 60px auto; padding: 20px; line-height: 1.6; }
+    h1 { font-size: 1.5rem; }
+    .step { background: #f5f5f7; padding: 16px; border-radius: 12px; margin: 12px 0; }
+    button { background: #0071E3; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 1rem; cursor: pointer; }
+    button:disabled { background: #ccc; }
+    .log { font-family: monospace; background: #1d1d1f; color: #34c759; padding: 16px; border-radius: 10px; margin-top: 16px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
+    .error { color: #ff453a; }
+    .success { color: #34c759; }
+  </style>
+</head>
+<body>
+  <h1>🏯 HiraQuest Database Setup</h1>
+  <p>This page seeds all Hiragana character sets into your Firestore database. Run this once, then delete this file.</p>
+
+  <div class="step">
+    <strong>Step 1:</strong> Make sure you are logged into HiraQuest in another tab first.
+  </div>
+
+  <div class="step">
+    <strong>Step 2:</strong> Click the button below.
+    <br><br>
+    <button id="seedBtn" onclick="seedData()">🌱 Seed Hiragana Data</button>
+  </div>
+
+  <div class="log" id="log">Waiting...</div>
+
+  <script type="module">
+    import { firebaseConfig } from './js/config.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+    import { getFirestore, collection, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const log = document.getElementById('log');
+    const btn = document.getElementById('seedBtn');
+
+    function write(msg, type='info') {
+      const color = type === 'error' ? 'color:#ff453a' : (type === 'success' ? 'color:#34c759' : '');
+      log.innerHTML += `<div style="${color}">${msg}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        write('❌ You must be logged into HiraQuest first! Open the main site and sign in, then refresh this page.', 'error');
+        btn.disabled = true;
+      } else {
+        write(`✅ Logged in as: ${user.email}`);
+      }
+    });
+
+    window.seedData = async () => {
+      btn.disabled = true;
+      write('Starting seed...');
+
+      const sets = [
+        { setId: "hiragana_a_row", type: "hiragana", category: "basic", name: "あ行 (A Row)", description: "The 5 basic vowels", order: 1, isActive: true, characters: [{char:"あ",romaji:"a"},{char:"い",romaji:"i"},{char:"う",romaji:"u"},{char:"え",romaji:"e"},{char:"お",romaji:"o"}] },
+        { setId: "hiragana_ka_row", type: "hiragana", category: "basic", name: "か行 (K Row)", description: "K-sound consonants", order: 2, isActive: true, characters: [{char:"か",romaji:"ka"},{char:"き",romaji:"ki"},{char:"く",romaji:"ku"},{char:"け",romaji:"ke"},{char:"こ",romaji:"ko"}] },
+        { setId: "hiragana_sa_row", type: "hiragana", category: "basic", name: "さ行 (S Row)", description: "S-sound consonants", order: 3, isActive: true, characters: [{char:"さ",romaji:"sa"},{char:"し",romaji:"shi"},{char:"す",romaji:"su"},{char:"せ",romaji:"se"},{char:"そ",romaji:"so"}] },
+        { setId: "hiragana_ta_row", type: "hiragana", category: "basic", name: "た行 (T Row)", description: "T-sound consonants", order: 4, isActive: true, characters: [{char:"た",romaji:"ta"},{char:"ち",romaji:"chi"},{char:"つ",romaji:"tsu"},{char:"て",romaji:"te"},{char:"と",romaji:"to"}] },
+        { setId: "hiragana_na_row", type: "hiragana", category: "basic", name: "な行 (N Row)", description: "N-sound consonants", order: 5, isActive: true, characters: [{char:"な",romaji:"na"},{char:"に",romaji:"ni"},{char:"ぬ",romaji:"nu"},{char:"ね",romaji:"ne"},{char:"の",romaji:"no"}] },
+        { setId: "hiragana_ha_row", type: "hiragana", category: "basic", name: "は行 (H Row)", description: "H-sound consonants", order: 6, isActive: true, characters: [{char:"は",romaji:"ha"},{char:"ひ",romaji:"hi"},{char:"ふ",romaji:"fu"},{char:"へ",romaji:"he"},{char:"ほ",romaji:"ho"}] },
+        { setId: "hiragana_ma_row", type: "hiragana", category: "basic", name: "ま行 (M Row)", description: "M-sound consonants", order: 7, isActive: true, characters: [{char:"ま",romaji:"ma"},{char:"み",romaji:"mi"},{char:"む",romaji:"mu"},{char:"め",romaji:"me"},{char:"も",romaji:"mo"}] },
+        { setId: "hiragana_ra_row", type: "hiragana", category: "basic", name: "ら行 (R Row)", description: "R-sound consonants", order: 8, isActive: true, characters: [{char:"ら",romaji:"ra"},{char:"り",romaji:"ri"},{char:"る",romaji:"ru"},{char:"れ",romaji:"re"},{char:"ろ",romaji:"ro"}] },
+        { setId: "hiragana_ya_row", type: "hiragana", category: "basic", name: "や行 (Y Row)", description: "Y-sound consonants", order: 9, isActive: true, characters: [{char:"や",romaji:"ya"},{char:"ゆ",romaji:"yu"},{char:"よ",romaji:"yo"}] },
+        { setId: "hiragana_wa_n", type: "hiragana", category: "basic", name: "わ・を・ん (W + N)", description: "W sounds and N", order: 10, isActive: true, characters: [{char:"わ",romaji:"wa"},{char:"を",romaji:"wo"},{char:"ん",romaji:"n"}] }
+      ];
+
+      try {
+        for (const set of sets) {
+          const { setId, ...data } = set;
+          await setDoc(doc(collection(db, 'content_sets'), setId), { ...data, createdAt: serverTimestamp() });
+          write(`✅ Created: ${set.name}`, 'success');
+        }
+        write('\n🎉 All done! You can now close this page and use HiraQuest normally.', 'success');
+        write('💡 Tip: Delete seed.html from your repo now.', 'success');
+      } catch (err) {
+        write(`\n❌ Error: ${err.message}`, 'error');
+        btn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>
