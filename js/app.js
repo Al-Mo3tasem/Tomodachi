@@ -3,7 +3,7 @@
 // Phase 1: Auth, Dashboard, Character Select, Presence
 // ============================================
 
-import { firebaseConfig, APP_CONFIG } from './config.js';
+import { firebaseConfig, APP_CONFIG } from './config.js?v=20260521-2';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
