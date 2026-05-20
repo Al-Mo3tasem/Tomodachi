@@ -49,6 +49,15 @@
       log.scrollTop = log.scrollHeight;
     }
 
+    function withTimeout(promise, label, ms = 15000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+          setTimeout(() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)} seconds.`)), ms);
+        })
+      ]);
+    }
+
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         write('❌ You must be logged into HiraQuest first! Open the main site and sign in, then refresh this page.', 'error');
@@ -78,7 +87,11 @@
       try {
         for (const set of sets) {
           const { setId, ...data } = set;
-          await setDoc(doc(collection(db, 'content_sets'), setId), { ...data, createdAt: serverTimestamp() });
+          write(`Writing: ${set.name}...`);
+          await withTimeout(
+            setDoc(doc(collection(db, 'content_sets'), setId), { ...data, createdAt: serverTimestamp() }),
+            `Writing ${set.name}`
+          );
           write(`✅ Created: ${set.name}`, 'success');
         }
         write('\n🎉 All done! You can now close this page and use HiraQuest normally.', 'success');

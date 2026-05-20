@@ -86,6 +86,15 @@ function setTheme(theme) {
   if (toggle) toggle.checked = theme === 'dark';
 }
 
+function withTimeout(promise, label, ms = 12000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)} seconds.`)), ms);
+    })
+  ]);
+}
+
 // ============================================
 // AUTHENTICATION
 // ============================================
@@ -231,7 +240,9 @@ function initPresence() {
     displayName: state.userData?.displayName,
     status: 'online',
     lastSeen: serverTimestamp()
-  }, { merge: true });
+  }, { merge: true }).catch(err => {
+    console.error('Presence update failed:', err);
+  });
 
   window.addEventListener('beforeunload', () => {
     setDoc(doc(db, 'presence', state.user.uid), {
@@ -247,6 +258,8 @@ function initPresence() {
         renderFriend();
       }
     });
+  }, (err) => {
+    console.error('Presence listener failed:', err);
   });
 }
 
@@ -291,7 +304,7 @@ function renderFriend() {
 
 async function loadContentSets() {
   try {
-    const snap = await getDocs(collection(db, 'content_sets'));
+    const snap = await withTimeout(getDocs(collection(db, 'content_sets')), 'Loading Hiragana sets', 12000);
     state.contentSets = [];
     snap.forEach(docSnap => {
       state.contentSets.push({ id: docSnap.id, ...docSnap.data() });
@@ -639,36 +652,59 @@ async function init() {
 
   onAuthStateChanged(auth, async (user) => {
     showLoading(true);
-    
-    if (user) {
-      state.user = user;
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (userDoc.exists()) {
-        state.userData = userDoc.data();
+
+    try {
+      if (user) {
+        state.user = user;
+
+        try {
+          const userDoc = await withTimeout(getDoc(doc(db, 'users', user.uid)), 'Loading your profile', 12000);
+          if (userDoc.exists()) {
+            state.userData = userDoc.data();
+          } else {
+            state.userData = {
+              displayName: user.displayName || user.email?.split('@')[0] || 'Player',
+              username: user.email?.split('@')[0] || 'player',
+              avatarEmoji: '🌸'
+            };
+            toast('Profile document is missing. Using a temporary local profile.', 'warning', 6000);
+          }
+        } catch (err) {
+          console.error('Profile load failed:', err);
+          state.userData = {
+            displayName: user.displayName || user.email?.split('@')[0] || 'Player',
+            username: user.email?.split('@')[0] || 'player',
+            avatarEmoji: '🌸'
+          };
+          toast(`Could not load your profile: ${err.message}`, 'error', 8000);
+        }
+
+        $('screen-auth').classList.remove('active');
+        const appEl = $('app');
+        if (appEl) appEl.classList.remove('hidden');
+
+        initPresence();
+        await loadContentSets();
+        goHome();
+        toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
+
+      } else {
+        state.user = null;
+        state.userData = null;
+        if (presenceUnsub) presenceUnsub();
+
+        const appEl = $('app');
+        if (appEl) appEl.classList.add('hidden');
+        const authScreen = $('screen-auth');
+        if (authScreen) authScreen.classList.add('active');
+        showScreen('screen-auth');
       }
-      
-      $('screen-auth').classList.remove('active');
-      const appEl = $('app');
-      if (appEl) appEl.classList.remove('hidden');
-      
-      initPresence();
-      await loadContentSets();
-      goHome();
-      toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
-      
-    } else {
-      state.user = null;
-      state.userData = null;
-      if (presenceUnsub) presenceUnsub();
-      
-      const appEl = $('app');
-      if (appEl) appEl.classList.add('hidden');
-      const authScreen = $('screen-auth');
-      if (authScreen) authScreen.classList.add('active');
-      showScreen('screen-auth');
+    } catch (err) {
+      console.error('App startup failed:', err);
+      toast(`App startup failed: ${err.message}`, 'error', 10000);
+    } finally {
+      showLoading(false);
     }
-    
-    showLoading(false);
   });
 }
 
