@@ -99,7 +99,7 @@ function withTimeout(promise, label, ms = 12000) {
 // AUTHENTICATION
 // ============================================
 
-function formatAuthError(code) {
+function formatAuthError(code, fallbackMessage = '') {
   const map = {
     'auth/invalid-email': 'Invalid email address.',
     'auth/user-disabled': 'This account has been disabled.',
@@ -108,9 +108,22 @@ function formatAuthError(code) {
     'auth/email-already-in-use': 'An account already exists with this email.',
     'auth/weak-password': 'Password must be at least 6 characters.',
     'auth/invalid-credential': 'Invalid email or password.',
-    'auth/too-many-requests': 'Too many attempts. Please try again later.'
+    'auth/invalid-login-credentials': 'Invalid email or password.',
+    'auth/too-many-requests': 'Too many attempts. Please try again later.',
+    'auth/network-request-failed': 'Network error. Check your connection and try again.',
+    'auth/operation-not-allowed': 'Email/password login is not enabled in Firebase Authentication.',
+    'auth/api-key-not-valid': 'Firebase rejected this API key. Check the deployed config.',
+    'auth/app-not-authorized': 'This domain is not authorized for this Firebase app.',
+    'auth/unauthorized-domain': 'This domain is not authorized in Firebase Authentication settings.'
   };
-  return map[code] || `Authentication failed (${code}). Please try again.`;
+  if (code && map[code]) return map[code];
+  if (fallbackMessage) return fallbackMessage;
+  return code ? `Authentication failed (${code}). Please try again.` : 'Authentication failed. Please try again.';
+}
+
+function showFormError(errorEl, message) {
+  if (errorEl) errorEl.textContent = message;
+  toast(message, 'error', 7000);
 }
 
 async function handleLogin(e) {
@@ -120,11 +133,17 @@ async function handleLogin(e) {
   const errorEl = $('login-error');
   if (errorEl) errorEl.textContent = '';
 
+  if (!email || !password) {
+    showFormError(errorEl, 'Enter both email and password.');
+    return;
+  }
+
   try {
     showLoading(true);
-    await signInWithEmailAndPassword(auth, email, password);
+    await withTimeout(signInWithEmailAndPassword(auth, email, password), 'Signing in', 15000);
+    toast('Signed in. Loading dashboard...', 'success');
   } catch (err) {
-    if (errorEl) errorEl.textContent = formatAuthError(err.code);
+    showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Login error:', err);
   } finally {
     showLoading(false);
@@ -141,7 +160,12 @@ async function handleRegister(e) {
   if (errorEl) errorEl.textContent = '';
 
   if (!/^[a-z0-9_]+$/.test(username)) {
-    if (errorEl) errorEl.textContent = 'Username must be lowercase letters, numbers, or underscores only.';
+    showFormError(errorEl, 'Username must be lowercase letters, numbers, or underscores only.');
+    return;
+  }
+
+  if (!displayName || !email || !password) {
+    showFormError(errorEl, 'Fill in every field before creating an account.');
     return;
   }
 
@@ -149,28 +173,28 @@ async function handleRegister(e) {
     showLoading(true);
 
     // Check 2-user limit
-    const usersSnap = await getDocs(collection(db, 'users'));
+    const usersSnap = await withTimeout(getDocs(collection(db, 'users')), 'Checking account limit', 15000);
     if (usersSnap.size >= APP_CONFIG.maxUsers) {
-      if (errorEl) errorEl.textContent = 'HiraQuest is full! Only 2 accounts are allowed.';
+      showFormError(errorEl, 'HiraQuest is full! Only 2 accounts are allowed.');
       showLoading(false);
       return;
     }
 
     // Check username uniqueness
     const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
-    const usernameSnap = await getDocs(usernameQuery);
+    const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
     if (!usernameSnap.empty) {
-      if (errorEl) errorEl.textContent = 'Username already taken.';
+      showFormError(errorEl, 'Username already taken.');
       showLoading(false);
       return;
     }
 
     // Create auth account
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(cred.user, { displayName });
+    const cred = await withTimeout(createUserWithEmailAndPassword(auth, email, password), 'Creating Firebase Auth account', 15000);
+    await withTimeout(updateProfile(cred.user, { displayName }), 'Saving display name', 15000);
 
     // Create user document
-    await setDoc(doc(db, 'users', cred.user.uid), {
+    await withTimeout(setDoc(doc(db, 'users', cred.user.uid), {
       uid: cred.user.uid,
       username,
       displayName,
@@ -178,10 +202,10 @@ async function handleRegister(e) {
       avatarEmoji: '🌸',
       createdAt: serverTimestamp(),
       status: 'offline'
-    });
+    }), 'Creating user profile', 15000);
 
     // Create stats document
-    await setDoc(doc(db, 'stats', cred.user.uid), {
+    await withTimeout(setDoc(doc(db, 'stats', cred.user.uid), {
       userId: cred.user.uid,
       totalGames: 0,
       duelsWon: 0,
@@ -190,12 +214,12 @@ async function handleRegister(e) {
       highestCoopScore: 0,
       charactersMastered: [],
       createdAt: serverTimestamp()
-    });
+    }), 'Creating stats profile', 15000);
 
     toast('Account created! Welcome to HiraQuest.', 'success');
 
   } catch (err) {
-    if (errorEl) errorEl.textContent = formatAuthError(err.code);
+    showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Register error:', err);
   } finally {
     showLoading(false);
