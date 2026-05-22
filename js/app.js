@@ -1,28 +1,33 @@
 // ============================================
 // HiraQuest — Application Orchestrator
-// Phase 2.1: Auth, Dashboard, Character Select, Zen (Read/Listen),
-// Survival Rush, Leaderboards, Settings, Presence, Progress Reset.
+// Phase 3: Auth, Dashboard, Character Select, Zen, Survival Rush,
+// Duel Mode (real-time VS), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260522b';
+import { APP_CONFIG } from './config.js?v=20260523';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core.js?v=20260522b';
+} from './core.js?v=20260523';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './firebase.js?v=20260522b';
+} from './firebase.js?v=20260523';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './game.js?v=20260522b';
+} from './game.js?v=20260523';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './leaderboard.js?v=20260522b';
-import { isSpeechSupported } from './audio.js?v=20260522b';
+} from './leaderboard.js?v=20260523';
+import { isSpeechSupported } from './audio.js?v=20260523';
+import {
+  initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
+  acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
+  playAgainDuel, resolveStall, cleanupDuel
+} from './duel.js?v=20260523';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
@@ -217,6 +222,8 @@ async function handleRegister(e) {
 async function logout() {
   try {
     cleanupGame();
+    cleanupDuel();
+    stopDuelInvites();
     if (state.user) {
       await setDoc(doc(db, 'presence', state.user.uid), {
         status: 'offline',
@@ -309,14 +316,9 @@ function renderFriend() {
       sessionStorage.setItem('last-online-toast', now.toString());
     }
   }
-}
 
-function inviteFriend() {
-  if (!state.friendPresence || state.friendPresence.status === 'offline') {
-    toast('Your friend is not online right now.', 'warning');
-    return;
-  }
-  toast('Live invites arrive with Duel Mode in Phase 3!', 'info', 4000);
+  // Let the duel engine react to opponent disconnects.
+  duelOnFriendPresence(p);
 }
 
 // ============================================
@@ -409,6 +411,7 @@ async function loadDashboard() {
     const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
     set('stat-total', stats.totalGames || 0);
     set('stat-best', (stats.highestSoloScore || 0).toLocaleString());
+    set('stat-record', `${stats.duelsWon || 0}–${stats.duelsLost || 0}`);
     set('stat-mastered', `${masteredCount}/${total}`);
 
     const pct = Math.round((masteredCount / total) * 100);
@@ -456,15 +459,25 @@ async function loadHistory() {
       const date = new Date(toMillis(data.createdAt)).toLocaleDateString();
       const item = document.createElement('div');
       item.className = 'history-item';
+
+      let metaHtml;
+      if (type === 'duel') {
+        const iWon = data.winnerId === state.user.uid;
+        const result = data.isDraw ? 'Draw' : (iWon ? 'Won' : 'Lost');
+        const cls = data.isDraw ? '' : (iWon ? 'res-win' : 'res-loss');
+        metaHtml = `<div class="history-score ${cls}">${result}</div>
+                    <div class="history-sub">vs ${escapeText(opponentNameFrom(data))}</div>`;
+      } else {
+        metaHtml = `<div class="history-score">${(data.score || 0).toLocaleString()} pts</div>
+                    <div class="history-sub">${Math.round((data.accuracy || 0) * 100)}% accuracy</div>`;
+      }
+
       item.innerHTML = `
         <div>
           <div class="history-mode">${MODE_EMOJI[type] || '🎮'} ${MODE_NAMES[type] || type}</div>
           <div class="history-date">${date}</div>
         </div>
-        <div class="history-meta">
-          <div class="history-score">${(data.score || 0).toLocaleString()} pts</div>
-          <div class="history-sub">${Math.round((data.accuracy || 0) * 100)}% accuracy</div>
-        </div>
+        <div class="history-meta">${metaHtml}</div>
       `;
       list.appendChild(item);
     });
@@ -472,6 +485,18 @@ async function loadHistory() {
     console.error('History load error:', err);
     list.innerHTML = '<p class="empty-state">Could not load history.</p>';
   }
+}
+
+function opponentNameFrom(data) {
+  const players = data.players || {};
+  const oppId = (data.playerIds || []).find(id => id !== state.user.uid);
+  return players[oppId]?.displayName || 'opponent';
+}
+
+function escapeText(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str ?? '');
+  return div.innerHTML;
 }
 
 function toMillis(ts) {
@@ -502,7 +527,10 @@ function updateSelectionUI() {
 
   if (countEl) countEl.textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
   if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}×`;
-  if (startBtn) startBtn.disabled = totalChars === 0;
+  if (startBtn) {
+    const min = state.currentGameType === 'duel' ? 4 : 1;
+    startBtn.disabled = totalChars < min;
+  }
 }
 
 function toggleSet(setId) {
@@ -560,7 +588,6 @@ function setPractice(type) {
   state.practiceType = type;
   localStorage.setItem('hiraquest-practice', type);
   syncSegmented('#seg-practice', 'practice', type);
-  // Listening practice always uses multiple choice — hide the input row.
   const inputRow = $('option-input');
   if (inputRow) inputRow.style.display = type === 'listen' ? 'none' : 'flex';
 }
@@ -577,38 +604,73 @@ function setZenDuration(seconds) {
   syncSegmented('#seg-duration', 'duration', seconds);
 }
 
+function setWinCondition(wc) {
+  state.winCondition = wc;
+  localStorage.setItem('hiraquest-wincon', wc);
+  syncSegmented('#seg-wincon', 'wincon', wc);
+}
+
+function setDuelInput(method) {
+  state.duelInput = method;
+  localStorage.setItem('hiraquest-duelinput', method);
+  syncSegmented('#seg-input', 'input', method);
+}
+
+// The shared #seg-input control feeds Zen or Duel depending on context.
+function handleInputSeg(method) {
+  if (state.currentGameType === 'duel') setDuelInput(method);
+  else setInputMethod(method);
+}
+
 // ============================================
 // NAVIGATION
 // ============================================
 
 function goHome() {
   cleanupGame();
+  cleanupDuel();
   state.returnScreen = null;
   showScreen('screen-dashboard');
   loadDashboard();
   loadHistory();
 }
 
+function navBrandClick() {
+  if (isInDuel()) { exitDuel(); return; }
+  goHome();
+}
+
 function goToSelect(gameType) {
   state.currentGameType = gameType;
 
   const subEl = $('select-subtitle');
-  if (subEl) subEl.textContent = `Set up your ${MODE_NAMES[gameType] || gameType} game`;
-
   const infoEl = $('select-options-info');
   const practiceRow = $('option-practice');
   const inputRow = $('option-input');
   const durationRow = $('option-duration');
+  const winconRow = $('option-wincon');
+  const startBtn = $('btn-start');
+
+  const show = (el, on) => { if (el) el.style.display = on ? 'flex' : 'none'; };
 
   if (gameType === 'survival') {
+    if (subEl) subEl.textContent = 'Set up your Survival Rush game';
     if (infoEl) infoEl.textContent = '🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.';
-    if (practiceRow) practiceRow.style.display = 'none';
-    if (inputRow) inputRow.style.display = 'none';
-    if (durationRow) durationRow.style.display = 'none';
+    show(practiceRow, false); show(inputRow, false); show(durationRow, false); show(winconRow, false);
+    if (startBtn) startBtn.textContent = 'Start Game';
+  } else if (gameType === 'duel') {
+    if (subEl) subEl.textContent = 'Set up your Duel — you are the host';
+    if (infoEl) infoEl.textContent = '⚔️ Real-time VS. You pick the characters and rules; both players race the same cards. Fastest correct answer takes the round. Pick at least 4 characters.';
+    show(practiceRow, false); show(durationRow, false);
+    show(winconRow, true); show(inputRow, true);
+    setWinCondition(state.winCondition);
+    setDuelInput(state.duelInput);
+    if (startBtn) startBtn.textContent = 'Send Challenge';
   } else {
+    // Zen
+    if (subEl) subEl.textContent = 'Set up your Zen Mode game';
     if (infoEl) infoEl.textContent = '🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.';
-    if (practiceRow) practiceRow.style.display = 'flex';
-    if (durationRow) durationRow.style.display = 'flex';
+    show(practiceRow, true); show(durationRow, true); show(winconRow, false);
 
     const listenBtn = document.querySelector('#seg-practice .seg-btn[data-practice="listen"]');
     if (listenBtn) {
@@ -624,6 +686,7 @@ function goToSelect(gameType) {
     setPractice(state.practiceType);
     setInputMethod(state.inputMethod);
     setZenDuration(state.zenDuration);
+    if (startBtn) startBtn.textContent = 'Start Game';
   }
 
   showScreen('screen-select');
@@ -632,19 +695,26 @@ function goToSelect(gameType) {
 }
 
 function handleModeClick(mode) {
-  if (mode === 'duel') {
-    toast('⚔️ Duel Mode arrives in Phase 3!', 'info', 4000);
-    return;
-  }
   if (mode === 'coop') {
     toast('🤝 Sync Match arrives in Phase 4!', 'info', 4000);
     return;
+  }
+  if (mode === 'duel') {
+    const fp = state.friendPresence;
+    if (!fp || fp.status === 'offline') {
+      toast('Your friend needs to be online to duel.', 'warning', 4000);
+      return;
+    }
   }
   goToSelect(mode);
 }
 
 function handleStartGame() {
-  startGame(state.currentGameType);
+  if (state.currentGameType === 'duel') {
+    sendChallenge();
+  } else {
+    startGame(state.currentGameType);
+  }
 }
 
 // ============================================
@@ -673,6 +743,10 @@ function renderAvatarPicker() {
 }
 
 function openSettings() {
+  if (isInDuel()) {
+    toast('Finish your duel before opening Settings.', 'info', 3500);
+    return;
+  }
   state.returnScreen = currentScreen() || 'screen-dashboard';
   if (state.returnScreen === 'screen-game' && isActive()) {
     pauseGame();
@@ -818,7 +892,6 @@ async function resetProgress() {
   try {
     showLoading(true);
 
-    // 1. Overwrite the stats document (no merge — truly clears accuracy map).
     await setDoc(doc(db, 'stats', state.user.uid), {
       userId: state.user.uid,
       totalGames: 0,
@@ -832,7 +905,6 @@ async function resetProgress() {
       updatedAt: serverTimestamp()
     });
 
-    // 2. Delete this player's solo game sessions.
     const q = query(
       collection(db, 'game_sessions'),
       where('playerIds', 'array-contains', state.user.uid)
@@ -849,7 +921,6 @@ async function resetProgress() {
       }
     }
 
-    // 3. Remove this player from every leaderboard bracket.
     await removeUserFromLeaderboards(state.user.uid);
 
     toast('Progress reset — fresh start!', 'success', 5000);
@@ -876,7 +947,7 @@ function attachListeners() {
   $('form-register')?.addEventListener('submit', handleRegister);
 
   // Nav
-  $('nav-brand')?.addEventListener('click', goHome);
+  $('nav-brand')?.addEventListener('click', navBrandClick);
   $('btn-settings')?.addEventListener('click', openSettings);
   $('btn-logout')?.addEventListener('click', logout);
 
@@ -894,10 +965,13 @@ function attachListeners() {
     btn.addEventListener('click', () => setPractice(btn.dataset.practice));
   });
   document.querySelectorAll('#seg-input .seg-btn').forEach(btn => {
-    btn.addEventListener('click', () => setInputMethod(btn.dataset.input));
+    btn.addEventListener('click', () => handleInputSeg(btn.dataset.input));
   });
   document.querySelectorAll('#seg-duration .seg-btn').forEach(btn => {
     btn.addEventListener('click', () => setZenDuration(Number(btn.dataset.duration)));
+  });
+  document.querySelectorAll('#seg-wincon .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => setWinCondition(btn.dataset.wincon));
   });
 
   // Leaderboard
@@ -916,18 +990,28 @@ function attachListeners() {
   $('reset-input')?.addEventListener('input', onResetInput);
   $('btn-reset-confirm')?.addEventListener('click', resetProgress);
 
-  // Friend
-  $('btn-invite')?.addEventListener('click', inviteFriend);
+  // Friend bar duel button
+  $('btn-invite')?.addEventListener('click', () => handleModeClick('duel'));
 
-  // Game screen
+  // Solo game screen
   $('game-exit')?.addEventListener('click', requestExit);
   $('game-speak')?.addEventListener('click', speakCurrent);
   $('pause-resume')?.addEventListener('click', resumeFromPause);
   $('results-again')?.addEventListener('click', playAgain);
   $('results-home')?.addEventListener('click', goHome);
 
-  // Internal navigation event (dispatched by the game engine)
+  // Duel
+  $('invite-accept')?.addEventListener('click', acceptInvite);
+  $('invite-decline')?.addEventListener('click', declineInvite);
+  $('lobby-cancel')?.addEventListener('click', cancelChallenge);
+  $('duel-exit')?.addEventListener('click', exitDuel);
+  $('duel-result-home')?.addEventListener('click', exitDuel);
+  $('duel-result-rematch')?.addEventListener('click', playAgainDuel);
+  $('duel-stall-leave')?.addEventListener('click', resolveStall);
+
+  // Internal navigation events
   document.addEventListener('hq:gohome', goHome);
+  document.addEventListener('hq:duel-rematch', () => sendChallenge());
 }
 
 // ============================================
@@ -958,9 +1042,12 @@ async function init() {
         initPresence();
         await loadContentSets();
         goHome();
+        initDuelInvites();
         toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
       } else {
         cleanupGame();
+        cleanupDuel();
+        stopDuelInvites();
         state.user = null;
         state.userData = null;
         if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }

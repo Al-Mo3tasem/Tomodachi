@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260522b">
+  <link rel="stylesheet" href="css/style.css?v=20260523">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -112,7 +112,7 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-secondary btn-sm" id="btn-invite" disabled>Invite</button>
+          <button class="btn btn-secondary btn-sm" id="btn-invite" disabled>Duel</button>
         </div>
 
         <div class="dashboard-grid">
@@ -133,6 +133,10 @@
               <div class="stat-box">
                 <div class="stat-value" id="stat-best">0</div>
                 <div class="stat-label">Best Score</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-value" id="stat-record">0–0</div>
+                <div class="stat-label">Duel W–L</div>
               </div>
               <div class="stat-box">
                 <div class="stat-value" id="stat-mastered">0</div>
@@ -168,13 +172,13 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn mode-btn-soon" data-mode="duel">
+              <button class="mode-btn" data-mode="duel">
                 <span class="mode-emoji">⚔️</span>
                 <div class="mode-details">
                   <div class="mode-name">Duel Mode</div>
-                  <div class="mode-desc">Challenge your friend</div>
+                  <div class="mode-desc">Real-time VS your friend</div>
                 </div>
-                <span class="mode-tag">Phase 3</span>
+                <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn mode-btn-soon" data-mode="coop">
                 <span class="mode-emoji">🤝</span>
@@ -224,6 +228,13 @@
             <div class="segmented" id="seg-practice">
               <button type="button" class="seg-btn" data-practice="read">👁️ Read</button>
               <button type="button" class="seg-btn" data-practice="listen">👂 Listen</button>
+            </div>
+          </div>
+          <div class="option-row" id="option-wincon">
+            <span class="option-label">Win Condition</span>
+            <div class="segmented" id="seg-wincon">
+              <button type="button" class="seg-btn" data-wincon="first_to_10">🏁 First to 10</button>
+              <button type="button" class="seg-btn" data-wincon="rounds_20">🔟 20 Rounds</button>
             </div>
           </div>
           <div class="option-row" id="option-input">
@@ -355,7 +366,7 @@
             <h3 class="settings-section-title danger-title">Danger Zone</h3>
             <p class="danger-desc">
               Reset all your progress — games played, scores, character mastery,
-              and leaderboard entries. This cannot be undone.
+              duel record, and leaderboard entries. This cannot be undone.
             </p>
             <button type="button" class="btn btn-danger btn-sm" id="btn-reset-start">Reset My Progress</button>
             <div class="reset-confirm" id="reset-confirm" hidden>
@@ -375,22 +386,17 @@
       </div>
     </section>
 
-    <!-- ========== GAME SCREEN ========== -->
+    <!-- ========== GAME SCREEN (Zen / Survival) ========== -->
     <section id="screen-game" class="screen">
       <div class="game-shell" id="game-shell">
-        <!-- HUD -->
         <div class="game-hud">
           <button class="icon-btn" id="game-exit" title="Exit game" aria-label="Exit game">✕</button>
           <div class="game-mode-label" id="game-mode-label">Game</div>
           <div class="game-hud-stats" id="game-hud-stats"></div>
         </div>
-
-        <!-- Timer (Survival only) -->
         <div class="game-timer" id="game-timer">
           <div class="game-timer-fill" id="game-timer-fill"></div>
         </div>
-
-        <!-- Stage -->
         <div class="game-stage">
           <div class="game-streak" id="game-streak"></div>
           <div class="game-card" id="game-card">
@@ -399,12 +405,9 @@
           </div>
           <div class="game-feedback" id="game-feedback"></div>
         </div>
-
-        <!-- Input -->
         <div class="game-input-area" id="game-input-area"></div>
       </div>
 
-      <!-- Pause Overlay -->
       <div class="pause-overlay" id="pause-overlay">
         <div class="pause-card">
           <div class="pause-emoji">⏸️</div>
@@ -414,7 +417,6 @@
         </div>
       </div>
 
-      <!-- Results Overlay -->
       <div class="results-overlay" id="results-overlay">
         <div class="results-card">
           <div class="results-emoji" id="results-emoji">🎉</div>
@@ -433,12 +435,116 @@
       </div>
     </section>
 
+    <!-- ========== DUEL LOBBY ========== -->
+    <section id="screen-duel-lobby" class="screen">
+      <div class="container">
+        <header class="page-header">
+          <h1 class="page-title">⚔️ Duel Lobby</h1>
+        </header>
+        <div class="lobby-card card">
+          <div class="spinner lobby-spinner"></div>
+          <h2 class="lobby-status" id="lobby-status">Waiting for opponent…</h2>
+          <p class="text-secondary" id="lobby-detail"></p>
+          <button class="btn btn-secondary" id="lobby-cancel">Cancel Challenge</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DUEL SCREEN ========== -->
+    <section id="screen-duel" class="screen">
+      <div class="duel-shell">
+        <div class="duel-topbar">
+          <button class="icon-btn" id="duel-exit" title="Forfeit" aria-label="Forfeit duel">✕</button>
+          <div class="duel-round-label" id="duel-round-label">Round 1</div>
+          <div class="duel-topbar-spacer"></div>
+        </div>
+
+        <div class="duel-hud">
+          <div class="duel-player duel-player-self" id="duel-self">
+            <div class="duel-p-avatar" id="duel-self-avatar">🌸</div>
+            <div class="duel-p-info">
+              <div class="duel-p-name" id="duel-self-name">You</div>
+              <div class="duel-p-won" id="duel-self-won">🏆 0</div>
+            </div>
+            <div class="duel-p-score" id="duel-self-score">0</div>
+          </div>
+          <div class="duel-vs-badge">VS</div>
+          <div class="duel-player duel-player-opp" id="duel-opp">
+            <div class="duel-p-score" id="duel-opp-score">0</div>
+            <div class="duel-p-info">
+              <div class="duel-p-name" id="duel-opp-name">Opponent</div>
+              <div class="duel-p-won" id="duel-opp-won">🏆 0</div>
+            </div>
+            <div class="duel-p-avatar" id="duel-opp-avatar">🎮</div>
+          </div>
+        </div>
+
+        <div class="game-timer duel-timer">
+          <div class="game-timer-fill" id="duel-timer-fill"></div>
+        </div>
+
+        <div class="game-stage">
+          <div class="game-card" id="duel-card">
+            <div class="game-card-char" id="duel-card-char">あ</div>
+          </div>
+          <div class="game-feedback" id="duel-feedback"></div>
+        </div>
+
+        <div class="game-input-area" id="duel-input-area"></div>
+      </div>
+
+      <!-- Countdown overlay -->
+      <div class="duel-overlay" id="duel-countdown">
+        <div class="duel-countdown-num" id="duel-countdown-num">3</div>
+        <p class="duel-countdown-text">Get ready…</p>
+      </div>
+
+      <!-- Stall overlay -->
+      <div class="duel-overlay" id="duel-stall">
+        <div class="pause-card">
+          <div class="pause-emoji">📡</div>
+          <h2 class="pause-title">Opponent unreachable</h2>
+          <p class="pause-desc">Your opponent seems to have disconnected.</p>
+          <button class="btn btn-primary" id="duel-stall-leave">Claim Win &amp; Leave</button>
+        </div>
+      </div>
+
+      <!-- Results overlay -->
+      <div class="results-overlay" id="duel-results">
+        <div class="results-card">
+          <div class="results-emoji" id="duel-result-emoji">🏆</div>
+          <h2 class="results-title" id="duel-result-title">Victory!</h2>
+          <p class="duel-result-detail" id="duel-result-detail"></p>
+          <div class="duel-result-scores" id="duel-result-scores"></div>
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="duel-result-home">Dashboard</button>
+            <button class="btn btn-primary" id="duel-result-rematch">Rematch</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DUEL INVITE MODAL ========== -->
+    <div class="invite-overlay" id="invite-overlay">
+      <div class="invite-card">
+        <div class="invite-avatar" id="invite-avatar">🎮</div>
+        <div class="invite-emoji">⚔️</div>
+        <h2 class="invite-title">Duel Challenge!</h2>
+        <p class="invite-text"><strong id="invite-from">Friend</strong> wants to duel you.</p>
+        <div class="invite-details" id="invite-details"></div>
+        <div class="invite-actions">
+          <button class="btn btn-secondary" id="invite-decline">Decline</button>
+          <button class="btn btn-primary" id="invite-accept">Accept Duel</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260522b"></script>
+  <script type="module" src="js/app.js?v=20260523"></script>
 </body>
 </html>

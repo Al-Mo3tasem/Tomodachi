@@ -193,3 +193,31 @@ scopes each collection and step-by-step console instructions to apply it.
 **Verification:** `node --check` passed on all modules; CSS braces balanced.
 **Open Follow-up:** Apply the updated hardened rules (game_sessions now allows
 participants to delete their own sessions, which powers the reset feature).
+
+## 2026-05-22 — Phase 3: Duel Mode (Real-time VS)
+**Status:** ✅ DONE
+**Scope:** Code / Firebase
+**Summary:** Built real-time head-to-head duels over Firestore in a new module,
+`duel.js`. Architecture: **host-authority** — the host generates the question
+list and is the only client that advances rounds (resolve → reveal → next);
+each client writes only its own answer; both render purely from document
+snapshots. Idempotency comes from local scheduling flags plus a synchronous
+`resolvingRound` guard against the snapshot race where two resolves fire before
+the first write lands.
+- **Invites:** the host challenge targets the friend by `guestId`; the friend's
+  dashboard runs an index-free listener (`where guestId == me`) and shows an
+  accept/decline modal. 3-2-1 countdown, then synchronized rounds.
+- **Scoring:** first correct +100, second correct +50, wrong −50, timeout 0.
+  Win conditions: First-to-10 round wins, or 20 rounds by points.
+- **Resilience:** opponent disconnect is caught by presence (→ forfeit win) and
+  by a 26s stall watchdog; explicit exit forfeits; rematch is one click.
+- Duel results update each player's `duelsWon` / `duelsLost`; the dashboard
+  shows a Duel W–L stat and history rows show Won/Lost vs the opponent.
+**Files / Areas:** `js/duel.js` (new), `js/app.js`, `js/core.js`,
+`js/firebase.js` (deleteDoc/runTransaction surface), `index.html`,
+`css/style.css`, `Firestore_Rules.md`.
+**Verification:** `node --check` passed on all modules; CSS braces balanced.
+Real-time sync needs a two-client play-test on the live deploy.
+**Open Follow-up:** Apply the updated hardened rules — `game_sessions` update
+now also allows the invited `guestId` to join a duel before being added to
+`playerIds`. Phase 4 (Sync Match / Co-op) remains.

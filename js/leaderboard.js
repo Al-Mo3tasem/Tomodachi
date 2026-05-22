@@ -6,8 +6,8 @@
 // the audit source of truth (written separately by game.js).
 // ============================================
 
-import { state, $, showScreen } from './core.js?v=20260522b';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260522b';
+import { state, $, showScreen } from './core.js?v=20260523';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260523';
 
 // Character-count brackets (from the Master Plan scoring spec).
 export const BRACKETS = [5, 10, 15, 25, 46];
