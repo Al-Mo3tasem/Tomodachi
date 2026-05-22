@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260523">
+  <link rel="stylesheet" href="css/style.css?v=20260524">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -100,7 +100,6 @@
           <p class="page-subtitle">Welcome back, <span id="dash-welcome">Player</span></p>
         </header>
 
-        <!-- Friend status bar (compact — only 2 players) -->
         <div class="friend-bar" id="friend-bar">
           <div class="friend-bar-left">
             <div class="friend-bar-avatar" id="friend-avatar">🎮</div>
@@ -139,13 +138,13 @@
                 <div class="stat-label">Duel W–L</div>
               </div>
               <div class="stat-box">
-                <div class="stat-value" id="stat-mastered">0</div>
-                <div class="stat-label">Mastered</div>
+                <div class="stat-value" id="stat-coop">0</div>
+                <div class="stat-label">Co-op Best</div>
               </div>
             </div>
             <div class="mastery-bar-wrap">
               <div class="mastery-bar-head">
-                <span>Hiragana mastery</span>
+                <span>Hiragana mastery <span id="stat-mastered">0/46</span></span>
                 <span id="mastery-percent">0%</span>
               </div>
               <div class="mastery-bar"><div class="mastery-bar-fill" id="mastery-fill"></div></div>
@@ -180,13 +179,13 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn mode-btn-soon" data-mode="coop">
+              <button class="mode-btn" data-mode="coop">
                 <span class="mode-emoji">🤝</span>
                 <div class="mode-details">
                   <div class="mode-name">Sync Match</div>
-                  <div class="mode-desc">Team up together</div>
+                  <div class="mode-desc">Team up — beat the clock together</div>
                 </div>
-                <span class="mode-tag">Phase 4</span>
+                <span class="mode-arrow">→</span>
               </button>
             </div>
           </div>
@@ -220,7 +219,6 @@
           <p class="page-subtitle" id="select-subtitle">Choose which Hiragana to include</p>
         </header>
 
-        <!-- Mode options -->
         <div class="select-options card" id="select-options">
           <div class="select-options-info" id="select-options-info"></div>
           <div class="option-row" id="option-practice">
@@ -255,7 +253,6 @@
         </div>
 
         <div class="select-layout">
-          <!-- Premade Sets -->
           <div class="select-panel">
             <div class="panel-header">
               <h3>Premade Sets</h3>
@@ -263,8 +260,6 @@
             </div>
             <div class="sets-grid" id="sets-grid"></div>
           </div>
-
-          <!-- Custom Grid -->
           <div class="select-panel">
             <div class="panel-header">
               <h3>Custom Pick</h3>
@@ -290,8 +285,9 @@
         <button class="btn btn-ghost back-btn" id="btn-lb-back">← Back to Dashboard</button>
         <header class="page-header">
           <h1 class="page-title">Leaderboard</h1>
-          <p class="page-subtitle">Survival Rush — best scores by set size</p>
+          <p class="page-subtitle">Best scores by game and set size</p>
         </header>
+        <div class="lb-modes" id="lb-modes"></div>
         <div class="lb-brackets" id="lb-brackets"></div>
         <div class="lb-list card" id="lb-list">
           <p class="empty-state">Loading rankings…</p>
@@ -361,7 +357,6 @@
             </label>
           </div>
 
-          <!-- Danger Zone -->
           <div class="settings-section danger-zone">
             <h3 class="settings-section-title danger-title">Danger Zone</h3>
             <p class="danger-desc">
@@ -386,7 +381,7 @@
       </div>
     </section>
 
-    <!-- ========== GAME SCREEN (Zen / Survival) ========== -->
+    <!-- ========== SOLO GAME SCREEN ========== -->
     <section id="screen-game" class="screen">
       <div class="game-shell" id="game-shell">
         <div class="game-hud">
@@ -435,17 +430,17 @@
       </div>
     </section>
 
-    <!-- ========== DUEL LOBBY ========== -->
-    <section id="screen-duel-lobby" class="screen">
+    <!-- ========== MULTIPLAYER LOBBY (Duel + Co-op) ========== -->
+    <section id="screen-lobby" class="screen">
       <div class="container">
         <header class="page-header">
-          <h1 class="page-title">⚔️ Duel Lobby</h1>
+          <h1 class="page-title" id="lobby-title">Lobby</h1>
         </header>
         <div class="lobby-card card">
           <div class="spinner lobby-spinner"></div>
           <h2 class="lobby-status" id="lobby-status">Waiting for opponent…</h2>
           <p class="text-secondary" id="lobby-detail"></p>
-          <button class="btn btn-secondary" id="lobby-cancel">Cancel Challenge</button>
+          <button class="btn btn-secondary" id="lobby-cancel">Cancel</button>
         </div>
       </div>
     </section>
@@ -493,13 +488,11 @@
         <div class="game-input-area" id="duel-input-area"></div>
       </div>
 
-      <!-- Countdown overlay -->
       <div class="duel-overlay" id="duel-countdown">
         <div class="duel-countdown-num" id="duel-countdown-num">3</div>
         <p class="duel-countdown-text">Get ready…</p>
       </div>
 
-      <!-- Stall overlay -->
       <div class="duel-overlay" id="duel-stall">
         <div class="pause-card">
           <div class="pause-emoji">📡</div>
@@ -509,7 +502,6 @@
         </div>
       </div>
 
-      <!-- Results overlay -->
       <div class="results-overlay" id="duel-results">
         <div class="results-card">
           <div class="results-emoji" id="duel-result-emoji">🏆</div>
@@ -524,17 +516,92 @@
       </div>
     </section>
 
-    <!-- ========== DUEL INVITE MODAL ========== -->
+    <!-- ========== SYNC MATCH (CO-OP) SCREEN ========== -->
+    <section id="screen-coop" class="screen">
+      <div class="coop-shell">
+        <div class="duel-topbar">
+          <button class="icon-btn" id="coop-exit" title="Leave match" aria-label="Leave match">✕</button>
+          <div class="duel-round-label">🤝 Sync Match</div>
+          <div class="duel-topbar-spacer"></div>
+        </div>
+
+        <div class="coop-statusbar">
+          <span class="hud-chip coop-time" id="coop-hud-time">⏱ 0:00</span>
+          <span class="hud-chip" id="coop-hud-rounds">Round 1 / 1</span>
+          <span class="hud-chip hud-good" id="coop-hud-cleared">✓ 0</span>
+        </div>
+
+        <div class="game-timer">
+          <div class="game-timer-fill" id="coop-timer-fill"></div>
+        </div>
+
+        <div class="coop-team">
+          <div class="coop-pip" id="coop-pip-self">
+            <span class="coop-pip-avatar">🌸</span>
+            <span class="coop-pip-name">You</span>
+            <span class="coop-pip-state">⏳</span>
+          </div>
+          <div class="coop-team-link">＋</div>
+          <div class="coop-pip" id="coop-pip-opp">
+            <span class="coop-pip-avatar">🎮</span>
+            <span class="coop-pip-name">Friend</span>
+            <span class="coop-pip-state">⏳</span>
+          </div>
+        </div>
+
+        <div class="game-stage">
+          <div class="game-card" id="coop-card">
+            <div class="game-card-char" id="coop-card-char">あ</div>
+          </div>
+          <div class="game-feedback" id="coop-feedback"></div>
+        </div>
+
+        <div class="game-input-area" id="coop-input-area"></div>
+      </div>
+
+      <div class="duel-overlay" id="coop-countdown">
+        <div class="duel-countdown-num" id="coop-countdown-num">3</div>
+        <p class="duel-countdown-text">Sync up…</p>
+      </div>
+
+      <div class="duel-overlay" id="coop-stall">
+        <div class="pause-card">
+          <div class="pause-emoji">📡</div>
+          <h2 class="pause-title">Partner unreachable</h2>
+          <p class="pause-desc">Your teammate seems to have disconnected.</p>
+          <button class="btn btn-primary" id="coop-stall-leave">End Match &amp; Leave</button>
+        </div>
+      </div>
+
+      <div class="results-overlay" id="coop-results">
+        <div class="results-card">
+          <div class="results-emoji" id="coop-result-emoji">🎉</div>
+          <h2 class="results-title" id="coop-result-title">All Cleared!</h2>
+          <div class="results-score-block">
+            <div class="results-score" id="coop-result-score">0</div>
+            <div class="results-score-label">Team Score</div>
+          </div>
+          <p class="duel-result-detail" id="coop-result-detail"></p>
+          <div class="results-stats" id="coop-result-stats"></div>
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="coop-result-home">Dashboard</button>
+            <button class="btn btn-primary" id="coop-result-again">Play Again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== MULTIPLAYER INVITE MODAL ========== -->
     <div class="invite-overlay" id="invite-overlay">
       <div class="invite-card">
         <div class="invite-avatar" id="invite-avatar">🎮</div>
-        <div class="invite-emoji">⚔️</div>
-        <h2 class="invite-title">Duel Challenge!</h2>
-        <p class="invite-text"><strong id="invite-from">Friend</strong> wants to duel you.</p>
+        <div class="invite-emoji" id="invite-emoji">⚔️</div>
+        <h2 class="invite-title" id="invite-title">Duel Challenge!</h2>
+        <p class="invite-text"><strong id="invite-from">Friend</strong> <span id="invite-text-action">wants to duel you.</span></p>
         <div class="invite-details" id="invite-details"></div>
         <div class="invite-actions">
           <button class="btn btn-secondary" id="invite-decline">Decline</button>
-          <button class="btn btn-primary" id="invite-accept">Accept Duel</button>
+          <button class="btn btn-primary" id="invite-accept">Accept</button>
         </div>
       </div>
     </div>
@@ -545,6 +612,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260523"></script>
+  <script type="module" src="js/app.js?v=20260524"></script>
 </body>
 </html>

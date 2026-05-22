@@ -7,7 +7,7 @@
 //  • playSound()  — game sound EFFECTS. Cosmetic; respects the audio toggle.
 // ============================================
 
-import { state } from './core.js?v=20260523';
+import { state } from './core.js?v=20260524';
 
 // ----- Speech (TTS) -----
 let jaVoice = null;

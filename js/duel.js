@@ -14,12 +14,13 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from './core.js?v=20260523';
+} from './core.js?v=20260524';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from './firebase.js?v=20260523';
-import { playSound, unlockAudio } from './audio.js?v=20260523';
+} from './firebase.js?v=20260524';
+import { playSound, unlockAudio } from './audio.js?v=20260524';
+import { acceptCoop, isInCoop } from './coop.js?v=20260524';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -83,12 +84,12 @@ export function initDuelInvites() {
     let invite = null;
     snap.forEach(docSnap => {
       const data = docSnap.data();
-      if (data.gameType !== 'duel' || data.status !== 'waiting') return;
+      if ((data.gameType !== 'duel' && data.gameType !== 'coop') || data.status !== 'waiting') return;
       const age = Date.now() - (data.createdAtMs || 0);
       if (age > INVITE_FRESH_MS) return;
       invite = { id: docSnap.id, data };
     });
-    if (invite && !isInDuel()) {
+    if (invite && !isInDuel() && !isInCoop()) {
       showInvite(invite);
     } else if (!invite) {
       hideInvite();
@@ -105,14 +106,27 @@ function showInvite(invite) {
   pendingInvite = invite;
   const overlay = $('invite-overlay');
   if (!overlay) return;
-  const host = invite.data.players?.[invite.data.hostId] || {};
+  const data = invite.data;
+  const host = data.players?.[data.hostId] || {};
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
-  set('invite-from', host.displayName || host.username || 'Your friend');
-  set('invite-avatar', host.avatarEmoji || '🎮');
-  const s = invite.data.settings || {};
-  const wc = s.winCondition === 'rounds_20' ? '20 rounds' : 'First to 10 wins';
+  const s = data.settings || {};
   const inp = s.inputMethod === 'typing' ? 'Typing' : 'Multiple choice';
-  set('invite-details', `${s.characterCount || '?'} characters · ${wc} · ${inp}`);
+
+  set('invite-avatar', host.avatarEmoji || '🎮');
+  set('invite-from', host.displayName || host.username || 'Your friend');
+
+  if (data.gameType === 'coop') {
+    set('invite-emoji', '🤝');
+    set('invite-title', 'Co-op Invite!');
+    set('invite-text-action', 'wants to team up in Sync Match.');
+    set('invite-details', `${s.characterCount || '?'} characters · Co-op · ${inp}`);
+  } else {
+    const wc = s.winCondition === 'rounds_20' ? '20 rounds' : 'First to 10';
+    set('invite-emoji', '⚔️');
+    set('invite-title', 'Duel Challenge!');
+    set('invite-text-action', 'wants to duel you.');
+    set('invite-details', `${s.characterCount || '?'} characters · ${wc} · ${inp}`);
+  }
   overlay.classList.add('active');
   playSound('start');
 }
@@ -214,6 +228,8 @@ export async function acceptInvite() {
   if (!pendingInvite) return;
   const invite = pendingInvite;
   hideInvite();
+  // Co-op invites are handed off to the co-op module.
+  if (invite.data.gameType === 'coop') { acceptCoop(invite); return; }
   unlockAudio();
   if (d) teardown();
 
@@ -842,6 +858,8 @@ export function playAgainDuel() {
 
 function armStallWatchdog() {
   clearStallWatchdog();
+  // A fresh snapshot proves the connection is alive — clear any stall warning.
+  setOverlay('duel-stall', false);
   if (!d) return;
   d.stallTimer = setTimeout(() => {
     if (d && d.data && (d.data.status === 'active' || d.data.status === 'countdown')) {
@@ -928,9 +946,11 @@ function opponentName() {
 }
 
 function showLobby(statusText, detailText) {
-  showScreen('screen-duel-lobby');
+  showScreen('screen-lobby');
+  const title = $('lobby-title');
   const s = $('lobby-status');
   const det = $('lobby-detail');
+  if (title) title.textContent = '⚔️ Duel Lobby';
   if (s) s.textContent = statusText;
   if (det) det.textContent = detailText || '';
 }

@@ -221,3 +221,32 @@ Real-time sync needs a two-client play-test on the live deploy.
 **Open Follow-up:** Apply the updated hardened rules — `game_sessions` update
 now also allows the invited `guestId` to join a duel before being added to
 `playerIds`. Phase 4 (Sync Match / Co-op) remains.
+
+## 2026-05-22 — Phase 4: Sync Match (Co-op)
+**Status:** ✅ DONE
+**Scope:** Code / Firebase
+**Summary:** Built real-time cooperative play in a new module, `coop.js`.
+Both players see the same card and must each clear it (retries allowed) before
+a shared time budget (5s × character count) runs out; the team shares one
+score. Architecture mirrors the duel host-authority model — the host generates
+the questions, advances a round once both players have cleared it, enforces the
+deadline, and ends the match; clients write only their own per-round progress.
+- **Scoring** (Master Plan formula): `(CorrectRounds×200 + PerfectRounds×100 +
+  TimeBonus) × (CharacterCount/5)`, where a perfect round means neither player
+  missed and TimeBonus rewards finishing the card set before the budget.
+- **Shared invite system:** the dashboard invite listener (in `duel.js`) now
+  matches both `duel` and `coop` sessions and routes accepts to the right
+  module; the invite modal and lobby screen are shared.
+- **Co-op leaderboard:** `leaderboard.js` generalised to per-(gameType+bracket)
+  documents; the full leaderboard screen gained a Survival / Co-op toggle.
+  Co-op entries are team entries (both avatars). Reset clears both.
+- Dashboard gained a "Co-op Best" stat; co-op runs update `highestCoopScore`.
+- Resilience reused from duel: presence-based and stall-watchdog disconnect
+  handling; the stall warning now self-dismisses when a snapshot arrives.
+**Files / Areas:** `js/coop.js` (new), `js/duel.js`, `js/leaderboard.js`,
+`js/app.js`, `js/core.js`, `index.html`, `css/style.css`.
+**Verification:** `node --check` passed on all modules; CSS braces balanced.
+Real-time co-op needs a two-client play-test on the live deploy.
+**Open Follow-up:** No Firestore rule change needed beyond the Phase 3 update
+(co-op reuses `game_sessions` + the `guestId` join rule, and `leaderboards`
+already allows authenticated writes). Phase 5 (Katakana / Words) remains.

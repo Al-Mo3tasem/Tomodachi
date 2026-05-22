@@ -2277,3 +2277,110 @@ body {
   .duel-p-score { font-size: 1.25rem; }
   .duel-countdown-num { font-size: 4.5rem; }
 }
+
+/* ============================================
+   PHASE 4 — Sync Match (Co-op)
+   ============================================ */
+
+.coop-shell {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 61px);
+}
+
+.coop-statusbar {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.coop-time.danger {
+  color: var(--danger);
+  animation: pulseDanger 1s ease-in-out infinite;
+}
+
+/* Team pips */
+.coop-team {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.coop-pip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.coop-pip.cleared {
+  border-color: var(--success);
+  background: rgba(52,199,89,0.12);
+}
+
+.coop-pip.missed { border-color: var(--warning); }
+
+.coop-pip-avatar { font-size: 1.1rem; }
+.coop-pip-name { font-size: 0.8125rem; font-weight: 600; }
+.coop-pip-state { font-size: 0.9375rem; }
+
+.coop-team-link {
+  color: var(--text-tertiary);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Leaderboard mode toggle */
+.lb-modes {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.lb-mode-tab {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lb-mode-tab:hover { color: var(--text-primary); }
+
+.lb-mode-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Co-op leaderboard rows: stacked team avatars */
+.lb-avatars {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.lb-avatars .lb-avatar { margin-left: -8px; }
+.lb-avatars .lb-avatar:first-child { margin-left: 0; }
+
+/* ----- Phase 4 responsive ----- */
+@media (max-width: 768px) {
+  .coop-shell { padding: var(--space-4); }
+  .coop-pip { padding: var(--space-2) var(--space-3); }
+}

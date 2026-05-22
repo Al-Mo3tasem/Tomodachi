@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260523';
+import { APP_CONFIG } from './config.js?v=20260524';
 
 // ----- Global App State -----
 export const state = {
@@ -26,9 +26,10 @@ export const state = {
   inputMethod: localStorage.getItem('hiraquest-input') || 'typing',   // 'typing' | 'multiple'
   zenDuration: Number(localStorage.getItem('hiraquest-duration')) || 60, // seconds
 
-  // Duel options (host picks these for both players — fixed for fairness).
+  // Duel / Co-op options (host picks these for both players — fixed for fairness).
   winCondition: localStorage.getItem('hiraquest-wincon') || 'first_to_10', // 'first_to_10' | 'rounds_20'
   duelInput: localStorage.getItem('hiraquest-duelinput') || 'multiple',    // 'multiple' | 'typing'
+  coopInput: localStorage.getItem('hiraquest-coopinput') || 'multiple',    // 'multiple' | 'typing'
 
   theme: localStorage.getItem('hiraquest-theme') || APP_CONFIG.defaultTheme
 };

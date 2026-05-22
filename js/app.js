@@ -1,33 +1,37 @@
 // ============================================
 // HiraQuest — Application Orchestrator
-// Phase 3: Auth, Dashboard, Character Select, Zen, Survival Rush,
-// Duel Mode (real-time VS), Leaderboards, Settings, Presence.
+// Phase 4: Auth, Dashboard, Character Select, Zen, Survival Rush,
+// Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260523';
+import { APP_CONFIG } from './config.js?v=20260524';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core.js?v=20260523';
+} from './core.js?v=20260524';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './firebase.js?v=20260523';
+} from './firebase.js?v=20260524';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './game.js?v=20260523';
+} from './game.js?v=20260524';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './leaderboard.js?v=20260523';
-import { isSpeechSupported } from './audio.js?v=20260523';
+} from './leaderboard.js?v=20260524';
+import { isSpeechSupported } from './audio.js?v=20260524';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './duel.js?v=20260523';
+} from './duel.js?v=20260524';
+import {
+  sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
+  onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
+} from './coop.js?v=20260524';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
@@ -223,6 +227,7 @@ async function logout() {
   try {
     cleanupGame();
     cleanupDuel();
+    cleanupCoop();
     stopDuelInvites();
     if (state.user) {
       await setDoc(doc(db, 'presence', state.user.uid), {
@@ -317,8 +322,9 @@ function renderFriend() {
     }
   }
 
-  // Let the duel engine react to opponent disconnects.
+  // Let the multiplayer engines react to opponent disconnects.
   duelOnFriendPresence(p);
+  coopOnFriendPresence(p);
 }
 
 // ============================================
@@ -412,6 +418,7 @@ async function loadDashboard() {
     set('stat-total', stats.totalGames || 0);
     set('stat-best', (stats.highestSoloScore || 0).toLocaleString());
     set('stat-record', `${stats.duelsWon || 0}–${stats.duelsLost || 0}`);
+    set('stat-coop', (stats.highestCoopScore || 0).toLocaleString());
     set('stat-mastered', `${masteredCount}/${total}`);
 
     const pct = Math.round((masteredCount / total) * 100);
@@ -467,6 +474,9 @@ async function loadHistory() {
         const cls = data.isDraw ? '' : (iWon ? 'res-win' : 'res-loss');
         metaHtml = `<div class="history-score ${cls}">${result}</div>
                     <div class="history-sub">vs ${escapeText(opponentNameFrom(data))}</div>`;
+      } else if (type === 'coop') {
+        metaHtml = `<div class="history-score">${(data.finalScore || 0).toLocaleString()} pts</div>
+                    <div class="history-sub">${data.endReason === 'cleared' ? 'All cleared' : 'Team run'}</div>`;
       } else {
         metaHtml = `<div class="history-score">${(data.score || 0).toLocaleString()} pts</div>
                     <div class="history-sub">${Math.round((data.accuracy || 0) * 100)}% accuracy</div>`;
@@ -528,8 +538,8 @@ function updateSelectionUI() {
   if (countEl) countEl.textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
   if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}×`;
   if (startBtn) {
-    const min = state.currentGameType === 'duel' ? 4 : 1;
-    startBtn.disabled = totalChars < min;
+    const multiplayer = state.currentGameType === 'duel' || state.currentGameType === 'coop';
+    startBtn.disabled = totalChars < (multiplayer ? 4 : 1);
   }
 }
 
@@ -616,9 +626,16 @@ function setDuelInput(method) {
   syncSegmented('#seg-input', 'input', method);
 }
 
-// The shared #seg-input control feeds Zen or Duel depending on context.
+function setCoopInput(method) {
+  state.coopInput = method;
+  localStorage.setItem('hiraquest-coopinput', method);
+  syncSegmented('#seg-input', 'input', method);
+}
+
+// The shared #seg-input control feeds Zen, Duel, or Co-op by context.
 function handleInputSeg(method) {
   if (state.currentGameType === 'duel') setDuelInput(method);
+  else if (state.currentGameType === 'coop') setCoopInput(method);
   else setInputMethod(method);
 }
 
@@ -629,6 +646,7 @@ function handleInputSeg(method) {
 function goHome() {
   cleanupGame();
   cleanupDuel();
+  cleanupCoop();
   state.returnScreen = null;
   showScreen('screen-dashboard');
   loadDashboard();
@@ -637,6 +655,7 @@ function goHome() {
 
 function navBrandClick() {
   if (isInDuel()) { exitDuel(); return; }
+  if (isInCoop()) { exitCoop(); return; }
   goHome();
 }
 
@@ -666,6 +685,13 @@ function goToSelect(gameType) {
     setWinCondition(state.winCondition);
     setDuelInput(state.duelInput);
     if (startBtn) startBtn.textContent = 'Send Challenge';
+  } else if (gameType === 'coop') {
+    if (subEl) subEl.textContent = 'Set up your Sync Match — you are the host';
+    if (infoEl) infoEl.textContent = '🤝 Team up! You both see the same card and must each clear it before a shared clock (5s per character) runs out. Pick at least 4 characters.';
+    show(practiceRow, false); show(durationRow, false); show(winconRow, false);
+    show(inputRow, true);
+    setCoopInput(state.coopInput);
+    if (startBtn) startBtn.textContent = 'Send Invite';
   } else {
     // Zen
     if (subEl) subEl.textContent = 'Set up your Zen Mode game';
@@ -695,14 +721,10 @@ function goToSelect(gameType) {
 }
 
 function handleModeClick(mode) {
-  if (mode === 'coop') {
-    toast('🤝 Sync Match arrives in Phase 4!', 'info', 4000);
-    return;
-  }
-  if (mode === 'duel') {
+  if (mode === 'duel' || mode === 'coop') {
     const fp = state.friendPresence;
     if (!fp || fp.status === 'offline') {
-      toast('Your friend needs to be online to duel.', 'warning', 4000);
+      toast('Your friend needs to be online for multiplayer.', 'warning', 4000);
       return;
     }
   }
@@ -710,11 +732,14 @@ function handleModeClick(mode) {
 }
 
 function handleStartGame() {
-  if (state.currentGameType === 'duel') {
-    sendChallenge();
-  } else {
-    startGame(state.currentGameType);
-  }
+  if (state.currentGameType === 'duel') sendChallenge();
+  else if (state.currentGameType === 'coop') sendCoopChallenge();
+  else startGame(state.currentGameType);
+}
+
+function lobbyCancel() {
+  if (isInCoop()) cancelCoopChallenge();
+  else cancelChallenge();
 }
 
 // ============================================
@@ -743,8 +768,8 @@ function renderAvatarPicker() {
 }
 
 function openSettings() {
-  if (isInDuel()) {
-    toast('Finish your duel before opening Settings.', 'info', 3500);
+  if (isInDuel() || isInCoop()) {
+    toast('Finish your match before opening Settings.', 'info', 3500);
     return;
   }
   state.returnScreen = currentScreen() || 'screen-dashboard';
@@ -990,7 +1015,7 @@ function attachListeners() {
   $('reset-input')?.addEventListener('input', onResetInput);
   $('btn-reset-confirm')?.addEventListener('click', resetProgress);
 
-  // Friend bar duel button
+  // Friend bar
   $('btn-invite')?.addEventListener('click', () => handleModeClick('duel'));
 
   // Solo game screen
@@ -1000,18 +1025,27 @@ function attachListeners() {
   $('results-again')?.addEventListener('click', playAgain);
   $('results-home')?.addEventListener('click', goHome);
 
-  // Duel
+  // Multiplayer invites + lobby
   $('invite-accept')?.addEventListener('click', acceptInvite);
   $('invite-decline')?.addEventListener('click', declineInvite);
-  $('lobby-cancel')?.addEventListener('click', cancelChallenge);
+  $('lobby-cancel')?.addEventListener('click', lobbyCancel);
+
+  // Duel
   $('duel-exit')?.addEventListener('click', exitDuel);
   $('duel-result-home')?.addEventListener('click', exitDuel);
   $('duel-result-rematch')?.addEventListener('click', playAgainDuel);
   $('duel-stall-leave')?.addEventListener('click', resolveStall);
 
+  // Co-op
+  $('coop-exit')?.addEventListener('click', exitCoop);
+  $('coop-result-home')?.addEventListener('click', exitCoop);
+  $('coop-result-again')?.addEventListener('click', playAgainCoop);
+  $('coop-stall-leave')?.addEventListener('click', resolveCoopStall);
+
   // Internal navigation events
   document.addEventListener('hq:gohome', goHome);
   document.addEventListener('hq:duel-rematch', () => sendChallenge());
+  document.addEventListener('hq:coop-rematch', () => sendCoopChallenge());
 }
 
 // ============================================
@@ -1047,6 +1081,7 @@ async function init() {
       } else {
         cleanupGame();
         cleanupDuel();
+        cleanupCoop();
         stopDuelInvites();
         state.user = null;
         state.userData = null;
