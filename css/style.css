@@ -1240,6 +1240,11 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+.seg-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ----- Settings: avatar picker ----- */
 .avatar-picker-wrap {
   display: flex;
@@ -1797,4 +1802,214 @@ body {
   .game-card-char { font-size: 5.5rem; }
   .results-card { padding: var(--space-6); }
   .results-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================
+   PHASE 2.1 — UX revision
+   ============================================ */
+
+/* ----- Nav user chip ----- */
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background: var(--bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.nav-name-text { font-size: 0.875rem; font-weight: 600; }
+
+/* ----- Compact friend bar (replaces the big friend card) ----- */
+.friend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.friend-bar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.friend-bar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.friend-bar-text { min-width: 0; }
+
+.friend-bar-name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friend-bar-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+/* ----- Danger button + Danger Zone ----- */
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(0.92);
+  transform: translateY(-1px);
+}
+
+.btn-danger:active:not(:disabled) { transform: scale(0.98); }
+
+.danger-zone {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+.danger-title { color: var(--danger); }
+
+.danger-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.reset-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(255,59,48,0.06);
+  border: 1px solid rgba(255,59,48,0.2);
+  border-radius: var(--radius-md);
+}
+
+.reset-label { font-size: 0.8125rem; color: var(--text-secondary); }
+
+.reset-input {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.reset-input:focus {
+  outline: none;
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(255,59,48,0.12);
+}
+
+.reset-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+/* ----- Pause overlay ----- */
+.pause-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.pause-overlay.active { opacity: 1; pointer-events: all; }
+
+.pause-card {
+  width: 100%;
+  max-width: 340px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.pause-emoji { font-size: 3rem; line-height: 1; }
+.pause-title { font-size: 1.5rem; font-weight: 700; margin-top: var(--space-2); }
+
+.pause-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.pause-card .btn { width: 100%; }
+
+/* ----- Listen-practice prompt ----- */
+.game-card-char.listen-prompt {
+  font-family: var(--font-sans);
+  animation: listenPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes listenPulse {
+  0%, 100% { transform: scale(1); opacity: 0.82; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+/* Multiple-choice buttons that show Japanese glyphs (Listen practice) */
+.choice-jp .choice-text {
+  font-family: var(--font-jp);
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+/* ----- HUD countdown ----- */
+.hud-time { color: var(--text-primary); }
+
+.hud-time.danger {
+  color: var(--danger);
+  animation: pulseDanger 1s ease-in-out infinite;
+}
+
+@keyframes pulseDanger {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ----- Phase 2.1 responsive ----- */
+@media (max-width: 768px) {
+  .nav-name-text { display: none; }
 }

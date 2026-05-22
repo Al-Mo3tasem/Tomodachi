@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260522';
+import { APP_CONFIG } from './config.js?v=20260522b';
 
 // ----- Global App State -----
 export const state = {
@@ -15,9 +15,17 @@ export const state = {
   selectedSets: new Set(),
   selectedChars: new Set(),
   currentGameType: null,
+  returnScreen: null,                 // where Settings should return to
+
+  // audioEnabled controls game sound EFFECTS only. Japanese pronunciation
+  // is functional (not a preference) and is governed by game design.
   audioEnabled: localStorage.getItem('hiraquest-audio') !== 'false',
-  inputMethod: localStorage.getItem('hiraquest-input') || 'typing',
-  shuffleEnabled: localStorage.getItem('hiraquest-shuffle') !== 'false',
+
+  // Zen practice options (solo mode — options are appropriate here).
+  practiceType: localStorage.getItem('hiraquest-practice') || 'read', // 'read' | 'listen'
+  inputMethod: localStorage.getItem('hiraquest-input') || 'typing',   // 'typing' | 'multiple'
+  zenDuration: Number(localStorage.getItem('hiraquest-duration')) || 60, // seconds
+
   theme: localStorage.getItem('hiraquest-theme') || APP_CONFIG.defaultTheme
 };
 
@@ -29,6 +37,11 @@ export function showScreen(id) {
   const el = $(id);
   if (el) el.classList.add('active');
   window.scrollTo(0, 0);
+}
+
+export function currentScreen() {
+  const el = document.querySelector('.screen.active');
+  return el ? el.id : null;
 }
 
 export function showLoading(show) {
@@ -65,6 +78,8 @@ export function setTheme(theme) {
   state.theme = theme;
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = theme === 'dark';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#F5F5F7');
 }
 
 // ----- Async Helpers -----
@@ -92,4 +107,11 @@ export function shuffle(array) {
 
 export function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+export function formatTime(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
 }

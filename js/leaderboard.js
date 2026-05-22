@@ -6,8 +6,8 @@
 // the audit source of truth (written separately by game.js).
 // ============================================
 
-import { state, $, showScreen, toast } from './core.js?v=20260522';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260522';
+import { state, $, showScreen } from './core.js?v=20260522b';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260522b';
 
 // Character-count brackets (from the Master Plan scoring spec).
 export const BRACKETS = [5, 10, 15, 25, 46];
@@ -67,6 +67,21 @@ export async function submitSurvivalScore({ score, characterCount }) {
 
   localStorage.setItem('hiraquest-last-bracket', String(bracket));
   return rank;
+}
+
+/** Remove every entry belonging to a user from all leaderboard brackets. */
+export async function removeUserFromLeaderboards(uid) {
+  for (const b of BRACKETS) {
+    const ref = doc(db, 'leaderboards', `survival_${b}`);
+    try {
+      const snap = await getDoc(ref);
+      if (!snap.exists()) continue;
+      const entries = (snap.data().entries || []).filter(e => e.userId !== uid);
+      await setDoc(ref, { entries }, { merge: true });
+    } catch (err) {
+      console.error('Leaderboard cleanup failed for bracket', b, err);
+    }
+  }
 }
 
 /** Fetch the entries array for a given bracket. */

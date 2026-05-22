@@ -1,19 +1,29 @@
 // ============================================
-// HiraQuest — Game Engine (Phase 2)
-// Drives Zen Mode (relaxed practice) and Survival Rush (timed,
-// 3 lives, ramping speed). One engine, mode-parameterised.
+// HiraQuest — Game Engine (Phase 2.1)
+// One engine, two modes:
+//  • Zen Mode      — relaxed timed practice. Practice type Read or Listen.
+//  • Survival Rush — competitive: 3 lives, ramping per-question timer.
+//
+// Audio is role-based, never a leak:
+//  • Read   — glyph is the prompt; audio is hidden until the answer reveal.
+//  • Listen — audio IS the prompt; the player picks the matching glyph.
+//
+// Every game has a timer (Zen: a session countdown, Survival: per-question)
+// and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle, clamp } from './core.js?v=20260522';
+import {
+  state, $, showScreen, toast, shuffle, clamp, formatTime
+} from './core.js?v=20260522b';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from './firebase.js?v=20260522';
-import { speak, playSound, unlockAudio, isSpeechSupported } from './audio.js?v=20260522';
-import { submitSurvivalScore, bracketFor } from './leaderboard.js?v=20260522';
+} from './firebase.js?v=20260522b';
+import { speak, stopSpeech, playSound, unlockAudio } from './audio.js?v=20260522b';
+import { submitSurvivalScore, bracketFor } from './leaderboard.js?v=20260522b';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
-const TIME_START = 5000;   // ms for first question
+const TIME_START = 5000;   // ms for the first Survival question
 const TIME_STEP = 500;     // ms removed per speed-up
 const TIME_MIN = 1500;     // ms floor
 const RAMP_EVERY = 5;      // correct answers per speed-up
@@ -35,6 +45,7 @@ const ROMAJI_ALT = {
 let g = null;
 let lastType = 'zen';
 let keyHandler = null;
+let visHandler = null;
 
 // ============================================
 // PUBLIC API
@@ -57,35 +68,58 @@ export function startGame(type) {
   unlockAudio();
   lastType = type;
 
+  const practice = type === 'survival' ? 'read' : state.practiceType;
+  const inputMethod = practice === 'listen'
+    ? 'multiple'
+    : (type === 'survival' ? 'typing' : state.inputMethod);
+
   g = {
     type,
     mode: type,
+    practice,
+    inputMethod,
     chars,
     allRomaji: collectRomaji(),
-    inputMethod: type === 'survival' ? 'typing' : state.inputMethod,
+    allChars: collectChars(),
     queue: [],
     current: null,
     lastChar: null,
+    revealed: false,
     correct: 0,
     wrong: 0,
     streak: 0,
     bestStreak: 0,
     lives: SURVIVAL_LIVES,
-    timeLimit: TIME_START,
     times: [],
     perChar: {},
     questionStart: 0,
-    locked: false,
-    active: true,
+    // Survival per-question timer
+    qStartedAt: 0,
+    qLimit: TIME_START,
+    qElapsed: 0,
     expiry: null,
     danger: null,
+    // Zen session timer
+    sessionDuration: (state.zenDuration || 60) * 1000,
+    sessionDeadline: 0,
+    sessionRemaining: 0,
+    sessionTick: null,
+    // feedback advance
+    advanceTimer: null,
+    advancePending: false,
+    locked: false,
+    active: true,
+    paused: false,
     startedAt: Date.now()
   };
 
   buildScreen();
   showScreen('screen-game');
+  hidePauseOverlay();
   setPresence('in_game');
   playSound('start');
+
+  if (g.mode === 'zen') startSessionTimer();
   nextQuestion();
   return true;
 }
@@ -119,19 +153,75 @@ export function requestExit() {
   }
 }
 
+/** Pause without showing the overlay (used when navigating to Settings). */
+export function pauseGame() {
+  if (!g || !g.active || g.paused) return;
+  g.paused = true;
+  stopSpeech();
+  if (g.advanceTimer) {
+    clearTimeout(g.advanceTimer);
+    g.advanceTimer = null;
+    g.advancePending = true;
+  }
+  if (g.mode === 'survival') pauseQuestionTimer();
+  else pauseSessionTimer();
+}
+
+/** Resume a paused game. */
+export function resumeGame() {
+  if (!g || !g.active || !g.paused) return;
+  g.paused = false;
+
+  // Resume the mode's clock. The Zen session timer always restarts; the
+  // Survival per-question timer only restarts if a question is still live
+  // (a pending advance will start the next question's timer fresh).
+  if (g.mode === 'zen') {
+    resumeSessionTimer();
+  } else if (!g.advancePending) {
+    resumeQuestionTimer();
+  }
+
+  // A pause that interrupted answer feedback finishes the advance now.
+  if (g.advancePending) {
+    g.advancePending = false;
+    doAdvance();
+    return;
+  }
+
+  if (g.inputMethod === 'typing' && !g.locked) $('answer-input')?.focus();
+}
+
+/** Resume from the tab-hidden pause overlay. */
+export function resumeFromPause() {
+  hidePauseOverlay();
+  resumeGame();
+}
+
+export function isActive() {
+  return !!(g && g.active);
+}
+
 /** Stop all timers/speech — call before navigating away. */
 export function cleanup() {
   if (g) {
     g.active = false;
-    stopTimer();
+    stopQuestionTimer();
+    stopSessionTimer();
+    if (g.advanceTimer) { clearTimeout(g.advanceTimer); g.advanceTimer = null; }
   }
-  if (keyHandler) {
-    document.removeEventListener('keydown', keyHandler);
-    keyHandler = null;
-  }
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  detachHandlers();
+  stopSpeech();
   hideResults();
+  hidePauseOverlay();
   setPresence('online');
+}
+
+/** Manual pronounce button. */
+export function speakCurrent() {
+  if (g && g.current) {
+    unlockAudio();
+    speak(g.current.char);
+  }
 }
 
 // ============================================
@@ -158,9 +248,25 @@ function collectRomaji() {
   return [...set];
 }
 
+function collectChars() {
+  const all = [];
+  state.contentSets.forEach(s => (s.characters || []).forEach(c => {
+    if (!all.find(x => x.char === c.char)) {
+      all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase() });
+    }
+  }));
+  return all;
+}
+
 function buildScreen() {
   const label = $('game-mode-label');
-  if (label) label.textContent = g.mode === 'zen' ? '🧘 Zen Mode' : '🔥 Survival Rush';
+  if (label) {
+    if (g.mode === 'zen') {
+      label.textContent = g.practice === 'listen' ? '🧘 Zen · Listening' : '🧘 Zen · Reading';
+    } else {
+      label.textContent = '🔥 Survival Rush';
+    }
+  }
 
   const shell = $('game-shell');
   if (shell) shell.dataset.mode = g.mode;
@@ -168,12 +274,9 @@ function buildScreen() {
   const timer = $('game-timer');
   if (timer) timer.style.display = g.mode === 'survival' ? 'block' : 'none';
 
-  const speakBtn = $('game-speak');
-  if (speakBtn) speakBtn.disabled = !isSpeechSupported();
-
   buildInputArea();
   renderHud();
-  installKeyHandler();
+  attachHandlers();
 }
 
 function buildInputArea() {
@@ -181,7 +284,7 @@ function buildInputArea() {
   if (!host) return;
   host.innerHTML = '';
 
-  if (g.inputMethod === 'typing') {
+  if (g.practice === 'read' && g.inputMethod === 'typing') {
     const form = document.createElement('form');
     form.className = 'answer-form';
     form.id = 'answer-form';
@@ -205,17 +308,36 @@ function buildInputArea() {
   }
 }
 
-function installKeyHandler() {
-  if (keyHandler) document.removeEventListener('keydown', keyHandler);
+function attachHandlers() {
+  detachHandlers();
+
   keyHandler = (e) => {
-    if (!g || !g.active || g.locked) return;
+    if (!g || !g.active || g.locked || g.paused) return;
     if (g.inputMethod === 'multiple' && e.key >= '1' && e.key <= '4') {
-      const btns = document.querySelectorAll('.choice-btn');
-      const btn = btns[Number(e.key) - 1];
+      const btn = document.querySelectorAll('.choice-btn')[Number(e.key) - 1];
       if (btn) onAnswer(btn.dataset.value, btn);
     }
   };
   document.addEventListener('keydown', keyHandler);
+
+  visHandler = () => {
+    if (document.hidden && g && g.active && !g.paused) {
+      pauseGame();
+      showPauseOverlay();
+    }
+  };
+  document.addEventListener('visibilitychange', visHandler);
+}
+
+function detachHandlers() {
+  if (keyHandler) {
+    document.removeEventListener('keydown', keyHandler);
+    keyHandler = null;
+  }
+  if (visHandler) {
+    document.removeEventListener('visibilitychange', visHandler);
+    visHandler = null;
+  }
 }
 
 // ============================================
@@ -225,10 +347,10 @@ function installKeyHandler() {
 function nextQuestion() {
   if (!g || !g.active) return;
   g.locked = false;
+  g.revealed = false;
 
   if (g.queue.length === 0) {
-    let pool = state.shuffleEnabled ? shuffle(g.chars) : g.chars.slice();
-    // Avoid repeating the same character back-to-back.
+    let pool = shuffle(g.chars);
     if (pool.length > 1 && pool[0].char === g.lastChar) {
       pool.push(pool.shift());
     }
@@ -237,33 +359,46 @@ function nextQuestion() {
   g.current = g.queue.shift();
   g.lastChar = g.current.char;
 
-  if (g.mode === 'survival') {
-    g.timeLimit = clamp(TIME_START - TIME_STEP * Math.floor(g.correct / RAMP_EVERY), TIME_MIN, TIME_START);
-  }
-
   renderCard();
   clearFeedback();
   renderInput();
   renderHud();
+  updateSpeakButton();
 
   g.questionStart = performance.now();
-  if (g.mode === 'survival') startTimer();
-  if (g.mode === 'zen') speak(g.current.char);
+  if (g.mode === 'survival') startQuestionTimer();
+  if (g.practice === 'listen') speak(g.current.char);
 }
 
 function renderCard() {
   const card = $('game-card');
   const charEl = $('game-card-char');
-  if (charEl) charEl.textContent = g.current.char;
+  if (charEl) {
+    if (g.practice === 'listen' && !g.revealed) {
+      charEl.textContent = '🔊';
+      charEl.classList.add('listen-prompt');
+    } else {
+      charEl.textContent = g.current.char;
+      charEl.classList.remove('listen-prompt');
+    }
+  }
   if (card) {
-    card.classList.remove('flip-in');
+    card.classList.remove('flip-in', 'correct', 'wrong');
     void card.offsetWidth; // restart animation
     card.classList.add('flip-in');
   }
 }
 
+function revealCard() {
+  const charEl = $('game-card-char');
+  if (charEl) {
+    charEl.textContent = g.current.char;
+    charEl.classList.remove('listen-prompt');
+  }
+}
+
 function renderInput() {
-  if (g.inputMethod === 'typing') {
+  if (g.practice === 'read' && g.inputMethod === 'typing') {
     const input = $('answer-input');
     const submit = document.querySelector('.answer-submit');
     if (input) {
@@ -273,26 +408,43 @@ function renderInput() {
       input.focus();
     }
     if (submit) submit.disabled = false;
-  } else {
-    const grid = $('choice-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const choices = makeChoices(g.current.romaji);
-    choices.forEach((romaji, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.dataset.value = romaji;
-      btn.innerHTML = `<span class="choice-key">${i + 1}</span><span class="choice-text">${romaji}</span>`;
-      btn.addEventListener('click', () => onAnswer(romaji, btn));
-      grid.appendChild(btn);
-    });
+    return;
   }
+
+  const grid = $('choice-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const isListen = g.practice === 'listen';
+  const choices = makeChoices();
+
+  choices.forEach((value, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (isListen ? ' choice-jp' : '');
+    btn.dataset.value = value;
+    btn.innerHTML = `<span class="choice-key">${i + 1}</span><span class="choice-text">${value}</span>`;
+    btn.addEventListener('click', () => onAnswer(value, btn));
+    grid.appendChild(btn);
+  });
 }
 
-function makeChoices(answer) {
-  const pool = g.allRomaji.filter(r => r !== answer);
+function makeChoices() {
+  if (g.practice === 'listen') {
+    const pool = g.allChars.filter(c => c.char !== g.current.char).map(c => c.char);
+    const picks = shuffle(pool).slice(0, 3);
+    return shuffle([g.current.char, ...picks]);
+  }
+  const pool = g.allRomaji.filter(r => r !== g.current.romaji);
   const picks = shuffle(pool).slice(0, 3);
-  return shuffle([answer, ...picks]);
+  return shuffle([g.current.romaji, ...picks]);
+}
+
+function updateSpeakButton() {
+  const btn = $('game-speak');
+  if (!btn) return;
+  // Listen practice: the speaker is the prompt — always available as a replay.
+  // Read practice: hidden until the answer is revealed (no audio leak).
+  const visible = g.practice === 'listen' || g.revealed;
+  btn.style.display = visible ? '' : 'none';
 }
 
 // ============================================
@@ -306,13 +458,18 @@ function answerMatches(input, romaji) {
   return (ROMAJI_ALT[r] || []).includes(a);
 }
 
+function checkAnswer(value) {
+  if (g.practice === 'listen') return value === g.current.char;
+  return answerMatches(value, g.current.romaji);
+}
+
 function onAnswer(value, btnEl) {
-  if (!g || !g.active || g.locked) return;
+  if (!g || !g.active || g.locked || g.paused) return;
   g.locked = true;
-  stopTimer();
+  if (g.mode === 'survival') stopQuestionTimer();
 
   const elapsed = (performance.now() - g.questionStart) / 1000;
-  const isCorrect = answerMatches(value, g.current.romaji);
+  const isCorrect = checkAnswer(value);
   recordChar(g.current.char, isCorrect);
 
   if (isCorrect) {
@@ -328,36 +485,35 @@ function onAnswer(value, btnEl) {
     if (g.mode === 'survival') loseLife();
   }
 
-  showFeedback(isCorrect, value, btnEl);
+  showFeedback(isCorrect, btnEl, false);
   renderHud();
-
-  const delay = isCorrect ? FEEDBACK_OK : FEEDBACK_BAD;
-  setTimeout(() => {
-    if (!g || !g.active) return;
-    if (g.mode === 'survival' && g.lives <= 0) {
-      endGame('over');
-    } else {
-      nextQuestion();
-    }
-  }, delay);
+  scheduleAdvance(isCorrect ? FEEDBACK_OK : FEEDBACK_BAD);
 }
 
 function onTimeout() {
-  if (!g || !g.active || g.locked) return;
+  if (!g || !g.active || g.locked || g.paused) return;
   g.locked = true;
   g.wrong++;
   g.streak = 0;
   recordChar(g.current.char, false);
   playSound('wrong');
   loseLife();
-  showFeedback(false, null, null, true);
+  showFeedback(false, null, true);
   renderHud();
+  scheduleAdvance(FEEDBACK_BAD);
+}
 
-  setTimeout(() => {
-    if (!g || !g.active) return;
-    if (g.lives <= 0) endGame('over');
-    else nextQuestion();
-  }, FEEDBACK_BAD);
+function scheduleAdvance(delay) {
+  g.advanceTimer = setTimeout(() => {
+    g.advanceTimer = null;
+    doAdvance();
+  }, delay);
+}
+
+function doAdvance() {
+  if (!g || !g.active) return;
+  if (g.mode === 'survival' && g.lives <= 0) endGame('over');
+  else nextQuestion();
 }
 
 function loseLife() {
@@ -385,26 +541,32 @@ function clearFeedback() {
     fb.className = 'game-feedback';
     fb.innerHTML = '';
   }
-  const card = $('game-card');
-  if (card) card.classList.remove('correct', 'wrong');
 }
 
-function showFeedback(isCorrect, value, btnEl, timedOut = false) {
-  const fb = $('game-feedback');
+function showFeedback(isCorrect, btnEl, timedOut) {
+  g.revealed = true;
+  if (g.practice === 'listen') revealCard();
+
   const card = $('game-card');
   if (card) card.classList.add(isCorrect ? 'correct' : 'wrong');
 
+  const fb = $('game-feedback');
   if (fb) {
     fb.className = `game-feedback show ${isCorrect ? 'good' : 'bad'}`;
+    const answer = `${g.current.char} = ${g.current.romaji}`;
     if (isCorrect) {
-      fb.innerHTML = `<span class="fb-mark">✓</span><span class="fb-text">${g.current.romaji}</span>`;
+      fb.innerHTML = `<span class="fb-mark">✓</span><span class="fb-text">${answer}</span>`;
     } else {
-      const lead = timedOut ? "Time's up!" : 'Answer:';
-      fb.innerHTML = `<span class="fb-mark">✗</span><span class="fb-text">${lead} <strong>${g.current.romaji}</strong></span>`;
+      const lead = timedOut ? "Time's up — " : '';
+      fb.innerHTML = `<span class="fb-mark">✗</span><span class="fb-text">${lead}<strong>${answer}</strong></span>`;
     }
   }
 
-  if (g.inputMethod === 'typing') {
+  // Reinforcement audio on reveal (everything except Survival, which stays lean).
+  if (g.mode !== 'survival') speak(g.current.char);
+  updateSpeakButton();
+
+  if (g.practice === 'read' && g.inputMethod === 'typing') {
     const input = $('answer-input');
     const submit = document.querySelector('.answer-submit');
     if (input) {
@@ -415,8 +577,11 @@ function showFeedback(isCorrect, value, btnEl, timedOut = false) {
   } else {
     document.querySelectorAll('.choice-btn').forEach(b => {
       b.disabled = true;
-      if (b.dataset.value === g.current.romaji) b.classList.add('choice-correct');
-      else if (b === btnEl) b.classList.add('choice-wrong');
+      if (b.dataset.value === String(g.practice === 'listen' ? g.current.char : g.current.romaji)) {
+        b.classList.add('choice-correct');
+      } else if (b === btnEl) {
+        b.classList.add('choice-wrong');
+      }
     });
   }
 }
@@ -426,8 +591,7 @@ function renderHud() {
   if (!hud) return;
 
   if (g.mode === 'survival') {
-    const hearts =
-      '❤️'.repeat(g.lives) + '🤍'.repeat(Math.max(0, SURVIVAL_LIVES - g.lives));
+    const hearts = '❤️'.repeat(g.lives) + '🤍'.repeat(Math.max(0, SURVIVAL_LIVES - g.lives));
     const round = Math.floor(g.correct / RAMP_EVERY) + 1;
     hud.innerHTML = `
       <span class="hud-lives">${hearts}</span>
@@ -435,11 +599,15 @@ function renderHud() {
       <span class="hud-chip hud-score">${liveScore().toLocaleString()}</span>
     `;
   } else {
+    const remaining = g.paused
+      ? g.sessionRemaining
+      : Math.max(0, (g.sessionDeadline || Date.now()) - Date.now());
+    const low = remaining <= 10000;
     const total = g.correct + g.wrong;
     const acc = total ? Math.round((g.correct / total) * 100) : 100;
     hud.innerHTML = `
+      <span class="hud-chip hud-time ${low ? 'danger' : ''}">⏱ ${formatTime(remaining)}</span>
       <span class="hud-chip hud-good">✓ ${g.correct}</span>
-      <span class="hud-chip hud-bad">✗ ${g.wrong}</span>
       <span class="hud-chip">${acc}%</span>
     `;
   }
@@ -456,28 +624,63 @@ function renderHud() {
 }
 
 // ============================================
-// TIMER (Survival)
+// SURVIVAL TIMER (per-question, pausable)
 // ============================================
 
-function startTimer() {
+function startQuestionTimer() {
   const fill = $('game-timer-fill');
-  if (!fill) return;
-  fill.style.transition = 'none';
-  fill.style.width = '100%';
-  fill.classList.remove('danger');
-  void fill.offsetWidth;
-  requestAnimationFrame(() => {
-    fill.style.transition = `width ${g.timeLimit}ms linear`;
-    fill.style.width = '0%';
-  });
-  g.expiry = setTimeout(onTimeout, g.timeLimit);
-  g.danger = setTimeout(() => fill.classList.add('danger'), Math.max(0, g.timeLimit - 1200));
+  g.qLimit = clamp(TIME_START - TIME_STEP * Math.floor(g.correct / RAMP_EVERY), TIME_MIN, TIME_START);
+  g.qElapsed = 0;
+  if (fill) {
+    fill.classList.remove('danger');
+    fill.style.transition = 'none';
+    fill.style.width = '100%';
+    void fill.offsetWidth;
+  }
+  runQuestionTimer(g.qLimit);
 }
 
-function stopTimer() {
-  if (!g) return;
+function runQuestionTimer(remaining) {
+  const fill = $('game-timer-fill');
+  g.qStartedAt = performance.now();
+  if (fill) {
+    requestAnimationFrame(() => {
+      fill.style.transition = `width ${remaining}ms linear`;
+      fill.style.width = '0%';
+    });
+  }
+  g.expiry = setTimeout(onTimeout, remaining);
+  if (remaining > 1200) {
+    g.danger = setTimeout(() => { if (fill) fill.classList.add('danger'); }, remaining - 1200);
+  } else if (fill) {
+    fill.classList.add('danger');
+  }
+}
+
+function pauseQuestionTimer() {
+  if (!g.expiry) return;
+  g.qElapsed += performance.now() - g.qStartedAt;
   clearTimeout(g.expiry);
   clearTimeout(g.danger);
+  g.expiry = null;
+  g.danger = null;
+  freezeFill();
+}
+
+function resumeQuestionTimer() {
+  if (g.locked) return;
+  runQuestionTimer(Math.max(200, g.qLimit - g.qElapsed));
+}
+
+function stopQuestionTimer() {
+  clearTimeout(g.expiry);
+  clearTimeout(g.danger);
+  g.expiry = null;
+  g.danger = null;
+  freezeFill();
+}
+
+function freezeFill() {
   const fill = $('game-timer-fill');
   if (fill) {
     const current = getComputedStyle(fill).width;
@@ -487,7 +690,46 @@ function stopTimer() {
 }
 
 // ============================================
-// SCORING
+// ZEN SESSION TIMER (countdown, pausable)
+// ============================================
+
+function startSessionTimer() {
+  g.sessionDeadline = Date.now() + g.sessionDuration;
+  g.sessionTick = setInterval(tickSession, 200);
+  tickSession();
+}
+
+function tickSession() {
+  if (!g || !g.active) return;
+  const remaining = Math.max(0, g.sessionDeadline - Date.now());
+  renderHud();
+  if (remaining <= 0) {
+    clearInterval(g.sessionTick);
+    g.sessionTick = null;
+    endGame('time');
+  }
+}
+
+function pauseSessionTimer() {
+  g.sessionRemaining = Math.max(0, g.sessionDeadline - Date.now());
+  clearInterval(g.sessionTick);
+  g.sessionTick = null;
+}
+
+function resumeSessionTimer() {
+  g.sessionDeadline = Date.now() + (g.sessionRemaining || 0);
+  g.sessionTick = setInterval(tickSession, 200);
+}
+
+function stopSessionTimer() {
+  if (g && g.sessionTick) {
+    clearInterval(g.sessionTick);
+    g.sessionTick = null;
+  }
+}
+
+// ============================================
+// SCORING (Survival)
 // ============================================
 
 function avgTime() {
@@ -495,7 +737,6 @@ function avgTime() {
   return g.times.reduce((a, b) => a + b, 0) / g.times.length;
 }
 
-/** Live (in-progress) survival score estimate for the HUD. */
 function liveScore() {
   return Math.round(computeSurvivalScore());
 }
@@ -515,17 +756,18 @@ function computeSurvivalScore() {
 function endGame(reason) {
   if (!g || !g.active) return;
   g.active = false;
-  stopTimer();
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-  if (keyHandler) {
-    document.removeEventListener('keydown', keyHandler);
-    keyHandler = null;
-  }
+  stopQuestionTimer();
+  stopSessionTimer();
+  if (g.advanceTimer) { clearTimeout(g.advanceTimer); g.advanceTimer = null; }
+  detachHandlers();
+  stopSpeech();
+  hidePauseOverlay();
   setPresence('online');
 
   const total = g.correct + g.wrong;
   const summary = {
     mode: g.mode,
+    practice: g.practice,
     correct: g.correct,
     wrong: g.wrong,
     accuracy: total ? g.correct / total : 0,
@@ -559,23 +801,20 @@ function showResults(s) {
     if (scoreLabel) scoreLabel.textContent = 'Final Score';
     if (scoreEl) countUp(scoreEl, s.score);
   } else {
-    if (title) title.textContent = 'Practice Complete';
+    if (title) title.textContent = s.practice === 'listen' ? 'Listening Session Done' : 'Reading Session Done';
     if (emoji) emoji.textContent = accPct >= 90 ? '🌸' : accPct >= 60 ? '🧘' : '📚';
-    if (scoreLabel) scoreLabel.textContent = 'Accuracy';
-    if (scoreEl) countUp(scoreEl, accPct, '%');
+    if (scoreLabel) scoreLabel.textContent = 'Characters Cleared';
+    if (scoreEl) countUp(scoreEl, s.correct);
   }
 
   if (statsHost) {
     const cells = [
       { label: 'Correct', value: s.correct },
       { label: 'Missed', value: s.wrong },
+      { label: 'Accuracy', value: `${accPct}%` },
       { label: 'Best Streak', value: s.bestStreak }
     ];
-    if (s.mode === 'survival') {
-      cells.push({ label: 'Round', value: s.round });
-    } else {
-      cells.push({ label: 'Accuracy', value: `${accPct}%` });
-    }
+    if (s.mode === 'survival') cells[2] = { label: 'Round', value: s.round };
     statsHost.innerHTML = cells
       .map(c => `<div class="rstat"><div class="rstat-value">${c.value}</div><div class="rstat-label">${c.label}</div></div>`)
       .join('');
@@ -603,7 +842,10 @@ async function persistResults(s, noteEl) {
   if (s.mode === 'survival' && noteEl) {
     const parts = [];
     if (newBest) parts.push('🏆 New personal best!');
-    if (rank) parts.push(`Ranked <strong>#${rank}</strong> · ${bracketFor(s.characterCount) === 46 ? 'Full 46' : bracketFor(s.characterCount) + '-char'} board`);
+    if (rank) {
+      const b = bracketFor(s.characterCount);
+      parts.push(`Ranked <strong>#${rank}</strong> · ${b === 46 ? 'Full 46' : b + '-char'} board`);
+    }
     noteEl.innerHTML = parts.length
       ? parts.map(p => `<div>${p}</div>`).join('')
       : '<span class="muted">Score saved.</span>';
@@ -611,7 +853,7 @@ async function persistResults(s, noteEl) {
 
   const celebrate =
     (s.mode === 'survival' && newBest) ||
-    (s.mode === 'zen' && s.accuracy >= 0.9 && s.correct + s.wrong >= 5);
+    (s.mode === 'zen' && s.accuracy >= 0.9 && s.correct >= 8);
   if (celebrate) {
     confetti();
     playSound('win');
@@ -685,6 +927,20 @@ function hideResults() {
 }
 
 // ============================================
+// PAUSE OVERLAY
+// ============================================
+
+function showPauseOverlay() {
+  const o = $('pause-overlay');
+  if (o) o.classList.add('active');
+}
+
+function hidePauseOverlay() {
+  const o = $('pause-overlay');
+  if (o) o.classList.remove('active');
+}
+
+// ============================================
 // HELPERS
 // ============================================
 
@@ -730,12 +986,4 @@ async function setPresence(status) {
 function goHome() {
   cleanup();
   document.dispatchEvent(new CustomEvent('hq:gohome'));
-}
-
-// Expose the manual pronounce button target.
-export function speakCurrent() {
-  if (g && g.current) {
-    unlockAudio();
-    speak(g.current.char);
-  }
 }

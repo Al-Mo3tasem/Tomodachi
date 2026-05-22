@@ -60,12 +60,12 @@ service cloud.firestore {
 
     // ----- Game sessions -----
     // Any signed-in user can read and create a session.
-    // Updates are limited to participants (used by Duel / Co-op later).
+    // Updates/deletes are limited to participants (delete powers the
+    // "Reset My Progress" feature; updates are used by Duel / Co-op later).
     match /game_sessions/{sessionId} {
       allow read, create: if request.auth != null;
-      allow update: if request.auth != null
-                    && request.auth.uid in resource.data.playerIds;
-      allow delete: if false;
+      allow update, delete: if request.auth != null
+                            && request.auth.uid in resource.data.playerIds;
     }
 
     // ----- Leaderboards -----

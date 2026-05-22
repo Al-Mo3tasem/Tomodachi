@@ -1,22 +1,28 @@
 // ============================================
 // HiraQuest — Application Orchestrator
-// Phase 2: Auth, Dashboard, Character Select, Zen Mode,
-// Survival Rush, Leaderboards, Settings, Presence.
+// Phase 2.1: Auth, Dashboard, Character Select, Zen (Read/Listen),
+// Survival Rush, Leaderboards, Settings, Presence, Progress Reset.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260522';
+import { APP_CONFIG } from './config.js?v=20260522b';
 import {
-  state, $, showScreen, showLoading, toast, setTheme, withTimeout
-} from './core.js?v=20260522';
+  state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
+} from './core.js?v=20260522b';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
-  doc, getDoc, setDoc, getDocs, collection, query, where, onSnapshot,
+  doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './firebase.js?v=20260522';
-import { startGame, requestExit, playAgain, cleanup as cleanupGame, speakCurrent } from './game.js?v=20260522';
-import { openLeaderboard, renderLeaderboardPreview } from './leaderboard.js?v=20260522';
+} from './firebase.js?v=20260522b';
+import {
+  startGame, requestExit, playAgain, cleanup as cleanupGame,
+  speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
+} from './game.js?v=20260522b';
+import {
+  openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
+} from './leaderboard.js?v=20260522b';
+import { isSpeechSupported } from './audio.js?v=20260522b';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
@@ -80,6 +86,7 @@ function renderUserIdentity() {
   set('dash-username', `@${username}`);
   set('dash-avatar', avatar);
   set('nav-name', displayName);
+  set('nav-avatar', avatar);
 }
 
 // ============================================
@@ -276,25 +283,22 @@ function renderFriend() {
   const statusEl = $('friend-status');
   const avatarEl = $('friend-avatar');
   const inviteBtn = $('btn-invite');
-  const navDot = $('nav-presence');
 
   if (!p) {
     if (nameEl) nameEl.textContent = 'Waiting for friend…';
     if (statusEl) statusEl.innerHTML = `<span class="status-dot offline"></span><span class="status-text">Offline</span>`;
     if (inviteBtn) inviteBtn.disabled = true;
-    if (navDot) navDot.className = 'presence-dot';
     return;
   }
 
   const isOnline = p.status === 'online' || p.status === 'in_game';
   const dotClass = p.status === 'in_game' ? 'in-game' : (isOnline ? 'online' : 'offline');
-  const statusText = p.status === 'in_game' ? 'In Game' : (isOnline ? 'Online' : 'Offline');
+  const statusText = p.status === 'in_game' ? 'In a game' : (isOnline ? 'Online' : 'Offline');
 
   if (nameEl) nameEl.textContent = p.displayName || p.username || 'Friend';
   if (avatarEl) avatarEl.textContent = p.avatarEmoji || state.friend?.avatarEmoji || '🎮';
   if (statusEl) statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span><span class="status-text">${statusText}</span>`;
   if (inviteBtn) inviteBtn.disabled = !isOnline;
-  if (navDot) navDot.className = `presence-dot ${dotClass}`;
 
   if (isOnline) {
     const lastToast = sessionStorage.getItem('last-online-toast');
@@ -544,12 +548,33 @@ function clearCustom() {
   updateSelectionUI();
 }
 
+// ----- Game options (segmented controls) -----
+
+function syncSegmented(groupSelector, attr, value) {
+  document.querySelectorAll(`${groupSelector} .seg-btn`).forEach(b => {
+    b.classList.toggle('active', b.dataset[attr] === String(value));
+  });
+}
+
+function setPractice(type) {
+  state.practiceType = type;
+  localStorage.setItem('hiraquest-practice', type);
+  syncSegmented('#seg-practice', 'practice', type);
+  // Listening practice always uses multiple choice — hide the input row.
+  const inputRow = $('option-input');
+  if (inputRow) inputRow.style.display = type === 'listen' ? 'none' : 'flex';
+}
+
 function setInputMethod(method) {
   state.inputMethod = method;
   localStorage.setItem('hiraquest-input', method);
-  document.querySelectorAll('.seg-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.input === method);
-  });
+  syncSegmented('#seg-input', 'input', method);
+}
+
+function setZenDuration(seconds) {
+  state.zenDuration = seconds;
+  localStorage.setItem('hiraquest-duration', String(seconds));
+  syncSegmented('#seg-duration', 'duration', seconds);
 }
 
 // ============================================
@@ -558,6 +583,7 @@ function setInputMethod(method) {
 
 function goHome() {
   cleanupGame();
+  state.returnScreen = null;
   showScreen('screen-dashboard');
   loadDashboard();
   loadHistory();
@@ -567,18 +593,38 @@ function goToSelect(gameType) {
   state.currentGameType = gameType;
 
   const subEl = $('select-subtitle');
-  if (subEl) subEl.textContent = `Choose Hiragana for ${MODE_NAMES[gameType] || gameType}`;
+  if (subEl) subEl.textContent = `Set up your ${MODE_NAMES[gameType] || gameType} game`;
 
   const infoEl = $('select-options-info');
+  const practiceRow = $('option-practice');
   const inputRow = $('option-input');
+  const durationRow = $('option-duration');
+
   if (gameType === 'survival') {
-    if (infoEl) infoEl.textContent = '🔥 Typing only · 3 lives · the clock speeds up every 5 correct answers. Score scales with how many characters you pick.';
+    if (infoEl) infoEl.textContent = '🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.';
+    if (practiceRow) practiceRow.style.display = 'none';
     if (inputRow) inputRow.style.display = 'none';
+    if (durationRow) durationRow.style.display = 'none';
   } else {
-    if (infoEl) infoEl.textContent = '🧘 Relaxed practice — no timer, no lives. Cards loop until you finish the session.';
-    if (inputRow) inputRow.style.display = 'flex';
+    if (infoEl) infoEl.textContent = '🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.';
+    if (practiceRow) practiceRow.style.display = 'flex';
+    if (durationRow) durationRow.style.display = 'flex';
+
+    const listenBtn = document.querySelector('#seg-practice .seg-btn[data-practice="listen"]');
+    if (listenBtn) {
+      if (!isSpeechSupported()) {
+        listenBtn.disabled = true;
+        listenBtn.title = 'Listening practice needs browser speech support.';
+        if (state.practiceType === 'listen') state.practiceType = 'read';
+      } else {
+        listenBtn.disabled = false;
+        listenBtn.title = '';
+      }
+    }
+    setPractice(state.practiceType);
+    setInputMethod(state.inputMethod);
+    setZenDuration(state.zenDuration);
   }
-  setInputMethod(state.inputMethod);
 
   showScreen('screen-select');
   renderSets();
@@ -626,6 +672,14 @@ function renderAvatarPicker() {
   });
 }
 
+function openSettings() {
+  state.returnScreen = currentScreen() || 'screen-dashboard';
+  if (state.returnScreen === 'screen-game' && isActive()) {
+    pauseGame();
+  }
+  showSettings();
+}
+
 function showSettings() {
   showScreen('screen-settings');
 
@@ -633,8 +687,6 @@ function showSettings() {
   if (themeToggle) themeToggle.checked = state.theme === 'dark';
   const audioToggle = $('toggle-audio');
   if (audioToggle) audioToggle.checked = state.audioEnabled;
-  const shuffleToggle = $('toggle-shuffle');
-  if (shuffleToggle) shuffleToggle.checked = state.shuffleEnabled;
 
   const displayInput = $('settings-displayname');
   const usernameInput = $('settings-username');
@@ -647,6 +699,20 @@ function showSettings() {
   if (versionEl) versionEl.textContent = `HiraQuest ${APP_CONFIG.version}`;
 
   renderAvatarPicker();
+  cancelReset();
+}
+
+function settingsBack() {
+  const ret = state.returnScreen;
+  state.returnScreen = null;
+  if (ret === 'screen-game' && isActive()) {
+    showScreen('screen-game');
+    resumeGame();
+  } else if (ret === 'screen-select' || ret === 'screen-leaderboard') {
+    showScreen(ret);
+  } else {
+    goHome();
+  }
 }
 
 function toggleTheme() {
@@ -656,11 +722,6 @@ function toggleTheme() {
 function toggleAudio() {
   state.audioEnabled = $('toggle-audio').checked;
   localStorage.setItem('hiraquest-audio', state.audioEnabled);
-}
-
-function toggleShuffle() {
-  state.shuffleEnabled = $('toggle-shuffle').checked;
-  localStorage.setItem('hiraquest-shuffle', state.shuffleEnabled);
 }
 
 async function saveProfileSettings(e) {
@@ -701,7 +762,6 @@ async function saveProfileSettings(e) {
       updatedAt: serverTimestamp()
     }, { merge: true }), 'Saving profile', 15000);
 
-    // Keep presence in sync with the new identity.
     setDoc(doc(db, 'presence', state.user.uid), {
       username, displayName, avatarEmoji: pendingAvatar
     }, { merge: true }).catch(() => {});
@@ -725,6 +785,84 @@ async function saveProfileSettings(e) {
   }
 }
 
+// ----- Danger Zone: reset progress -----
+
+function startReset() {
+  const startBtn = $('btn-reset-start');
+  const confirmBox = $('reset-confirm');
+  if (startBtn) startBtn.hidden = true;
+  if (confirmBox) confirmBox.hidden = false;
+  const input = $('reset-input');
+  if (input) { input.value = ''; input.focus(); }
+  const confirmBtn = $('btn-reset-confirm');
+  if (confirmBtn) confirmBtn.disabled = true;
+}
+
+function cancelReset() {
+  const startBtn = $('btn-reset-start');
+  const confirmBox = $('reset-confirm');
+  const input = $('reset-input');
+  if (confirmBox) confirmBox.hidden = true;
+  if (startBtn) startBtn.hidden = false;
+  if (input) input.value = '';
+}
+
+function onResetInput() {
+  const input = $('reset-input');
+  const confirmBtn = $('btn-reset-confirm');
+  if (confirmBtn) confirmBtn.disabled = !input || input.value.trim().toUpperCase() !== 'RESET';
+}
+
+async function resetProgress() {
+  if (!state.user) return;
+  try {
+    showLoading(true);
+
+    // 1. Overwrite the stats document (no merge — truly clears accuracy map).
+    await setDoc(doc(db, 'stats', state.user.uid), {
+      userId: state.user.uid,
+      totalGames: 0,
+      duelsWon: 0,
+      duelsLost: 0,
+      highestSoloScore: 0,
+      highestCoopScore: 0,
+      charactersMastered: [],
+      characterAccuracy: {},
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+
+    // 2. Delete this player's solo game sessions.
+    const q = query(
+      collection(db, 'game_sessions'),
+      where('playerIds', 'array-contains', state.user.uid)
+    );
+    const snap = await getDocs(q);
+    for (const docSnap of snap.docs) {
+      const pids = docSnap.data().playerIds || [];
+      if (pids.length <= 1) {
+        try {
+          await deleteDoc(docSnap.ref);
+        } catch (err) {
+          console.error('Session delete failed:', err);
+        }
+      }
+    }
+
+    // 3. Remove this player from every leaderboard bracket.
+    await removeUserFromLeaderboards(state.user.uid);
+
+    toast('Progress reset — fresh start!', 'success', 5000);
+    cancelReset();
+    goHome();
+  } catch (err) {
+    console.error('Reset failed:', err);
+    toast('Reset failed: ' + err.message, 'error', 8000);
+  } finally {
+    showLoading(false);
+  }
+}
+
 // ============================================
 // EVENT WIRING
 // ============================================
@@ -739,7 +877,7 @@ function attachListeners() {
 
   // Nav
   $('nav-brand')?.addEventListener('click', goHome);
-  $('btn-settings')?.addEventListener('click', showSettings);
+  $('btn-settings')?.addEventListener('click', openSettings);
   $('btn-logout')?.addEventListener('click', logout);
 
   // Game mode buttons
@@ -747,13 +885,19 @@ function attachListeners() {
     btn.addEventListener('click', () => handleModeClick(btn.dataset.mode));
   });
 
-  // Character select
+  // Character select + options
   $('btn-select-back')?.addEventListener('click', goHome);
   $('btn-select-all')?.addEventListener('click', selectAllSets);
   $('btn-clear-custom')?.addEventListener('click', clearCustom);
   $('btn-start')?.addEventListener('click', handleStartGame);
-  document.querySelectorAll('.seg-btn').forEach(btn => {
+  document.querySelectorAll('#seg-practice .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => setPractice(btn.dataset.practice));
+  });
+  document.querySelectorAll('#seg-input .seg-btn').forEach(btn => {
     btn.addEventListener('click', () => setInputMethod(btn.dataset.input));
+  });
+  document.querySelectorAll('#seg-duration .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => setZenDuration(Number(btn.dataset.duration)));
   });
 
   // Leaderboard
@@ -761,11 +905,16 @@ function attachListeners() {
   $('btn-lb-back')?.addEventListener('click', goHome);
 
   // Settings
-  $('btn-settings-back')?.addEventListener('click', goHome);
+  $('btn-settings-back')?.addEventListener('click', settingsBack);
   $('form-profile')?.addEventListener('submit', saveProfileSettings);
   $('toggle-theme')?.addEventListener('change', toggleTheme);
   $('toggle-audio')?.addEventListener('change', toggleAudio);
-  $('toggle-shuffle')?.addEventListener('change', toggleShuffle);
+
+  // Danger zone
+  $('btn-reset-start')?.addEventListener('click', startReset);
+  $('btn-reset-cancel')?.addEventListener('click', cancelReset);
+  $('reset-input')?.addEventListener('input', onResetInput);
+  $('btn-reset-confirm')?.addEventListener('click', resetProgress);
 
   // Friend
   $('btn-invite')?.addEventListener('click', inviteFriend);
@@ -773,6 +922,7 @@ function attachListeners() {
   // Game screen
   $('game-exit')?.addEventListener('click', requestExit);
   $('game-speak')?.addEventListener('click', speakCurrent);
+  $('pause-resume')?.addEventListener('click', resumeFromPause);
   $('results-again')?.addEventListener('click', playAgain);
   $('results-home')?.addEventListener('click', goHome);
 

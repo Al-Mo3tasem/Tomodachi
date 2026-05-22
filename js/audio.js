@@ -1,10 +1,13 @@
 // ============================================
 // HiraQuest — Audio Engine
-// Japanese pronunciation via the Web Speech API + lightweight
-// WebAudio sound effects. Both respect the global audio toggle.
+// Two distinct roles:
+//  • speak()      — Japanese pronunciation. FUNCTIONAL, not a preference.
+//                   Driven by game design (the prompt in Listening practice,
+//                   reinforcement on reveal in Reading practice).
+//  • playSound()  — game sound EFFECTS. Cosmetic; respects the audio toggle.
 // ============================================
 
-import { state } from './core.js?v=20260522';
+import { state } from './core.js?v=20260522b';
 
 // ----- Speech (TTS) -----
 let jaVoice = null;
@@ -28,9 +31,13 @@ export function isSpeechSupported() {
   return speechSupported;
 }
 
-/** Speak a Japanese character/word aloud. Silent if audio is disabled. */
+/**
+ * Speak a Japanese character/word aloud. This is functional audio — it is
+ * NOT gated by the cosmetic sound-effects toggle, because Listening practice
+ * depends on it. Falls back silently if speech is unavailable.
+ */
 export function speak(text) {
-  if (!state.audioEnabled || !speechSupported || !text) return;
+  if (!speechSupported || !text) return;
   try {
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
@@ -41,6 +48,12 @@ export function speak(text) {
     window.speechSynthesis.speak(utter);
   } catch {
     /* speech failures are non-critical */
+  }
+}
+
+export function stopSpeech() {
+  if (speechSupported) {
+    try { window.speechSynthesis.cancel(); } catch { /* ignore */ }
   }
 }
 
@@ -83,7 +96,7 @@ function tone(freq, duration, type = 'sine', volume = 0.07) {
   osc.stop(t + duration);
 }
 
-/** Play a short game sound effect. Silent if audio is disabled. */
+/** Play a short game sound effect. Silent if sound effects are disabled. */
 export function playSound(kind) {
   if (!state.audioEnabled) return;
   switch (kind) {

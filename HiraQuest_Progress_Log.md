@@ -167,3 +167,29 @@ scopes each collection and step-by-step console instructions to apply it.
 **Files / Areas:** `Firestore_Rules.md` (new).
 **Verification:** Rules reviewed against every Firestore call in the codebase.
 **Open Follow-up:** User to decide whether to apply the hardened rules.
+
+## 2026-05-22 — Phase 2.1: UX Revision (Expert Pass)
+**Status:** ✅ DONE
+**Scope:** Code / Design
+**Summary:** Reworked Phase 2 from player feedback to be pedagogically sound.
+- **Audio is now role-based, not a free setting.** In Reading practice the
+  glyph is the prompt and audio is hidden until the answer reveal (no leak —
+  previously you could sound-match without reading the hiragana). In the new
+  **Listening practice** audio IS the prompt and the player picks the matching
+  glyph. Survival stays pure reading.
+- **Zen Mode is now a timed practice studio** with a session countdown
+  (1/2/3 min) and a Practice toggle (Read / Listen). Every game now has a
+  timer (Zen: session countdown; Survival: per-question).
+- **Pause/resume:** games freeze cleanly when the tab is hidden (pause overlay)
+  or when Settings is opened; Settings "Back" returns to the game and resumes
+  it instead of dumping the player on the dashboard.
+- **Shuffle is always on** (the toggle was removed — predictable order
+  defeats practice).
+- **Compact friend bar** replaces the oversized friend card (2-player app).
+- **Reset My Progress** added to a Settings "Danger Zone" — type-to-confirm,
+  wipes stats, solo game history, and leaderboard entries.
+**Files / Areas:** `js/game.js`, `js/app.js`, `js/core.js`, `js/audio.js`,
+`js/leaderboard.js`, `js/firebase.js`, `index.html`, `css/style.css`.
+**Verification:** `node --check` passed on all modules; CSS braces balanced.
+**Open Follow-up:** Apply the updated hardened rules (game_sessions now allows
+participants to delete their own sessions, which powers the reset feature).

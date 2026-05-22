@@ -4,7 +4,7 @@
 // and one pinned SDK version.
 // ============================================
 
-import { firebaseConfig } from './config.js?v=20260522';
+import { firebaseConfig } from './config.js?v=20260522b';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
@@ -20,6 +20,7 @@ import {
   getDoc,
   setDoc,
   getDocs,
+  deleteDoc,
   collection,
   query,
   where,
@@ -50,6 +51,7 @@ export {
   getDoc,
   setDoc,
   getDocs,
+  deleteDoc,
   collection,
   query,
   where,
