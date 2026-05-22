@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260524';
+import { APP_CONFIG } from './config.js?v=20260525';
 
 // ----- Global App State -----
 export const state = {

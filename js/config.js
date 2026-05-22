@@ -17,5 +17,5 @@ export const firebaseConfig = {
 export const APP_CONFIG = {
   maxUsers: 2,
   defaultTheme: 'light',
-  version: '4.0.0-phase4'
+  version: '4.1.0-phase4'
 };

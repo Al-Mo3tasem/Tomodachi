@@ -14,12 +14,15 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from './core.js?v=20260524';
+} from './core.js?v=20260525';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from './firebase.js?v=20260524';
-import { speak, stopSpeech, playSound, unlockAudio } from './audio.js?v=20260524';
-import { submitSurvivalScore, bracketFor } from './leaderboard.js?v=20260524';
+} from './firebase.js?v=20260525';
+import {
+  speak, stopSpeech, playSound, unlockAudio,
+  primeSpeech, unprimeSpeech
+} from './audio.js?v=20260525';
+import { submitSurvivalScore, bracketFor } from './leaderboard.js?v=20260525';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -66,6 +69,9 @@ export function startGame(type) {
   }
 
   unlockAudio();
+  // Pre-build per-character utterances and warm the speech engine so the
+  // first pronunciation has no cold-start delay.
+  primeSpeech(chars.map(c => c.char));
   lastType = type;
 
   const practice = type === 'survival' ? 'read' : state.practiceType;
@@ -211,6 +217,7 @@ export function cleanup() {
   }
   detachHandlers();
   stopSpeech();
+  unprimeSpeech();
   hideResults();
   hidePauseOverlay();
   setPresence('online');
@@ -761,6 +768,7 @@ function endGame(reason) {
   if (g.advanceTimer) { clearTimeout(g.advanceTimer); g.advanceTimer = null; }
   detachHandlers();
   stopSpeech();
+  unprimeSpeech();
   hidePauseOverlay();
   setPresence('online');
 

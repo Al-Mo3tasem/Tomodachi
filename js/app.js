@@ -4,38 +4,39 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260524';
+import { APP_CONFIG } from './config.js?v=20260525';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core.js?v=20260524';
+} from './core.js?v=20260525';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './firebase.js?v=20260524';
+} from './firebase.js?v=20260525';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './game.js?v=20260524';
+} from './game.js?v=20260525';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './leaderboard.js?v=20260524';
-import { isSpeechSupported } from './audio.js?v=20260524';
+} from './leaderboard.js?v=20260525';
+import { isSpeechSupported } from './audio.js?v=20260525';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './duel.js?v=20260524';
+} from './duel.js?v=20260525';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './coop.js?v=20260524';
+} from './coop.js?v=20260525';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
+const ZEN_DURATIONS = [60, 180, 300, 420, 600];   // 1, 3, 5, 7, 10 minutes
 
 let pendingAvatar = '🌸';
 
@@ -711,6 +712,8 @@ function goToSelect(gameType) {
     }
     setPractice(state.practiceType);
     setInputMethod(state.inputMethod);
+    // Snap any previously-stored duration onto the current option set.
+    if (!ZEN_DURATIONS.includes(state.zenDuration)) state.zenDuration = 60;
     setZenDuration(state.zenDuration);
     if (startBtn) startBtn.textContent = 'Start Game';
   }

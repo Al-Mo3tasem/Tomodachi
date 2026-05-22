@@ -5,8 +5,8 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $, showScreen } from './core.js?v=20260524';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260524';
+import { state, $, showScreen } from './core.js?v=20260525';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260525';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
