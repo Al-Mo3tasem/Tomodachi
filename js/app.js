@@ -1,101 +1,32 @@
 // ============================================
-// HiraQuest Main Application - FIXED VERSION
-// Phase 1: Auth, Dashboard, Character Select, Presence
+// HiraQuest — Application Orchestrator
+// Phase 2: Auth, Dashboard, Character Select, Zen Mode,
+// Survival Rush, Leaderboards, Settings, Presence.
 // ============================================
 
-import { firebaseConfig, APP_CONFIG } from './config.js?v=20260521-3';
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { APP_CONFIG } from './config.js?v=20260522';
 import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signOut
-} from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+  state, $, showScreen, showLoading, toast, setTheme, withTimeout
+} from './core.js?v=20260522';
 import {
-  initializeFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  getDocs,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  serverTimestamp,
-  updateDoc,
-  addDoc,
-  limit
-} from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+  auth, db,
+  onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  updateProfile, signOut,
+  doc, getDoc, setDoc, getDocs, collection, query, where, onSnapshot,
+  serverTimestamp, limit
+} from './firebase.js?v=20260522';
+import { startGame, requestExit, playAgain, cleanup as cleanupGame, speakCurrent } from './game.js?v=20260522';
+import { openLeaderboard, renderLeaderboardPreview } from './leaderboard.js?v=20260522';
 
-// ----- Initialize Firebase -----
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true
-});
+const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
+const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
+const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
 
-// ----- Global State -----
-const state = {
-  user: null,
-  userData: null,
-  friend: null,
-  friendPresence: null,
-  contentSets: [],
-  selectedSets: new Set(),
-  selectedChars: new Set(),
-  currentGameType: null,
-  audioEnabled: true,
-  theme: localStorage.getItem('hiraquest-theme') || APP_CONFIG.defaultTheme
-};
+let pendingAvatar = '🌸';
 
-// ----- DOM Helpers -----
-const $ = (id) => document.getElementById(id);
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const el = $(id);
-  if (el) el.classList.add('active');
-}
-
-function showLoading(show) {
-  const overlay = $('loading-overlay');
-  if (overlay) overlay.classList.toggle('active', show);
-}
-
-function toast(message, type = 'info', duration = 3000) {
-  const container = $('toast-container');
-  if (!container) return;
-
-  const toastEl = document.createElement('div');
-  toastEl.className = 'toast';
-  const icons = { info: 'ℹ️', success: '✅', error: '❌', warning: '⚠️' };
-  toastEl.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
-  container.appendChild(toastEl);
-
-  setTimeout(() => {
-    toastEl.classList.add('leaving');
-    setTimeout(() => toastEl.remove(), 300);
-  }, duration);
-}
-
-function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('hiraquest-theme', theme);
-  state.theme = theme;
-  const toggle = $('toggle-theme');
-  if (toggle) toggle.checked = theme === 'dark';
-}
-
-function withTimeout(promise, label, ms = 12000) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)} seconds.`)), ms);
-    })
-  ]);
-}
+// ============================================
+// PROFILE HELPERS
+// ============================================
 
 function fallbackUserData(user) {
   const emailName = user.email?.split('@')[0] || 'player';
@@ -138,6 +69,19 @@ async function ensureUserProfile(user) {
   return profile;
 }
 
+function renderUserIdentity() {
+  const displayName = state.userData?.displayName || 'Player';
+  const username = state.userData?.username || 'player';
+  const avatar = state.userData?.avatarEmoji || '🌸';
+
+  const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
+  set('dash-welcome', displayName);
+  set('dash-displayname', displayName);
+  set('dash-username', `@${username}`);
+  set('dash-avatar', avatar);
+  set('nav-name', displayName);
+}
+
 // ============================================
 // AUTHENTICATION
 // ============================================
@@ -169,24 +113,6 @@ function showFormError(errorEl, message) {
   toast(message, 'error', 7000);
 }
 
-function renderUserIdentity() {
-  const displayName = state.userData?.displayName || 'Player';
-  const username = state.userData?.username || 'player';
-  const avatar = state.userData?.avatarEmoji || '🌸';
-
-  const welcomeEl = $('dash-welcome');
-  const displayEl = $('dash-displayname');
-  const usernameEl = $('dash-username');
-  const avatarEl = $('dash-avatar');
-  const navNameEl = $('nav-name');
-
-  if (welcomeEl) welcomeEl.textContent = displayName;
-  if (displayEl) displayEl.textContent = displayName;
-  if (usernameEl) usernameEl.textContent = `@${username}`;
-  if (avatarEl) avatarEl.textContent = avatar;
-  if (navNameEl) navNameEl.textContent = displayName;
-}
-
 async function handleLogin(e) {
   e.preventDefault();
   const email = $('login-email').value.trim();
@@ -202,7 +128,7 @@ async function handleLogin(e) {
   try {
     showLoading(true);
     await withTimeout(signInWithEmailAndPassword(auth, email, password), 'Signing in', 15000);
-    toast('Signed in. Loading dashboard...', 'success');
+    toast('Signed in. Loading dashboard…', 'success');
   } catch (err) {
     showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Login error:', err);
@@ -233,7 +159,6 @@ async function handleRegister(e) {
   try {
     showLoading(true);
 
-    // Check 2-user limit
     const usersSnap = await withTimeout(getDocs(collection(db, 'users')), 'Checking account limit', 15000);
     if (usersSnap.size >= APP_CONFIG.maxUsers) {
       showFormError(errorEl, 'HiraQuest is full! Only 2 accounts are allowed.');
@@ -241,7 +166,6 @@ async function handleRegister(e) {
       return;
     }
 
-    // Check username uniqueness
     const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
     const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
     if (!usernameSnap.empty) {
@@ -250,11 +174,9 @@ async function handleRegister(e) {
       return;
     }
 
-    // Create auth account
     const cred = await withTimeout(createUserWithEmailAndPassword(auth, email, password), 'Creating Firebase Auth account', 15000);
     await withTimeout(updateProfile(cred.user, { displayName }), 'Saving display name', 15000);
 
-    // Create user document
     await withTimeout(setDoc(doc(db, 'users', cred.user.uid), {
       uid: cred.user.uid,
       username,
@@ -265,7 +187,6 @@ async function handleRegister(e) {
       status: 'offline'
     }), 'Creating user profile', 15000);
 
-    // Create stats document
     await withTimeout(setDoc(doc(db, 'stats', cred.user.uid), {
       userId: cred.user.uid,
       totalGames: 0,
@@ -278,7 +199,6 @@ async function handleRegister(e) {
     }), 'Creating stats profile', 15000);
 
     toast('Account created! Welcome to HiraQuest.', 'success');
-
   } catch (err) {
     showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Register error:', err);
@@ -289,6 +209,7 @@ async function handleRegister(e) {
 
 async function logout() {
   try {
+    cleanupGame();
     if (state.user) {
       await setDoc(doc(db, 'presence', state.user.uid), {
         status: 'offline',
@@ -323,6 +244,7 @@ function initPresence() {
     userId: state.user.uid,
     username: state.userData?.username,
     displayName: state.userData?.displayName,
+    avatarEmoji: state.userData?.avatarEmoji || '🌸',
     status: 'online',
     lastSeen: serverTimestamp()
   }, { merge: true }).catch(err => {
@@ -352,11 +274,12 @@ function renderFriend() {
   const p = state.friendPresence;
   const nameEl = $('friend-name');
   const statusEl = $('friend-status');
+  const avatarEl = $('friend-avatar');
   const inviteBtn = $('btn-invite');
   const navDot = $('nav-presence');
 
   if (!p) {
-    if (nameEl) nameEl.textContent = 'Waiting for friend...';
+    if (nameEl) nameEl.textContent = 'Waiting for friend…';
     if (statusEl) statusEl.innerHTML = `<span class="status-dot offline"></span><span class="status-text">Offline</span>`;
     if (inviteBtn) inviteBtn.disabled = true;
     if (navDot) navDot.className = 'presence-dot';
@@ -368,6 +291,7 @@ function renderFriend() {
   const statusText = p.status === 'in_game' ? 'In Game' : (isOnline ? 'Online' : 'Offline');
 
   if (nameEl) nameEl.textContent = p.displayName || p.username || 'Friend';
+  if (avatarEl) avatarEl.textContent = p.avatarEmoji || state.friend?.avatarEmoji || '🎮';
   if (statusEl) statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span><span class="status-text">${statusText}</span>`;
   if (inviteBtn) inviteBtn.disabled = !isOnline;
   if (navDot) navDot.className = `presence-dot ${dotClass}`;
@@ -381,6 +305,14 @@ function renderFriend() {
       sessionStorage.setItem('last-online-toast', now.toString());
     }
   }
+}
+
+function inviteFriend() {
+  if (!state.friendPresence || state.friendPresence.status === 'offline') {
+    toast('Your friend is not online right now.', 'warning');
+    return;
+  }
+  toast('Live invites arrive with Duel Mode in Phase 3!', 'info', 4000);
 }
 
 // ============================================
@@ -397,8 +329,14 @@ async function loadContentSets() {
     state.contentSets.sort((a, b) => (a.order || 0) - (b.order || 0));
   } catch (err) {
     console.error('Failed to load content sets:', err);
-    toast('Failed to load Hiragana sets. Make sure database is seeded.', 'error');
+    toast('Failed to load Hiragana sets. Make sure the database is seeded.', 'error');
   }
+}
+
+function totalCharCount() {
+  const chars = new Set();
+  state.contentSets.forEach(s => (s.characters || []).forEach(c => chars.add(c.char)));
+  return chars.size;
 }
 
 function renderSets() {
@@ -413,7 +351,6 @@ function renderSets() {
     el.addEventListener('click', () => toggleSet(set.id));
 
     const chars = (set.characters || []).map(c => c.char).join(' ');
-
     el.innerHTML = `
       <div class="set-checkbox"></div>
       <div class="set-info">
@@ -462,71 +399,86 @@ async function loadDashboard() {
     const statsDoc = await getDoc(doc(db, 'stats', state.user.uid));
     const stats = statsDoc.exists() ? statsDoc.data() : {};
 
-    const totalEl = $('stat-total');
-    const winsEl = $('stat-wins');
-    const bestEl = $('stat-best');
-    if (totalEl) totalEl.textContent = stats.totalGames || 0;
-    if (winsEl) winsEl.textContent = stats.duelsWon || 0;
-    if (bestEl) bestEl.textContent = stats.highestSoloScore || 0;
+    const masteredCount = (stats.charactersMastered || []).length;
+    const total = totalCharCount() || 46;
+
+    const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
+    set('stat-total', stats.totalGames || 0);
+    set('stat-best', (stats.highestSoloScore || 0).toLocaleString());
+    set('stat-mastered', `${masteredCount}/${total}`);
+
+    const pct = Math.round((masteredCount / total) * 100);
+    set('mastery-percent', `${pct}%`);
+    const fill = $('mastery-fill');
+    if (fill) fill.style.width = `${pct}%`;
 
     renderUserIdentity();
 
     const usersSnap = await getDocs(collection(db, 'users'));
     usersSnap.forEach(u => {
-      if (u.id !== state.user.uid) {
-        state.friend = u.data();
-      }
+      if (u.id !== state.user.uid) state.friend = u.data();
     });
 
     renderFriend();
+    renderLeaderboardPreview();
   } catch (err) {
     console.error('Dashboard load error:', err);
   }
 }
 
 async function loadHistory() {
+  const list = $('history-list');
+  if (!list || !state.user) return;
   try {
     const q = query(
       collection(db, 'game_sessions'),
-      where('players', 'array-contains', state.user.uid),
-      limit(5)
+      where('playerIds', 'array-contains', state.user.uid),
+      limit(20)
     );
     const snap = await getDocs(q);
-    const list = $('history-list');
-    if (!list) return;
 
     if (snap.empty) {
       list.innerHTML = '<p class="empty-state">No games played yet.</p>';
       return;
     }
 
-    list.innerHTML = '';
-    snap.forEach(docSnap => {
-      const data = docSnap.data();
-      const isDuel = data.gameType === 'duel';
-      const result = isDuel
-        ? (data.winner === state.user.uid ? 'Victory' : 'Defeat')
-        : 'Completed';
-      const color = result === 'Victory' ? 'var(--success)' : (result === 'Defeat' ? 'var(--danger)' : 'var(--accent)');
+    const games = [];
+    snap.forEach(docSnap => games.push(docSnap.data()));
+    games.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
 
+    list.innerHTML = '';
+    games.slice(0, 6).forEach(data => {
+      const type = data.gameType || 'game';
+      const date = new Date(toMillis(data.createdAt)).toLocaleDateString();
       const item = document.createElement('div');
-      item.style.cssText = 'padding: 12px 0; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;';
+      item.className = 'history-item';
       item.innerHTML = `
         <div>
-          <div style="font-weight:600; font-size:0.9375rem;">${(data.gameType || 'GAME').toUpperCase()}</div>
-          <div style="font-size:0.75rem; color:var(--text-secondary);">${new Date(data.createdAt?.toDate?.() || Date.now()).toLocaleDateString()}</div>
+          <div class="history-mode">${MODE_EMOJI[type] || '🎮'} ${MODE_NAMES[type] || type}</div>
+          <div class="history-date">${date}</div>
         </div>
-        <div style="font-weight:700; color:${color}; font-size:0.875rem;">${result}</div>
+        <div class="history-meta">
+          <div class="history-score">${(data.score || 0).toLocaleString()} pts</div>
+          <div class="history-sub">${Math.round((data.accuracy || 0) * 100)}% accuracy</div>
+        </div>
       `;
       list.appendChild(item);
     });
   } catch (err) {
     console.error('History load error:', err);
+    list.innerHTML = '<p class="empty-state">Could not load history.</p>';
   }
 }
 
+function toMillis(ts) {
+  if (!ts) return 0;
+  if (typeof ts.toMillis === 'function') return ts.toMillis();
+  if (typeof ts.toDate === 'function') return ts.toDate().getTime();
+  return new Date(ts).getTime() || 0;
+}
+
 // ============================================
-// CHARACTER SELECTION LOGIC
+// CHARACTER SELECTION
 // ============================================
 
 function updateSelectionUI() {
@@ -545,7 +497,7 @@ function updateSelectionUI() {
   const startBtn = $('btn-start');
 
   if (countEl) countEl.textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
-  if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}x`;
+  if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}×`;
   if (startBtn) startBtn.disabled = totalChars === 0;
 }
 
@@ -566,19 +518,15 @@ function toggleSet(setId) {
 function toggleChar(char) {
   if (state.selectedChars.has(char)) {
     state.selectedChars.delete(char);
-    state.contentSets.forEach(set => {
-      const setChars = (set.characters || []).map(c => c.char);
-      const hasAll = setChars.every(c => state.selectedChars.has(c));
-      if (!hasAll) state.selectedSets.delete(set.id);
-    });
   } else {
     state.selectedChars.add(char);
-    state.contentSets.forEach(set => {
-      const setChars = (set.characters || []).map(c => c.char);
-      const hasAll = setChars.every(c => state.selectedChars.has(c));
-      if (hasAll) state.selectedSets.add(set.id);
-    });
   }
+  state.contentSets.forEach(set => {
+    const setChars = (set.characters || []).map(c => c.char);
+    const hasAll = setChars.length > 0 && setChars.every(c => state.selectedChars.has(c));
+    if (hasAll) state.selectedSets.add(set.id);
+    else state.selectedSets.delete(set.id);
+  });
   updateSelectionUI();
 }
 
@@ -596,11 +544,20 @@ function clearCustom() {
   updateSelectionUI();
 }
 
+function setInputMethod(method) {
+  state.inputMethod = method;
+  localStorage.setItem('hiraquest-input', method);
+  document.querySelectorAll('.seg-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.input === method);
+  });
+}
+
 // ============================================
-// ROUTER & NAVIGATION
+// NAVIGATION
 // ============================================
 
 function goHome() {
+  cleanupGame();
   showScreen('screen-dashboard');
   loadDashboard();
   loadHistory();
@@ -608,56 +565,102 @@ function goHome() {
 
 function goToSelect(gameType) {
   state.currentGameType = gameType;
-  const names = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
+
   const subEl = $('select-subtitle');
-  if (subEl) subEl.textContent = `Choose Hiragana for ${names[gameType] || gameType}`;
+  if (subEl) subEl.textContent = `Choose Hiragana for ${MODE_NAMES[gameType] || gameType}`;
+
+  const infoEl = $('select-options-info');
+  const inputRow = $('option-input');
+  if (gameType === 'survival') {
+    if (infoEl) infoEl.textContent = '🔥 Typing only · 3 lives · the clock speeds up every 5 correct answers. Score scales with how many characters you pick.';
+    if (inputRow) inputRow.style.display = 'none';
+  } else {
+    if (infoEl) infoEl.textContent = '🧘 Relaxed practice — no timer, no lives. Cards loop until you finish the session.';
+    if (inputRow) inputRow.style.display = 'flex';
+  }
+  setInputMethod(state.inputMethod);
+
   showScreen('screen-select');
   renderSets();
   updateSelectionUI();
 }
 
+function handleModeClick(mode) {
+  if (mode === 'duel') {
+    toast('⚔️ Duel Mode arrives in Phase 3!', 'info', 4000);
+    return;
+  }
+  if (mode === 'coop') {
+    toast('🤝 Sync Match arrives in Phase 4!', 'info', 4000);
+    return;
+  }
+  goToSelect(mode);
+}
+
+function handleStartGame() {
+  startGame(state.currentGameType);
+}
+
+// ============================================
+// SETTINGS
+// ============================================
+
+function renderAvatarPicker() {
+  const host = $('avatar-picker');
+  if (!host) return;
+  pendingAvatar = state.userData?.avatarEmoji || '🌸';
+  host.innerHTML = '';
+  AVATARS.forEach(emoji => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'avatar-option';
+    btn.textContent = emoji;
+    if (emoji === pendingAvatar) btn.classList.add('selected');
+    btn.addEventListener('click', () => {
+      pendingAvatar = emoji;
+      host.querySelectorAll('.avatar-option').forEach(o => {
+        o.classList.toggle('selected', o.textContent === emoji);
+      });
+    });
+    host.appendChild(btn);
+  });
+}
+
 function showSettings() {
   showScreen('screen-settings');
-  const toggle = $('toggle-theme');
-  if (toggle) toggle.checked = state.theme === 'dark';
+
+  const themeToggle = $('toggle-theme');
+  if (themeToggle) themeToggle.checked = state.theme === 'dark';
+  const audioToggle = $('toggle-audio');
+  if (audioToggle) audioToggle.checked = state.audioEnabled;
+  const shuffleToggle = $('toggle-shuffle');
+  if (shuffleToggle) shuffleToggle.checked = state.shuffleEnabled;
+
   const displayInput = $('settings-displayname');
   const usernameInput = $('settings-username');
   const errorEl = $('settings-profile-error');
   if (displayInput) displayInput.value = state.userData?.displayName || '';
   if (usernameInput) usernameInput.value = state.userData?.username || '';
   if (errorEl) errorEl.textContent = '';
-}
 
-function showLeaderboard() {
-  toast('Full leaderboard coming in Phase 2!', 'info');
-}
+  const versionEl = $('settings-version');
+  if (versionEl) versionEl.textContent = `HiraQuest ${APP_CONFIG.version}`;
 
-function startGame() {
-  const chars = Array.from(state.selectedChars);
-  if (chars.length === 0) {
-    toast('Select at least one character!', 'warning');
-    return;
-  }
-  showScreen('screen-game');
-  toast(`${state.currentGameType} mode selected with ${chars.length} characters. Phase 2 will add the actual gameplay!`, 'success', 5000);
-}
-
-function inviteFriend() {
-  if (!state.friendPresence || state.friendPresence.status !== 'online') {
-    toast('Your friend is not online right now.', 'warning');
-    return;
-  }
-  toast(`Invite sent to ${state.friendPresence.displayName || 'your friend'}! (Full invites in Phase 3)`, 'info');
+  renderAvatarPicker();
 }
 
 function toggleTheme() {
-  const newTheme = $('toggle-theme').checked ? 'dark' : 'light';
-  setTheme(newTheme);
+  setTheme($('toggle-theme').checked ? 'dark' : 'light');
 }
 
 function toggleAudio() {
   state.audioEnabled = $('toggle-audio').checked;
   localStorage.setItem('hiraquest-audio', state.audioEnabled);
+}
+
+function toggleShuffle() {
+  state.shuffleEnabled = $('toggle-shuffle').checked;
+  localStorage.setItem('hiraquest-shuffle', state.shuffleEnabled);
 }
 
 async function saveProfileSettings(e) {
@@ -673,7 +676,6 @@ async function saveProfileSettings(e) {
     showFormError(errorEl, 'Display name is required.');
     return;
   }
-
   if (!/^[a-z0-9_]+$/.test(username)) {
     showFormError(errorEl, 'Username must be lowercase letters, numbers, or underscores only.');
     return;
@@ -683,9 +685,8 @@ async function saveProfileSettings(e) {
     showLoading(true);
     const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
     const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
-    const takenByOtherUser = usernameSnap.docs.some(docSnap => docSnap.id !== state.user.uid);
-
-    if (takenByOtherUser) {
+    const takenByOther = usernameSnap.docs.some(docSnap => docSnap.id !== state.user.uid);
+    if (takenByOther) {
       showFormError(errorEl, 'Username already taken.');
       return;
     }
@@ -696,9 +697,14 @@ async function saveProfileSettings(e) {
       username,
       displayName,
       email: state.user.email || '',
-      avatarEmoji: state.userData?.avatarEmoji || '🌸',
+      avatarEmoji: pendingAvatar,
       updatedAt: serverTimestamp()
     }, { merge: true }), 'Saving profile', 15000);
+
+    // Keep presence in sync with the new identity.
+    setDoc(doc(db, 'presence', state.user.uid), {
+      username, displayName, avatarEmoji: pendingAvatar
+    }, { merge: true }).catch(() => {});
 
     state.userData = {
       ...state.userData,
@@ -706,7 +712,7 @@ async function saveProfileSettings(e) {
       username,
       displayName,
       email: state.user.email || '',
-      avatarEmoji: state.userData?.avatarEmoji || '🌸'
+      avatarEmoji: pendingAvatar
     };
 
     renderUserIdentity();
@@ -720,81 +726,70 @@ async function saveProfileSettings(e) {
 }
 
 // ============================================
-// EVENT LISTENERS (All attached here - robust)
+// EVENT WIRING
 // ============================================
 
 function attachListeners() {
-  // Auth tabs
+  // Auth tabs + forms
   document.querySelectorAll('.auth-tab').forEach(btn => {
     btn.addEventListener('click', () => switchAuthTab(btn.dataset.tab));
   });
-
-  // Auth forms
-  const loginForm = $('form-login');
-  const registerForm = $('form-register');
-  if (loginForm) loginForm.addEventListener('submit', handleLogin);
-  if (registerForm) registerForm.addEventListener('submit', handleRegister);
+  $('form-login')?.addEventListener('submit', handleLogin);
+  $('form-register')?.addEventListener('submit', handleRegister);
 
   // Nav
-  const navBrand = $('nav-brand');
-  const btnSettings = $('btn-settings');
-  const btnLogout = $('btn-logout');
-  if (navBrand) navBrand.addEventListener('click', goHome);
-  if (btnSettings) btnSettings.addEventListener('click', showSettings);
-  if (btnLogout) btnLogout.addEventListener('click', logout);
+  $('nav-brand')?.addEventListener('click', goHome);
+  $('btn-settings')?.addEventListener('click', showSettings);
+  $('btn-logout')?.addEventListener('click', logout);
 
   // Game mode buttons
   document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => goToSelect(btn.dataset.mode));
+    btn.addEventListener('click', () => handleModeClick(btn.dataset.mode));
   });
 
-  // Select screen
-  const btnSelectBack = $('btn-select-back');
-  const btnSelectAll = $('btn-select-all');
-  const btnClearCustom = $('btn-clear-custom');
-  const btnStart = $('btn-start');
-  if (btnSelectBack) btnSelectBack.addEventListener('click', goHome);
-  if (btnSelectAll) btnSelectAll.addEventListener('click', selectAllSets);
-  if (btnClearCustom) btnClearCustom.addEventListener('click', clearCustom);
-  if (btnStart) btnStart.addEventListener('click', startGame);
-
-  // Settings
-  const btnSettingsBack = $('btn-settings-back');
-  const profileForm = $('form-profile');
-  const toggleThemeEl = $('toggle-theme');
-  const toggleAudioEl = $('toggle-audio');
-  if (btnSettingsBack) btnSettingsBack.addEventListener('click', goHome);
-  if (profileForm) profileForm.addEventListener('submit', saveProfileSettings);
-  if (toggleThemeEl) toggleThemeEl.addEventListener('change', toggleTheme);
-  if (toggleAudioEl) toggleAudioEl.addEventListener('change', toggleAudio);
-
-  // Game placeholder
-  const btnGameBack = $('btn-game-back');
-  if (btnGameBack) btnGameBack.addEventListener('click', goHome);
+  // Character select
+  $('btn-select-back')?.addEventListener('click', goHome);
+  $('btn-select-all')?.addEventListener('click', selectAllSets);
+  $('btn-clear-custom')?.addEventListener('click', clearCustom);
+  $('btn-start')?.addEventListener('click', handleStartGame);
+  document.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => setInputMethod(btn.dataset.input));
+  });
 
   // Leaderboard
-  const btnLeaderboard = $('btn-leaderboard');
-  if (btnLeaderboard) btnLeaderboard.addEventListener('click', showLeaderboard);
+  $('btn-leaderboard')?.addEventListener('click', openLeaderboard);
+  $('btn-lb-back')?.addEventListener('click', goHome);
 
-  // Invite
-  const btnInvite = $('btn-invite');
-  if (btnInvite) btnInvite.addEventListener('click', inviteFriend);
+  // Settings
+  $('btn-settings-back')?.addEventListener('click', goHome);
+  $('form-profile')?.addEventListener('submit', saveProfileSettings);
+  $('toggle-theme')?.addEventListener('change', toggleTheme);
+  $('toggle-audio')?.addEventListener('change', toggleAudio);
+  $('toggle-shuffle')?.addEventListener('change', toggleShuffle);
+
+  // Friend
+  $('btn-invite')?.addEventListener('click', inviteFriend);
+
+  // Game screen
+  $('game-exit')?.addEventListener('click', requestExit);
+  $('game-speak')?.addEventListener('click', speakCurrent);
+  $('results-again')?.addEventListener('click', playAgain);
+  $('results-home')?.addEventListener('click', goHome);
+
+  // Internal navigation event (dispatched by the game engine)
+  document.addEventListener('hq:gohome', goHome);
 }
 
 // ============================================
-// APP INITIALIZATION
+// INITIALIZATION
 // ============================================
 
 async function init() {
   setTheme(state.theme);
-  const audioToggle = $('toggle-audio');
-  if (audioToggle) audioToggle.checked = localStorage.getItem('hiraquest-audio') !== 'false';
-
   attachListeners();
 
   onAuthStateChanged(auth, async (user) => {
     showLoading(true);
-
     try {
       if (user) {
         state.user = user;
@@ -807,24 +802,20 @@ async function init() {
           toast(`Could not load your profile: ${err.message}`, 'error', 8000);
         }
 
-        $('screen-auth').classList.remove('active');
-        const appEl = $('app');
-        if (appEl) appEl.classList.remove('hidden');
+        $('screen-auth')?.classList.remove('active');
+        $('app')?.classList.remove('hidden');
 
         initPresence();
         await loadContentSets();
         goHome();
         toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
-
       } else {
+        cleanupGame();
         state.user = null;
         state.userData = null;
-        if (presenceUnsub) presenceUnsub();
+        if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }
 
-        const appEl = $('app');
-        if (appEl) appEl.classList.add('hidden');
-        const authScreen = $('screen-auth');
-        if (authScreen) authScreen.classList.add('active');
+        $('app')?.classList.add('hidden');
         showScreen('screen-auth');
       }
     } catch (err) {

@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HiraQuest</title>
+  <meta name="theme-color" content="#F5F5F7">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260522">
 </head>
 <body>
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay active">
     <div class="spinner"></div>
-    <p class="loading-text">Loading HiraQuest...</p>
+    <p class="loading-text">Loading HiraQuest…</p>
   </div>
 
   <!-- ========== AUTH SCREEN ========== -->
@@ -82,7 +83,7 @@
         </div>
       </div>
       <div class="nav-right">
-        <button class="nav-btn" id="btn-settings" title="Settings">⚙️</button>
+        <button class="nav-btn" id="btn-settings" title="Settings" aria-label="Settings">⚙️</button>
         <div class="nav-user">
           <div class="presence-dot" id="nav-presence"></div>
           <span id="nav-name">Player</span>
@@ -115,13 +116,20 @@
                 <div class="stat-label">Games</div>
               </div>
               <div class="stat-box">
-                <div class="stat-value" id="stat-wins">0</div>
-                <div class="stat-label">Wins</div>
-              </div>
-              <div class="stat-box">
                 <div class="stat-value" id="stat-best">0</div>
                 <div class="stat-label">Best Score</div>
               </div>
+              <div class="stat-box">
+                <div class="stat-value" id="stat-mastered">0</div>
+                <div class="stat-label">Mastered</div>
+              </div>
+            </div>
+            <div class="mastery-bar-wrap">
+              <div class="mastery-bar-head">
+                <span>Hiragana mastery</span>
+                <span id="mastery-percent">0%</span>
+              </div>
+              <div class="mastery-bar"><div class="mastery-bar-fill" id="mastery-fill"></div></div>
             </div>
           </div>
 
@@ -131,7 +139,7 @@
             <div class="friend-row" id="friend-row">
               <div class="friend-avatar" id="friend-avatar">🎮</div>
               <div class="friend-info">
-                <div class="friend-name" id="friend-name">...</div>
+                <div class="friend-name" id="friend-name">…</div>
                 <div class="friend-status" id="friend-status">
                   <span class="status-dot offline"></span>
                   <span class="status-text">Offline</span>
@@ -139,7 +147,7 @@
               </div>
             </div>
             <div class="friend-actions">
-              <button class="btn btn-secondary btn-sm" id="btn-invite" disabled>Invite to Game</button>
+              <button class="btn btn-secondary btn-sm btn-full" id="btn-invite" disabled>Invite to Game</button>
             </div>
           </div>
 
@@ -163,21 +171,21 @@
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
-              <button class="mode-btn" data-mode="duel">
+              <button class="mode-btn mode-btn-soon" data-mode="duel">
                 <span class="mode-emoji">⚔️</span>
                 <div class="mode-details">
                   <div class="mode-name">Duel Mode</div>
                   <div class="mode-desc">Challenge your friend</div>
                 </div>
-                <span class="mode-arrow">→</span>
+                <span class="mode-tag">Phase 3</span>
               </button>
-              <button class="mode-btn" data-mode="coop">
+              <button class="mode-btn mode-btn-soon" data-mode="coop">
                 <span class="mode-emoji">🤝</span>
                 <div class="mode-details">
                   <div class="mode-name">Sync Match</div>
                   <div class="mode-desc">Team up together</div>
                 </div>
-                <span class="mode-arrow">→</span>
+                <span class="mode-tag">Phase 4</span>
               </button>
             </div>
           </div>
@@ -211,6 +219,18 @@
           <p class="page-subtitle" id="select-subtitle">Choose which Hiragana to include</p>
         </header>
 
+        <!-- Mode options -->
+        <div class="select-options card" id="select-options">
+          <div class="select-options-info" id="select-options-info"></div>
+          <div class="option-row" id="option-input">
+            <span class="option-label">Input Method</span>
+            <div class="segmented" id="seg-input">
+              <button class="seg-btn" data-input="typing">⌨️ Typing</button>
+              <button class="seg-btn" data-input="multiple">🔘 Multiple Choice</button>
+            </div>
+          </div>
+        </div>
+
         <div class="select-layout">
           <!-- Premade Sets -->
           <div class="select-panel">
@@ -234,9 +254,24 @@
         <div class="select-footer">
           <div class="selection-meta">
             <span class="selection-count" id="selection-count">0 characters selected</span>
-            <span class="selection-difficulty" id="selection-difficulty">Difficulty: 1.0x</span>
+            <span class="selection-difficulty" id="selection-difficulty">Difficulty: 1.0×</span>
           </div>
           <button class="btn btn-primary btn-lg" id="btn-start" disabled>Start Game</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LEADERBOARD ========== -->
+    <section id="screen-leaderboard" class="screen">
+      <div class="container">
+        <button class="btn btn-ghost back-btn" id="btn-lb-back">← Back to Dashboard</button>
+        <header class="page-header">
+          <h1 class="page-title">Leaderboard</h1>
+          <p class="page-subtitle">Survival Rush — best scores by set size</p>
+        </header>
+        <div class="lb-brackets" id="lb-brackets"></div>
+        <div class="lb-list card" id="lb-list">
+          <p class="empty-state">Loading rankings…</p>
         </div>
       </div>
     </section>
@@ -252,6 +287,10 @@
         <div class="settings-card card">
           <form class="settings-section" id="form-profile">
             <h3 class="settings-section-title">Profile</h3>
+            <div class="avatar-picker-wrap">
+              <span class="option-label">Avatar</span>
+              <div class="avatar-picker" id="avatar-picker"></div>
+            </div>
             <div class="settings-fields">
               <div class="input-group">
                 <label>Display Name</label>
@@ -279,11 +318,22 @@
 
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Pronunciation Audio</div>
-              <div class="setting-desc">Speak Hiragana aloud using browser TTS</div>
+              <div class="setting-name">Sound &amp; Pronunciation</div>
+              <div class="setting-desc">Japanese audio plus game sound effects</div>
             </div>
             <label class="toggle">
               <input type="checkbox" id="toggle-audio" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Shuffle Characters</div>
+              <div class="setting-desc">Randomise card order during games</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="toggle-shuffle" checked>
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -298,17 +348,58 @@
               <span class="toggle-slider"></span>
             </label>
           </div>
+
+          <div class="settings-foot">
+            <span id="settings-version">HiraQuest</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ========== GAME SCREENS (Phase 2+) ========== -->
+    <!-- ========== GAME SCREEN ========== -->
     <section id="screen-game" class="screen">
-      <div class="container game-container">
-        <div class="game-placeholder card">
-          <h2>🚧 Game Mode Coming in Phase 2</h2>
-          <p>This game mode is under construction.</p>
-          <button class="btn btn-primary" id="btn-game-back">Back to Dashboard</button>
+      <div class="game-shell" id="game-shell">
+        <!-- HUD -->
+        <div class="game-hud">
+          <button class="icon-btn" id="game-exit" title="Exit game" aria-label="Exit game">✕</button>
+          <div class="game-mode-label" id="game-mode-label">Game</div>
+          <div class="game-hud-stats" id="game-hud-stats"></div>
+        </div>
+
+        <!-- Timer (Survival only) -->
+        <div class="game-timer" id="game-timer">
+          <div class="game-timer-fill" id="game-timer-fill"></div>
+        </div>
+
+        <!-- Stage -->
+        <div class="game-stage">
+          <div class="game-streak" id="game-streak"></div>
+          <div class="game-card" id="game-card">
+            <div class="game-card-char" id="game-card-char">あ</div>
+            <button class="speak-btn" id="game-speak" title="Hear pronunciation" aria-label="Hear pronunciation">🔊</button>
+          </div>
+          <div class="game-feedback" id="game-feedback"></div>
+        </div>
+
+        <!-- Input -->
+        <div class="game-input-area" id="game-input-area"></div>
+      </div>
+
+      <!-- Results Overlay -->
+      <div class="results-overlay" id="results-overlay">
+        <div class="results-card">
+          <div class="results-emoji" id="results-emoji">🎉</div>
+          <h2 class="results-title" id="results-title">Complete</h2>
+          <div class="results-score-block">
+            <div class="results-score" id="results-score">0</div>
+            <div class="results-score-label" id="results-score-label">Score</div>
+          </div>
+          <div class="results-note" id="results-note"></div>
+          <div class="results-stats" id="results-stats"></div>
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="results-home">Dashboard</button>
+            <button class="btn btn-primary" id="results-again">Play Again</button>
+          </div>
         </div>
       </div>
     </section>
@@ -319,6 +410,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260521-3"></script>
+  <script type="module" src="js/app.js?v=20260522"></script>
 </body>
 </html>

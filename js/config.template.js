@@ -3,7 +3,8 @@
 // ============================================
 // 1. Copy this file to config.js
 // 2. Fill in your real values from Firebase Console
-// 3. NEVER commit config.js (it's gitignored)
+// 3. js/config.js IS deployed (GitHub Pages needs it). The Firebase API
+//    key is safe to expose because it is domain-restricted.
 
 export const firebaseConfig = {
   apiKey: "YOUR_API_KEY_HERE",
@@ -17,5 +18,5 @@ export const firebaseConfig = {
 export const APP_CONFIG = {
   maxUsers: 2,
   defaultTheme: 'light',
-  version: '1.0.0-phase1'
+  version: '2.0.0-phase2'
 };
