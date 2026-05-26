@@ -149,6 +149,29 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Test the production site end-to-end. Record completion in `Tomodachi_Progress_Log.md` per `PROJECT_RULES.md` §2.4. Add Learning Log entry covering the folder reorganization (what new structure means, why we split it that way, tradeoffs).
 **Acceptance:** Progress Log entry written; Learning Log entry written.
 
+### R1.12 — Rename local directory path (deferred from in-session execution)
+**Deps:** R1.11
+**Owner:** User (closes VS Code) → Claude (rename via Bash + updates path references)
+**Description:** Rename the local directory `d:\MO3 LAP\MyProjects\hiraquest\hiraquest\` to `d:\MO3 LAP\MyProjects\tomodachi\` (flatten — the outer `hiraquest/` folder is a useless wrapper containing only the project; siblings like Byte+, ExerciseDetection sit at `MyProjects/` level).
+
+**Why this is its own task (deferred from R1.04):** Claude Code chat is folder-bound. Closing VS Code mid-rename would kill the session containing the R1 work-in-progress. Doing this *after* R1.11 closes means the work is committed, pushed, verified, and a fresh Claude session can pick up via the memory file + tracked docs without context loss.
+
+**Step-by-step (for the future fresh Claude session):**
+1. User closes VS Code completely (File → Close Folder won't release the OS file handle reliably; full close is safer).
+2. User opens PowerShell (or Explorer) outside the project: `cd "d:\MO3 LAP\MyProjects"`
+3. Verify nothing else has the folder open (`hiraquest`): if locked, kill the holding process.
+4. Rename via PowerShell: `Move-Item hiraquest\hiraquest tomodachi` then `Remove-Item hiraquest` (the now-empty wrapper).
+5. User opens VS Code at `d:\MO3 LAP\MyProjects\tomodachi\` (File → Open Folder).
+6. User launches a fresh Claude Code session there.
+7. New Claude session reads the memory file (`tomodachi-commercialization.md`) and the tracked planning docs to orient.
+8. New Claude updates path references:
+   - `PROJECT_RULES.md` §4.2 — remove the "will become" caveat, lock new path
+   - `tomodachi-commercialization.md` (memory) — update path mention
+   - `hiraquest-deploy-workflow.md` (memory) — update path mention; consider renaming the memory file itself to `tomodachi-deploy-workflow.md`
+9. Commit the path updates to main: `git commit -m "chore: update path references to renamed local directory"`
+
+**Acceptance:** Working tree path is `d:\MO3 LAP\MyProjects\tomodachi\`; all doc path references updated; new Claude session works with the new path; Progress Log entry added.
+
 ---
 
 ## Phase R2 — Backend migration: 3 Firebase projects + Cloudflare Pages staging

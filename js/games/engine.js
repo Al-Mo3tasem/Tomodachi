@@ -1,5 +1,5 @@
 // ============================================
-// HiraQuest — Game Engine (Phase 2.1)
+// Tomodachi — Game Engine (Phase 2.1)
 // One engine, two modes:
 //  • Zen Mode      — relaxed timed practice. Practice type Read or Listen.
 //  • Survival Rush — competitive: 3 lives, ramping per-question timer.
@@ -14,15 +14,15 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from './core.js?v=20260525';
+} from '../core/core.js?v=20260526a';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from './firebase.js?v=20260525';
+} from '../data/firebase.js?v=20260526a';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from './audio.js?v=20260525';
-import { submitSurvivalScore, bracketFor } from './leaderboard.js?v=20260525';
+} from '../audio/audio.js?v=20260526a';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260526a';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;

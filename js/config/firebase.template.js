@@ -1,10 +1,12 @@
 // ============================================
-// HiraQuest Firebase Config Template
+// Tomodachi Firebase Config Template
 // ============================================
-// 1. Copy this file to config.js
+// 1. Copy this file to config/firebase.js
 // 2. Fill in your real values from Firebase Console
-// 3. js/config.js IS deployed (GitHub Pages needs it). The Firebase API
-//    key is safe to expose because it is domain-restricted.
+// 3. js/config/firebase.js IS deployed (GitHub Pages needs it). The Firebase
+//    API key is safe to expose because it is domain-restricted.
+// Project ID stays `hiraquest0` (immutable) until Phase R2 migrates to
+// `tomodachi-prod`. See Phases_and_Tasks.md Phase R2.
 
 export const firebaseConfig = {
   apiKey: "YOUR_API_KEY_HERE",

@@ -1,5 +1,5 @@
 // ============================================
-// HiraQuest — Duel Mode (Phase 3)
+// Tomodachi — Duel Mode (Phase 3)
 // Real-time head-to-head over Firestore.
 //
 // Sync model: HOST-AUTHORITY.
@@ -14,13 +14,13 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from './core.js?v=20260525';
+} from '../core/core.js?v=20260526a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from './firebase.js?v=20260525';
-import { playSound, unlockAudio } from './audio.js?v=20260525';
-import { acceptCoop, isInCoop } from './coop.js?v=20260525';
+} from '../data/firebase.js?v=20260526a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260526a';
+import { acceptCoop, isInCoop } from './coop.js?v=20260526a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

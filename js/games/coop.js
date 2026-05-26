@@ -1,5 +1,5 @@
 // ============================================
-// HiraQuest — Sync Match / Co-op (Phase 4)
+// Tomodachi — Sync Match / Co-op (Phase 4)
 // Real-time cooperative play over Firestore.
 //
 // Both players see the SAME card and must each answer it correctly
@@ -12,13 +12,13 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from './core.js?v=20260525';
+} from '../core/core.js?v=20260526a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from './firebase.js?v=20260525';
-import { playSound, unlockAudio } from './audio.js?v=20260525';
-import { submitCoopScore } from './leaderboard.js?v=20260525';
+} from '../data/firebase.js?v=20260526a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260526a';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260526a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

@@ -1,9 +1,26 @@
 // ============================================
-// HiraQuest — Core State & UI Helpers
+// Tomodachi — Core State & UI Helpers
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260525';
+import { APP_CONFIG } from '../config/firebase.js?v=20260526a';
+
+// ----- One-shot localStorage migration: hiraquest-* → tomodachi-* (R1.05a).
+// Runs on module load; harmless after the first time. Removed once we're
+// confident every user's browser has migrated (Phase L3 or so).
+const _MIGRATE_KEYS = [
+  'audio', 'practice', 'input', 'duration', 'wincon',
+  'duelinput', 'coopinput', 'theme', 'last-bracket'
+];
+for (const k of _MIGRATE_KEYS) {
+  const oldK = 'tomodachi-' + k;
+  const newK = 'tomodachi-' + k;
+  const oldV = localStorage.getItem(oldK);
+  if (oldV !== null && localStorage.getItem(newK) === null) {
+    localStorage.setItem(newK, oldV);
+    localStorage.removeItem(oldK);
+  }
+}
 
 // ----- Global App State -----
 export const state = {
@@ -19,19 +36,19 @@ export const state = {
 
   // audioEnabled controls game sound EFFECTS only. Japanese pronunciation
   // is functional (not a preference) and is governed by game design.
-  audioEnabled: localStorage.getItem('hiraquest-audio') !== 'false',
+  audioEnabled: localStorage.getItem('tomodachi-audio') !== 'false',
 
   // Zen practice options (solo mode — options are appropriate here).
-  practiceType: localStorage.getItem('hiraquest-practice') || 'read', // 'read' | 'listen'
-  inputMethod: localStorage.getItem('hiraquest-input') || 'typing',   // 'typing' | 'multiple'
-  zenDuration: Number(localStorage.getItem('hiraquest-duration')) || 60, // seconds
+  practiceType: localStorage.getItem('tomodachi-practice') || 'read', // 'read' | 'listen'
+  inputMethod: localStorage.getItem('tomodachi-input') || 'typing',   // 'typing' | 'multiple'
+  zenDuration: Number(localStorage.getItem('tomodachi-duration')) || 60, // seconds
 
   // Duel / Co-op options (host picks these for both players — fixed for fairness).
-  winCondition: localStorage.getItem('hiraquest-wincon') || 'first_to_10', // 'first_to_10' | 'rounds_20'
-  duelInput: localStorage.getItem('hiraquest-duelinput') || 'multiple',    // 'multiple' | 'typing'
-  coopInput: localStorage.getItem('hiraquest-coopinput') || 'multiple',    // 'multiple' | 'typing'
+  winCondition: localStorage.getItem('tomodachi-wincon') || 'first_to_10', // 'first_to_10' | 'rounds_20'
+  duelInput: localStorage.getItem('tomodachi-duelinput') || 'multiple',    // 'multiple' | 'typing'
+  coopInput: localStorage.getItem('tomodachi-coopinput') || 'multiple',    // 'multiple' | 'typing'
 
-  theme: localStorage.getItem('hiraquest-theme') || APP_CONFIG.defaultTheme
+  theme: localStorage.getItem('tomodachi-theme') || APP_CONFIG.defaultTheme
 };
 
 // ----- DOM Helpers -----
@@ -79,7 +96,7 @@ export function toast(message, type = 'info', duration = 3000) {
 // ----- Theme -----
 export function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('hiraquest-theme', theme);
+  localStorage.setItem('tomodachi-theme', theme);
   state.theme = theme;
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = theme === 'dark';

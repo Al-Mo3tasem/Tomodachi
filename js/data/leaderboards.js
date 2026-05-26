@@ -1,12 +1,12 @@
 // ============================================
-// HiraQuest — Leaderboards
+// Tomodachi — Leaderboards
 // Denormalized strategy: one document per (gameType + bracket) holding
 // the top-10 entries — reads are a single O(1) fetch that never slows
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $, showScreen } from './core.js?v=20260525';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260525';
+import { state, $, showScreen } from '../core/core.js?v=20260526a';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260526a';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -53,7 +53,7 @@ async function submitEntry(gameType, bracket, entry) {
 export async function submitSurvivalScore({ score, characterCount }) {
   if (!state.user) return null;
   const bracket = bracketFor(characterCount);
-  localStorage.setItem('hiraquest-last-bracket', String(bracket));
+  localStorage.setItem('tomodachi-last-bracket', String(bracket));
   return submitEntry('survival', bracket, {
     userId: state.user.uid,
     username: state.userData?.username || 'player',
@@ -125,7 +125,7 @@ function escapeHtml(str) {
 export async function renderLeaderboardPreview() {
   const host = $('lb-preview');
   if (!host) return;
-  const bracket = Number(localStorage.getItem('hiraquest-last-bracket')) || 10;
+  const bracket = Number(localStorage.getItem('tomodachi-last-bracket')) || 10;
   const entries = await fetchLeaderboard('survival', bracket);
 
   if (!entries.length) {
@@ -187,7 +187,7 @@ export async function openLeaderboard() {
     tabs.dataset.built = '1';
   }
 
-  lbBracket = Number(localStorage.getItem('hiraquest-last-bracket')) || 10;
+  lbBracket = Number(localStorage.getItem('tomodachi-last-bracket')) || 10;
   selectMode('survival');
 }
 

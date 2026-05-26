@@ -1,5 +1,5 @@
 // ============================================
-// HiraQuest — Audio Engine
+// Tomodachi — Audio Engine
 // Two distinct roles:
 //  • speak()      — Japanese pronunciation. FUNCTIONAL, not a preference.
 //                   Driven by game design (the prompt in Listening practice,
@@ -15,7 +15,7 @@
 //     ~15s of idle time (primeSpeech / unprimeSpeech).
 // ============================================
 
-import { state } from './core.js?v=20260525';
+import { state } from '../core/core.js?v=20260526a';
 
 // ----- Speech (TTS) -----
 let jaVoice = null;

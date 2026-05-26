@@ -1,37 +1,37 @@
 // ============================================
-// HiraQuest — Application Orchestrator
+// Tomodachi — Application Orchestrator
 // Phase 4: Auth, Dashboard, Character Select, Zen, Survival Rush,
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config.js?v=20260525';
+import { APP_CONFIG } from './config/firebase.js?v=20260526a';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core.js?v=20260525';
+} from './core/core.js?v=20260526a';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './firebase.js?v=20260525';
+} from './data/firebase.js?v=20260526a';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './game.js?v=20260525';
+} from './games/engine.js?v=20260526a';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './leaderboard.js?v=20260525';
-import { isSpeechSupported } from './audio.js?v=20260525';
+} from './data/leaderboards.js?v=20260526a';
+import { isSpeechSupported } from './audio/audio.js?v=20260526a';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './duel.js?v=20260525';
+} from './games/duel.js?v=20260526a';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './coop.js?v=20260525';
+} from './games/coop.js?v=20260526a';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
@@ -178,7 +178,7 @@ async function handleRegister(e) {
 
     const usersSnap = await withTimeout(getDocs(collection(db, 'users')), 'Checking account limit', 15000);
     if (usersSnap.size >= APP_CONFIG.maxUsers) {
-      showFormError(errorEl, 'HiraQuest is full! Only 2 accounts are allowed.');
+      showFormError(errorEl, 'Tomodachi is full! Only 2 accounts are allowed.');
       showLoading(false);
       return;
     }
@@ -215,7 +215,7 @@ async function handleRegister(e) {
       createdAt: serverTimestamp()
     }), 'Creating stats profile', 15000);
 
-    toast('Account created! Welcome to HiraQuest.', 'success');
+    toast('Account created! Welcome to Tomodachi.', 'success');
   } catch (err) {
     showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Register error:', err);
@@ -597,7 +597,7 @@ function syncSegmented(groupSelector, attr, value) {
 
 function setPractice(type) {
   state.practiceType = type;
-  localStorage.setItem('hiraquest-practice', type);
+  localStorage.setItem('tomodachi-practice', type);
   syncSegmented('#seg-practice', 'practice', type);
   const inputRow = $('option-input');
   if (inputRow) inputRow.style.display = type === 'listen' ? 'none' : 'flex';
@@ -605,31 +605,31 @@ function setPractice(type) {
 
 function setInputMethod(method) {
   state.inputMethod = method;
-  localStorage.setItem('hiraquest-input', method);
+  localStorage.setItem('tomodachi-input', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
 function setZenDuration(seconds) {
   state.zenDuration = seconds;
-  localStorage.setItem('hiraquest-duration', String(seconds));
+  localStorage.setItem('tomodachi-duration', String(seconds));
   syncSegmented('#seg-duration', 'duration', seconds);
 }
 
 function setWinCondition(wc) {
   state.winCondition = wc;
-  localStorage.setItem('hiraquest-wincon', wc);
+  localStorage.setItem('tomodachi-wincon', wc);
   syncSegmented('#seg-wincon', 'wincon', wc);
 }
 
 function setDuelInput(method) {
   state.duelInput = method;
-  localStorage.setItem('hiraquest-duelinput', method);
+  localStorage.setItem('tomodachi-duelinput', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
 function setCoopInput(method) {
   state.coopInput = method;
-  localStorage.setItem('hiraquest-coopinput', method);
+  localStorage.setItem('tomodachi-coopinput', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
@@ -798,7 +798,7 @@ function showSettings() {
   if (errorEl) errorEl.textContent = '';
 
   const versionEl = $('settings-version');
-  if (versionEl) versionEl.textContent = `HiraQuest ${APP_CONFIG.version}`;
+  if (versionEl) versionEl.textContent = `Tomodachi ${APP_CONFIG.version}`;
 
   renderAvatarPicker();
   cancelReset();
@@ -823,7 +823,7 @@ function toggleTheme() {
 
 function toggleAudio() {
   state.audioEnabled = $('toggle-audio').checked;
-  localStorage.setItem('hiraquest-audio', state.audioEnabled);
+  localStorage.setItem('tomodachi-audio', state.audioEnabled);
 }
 
 async function saveProfileSettings(e) {

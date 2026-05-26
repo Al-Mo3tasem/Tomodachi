@@ -1,5 +1,8 @@
 // ============================================
-// HiraQuest Firebase Configuration
+// Tomodachi Firebase Configuration
+// Project ID stays `hiraquest0` (immutable) until Phase R2 migrates to
+// `tomodachi-prod`. See Commercialization_Plan.md §14 and Phases_and_Tasks.md
+// Phase R2 for the migration plan.
 // ============================================
 // Replace the values below with your actual Firebase config from the console.
 // Do NOT share this file publicly.
