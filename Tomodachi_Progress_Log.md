@@ -16,6 +16,30 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-26 — Phase R1 Closure: R1.02 + R1.11 + R1.12
+**Status:** ✅ DONE
+**Scope:** Firebase | Docs | Local filesystem
+**Summary:** Closed the three remaining R1 follow-ups in one wrap-up session. **R1.02:** Firebase Console public-facing name flipped "HiraQuest" → "Tomodachi" on the `hiraquest0` project (the project ID surfaced by the tracked config at `js/config/firebase.js:13`). Note: Claude's original step-by-step incorrectly referenced a `japanese-289e0` project ID — derived from misreading a stale, gitignored, npm-style snippet at repo root (`config.js`) instead of the tracked active config; the user navigated to the right project (`hiraquest0`) anyway, and confirmation was obtained before this entry was finalized. The stale `config.js` was deleted as part of this entry to prevent future misreading. **R1.11:** End-to-end production smoke test passed at `https://al-mo3tasem.github.io/Tomodachi/` — login, dashboard, settings (theme/audio carried over via the R1.05a localStorage shim), Zen round, Survival round, leaderboard all green. **R1.12:** Local clone relocated from the nested `d:\MO3 LAP\MyProjects\HiraQuest\hiraquest\` to a flat `d:\MO3 LAP\MyProjects\Tomodachi\` by file-copy (deferred-from-R1.04 design — fresh session can't `mv` its own folder under VS Code's open handle). New location verified canonical: `git status` clean except this entry, `git remote -v` points at `Al-Mo3tasem/Tomodachi`, `git worktree list` shows a single `[main]` row at the new path, `node --check` passes on all 10 modules. Old folder retained as a recycle-bin safety net pending user deletion after this commit lands.
+
+**Files / Areas:**
+- `PROJECT_RULES.md` §4.2 — path references locked to the new location. Removed the conditional "will become" prose from lines 167 and 170; canonical clone path is now stated as `d:\MO3 LAP\MyProjects\Tomodachi\` and the canonical remote as `https://github.com/Al-Mo3tasem/Tomodachi`.
+- `Learning_Log.md` — new entry [Phase R1, Task R1.11] on the folder *taxonomy* decision (complements the existing R1.04 entry on `git mv` mechanics). Index updated.
+- `Tomodachi_Progress_Log.md` — this entry.
+- `config.js` (repo root, gitignored, npm-style Firebase init referencing the unrelated `japanese-289e0` project) — **deleted**. Not loaded by the deployed app. Removing prevents future readers (human or AI) from misidentifying it as the live config and acting on its values, which is exactly what happened during R1.02 prep.
+- Memory file at `C:\Users\mouta\.claude\projects\d--\memory\tomodachi-commercialization.md` — updated out-of-band to reflect the new path and that R1.01/R1.10 are already done. (Memory files are not in the repo.)
+
+**Verification:**
+- Firebase Console (browser): `hiraquest0` project's Public-facing name now reads "Tomodachi" (user confirmed after navigating to the correct project despite Claude's wrong-ID instruction).
+- Production smoke test (browser at `https://al-mo3tasem.github.io/Tomodachi/`): all 6 steps from the R1.09 smoke protocol passed end-to-end on prod.
+- Local clone health: `git status` clean before this commit, `git log --oneline -1` shows `9eaa769 Phase R1: Brand rename HiraQuest → Tomodachi + folder reorganization`, `node --check` passes module-by-module.
+- Stale root `config.js` removal verified by `Test-Path` returning false after deletion.
+
+**Open Follow-up:**
+1. **User:** Delete `d:\MO3 LAP\MyProjects\HiraQuest\` via Explorer → Recycle Bin (decision recorded: delete via Recycle Bin, not permanent removal, so a ~30-day undo window exists if anything surfaces).
+2. **Carried forward from R1.04 (still deferred):** Intra-file splits — `core.js` → 4 files, `audio.js` → 2 files, `engine.js` → 3 files. Trigger: Phase L2.C when new modules need to import from the inside of these files.
+
+---
+
 ## 2026-05-26 — Phase R1: Rename HiraQuest → Tomodachi + Folder Reorganization
 **Status:** ✅ DONE (visual rename verified locally; post-login smoke test deferred to production)
 **Scope:** Code | Docs | GitHub

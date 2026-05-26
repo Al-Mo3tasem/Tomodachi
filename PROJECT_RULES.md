@@ -164,10 +164,10 @@ All work — code edits, doc updates, fixture rebuilds, dependency changes, env-
 The canonical clone is identifiable by these properties — verify before starting work:
 
 1. `git worktree list` (run from inside the directory) shows that directory as the **first row with `[main]`** branch (no `[claude/...]` annotation).
-2. `git remote -v` returns `origin` pointing at the project's GitHub repo URL (currently `https://github.com/Al-Mo3tasem/hiraquest` — will become `.../tomodachi` after the rename).
+2. `git remote -v` returns `origin` pointing at the project's GitHub repo URL: `https://github.com/Al-Mo3tasem/Tomodachi`.
 3. The directory is NOT located under any `.claude/worktrees/` parent.
 
-Current main project clone path: `d:\MO3 LAP\MyProjects\hiraquest\hiraquest\` (will become `d:\MO3 LAP\MyProjects\tomodachi\tomodachi\` if local folder is also renamed). The absolute path may differ on other machines.
+Current main project clone path: `d:\MO3 LAP\MyProjects\Tomodachi\`. The absolute path may differ on other machines.
 
 ### 4.3 If the current directory fails any check
 

@@ -14,7 +14,11 @@
 
 ## Index
 
-*(Entries listed newest first. None yet — this log begins populating when Phase R1 starts.)*
+*(Entries listed newest first.)*
+
+- **[Phase R1, Task R1.11]** — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
+- **[Phase R1, Task R1.05a]** — localStorage migration on brand rename
+- **[Phase R1, Task R1.04]** — Folder reorganization with `git mv` + cross-module import path updates
 
 ---
 
@@ -54,6 +58,50 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase R1, Task R1.11] — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
+**Date:** 2026-05-26
+**Contributor:** Claude
+
+### Technology / Library Introduced
+- **Folder-by-role module taxonomy** — convention for grouping `.js` files into subdirectories named after the *responsibility* the files share, not the *feature* they implement. R1.04 moved the flat `js/` layout into five subdirectories: `core/`, `config/`, `data/`, `games/`, `audio/`. This entry covers the *taxonomy decision* itself (what does each name mean? why these five and not some other split?) as a complement to the R1.04 entry on the `git mv` mechanics.
+
+### What it actually does (plain language)
+Before R1.04, every `.js` file lived directly under `js/` — `core.js`, `game.js`, `duel.js`, `coop.js`, `leaderboard.js`, `firebase.js`, `audio.js`, `app.js`, `config.js`, `config.template.js`. That works fine at ~10 files. It stops working when the count grows because (1) the import lines at the top of each file lose information value — you can't tell from `import { ... } from './engine.js'` whether `engine` is a renderer, a game-mode controller, or a network engine, and (2) new contributors (including future AI sessions) waste tokens scanning the flat list to figure out what belongs to what subsystem.
+
+The R1.04 reorganization picks **responsibility** as the grouping axis (not feature, not layer, not file size):
+
+- **`js/core/`** — Shared *primitives*: app-wide state, theme/UI helpers, generic utilities. Things that almost every other module imports from. After the deferred split, this will be `state.js + ui.js + theme.js + utils.js`. The bar for adding a file here is high — it has to be genuinely shared infrastructure.
+- **`js/config/`** — Static *configuration values* that the rest of the app reads but doesn't mutate. Currently `firebase.js` (real values, gitignored at the file-content level via `.gitignore`) and `firebase.template.js` (the public template). Future entries: environment-aware config per `PROJECT_RULES.md` §5 (`dev`/`staging`/`prod` Firebase configs picked by hostname); feature flag map; remote-config bootstrap.
+- **`js/data/`** — *Persistence-layer* code that talks to Firestore / Firebase Storage / cloud functions. Reading and writing the source-of-truth data, plus the query shapes that need to live close to the data. Currently `firebase.js` (init + auth wiring) and `leaderboards.js` (Firestore reads/writes for the leaderboard). Future entries: user profile data access, content set loaders, SRS state persistence.
+- **`js/games/`** — *Game-mode controllers* — modules that own the rules and state machine of one game mode. Currently `engine.js` (the parametric Zen/Survival engine), `duel.js` (real-time head-to-head), `coop.js` (real-time sync match). Future entries: `daily-quest.js`, additional multiplayer modes, the SRS-driven session controller from Phase L2.
+- **`js/audio/`** — *Sound output*. Currently `audio.js` (mixed sfx + TTS); after the deferred R1.04 split this becomes `sfx.js` + `tts.js`. Separated from `data/` even though TTS will eventually call Azure TTS through a Cloud Function gateway — because *callers* of audio care about "play this sound" semantics, not which backend produces the audio bytes. Hiding the backend choice behind this folder lets us swap TTS providers later without touching call sites.
+
+`js/app.js` stays at the top level. It's the entry point — the script tag in `index.html` loads it, and it kicks off the import graph. Putting it under any subdirectory would obscure that role.
+
+### Alternatives considered
+- **Group by feature instead of role** — e.g., `js/leaderboard/{ui.js,data.js,types.js}`, `js/duel/{ui.js,engine.js,protocol.js}`. This co-locates everything a feature needs, which is great when one developer owns one feature. Rejected: at our team-of-one scale, the same person touches all features and gets more value from "all data-access code in one place" than from "all leaderboard files in one place" — the import-line scanability wins. Reconsider if/when (a) features grow > ~5 files each and (b) different contributors specialize in different features.
+- **Group by layer (MVC-ish)** — `js/models/`, `js/views/`, `js/controllers/`. Rejected: the app isn't shaped like MVC. Game-mode controllers (`engine.js`, `duel.js`, `coop.js`) hold both state and rendering hooks; splitting them across model/view/controller folders would scatter code that always changes together. MVC suits frameworks that enforce the split; vanilla-JS app code doesn't.
+- **Flatten into one big `src/`** — popular in `webpack`-era codebases. Rejected: no build step here, so there's no `src/` vs `dist/` distinction; flatter doesn't help. Also `src/` would just push the same naming problem one level deeper.
+- **Cut finer than 5 buckets** — e.g., separate `js/ui/` from `js/core/`, or `js/auth/` out of `js/data/`. Rejected for now: at 10 files, 5 buckets is already 2 files per bucket on average. Going finer means some buckets have 1 file, which is overkill. Add new buckets only when an existing one crosses ~6 files AND a coherent sub-grouping exists.
+- **Group by JS-vs-static** (`js/dynamic/`, `js/static/`). Rejected: not a meaningful axis for this app — every file is dynamic.
+
+### Concepts to understand
+- **Folder names are documentation** — when you write `import { play } from '../audio/sfx.js'`, the path is doing some of the work that a comment used to do. The reader (or AI) sees three things at once: this file isn't local (`../`), it lives in the `audio` subsystem, and it's about sfx specifically. Picking subsystem names well repays itself on every import line for years.
+- **Cohesion vs coupling** — "cohesion" means how related the things inside one module are; "coupling" means how dependent one module is on another. A good taxonomy maximizes cohesion within each subdirectory (everything in `data/` cares about persistence) and minimizes coupling between them (a `games/` module shouldn't need to know which Firestore collection a `data/` function targets — that's what the function is for).
+- **The "should we split this folder" trigger** — a folder is ready to split when (a) it crosses ~6 files AND (b) you can articulate a coherent sub-grouping in one sentence ("the SRS-related state vs. the UI-related state"). If the sub-grouping needs a paragraph to explain, it's not real — leave the folder flat until a clearer line emerges.
+
+### Tradeoffs accepted
+- **Slightly longer relative-import paths** — `import { x } from '../core/utils.js'` instead of `import { x } from './utils.js'`. Worth it: the path tells you *which subsystem* utils belongs to, which a flat structure can't do. Cost is one to two extra characters per import line.
+- **A module that genuinely spans two subsystems has nowhere clean to live** — e.g., a future "auth-aware leaderboard rendering" module. Mitigation: pick the subsystem that's *more about what the file owns* than the subsystem it *calls into*. If the file owns rendering and calls auth/data helpers, it goes in `games/` or `core/` — not `data/`. Re-home if the balance shifts.
+- **Reorganization wasn't paired with file splits** — `core.js`, `audio.js`, and `engine.js` are still single files at their new locations even though `PROJECT_RULES.md` §7.1 calls for splits. Documented as deferred to Phase L2.C — pay the cost when there's a forcing function, not before.
+
+### Useful resources
+- [PROJECT_RULES.md §7.1](PROJECT_RULES.md) — the file layout convention this entry implements.
+- [Cohesion (computer science) — Wikipedia](https://en.wikipedia.org/wiki/Cohesion_(computer_science)) — the canonical writeup of LCOM and the cohesion/coupling tradeoff.
+- [DDD: Bounded Contexts](https://martinfowler.com/bliki/BoundedContext.html) — a heavier-weight version of the same idea (when feature-grouping starts to pay off at scale).
+
+---
 
 ## [Phase R1, Task R1.04] — Folder reorganization with git mv + cross-module import path updates
 **Date:** 2026-05-26
