@@ -5,3 +5,16 @@
 seed.html
 
 HiraQuest_Master_Plan.md
+Tomodachi_Master_Plan.md
+Commercialization_Plan.md
+
+# T4 content per PROJECT_RULES.md §18.2 — never commit authoring artifacts
+# (content drafts, prompts, intermediate JSON, generated audio caches)
+/content/
+/scripts/cache/
+/scripts/output/
+/scripts/prompts/
+audio/
+*.mp3
+*.wav
+*.ogg
