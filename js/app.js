@@ -4,34 +4,34 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260526a';
+import { APP_CONFIG } from './config/firebase.js?v=20260527a';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260526a';
+} from './core/core.js?v=20260527a';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260526a';
+} from './data/firebase.js?v=20260527a';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260526a';
+} from './games/engine.js?v=20260527a';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260526a';
+} from './data/leaderboards.js?v=20260527a';
 import { isSpeechSupported } from './audio/audio.js?v=20260526a';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260526a';
+} from './games/duel.js?v=20260527a';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260526a';
+} from './games/coop.js?v=20260527a';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
