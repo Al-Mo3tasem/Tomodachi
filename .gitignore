@@ -17,3 +17,10 @@ audio/
 *.mp3
 *.wav
 *.ogg
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
