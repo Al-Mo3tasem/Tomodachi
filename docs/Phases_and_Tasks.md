@@ -430,8 +430,22 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Bring the username-change path in `js/app.js` (`saveProfileSettings`) onto the same atomicity pattern that R2.05 established for the signup flow. Currently the function uses `query(collection(db, 'users'), where('username', '==', ...))` to check uniqueness — race-vulnerable when two users try to claim the same new username simultaneously. Refactor to: (1) create the new `usernames/{newLower}` doc as the atomic lock (relies on the R2.05 `allow create` rule); (2) delete the old `usernames/{oldLower}` doc; (3) update `users/{uid}.username`. ~30 LOC. Pattern matches the R2.05 signup flow refactor; reuse the same error-mapping idiom (`permission-denied` → "Username already taken").
 **Acceptance:** Username change in Settings uses the atomic pattern; `node --check` passes; race-test (two browser tabs racing on the same target username) shows one succeeds and one gets "Username already taken."
 
-### L1.20 — Log Phase L1 completion
-**Deps:** L1.19
+### L1.20 — Make `ensureUserProfile` honor R2.05's `usernames/` invariant
+**Deps:** R2.05, R2.06
+**Owner:** Claude
+**Description:** `js/app.js` `ensureUserProfile` (lines 56-86) was designed pre-R2.05 to self-heal users who have an Auth account but no Firestore profile (e.g., signup that dropped mid-write). R2.05's signup refactor introduced the `usernames/{lower}` uniqueness lock but did NOT update `ensureUserProfile`, leaving two failure modes:
+1. **Orphan `users/` docs during a failing signup.** `onAuthStateChanged` fires as soon as `createUserWithEmailAndPassword` succeeds. `ensureUserProfile` runs in the auth-state callback, sees no `users/{uid}` doc, and writes a fallback profile. Meanwhile `handleRegister` may be failing at the `usernames/` write (collision) and calling `cred.user.delete()` to clean up the Auth account. The Auth deletion succeeds but the `users/{uid}` doc that `ensureUserProfile` just wrote stays — Firestore orphan with no Auth backing. **Confirmed empirically during R2.06 Step C testing** — found two orphan `users/` docs on `hiraquest0` with no matching Auth accounts.
+2. **Self-heal bypasses uniqueness lock.** When `ensureUserProfile` creates a fallback profile, it derives a username from the email's local part and writes only the `users/{uid}` doc — NOT a corresponding `usernames/{lower}` reservation. A future user could legitimately claim that same username via the R2.05 signup flow, leaving two `users/` docs sharing a username with only one reservation.
+
+Two-part fix:
+- **(a)** Extend `handleRegister`'s cleanup path: when the `usernames/` write fails and we're about to delete the Auth account, also `getDoc + deleteDoc` on `users/{uid}` and `stats/{uid}` to remove any docs `ensureUserProfile` may have raced in.
+- **(b)** Make `ensureUserProfile` reserve a `usernames/{lower}` doc as part of its self-heal. If the derived username is taken, retry with a numeric suffix (e.g., `alice_2`, `alice_3`). Surface a warning to the user if multiple retries fail.
+
+Pattern matches L1.19's atomicity approach. Estimate ~40 LOC across both functions.
+**Acceptance:** Race-test (mock a failing usernames write via a forced collision) leaves zero Firestore orphans. Fresh-user self-heal scenario (auth exists, no `users/`) creates both `users/{uid}` AND `usernames/{lower}` consistently.
+
+### L1.21 — Log Phase L1 completion
+**Deps:** L1.20
 **Owner:** Claude
 **Description:** Progress Log entry; Learning Log entries covering i18next, RTL CSS logical properties, Sentry setup, GA4 Consent Mode v2, Cloudflare Pages branch deploys, Brevo API.
 **Acceptance:** Entries written.
@@ -453,7 +467,7 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 The user feedback in iteration 1 was clear: gamification depth needs more thought than "ship XP and badges". Both the learning experience and the gamification mechanics get explicit design docs *before* any building begins.
 
 #### L2.01 — Write `LEARNING_EXPERIENCE.md` design doc
-**Deps:** L1.20
+**Deps:** L1.21
 **Owner:** Claude (drafts) → User (review & amend)
 **Description:** A new tracked design doc covering the full learner journey. Must specify:
 - **Onboarding flow** — first-time signup → placement (or skip) → first lesson
@@ -471,7 +485,7 @@ The user feedback in iteration 1 was clear: gamification depth needs more though
 **Acceptance:** `LEARNING_EXPERIENCE.md` v1.0 committed (tracked); project lead reviewed and approved.
 
 #### L2.02 — Write `GAMIFICATION_DESIGN.md` design doc
-**Deps:** L1.20
+**Deps:** L1.21
 **Owner:** Claude (drafts) → User (review & amend)
 **Description:** A new tracked design doc covering the full engagement-mechanics surface. Must specify:
 - **XP table** — exact XP awarded for every action (correct answer = X, perfect game = Y, streak day = Z, daily quest complete = W, badge unlock = N, etc.)

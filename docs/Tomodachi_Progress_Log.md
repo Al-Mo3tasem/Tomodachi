@@ -16,6 +16,31 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase R2.06: Cloudflare Pages staging deploys (with Workers↔Pages misstep + recovery)
+**Status:** ✅ DONE
+**Scope:** Cloudflare | Firebase | Docs
+**Summary:** Set up Cloudflare Pages to auto-deploy the `staging` branch of `Al-Mo3tasem/Tomodachi`. Staging URL is now `https://tomodachi-staging.pages.dev/`. Hostname selector correctly routes to `tomodachi-staging` Firebase config; end-to-end signup verified — fresh email + fresh username creates three docs (`usernames/{lower}`, `users/{uid}`, `stats/{uid}`) in `tomodachi-staging` Firestore.
+
+**Files / Areas:** No code changes. Pre-task: `staging` branch created from `main` (`git checkout -b staging && git push -u origin staging`). Phases doc updated: new L1.20 task (`ensureUserProfile` R2.05-compatibility fix); old L1.20 (Log Phase L1 completion) renumbered to L1.21; L2.01 + L2.02 deps updated to L1.21.
+
+**Execution notes:**
+- **Cloudflare Workers vs Pages misstep on first attempt.** Initial setup walkthrough led to creating a Cloudflare **Worker** (URL pattern `tomodachi-staging.moutasem-hamdi14.workers.dev`), not a Pages project (`tomodachi-staging.pages.dev`). The unified "Workers & Pages" dashboard in current Cloudflare UI doesn't always make the Pages-specific entry point prominent. The hostname selector in `js/config/firebase.js` only recognizes `.pages.dev` (and the future `staging.tomodachi.com`) as staging — `.workers.dev` falls through to the default `prod` branch, which means **the failed initial test attempts wrote to `hiraquest0` (live prod)**, not staging. Caught and recovered: Worker deleted, Pages project created correctly. URL-pattern check (`.pages.dev` vs `.workers.dev`) is the unambiguous tell of what type of project was created.
+- **Orphan `users/` docs without orphan Auth accounts (on hiraquest0).** During cleanup of the misdirected writes, the Auth Users tab showed zero orphan accounts but the `users` collection had two orphan docs. **Diagnosis:** the `cred.user.delete()` cleanup in `handleRegister`'s USERNAME_TAKEN path correctly removed the Auth orphans, BUT `ensureUserProfile` had already raced in and written fallback `users/{uid}` docs from the `onAuthStateChanged` fire that happened the moment `createUserWithEmailAndPassword` succeeded. The Auth deletion then succeeded but the Firestore docs remained. Both orphan `users/` docs were manually deleted; no orphans in other collections (the `usernames/` write was the FAILING step in each case, so no orphan usernames docs were created). This race is a real bug — tracked for fix as L1.20.
+
+**Verification:**
+- `https://tomodachi-staging.pages.dev/` loads cleanly.
+- Console: `[firebase-init] env=staging projectId=tomodachi-staging` confirms hostname selector picked the staging branch.
+- Fresh signup succeeded; three docs landed in `tomodachi-staging` Firestore.
+- `hiraquest0` state cleaned: 2 orphan `users/` docs removed; no Auth orphans needed removal.
+- Authorized domain added to `tomodachi-staging` Firebase Auth: `tomodachi-staging.pages.dev`.
+
+**Open Follow-up:**
+1. **`tomodachi-prod` Auth authorized domain** still needs `al-mo3tasem.github.io` added BEFORE R2.11 cutover (otherwise every existing user gets locked out at cutover). Tracked previously in R2.04 closure; reiterating here so R2.11 prep checklist includes it.
+2. **L1.20** — `ensureUserProfile` R2.05-compatibility fix (the race-orphan + usernames-bypass bug surfaced during this task's testing). Two-part fix outlined in the task description. Renumbered the existing L1.20 (Log Phase L1 completion) to L1.21; updated L2.01 + L2.02 deps from L1.20 to L1.21.
+3. **Cloudflare Pages walkthrough refinement (meta).** My Part A instructions assumed a clear "Pages" tab in the Create flow. Current Cloudflare UI doesn't always present this prominently, leading to the Worker misstep. If similar Cloudflare-Pages walkthroughs are needed in future phases (e.g., adding a Pages project for the marketing site or for `tomodachi.com` itself), update them to feature the URL-pattern check (`.pages.dev` vs `.workers.dev`) as the primary post-deploy verification step.
+
+---
+
 ## 2026-05-28 — Phase R2.05: hardened rules on 3-env + `usernames/` atomic lock pattern
 **Status:** ✅ DONE
 **Scope:** Code | Firebase | Docs

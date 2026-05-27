@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase R2, Task R2.06]** — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
 - **[Phase R2, Task R2.05]** — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
 - **[Phase R2, Task R2.04]** — Hostname-based environment selection + prod-debug-gate idiom
 - **[Phase R1, Task R1.11]** — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
@@ -60,6 +61,45 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase R2, Task R2.06] — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
+**Date:** 2026-05-28
+**Contributor:** Claude (with project lead's hands-on discovery of the difference)
+
+### Technology / Library Introduced
+- **Cloudflare Workers** — Cloudflare's serverless runtime for executing JavaScript / TypeScript code at the edge. Workers are *programs*: you deploy code that runs in response to requests, can call upstream services, transform data, route requests, etc. Default URL: `<worker-name>.<account-subdomain>.workers.dev` (e.g., `tomodachi-staging.moutasem-hamdi14.workers.dev`).
+- **Cloudflare Pages** — Cloudflare's static site hosting product. Pages projects connect to a Git repo and auto-deploy a designated branch's contents as static files. No code execution involved (unless you add Pages Functions, which are Workers-under-the-hood). Default URL: `<project-name>.pages.dev` (no account subdomain).
+- **The unified "Workers & Pages" dashboard** — as of 2024-2025 Cloudflare merged the two products' admin UIs, which means the Create flow may not visually distinguish them well. The URL pattern after creation is the unambiguous tell of which product you actually got.
+
+### What it actually does (plain language)
+We wanted Cloudflare Pages: a no-code static site host that auto-deploys our `staging` branch every time we push to it. The setup steps should be: create a Pages project → connect to GitHub → pick the branch → set build config (none for vanilla static) → save and deploy. Cloudflare provisions a `tomodachi-staging.pages.dev` URL, and every push to the `staging` branch triggers an auto-rebuild.
+
+What actually happened on first attempt: the dashboard's "Create application" flow steered toward Workers instead of Pages. Workers also has a Git-connect option ("Workers Assets" or similar), so the flow looks superficially similar — but the result is a worker that serves static files, deployed under a `<worker>.<account>.workers.dev` URL. Functionally it could host our site, but the URL pattern matters for us because our hostname-based environment selector in `js/config/firebase.js` only recognizes `.pages.dev` as staging. A `.workers.dev` URL falls through to the default `prod` branch, which silently routes the app to `hiraquest0` (live production) instead of `tomodachi-staging`. The misdirection was invisible at the URL bar but visible in `[firebase-init]` console output once we knew to look.
+
+The fix: delete the Worker, find the Pages-specific entry point in the Create flow (which may be a small badge / tab / link, not the prominent button), and recreate as a Pages project. The URL after Save and Deploy is the unambiguous verification — `.pages.dev` means Pages, `.workers.dev` means Worker.
+
+### Alternatives considered
+- **Use Workers instead and update the selector to recognize `.workers.dev`** — would have technically worked. Rejected because (a) it normalizes the wrong setup choice for future Pages projects we might create, (b) Pages is purpose-built for our use case (static site, no server-side logic), (c) the URL `tomodachi-staging.pages.dev` is more brand-aligned for the eventual `staging.tomodachi.com` swap in R3.
+- **Move to a different static host (Netlify, Vercel)** — both work, both have similar GitHub-integrated auto-deploy. Rejected: we're already in the Cloudflare ecosystem for the future `tomodachi.com` purchase + the Pages-to-tomodachi.com cutover; no reason to add another vendor.
+- **Run our own static-file server somewhere** — extreme overkill for a 200KB static site.
+
+### Concepts to understand
+- **URL pattern as architectural signal.** `<project>.<account>.workers.dev` and `<project>.pages.dev` aren't just cosmetic — they encode what the URL is actually serving. Workers always include the account subdomain because each account has its own worker namespace; Pages project URLs are globally unique by project name (claimed first-come-first-served). When debugging "why isn't my deploy working as expected," the URL pattern tells you most of what you need to know.
+- **Hostname-based env selection × deploy-target URLs.** The hostname-based selector pattern (introduced in R2.04) makes assumptions about what hosts will serve what environments. Those assumptions are baked into the selector code. Any change to the deploy URL (different host, different subdomain pattern, new custom domain) requires a corresponding selector update. R2.06's misstep was a deploy URL that the selector didn't recognize, silently falling through to the default — a category of bug worth being alert to for future infrastructure changes.
+- **Cloudflare Pages "production branch" terminology.** Cloudflare uses this term for the branch they auto-deploy to the canonical URL. For us, that branch is `staging`, not `main` — Cloudflare's "production" ≠ our "production." Naming collision worth holding in your head when configuring the project.
+- **Worker self-served URL vs Pages self-served URL.** A Worker can serve at `*.workers.dev` (default), at a Worker Route on a custom domain, or behind a Cloudflare WAF rule. A Pages project serves at `*.pages.dev` (default) and at custom domains added in the Pages project settings. The R3 phase will add `staging.tomodachi.com` to the Pages project specifically.
+
+### Tradeoffs accepted
+- **Cloudflare may evolve their UI further.** Today's distinguishing entry points may shift over the next ~6 months. The check "is the URL `.pages.dev` or `.workers.dev`?" is the durable signal regardless of UI changes. If a future migration changes the URL pattern entirely, both the deploy and the selector need an update.
+- **No build step on this Pages project.** Vanilla JS, no transpilation, no bundling. Cloudflare runs through the Pages build pipeline in <30 seconds because there's literally nothing to build. If we ever add a build step (esbuild, Vite, etc.), the Pages build config will need a `build command` and possibly an output directory other than `/`.
+- **Two separate auto-deploy pipelines for the same repo.** `main` → GitHub Pages (prod URL); `staging` → Cloudflare Pages (staging URL). Each requires its own monitoring, its own DNS, its own auth domain whitelist in Firebase. The complexity buys us a real staging environment, which is worth it — but it's complexity worth holding in your head.
+
+### Useful resources
+- [Cloudflare Pages docs](https://developers.cloudflare.com/pages/) — official.
+- [Workers vs Pages comparison](https://developers.cloudflare.com/pages/migrations/migrating-from-workers/) — Cloudflare's own writeup of when to use which.
+- [docs/Firestore_Rules.md hiraquest0 carve-out](Firestore_Rules.md) — the R2.05 ruleset's note on why hiraquest0 stays on its old catch-all; relevant because R2.06's failed first attempt accidentally wrote to hiraquest0, which the carve-out's catch-all silently permitted.
+
+---
 
 ## [Phase R2, Task R2.05] — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
 **Date:** 2026-05-28
