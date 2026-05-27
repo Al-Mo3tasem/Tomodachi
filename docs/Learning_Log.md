@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase R2, Task R2.05]** — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
 - **[Phase R2, Task R2.04]** — Hostname-based environment selection + prod-debug-gate idiom
 - **[Phase R1, Task R1.11]** — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
 - **[Phase R1, Task R1.05a]** — localStorage migration on brand rename
@@ -59,6 +60,52 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase R2, Task R2.05] — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
+**Date:** 2026-05-28
+**Contributor:** Claude (with project-lead direction on option choice + scope reductions)
+
+### Technology / Library Introduced
+- **Doc-as-key uniqueness pattern in Firestore** — a way to enforce unique-value constraints across documents in a collection when Firestore Security Rules can't natively express "no two docs may share a field value." You encode the unique value into the document ID, then rely on Firestore's create-vs-update semantics for atomicity: a `create` operation only succeeds when the doc doesn't already exist, so two simultaneous create attempts at the same path can never both win.
+- **`allow create` vs `allow update` distinction in Firestore Security Rules** — separate rule clauses that fire based on whether the target document already exists. `create` fires on writes to non-existing paths; `update` on writes that target existing docs. Omitting `allow update` means updates are universally denied — which is how we enforce immutability on the `usernames/` collection.
+
+### What it actually does (plain language)
+Tomodachi needed to enforce "no two users may pick the same username" — a constraint that's natural in SQL (`UNIQUE` index) but not directly expressible in Firestore Security Rules. The pre-R2.05 approach was to *query* the `users` collection for the username before allowing the signup to proceed; under hardened rules (`allow read: if request.auth != null`), this query failed because the would-be user wasn't yet authenticated when the check ran.
+
+R2.05's solution: a separate `usernames/` collection where the **document ID is the lowercase username itself**. The doc stores `{ uid, createdAt }`. The rule for `create` is: "anyone authenticated can create, BUT only with `data.uid == auth.uid` (you can only claim a name for yourself) and only with exactly `['uid', 'createdAt']` as fields (no schema injection)." The rule for `update` is absent — Firestore denies operations that have no matching `allow` clause, so usernames become immutable once written.
+
+The atomicity is **implicit in Firestore's create semantics**. When bob and alice simultaneously try to register the same username `dragon`, the first request's `setDoc(usernames/dragon, {uid: bob})` finds no existing doc and succeeds as a create. The second request's `setDoc(usernames/dragon, {uid: alice})` finds the doc already exists and Firestore reinterprets the operation as an update — but our ruleset has no `allow update` for `usernames/`, so the second request gets `permission-denied`. The signup flow catches that exact error code and surfaces "Username already taken" to alice.
+
+The squat-attack protection is the `data.uid == auth.uid` check: it prevents bob from creating `/usernames/alice` with `data.uid = alice` while signed in as bob. Without this check, bob could squat any username in the rightful owner's name, leaving the rightful owner unable to claim it (and the squatter able to delete it later anytime, since the delete rule checks `resource.data.uid == auth.uid`).
+
+### Alternatives considered
+- **(a) Relax `users` collection read to allow unauthenticated** — the simplest fix; the signup query just works. Rejected per project-lead decision because it exposes every user document (including email, displayName, createdAt) to any anonymous reader. PII concern, acceptable only as a temporary workaround until L1's Cloud Function gateway lands. We chose (d) instead specifically to keep `users` read auth-required.
+- **(b) Move the uniqueness check to a callable Cloud Function** — server-side enforcement is the cleanest design, and avoids exposing any user data. Rejected for R2.05 because Cloud Functions require Blaze tier and the project is staying on Spark until at least L2. Will likely become L1's approach when the registration-cap gateway ships.
+- **(c) Counter document + atomic increment trigger** — relevant for the now-retired maxUsers cap (count users via a separate `meta/registration_count` doc instead of `getDocs(users)`), but doesn't solve username uniqueness on its own. Also needs a Functions-based trigger for atomic increments. Rejected for the same Spark-tier reason as (b), and doesn't fit the username problem.
+- **(d) Doc-as-key uniqueness via the `usernames/` collection** — chosen. Spark-compatible, no PII exposure, atomic uniqueness via create-semantics, no Functions dependency.
+- **Sub-decision within (d): refactor `saveProfileSettings` (username CHANGE path) in R2.05 too** — explicitly deferred to L1.19 by project-lead direction. The existing query approach works correctly post-auth under hardened rules; the race condition (two users simultaneously claim the same new username via Settings) is benign at <50 users. Tracked in `Phases_and_Tasks.md` so the open follow-up doesn't decay.
+
+### Concepts to understand
+- **Doc ID as a uniqueness key** — any value that needs to be unique in a Firestore collection can be promoted to *be* the document ID instead of stored as a field. This converts "is anyone else using this value?" from a query (which requires `allow read` and an index) into a single-doc existence check (which is implicit in create semantics).
+- **Create-vs-update reinterpretation** — Firestore looks at the path of a write and decides whether it's a create or update based on whether a doc already exists. The same client SDK call (`setDoc`) can be either operation depending on server-side state. Your rules need to handle both possibilities OR deliberately omit one to deny it entirely.
+- **`request.resource.data` vs `resource.data` in rules** — `request.resource.data` is the **proposed new value** the client is trying to write; available on create + update. `resource.data` is the **existing document's data**; available on read, update, delete. For create operations, `resource` is `null` because nothing exists yet.
+- **`.keys().hasOnly([...])`** — a Security Rules expression that returns true if and only if the document's keys are a subset of the provided list. Prevents schema-injection: even if an attacker authenticated and signed up legitimately, they couldn't slip extra fields (like `isAdmin: true`) into their usernames doc.
+- **Orphan Auth + the `ensureUserProfile` self-heal** — Firebase Auth and Firestore are separate services with separate consistency models. If a signup flow creates an Auth account but fails to write the Firestore profile, the Auth account is "orphaned." The R2.05 `handleRegister` attempts `cred.user.delete()` when the usernames write fails; if that cleanup also fails (network, extension blocking), the Auth account persists. The pre-existing `ensureUserProfile` function creates a missing profile on the next successful login, which self-heals most orphan scenarios.
+
+### Tradeoffs accepted
+- **Duplicated username storage.** The canonical display username (original case) lives in `users/{uid}.username`; the uniqueness lock (lowercase) lives in `usernames/{lower}`. A username CHANGE has to update both: delete old `usernames/{oldLower}`, create new `usernames/{newLower}`, update `users/{uid}.username`. Three writes instead of one. Worth it: the uniqueness guarantee is structural, not best-effort.
+- **`saveProfileSettings` not yet migrated.** Username CHANGES still race-vulnerable until L1.19. Acceptable at <50 users.
+- **No transactional cleanup of partial signups.** If the network drops between the usernames write and the users write, we end up with a `usernames/{lower}` reservation but no profile. The user retries; `ensureUserProfile` heals the missing profile on next login. Acceptable; could be tightened with a Cloud Function transaction later.
+- **Username changes via delete-then-create are not atomic.** Between the delete of `usernames/{old}` and the create of `usernames/{new}`, another user could grab the just-freed old name. Acceptable at scale; matters only when usernames have value to others (e.g., recognizable handles), which isn't the case in our friend-card-only social model.
+- **One implicit Firestore "feature" we now depend on.** The "create-against-existing-doc becomes update" reinterpretation is documented Firestore behavior but isn't something the SDK exposes a direct API for. If Firestore ever changes this semantic, our atomicity gate breaks silently. Mitigation: the Playground simulations in `Firestore_Rules.md` Application Sequence include the immutability test (Sim 6), which would catch a regression here on the next rule deploy.
+
+### Useful resources
+- [Firebase docs: Security Rules data validation](https://firebase.google.com/docs/firestore/security/rules-conditions#data_validation) — official docs section on how rules match to write operations.
+- [Stack Overflow: enforcing uniqueness in Firestore](https://stackoverflow.com/q/47089457) — community discussion of the doc-as-key pattern and its alternatives.
+- [docs/Firestore_Rules.md](Firestore_Rules.md) — the R2.05 ruleset in full, with the Application Sequence + Playground sims.
+- [docs/Tomodachi_Master_Plan.md §4.8](Tomodachi_Master_Plan.md) — the `usernames/` collection schema documented in the project's data model (gitignored, local-only).
+
+---
 
 ## [Phase R2, Task R2.04] — Hostname-based environment selection + prod-debug-gate idiom
 **Date:** 2026-05-27

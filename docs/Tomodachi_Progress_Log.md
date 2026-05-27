@@ -16,6 +16,46 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase R2.05: hardened rules on 3-env + `usernames/` atomic lock pattern
+**Status:** ✅ DONE
+**Scope:** Code | Firebase | Docs
+**Summary:** Applied the new hardened ruleset to all three new Firebase projects (`tomodachi-dev`, `tomodachi-staging`, `tomodachi-prod`). The key R2.05 design move was the **`usernames/` collection** as the atomic uniqueness gate for signup, replacing the previous pre-auth `users` query that broke under hardened rules. This is "option (d)" from the R2.05 design discussion. Privacy posture preserved — `users` read stays auth-required throughout the R2.11→L1-gateway window. The maxUsers client-side cap is **retired**; the Phase L1 Cloud Function registration gateway will own rate limiting going forward.
+
+**Three-commit landing:**
+- `9ebe3ad` — Code: `handleRegister` refactor in `js/app.js` (createUserWithEmailAndPassword → setDoc on `usernames/{lower}` as atomic lock → users/stats writes; `permission-denied` on the usernames write triggers orphan-Auth cleanup + "Username already taken" UX). Dropped `maxUsers` from `APP_CONFIG`. Phases doc: new L1.19 task for the `saveProfileSettings` race-condition cleanup; old L1.19 (completion log) renumbered to L1.20; L2.01 + L2.02 deps updated. Cache busters bumped `20260527a` → `20260527b` on the 3 imports whose target content changed.
+- `2f7c41a` — `docs/Firestore_Rules.md` full rewrite for the 3-env topology. New ruleset adds the `usernames/{username}` block (read public; create gated by `auth.uid == data.uid` + `hasOnly(['uid','createdAt'])`; delete owner-only; no update rule = immutability). `hiraquest0` carve-out documented with R2.13 decommission trigger. Application Sequence section: 8-step per-project paste flow + Rules Playground sims + rollback.
+- `f28cc5c` — Mid-execution fix: original Sim 3 in the Application Sequence had a misleading payload (`auth.uid=bob, data.uid=bob` writing to `/usernames/alice`) that tested a *legitimate* operation (bob reserving available name "alice" for himself) and correctly returned Allow. Fixed Sim 3 to test the actual squat-attack (`data.uid=alice` while `auth.uid=bob` → Deny via uid-mismatch). Added Sim 6 (update-type) demonstrating the immutability/atomicity gate. The actual ruleset was unchanged — only the doc's test payload was wrong.
+
+**Files / Areas (across the three commits):**
+- `js/app.js` `handleRegister` — refactored per the three-step pattern (Auth → usernames lock → users + stats); also lines 7 (cache buster bump) and 10/17/21/24/30/34 untouched.
+- `js/config/firebase.js` + `js/config/firebase.template.js` — `maxUsers` removed.
+- `js/core/core.js` (line 6) and `index.html` (line 619) — cache busters bumped `20260527a` → `20260527b` (strict §14.3).
+- `docs/Phases_and_Tasks.md` — new L1.19 (saveProfileSettings refactor task), old L1.19 → L1.20, L2.01 + L2.02 deps updated.
+- `docs/Firestore_Rules.md` — full rewrite + Sim-3 fix + Sim-6 addition.
+- `docs/Tomodachi_Master_Plan.md` (gitignored, local-only) — §4.8 `usernames` collection documented; §4.7 (`config/system { maxUsers: 2 }`) deleted; §4.8 backfill count later corrected to 1 doc.
+
+**Backfill on `hiraquest0`:** Originally planned for 2 docs; actually only 1 backfilled because the second active user hasn't signed up on the current production app yet. No problem — that user's future signup against `hiraquest0` runs the new R2.05 flow, which `hiraquest0`'s catch-all rule still permits, creating both `users/{uid}` and `usernames/{lower}` naturally. R2.09 import then carries both.
+
+**Verification:**
+- Rules Playground sims 1–6 passed Allow/Deny as expected on all 3 new projects (sim 3 ran with the corrected `data.uid=alice` payload after the `f28cc5c` doc fix).
+- `tomodachi-dev` localhost end-to-end signup: fresh email + username → "Account created!" toast; 3 docs landed (`usernames/{lower}`, `users/{uid}`, `stats/{uid}`).
+- Collision test on `tomodachi-dev`: second account with different email + same username → "Username already taken" toast; orphan-Auth cleanup confirmed via Authentication tab (only one account remained).
+- `tomodachi-staging` rules published; Playground sims passed; localhost-via-staging-URL signup deferred to R2.06 (Cloudflare Pages setup).
+- `tomodachi-prod` rules published; Playground sims passed; no real-traffic test possible until R2.11 cutover routes prod traffic to this project.
+
+**Process notes from execution:**
+- The original Sim 3 instruction was wrong in a subtle way — the payload tested a legitimate username-reservation, not the squat-attack the documentation claimed it was testing. Caught during the user's `tomodachi-dev` Playground run. Doc patched mid-execution; staging + prod proceeded with the corrected version.
+- `ERR_BLOCKED_BY_CLIENT` errors against `firestore.googleapis.com/.../channel?VER=8` (long-polling URLs) surfaced during step-8 localhost verification. Content-blocker extensions (uBlock Origin / Brave Shields / AdGuard / etc.) classify these channels as analytics beacons and block them by default. `js/data/firebase.js` uses `experimentalForceLongPolling: true` (legacy workaround from Phase 2 for streaming-channel flakiness), so removing the flag isn't free. Workaround for dev: incognito window OR allowlist `firestore.googleapis.com` in the offending extension. **Not a code change at this point** — track for the future.
+- Cleanup of stale Auth + Firestore state in `tomodachi-dev` was needed before the clean retest passed (Authentication tab → delete test user; Firestore → delete orphan docs in `users/`, `usernames/`, `stats/`, `presence/`; browser storage cleared on localhost).
+
+**Open Follow-up:**
+1. **L1.19** — `saveProfileSettings` race-condition refactor (username CHANGES path). Tracked in `docs/Phases_and_Tasks.md`. Current query approach works post-auth under the new ruleset but is race-vulnerable. Deferred to Phase L1 per agreed R2.05 scope.
+2. **`hiraquest0` carve-out** — stays on broad catch-all until R2.13 decommissions the project. Documented in `docs/Firestore_Rules.md`.
+3. **`experimentalForceLongPolling` × browser-extension interaction (dev-environment only)** — workaround documented above. Decide on permanent fix only if friction grows.
+4. **`config/system`** Firestore collection — referenced in the ruleset under `match /config/{docId}` as a forward placeholder but currently has no documented docs (Master Plan §4.7 was deleted with the `maxUsers` retirement). Re-add a Master Plan §4.X entry when the first real config doc is needed.
+
+---
+
 ## 2026-05-27 — Phase R2.04: 3-environment Firebase config switcher
 **Status:** ✅ DONE
 **Scope:** Code | Firebase
