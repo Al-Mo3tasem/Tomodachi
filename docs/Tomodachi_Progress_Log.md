@@ -16,6 +16,34 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-27 — Phase R2.04: 3-environment Firebase config switcher
+**Status:** ✅ DONE
+**Scope:** Code | Firebase
+**Summary:** Replaced the single `firebaseConfig` export in `js/config/firebase.js` with a module-private `configs` map (`dev` / `staging` / `prod`) plus `getEnv()` + `getFirebaseConfig()` helpers per `PROJECT_RULES.md` §6.2. Selector is hostname-based: `localhost` / `127.0.0.1` → dev, `*.pages.dev` or `staging.tomodachi.com` → staging, everything else → prod. Dev/staging point at the new `tomodachi-dev` / `tomodachi-staging` projects from R2.01–R2.02. **Prod still holds the legacy `hiraquest0` config unchanged** — R2.11 owns the cutover to `tomodachi-prod` after R2.08–R2.10 migrate data + Auth users. Zero behavioral change for existing prod users today.
+
+**Files / Areas (commit `e2c9ef9`, 10 files, +124 / −46):**
+- `js/config/firebase.js` — restructured. `APP_CONFIG` export preserved.
+- `js/config/firebase.template.js` — mirrors the new three-env shape with placeholders per §5.2.
+- `js/data/firebase.js` — calls `getFirebaseConfig()` at module load. Verification log gated by `env !== 'prod' || URLSearchParams.has('debug')` so dev/staging print env+projectId always and prod prints only with `?debug=1` (respects §9.4 default-quiet-in-prod). Pattern intended to be reused for R2.05+ init code.
+- Cache busters bumped `20260526a` → `20260527a` (strict §14.3 reading) on every import whose target's content changed: `index.html` (app.js link, line 619), `js/app.js` (7 of 8 imports), `js/core/core.js` (line 6), `js/data/firebase.js` (line 7), `js/data/leaderboards.js` (lines 8–9), `js/games/coop.js` (lines 15/19/21), `js/games/engine.js` (lines 17/20/25), `js/games/duel.js` (lines 17/21/23). Audio.js imports (×4) and the CSS link in `index.html` intentionally stayed at `20260526a` — their targets did not change.
+
+**Verification:**
+- `node --check` passed on all 9 modified JS modules.
+- Grep confirmed no stale `?v=20260526a` on changed-target imports; the 5 remaining instances are the documented audio.js + CSS exceptions.
+- Localhost test (`python -m http.server 8000` → `http://localhost:8000`): console printed `[firebase-init] env=dev projectId=tomodachi-dev`. Identical on `http://127.0.0.1:8000`.
+- Production-path test (`https://al-mo3tasem.github.io/Tomodachi/`): silent by default. With `?debug=1` appended: `[firebase-init] env=prod projectId=hiraquest0` — confirms prod still hits the legacy project and the debug-gate override works.
+
+**Open Follow-up:**
+1. **Pre-existing R1.05a migration bug** at `js/core/core.js:16-17`: both `oldK` and `newK` use the `'tomodachi-'` prefix; one should be `'hiraquest-'`. The migration is currently a silent no-op. Practical impact small — the two active accounts had loaded post-rename before the typo landed. **Disposition:** delete the shim at the next `core.js` touchpoint (the L2.C deferred file split), since the shim was already declared "harmless after the first run" in the R1.05a Learning Log entry. Not a separate task.
+2. **Storage + Cloud Functions** on the three new Spark-tier projects intentionally NOT enabled (Blaze required for new projects post-2024). Revisit when the registration-cap gateway or audio pipeline becomes blocking (Phase L2, $1/mo Blaze budget cap).
+3. **Authorized-domain gaps** with explicit later triggers:
+   - `tomodachi-staging` project needs the Cloudflare Pages FQDN added at R2.06 (e.g., `tomodachi-staging.pages.dev`). Tracked as R2.06 acceptance prerequisite.
+   - `tomodachi-prod` project needs `al-mo3tasem.github.io` added BEFORE R2.11 cutover, or every existing user is locked out at the cutover moment. Tracked as R2.11 step-1 prerequisite.
+   - `tomodachi.com` deferred to R3.04 (post-domain-purchase).
+4. **`Firestore_Rules.md` line 1 title still reads "HiraQuest"** — folds into the R2.05 rewrite.
+
+---
+
 ## 2026-05-27 — Docs reorganization: all planning docs moved into `docs/`
 **Status:** ✅ DONE
 **Scope:** Repo layout | Docs

@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase R2, Task R2.04]** — Hostname-based environment selection + prod-debug-gate idiom
 - **[Phase R1, Task R1.11]** — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
 - **[Phase R1, Task R1.05a]** — localStorage migration on brand rename
 - **[Phase R1, Task R1.04]** — Folder reorganization with `git mv` + cross-module import path updates
@@ -58,6 +59,47 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase R2, Task R2.04] — Hostname-based environment selection + prod-debug-gate idiom
+**Date:** 2026-05-27
+**Contributor:** Claude
+
+### Technology / Library Introduced
+- **Hostname-based environment selector** — pattern for choosing between dev / staging / prod configuration at runtime by reading `location.hostname` in the browser. No build step, no env-var injection, no manual toggle. The browser tells us which environment it's in by *where it's running*.
+- **Prod-debug-gate idiom** — `if (env !== 'prod' || params.has('debug')) { ... }` — a one-line gate that makes a side-effect (a console.log, a banner, a verification screen) verbose in dev/staging by default and opt-in only on prod via a `?debug=1` URL param. Reusable across the project.
+
+### What it actually does (plain language)
+With three separate Firebase backends (one per environment), the client app needs to point at the right one without us hand-editing which config it loads. The hostname is the cleanest signal we have: when the page is served from `localhost`, we're in dev; from `*.pages.dev`, we're in staging; from `al-mo3tasem.github.io` (or later `tomodachi.com`), we're in prod. The selector function `getEnv()` is six lines of `if`s returning one of three strings; `getFirebaseConfig()` indexes a `configs` map by that string. No magic, no framework.
+
+The prod-debug-gate solves a related problem: per `PROJECT_RULES.md` §9.4, prod should be quiet by default — no info-level logs. But the R2.04 acceptance criterion specifically says "verified by console-logging the project ID on each." A pure `if (env !== 'prod') log()` makes prod silently un-verifiable — we couldn't ever check from a browser that prod is hitting the right backend. The `params.has('debug')` branch keeps prod quiet by default but gives an opt-in escape hatch: visit `?debug=1` once, see the log, leave.
+
+### Alternatives considered
+- **Build-time env injection (Vite / Webpack / esbuild)** — the modern-frontend default. Rejected: the project is vanilla JS with no build step; introducing one conflicts with the minimal-stack decision in `Commercialization_Plan.md`. The hostname approach gets the same outcome with zero new dependencies.
+- **URL query parameter to select env** (`?env=staging`) — flexible but fragile. Anyone landing on a deep-linked URL might accidentally hit the wrong backend. Rejected as a primary selector.
+- **localStorage flag** (`localStorage.setItem('TOMODACHI_ENV', 'staging')`) — useful for one-off dev testing but easy to forget, requires DevTools to flip. Rejected as primary.
+- **`if (env === 'prod') skip log` (no escape hatch)** — what was proposed in the original plan and corrected by the project lead. Rejected because prod stays unverifiable: if R2.11 ever lands a wrong projectId, we'd only find out via Sentry errors, not a 5-second visual check.
+- **Option chosen** — hostname-based selector with a per-call debug-gate idiom for prod observability.
+
+### Concepts to understand
+- **`location.hostname`** — browser-provided string telling you the host of the current page (`localhost`, `127.0.0.1`, `tomodachi-staging.pages.dev`, etc.). Read-only, set by the browser based on the URL. Available synchronously at module load time.
+- **`URLSearchParams`** — modern browser API for parsing the `?key=value` portion of a URL. `new URLSearchParams(location.search).has('debug')` returns true if `?debug` (with or without a value) is present.
+- **Module-private state via top-level `const`** — the `configs` map isn't exported; nothing outside the file can read or mutate it directly. Callers go through `getFirebaseConfig()`. The internal shape can change later (rename a key, add a field, switch to a remote-config fetch) without breaking any caller. Export surface stays narrow.
+- **Strict §14.3 cache-buster reading vs. release-alignment** — R2.04 used strict (bump only on changed-target consumers; audio.js + CSS stay at the old buster). R1 used release-alignment (bump everything to today's date). Both valid; strict makes diffs sharper, release-alignment makes versions easy to eyeball at a glance.
+
+### Tradeoffs accepted
+- **Hostname is the only signal.** If we ever need to run dev locally but talk to staging or prod data, we'd need a DevTools override or add an opt-in URL parameter. Acceptable: 99% of dev work hits dev data.
+- **Adding an environment means editing this file.** A hypothetical `qa` would need a new hostname rule + a `configs.qa` entry. Cheap. The alternative (config-as-data fetched at boot) adds a runtime dependency and a chicken-and-egg problem without enough benefit at this stage.
+- **The debug gate is per-call, not centralized.** Every future verification log site has to remember the pattern. If many appear, extract a `debugLog(...)` helper; for now the one-liner is short enough that DRY would be premature.
+- **`configs.prod` holds hiraquest0 values until R2.11.** Surfaces in the file as a comment + a code-level reminder. Easy to misread for "this is wrong, the prod project is tomodachi-prod." Will be deleted when R2.11 cutover commits.
+
+### Useful resources
+- [MDN: location.hostname](https://developer.mozilla.org/en-US/docs/Web/API/Location/hostname) — what it returns under various URLs.
+- [MDN: URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) — modern query-string parsing.
+- [12-factor app: III. Config](https://12factor.net/config) — the broader principle of "config lives in the environment, not the code." Hostname-based selection is one realization; build-time injection is another.
+- [PROJECT_RULES.md §6.2](PROJECT_RULES.md) — the rule mandating this loader shape.
+- [PROJECT_RULES.md §9.4](PROJECT_RULES.md) — the "prod stays quiet by default" rule that motivates the debug-gate idiom.
+
+---
 
 ## [Phase R1, Task R1.11] — Folder taxonomy: what each `js/` subdirectory captures and why this grouping
 **Date:** 2026-05-26
