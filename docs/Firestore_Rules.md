@@ -194,17 +194,40 @@ For **each** project, do these 8 steps:
        Firebase UID: `alice`, Build a custom resource with:
        `{ "uid": "alice", "createdAt": "<any timestamp>" }`.
      - Expected: **Allow**.
-   - **Simulation 3** — try to claim someone else's username:
+   - **Simulation 3** — squat-attack: bob tries to reserve a username
+     while putting someone *else's* uid in the data (which would let bob
+     squat a reservation that the rightful owner couldn't later modify):
      - Type: `create`, Path: `/usernames/alice`, Authenticated: **on**,
        Firebase UID: `bob`, Build a custom resource with:
-       `{ "uid": "bob", "createdAt": "<any timestamp>" }`.
-     - Expected: **Deny** (uid mismatch — auth.uid must equal data.uid).
+       `{ "uid": "alice", "createdAt": "<any timestamp>" }`.
+     - Expected: **Deny** (auth.uid `bob` ≠ data.uid `alice`; the rule
+       requires they match).
+     - **Important nuance:** if you instead build the resource with
+       `{ "uid": "bob", ... }` and Firebase UID stays `bob`, the create
+       is **Allow**ed. That's bob legitimately reserving the available
+       name "alice" for himself, which is the intended behavior — any
+       authed user can pick any *available* username for themselves.
+       The atomicity gate (doc doesn't exist → it's a create; doc
+       exists → it'd be an update; no update rule) prevents a second
+       user from taking an already-claimed name; Simulation 6 below
+       demonstrates the update-denial.
    - **Simulation 4** — users collection stays private:
      - Type: `get`, Path: `/users/alice`, Authenticated: **off**.
      - Expected: **Deny**.
    - **Simulation 5** — authed user can read other users:
      - Type: `get`, Path: `/users/alice`, Authenticated: **on**, UID: `bob`.
      - Expected: **Allow** (friend card needs cross-read).
+   - **Simulation 6** — usernames are immutable (the atomicity gate):
+     - Type: `update`, Path: `/usernames/alice`, Authenticated: **on**,
+       Firebase UID: `alice`. In the "Resource" field set the existing
+       document state to `{ "uid": "alice", "createdAt": "<any past timestamp>" }`.
+       In Data set the new value: `{ "uid": "alice", "createdAt": "<any new timestamp>" }`.
+     - Expected: **Deny** (the ruleset has no `allow update` rule for
+       `/usernames/{username}`, so all updates are denied even by the
+       owning user). This is the gate that protects against a second
+       user grabbing an already-claimed username: their `create` attempt
+       becomes an update under Firestore semantics, and updates are
+       categorically denied.
 7. Click **Publish** (top-right). Wait for the green "Rules published"
    confirmation (usually <5 seconds).
 8. Hard-refresh the app (`Ctrl + Shift + R`) and sign in once to confirm
