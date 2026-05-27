@@ -424,8 +424,14 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Share landing URL with personal network (friends, family, your existing channels) to capture initial 50 signups. This validates the funnel + provides social proof for later marketing.
 **Acceptance:** 50 confirmed (double-opted-in) emails in Brevo list.
 
-### L1.19 — Log Phase L1 completion
-**Deps:** L1.18
+### L1.19 — Refactor `saveProfileSettings` to use `usernames/` atomic lock
+**Deps:** R2.05
+**Owner:** Claude
+**Description:** Bring the username-change path in `js/app.js` (`saveProfileSettings`) onto the same atomicity pattern that R2.05 established for the signup flow. Currently the function uses `query(collection(db, 'users'), where('username', '==', ...))` to check uniqueness — race-vulnerable when two users try to claim the same new username simultaneously. Refactor to: (1) create the new `usernames/{newLower}` doc as the atomic lock (relies on the R2.05 `allow create` rule); (2) delete the old `usernames/{oldLower}` doc; (3) update `users/{uid}.username`. ~30 LOC. Pattern matches the R2.05 signup flow refactor; reuse the same error-mapping idiom (`permission-denied` → "Username already taken").
+**Acceptance:** Username change in Settings uses the atomic pattern; `node --check` passes; race-test (two browser tabs racing on the same target username) shows one succeeds and one gets "Username already taken."
+
+### L1.20 — Log Phase L1 completion
+**Deps:** L1.19
 **Owner:** Claude
 **Description:** Progress Log entry; Learning Log entries covering i18next, RTL CSS logical properties, Sentry setup, GA4 Consent Mode v2, Cloudflare Pages branch deploys, Brevo API.
 **Acceptance:** Entries written.
@@ -447,7 +453,7 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 The user feedback in iteration 1 was clear: gamification depth needs more thought than "ship XP and badges". Both the learning experience and the gamification mechanics get explicit design docs *before* any building begins.
 
 #### L2.01 — Write `LEARNING_EXPERIENCE.md` design doc
-**Deps:** L1.19
+**Deps:** L1.20
 **Owner:** Claude (drafts) → User (review & amend)
 **Description:** A new tracked design doc covering the full learner journey. Must specify:
 - **Onboarding flow** — first-time signup → placement (or skip) → first lesson
@@ -465,7 +471,7 @@ The user feedback in iteration 1 was clear: gamification depth needs more though
 **Acceptance:** `LEARNING_EXPERIENCE.md` v1.0 committed (tracked); project lead reviewed and approved.
 
 #### L2.02 — Write `GAMIFICATION_DESIGN.md` design doc
-**Deps:** L1.19
+**Deps:** L1.20
 **Owner:** Claude (drafts) → User (review & amend)
 **Description:** A new tracked design doc covering the full engagement-mechanics surface. Must specify:
 - **XP table** — exact XP awarded for every action (correct answer = X, perfect game = Y, streak day = Z, daily quest complete = W, badge unlock = N, etc.)

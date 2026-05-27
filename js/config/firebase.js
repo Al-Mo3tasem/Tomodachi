@@ -51,8 +51,8 @@ export function getFirebaseConfig() {
 }
 
 // App Settings (unchanged surface — imported by app.js and core/core.js).
+// maxUsers removed in R2.05; L1 gateway owns rate limiting going forward.
 export const APP_CONFIG = {
-  maxUsers: 2,
   defaultTheme: 'light',
   version: '4.1.0-phase4'
 };

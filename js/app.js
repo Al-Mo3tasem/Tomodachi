@@ -4,7 +4,7 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260527a';
+import { APP_CONFIG } from './config/firebase.js?v=20260527b';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
 } from './core/core.js?v=20260527a';
@@ -173,25 +173,50 @@ async function handleRegister(e) {
     return;
   }
 
+  let cred = null;
   try {
     showLoading(true);
 
-    const usersSnap = await withTimeout(getDocs(collection(db, 'users')), 'Checking account limit', 15000);
-    if (usersSnap.size >= APP_CONFIG.maxUsers) {
-      showFormError(errorEl, 'Tomodachi is full! Only 2 accounts are allowed.');
-      showLoading(false);
-      return;
+    // Step 1: create the Auth account so we have a real uid for the
+    // usernames write that follows.
+    cred = await withTimeout(
+      createUserWithEmailAndPassword(auth, email, password),
+      'Creating Firebase Auth account',
+      15000
+    );
+
+    // Step 2: usernames/{lowercase} is the atomic uniqueness lock.
+    // The rule only allows create when the doc doesn't exist, so two
+    // simultaneous claims for the same username can never both win.
+    // permission-denied here = doc already exists = username taken.
+    try {
+      await withTimeout(
+        setDoc(doc(db, 'usernames', username), {
+          uid: cred.user.uid,
+          createdAt: serverTimestamp()
+        }),
+        'Reserving username',
+        15000
+      );
+    } catch (usernameErr) {
+      if (usernameErr.code === 'permission-denied') {
+        // Atomicity gate fired. Delete the orphan Auth account and
+        // surface "username taken" to the user.
+        try { await cred.user.delete(); }
+        catch (cleanupErr) { console.error('Auth cleanup failed:', cleanupErr); }
+        cred = null;
+        throw new Error('USERNAME_TAKEN');
+      }
+      // Other errors (network, timeout): the Auth account exists but
+      // the username isn't reserved. Propagate; the user can retry,
+      // and the unused Auth account is harmless until they log in
+      // (ensureUserProfile will self-heal the missing profile).
+      throw usernameErr;
     }
 
-    const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
-    const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
-    if (!usernameSnap.empty) {
-      showFormError(errorEl, 'Username already taken.');
-      showLoading(false);
-      return;
-    }
-
-    const cred = await withTimeout(createUserWithEmailAndPassword(auth, email, password), 'Creating Firebase Auth account', 15000);
+    // Step 3: profile + display name + stats. From here on, failures
+    // leave the usernames/ reservation in place — acceptable because
+    // the user still owns it (uid matches) and retry will work.
     await withTimeout(updateProfile(cred.user, { displayName }), 'Saving display name', 15000);
 
     await withTimeout(setDoc(doc(db, 'users', cred.user.uid), {
@@ -217,7 +242,11 @@ async function handleRegister(e) {
 
     toast('Account created! Welcome to Tomodachi.', 'success');
   } catch (err) {
-    showFormError(errorEl, formatAuthError(err.code, err.message));
+    if (err.message === 'USERNAME_TAKEN') {
+      showFormError(errorEl, 'Username already taken.');
+    } else {
+      showFormError(errorEl, formatAuthError(err.code, err.message));
+    }
     console.error('Register error:', err);
   } finally {
     showLoading(false);
