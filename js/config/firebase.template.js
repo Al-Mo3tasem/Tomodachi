@@ -6,7 +6,7 @@
 // 3. js/config/firebase.js IS deployed (GitHub Pages needs it). The Firebase
 //    API key is safe to expose because it is domain-restricted.
 // Project ID stays `hiraquest0` (immutable) until Phase R2 migrates to
-// `tomodachi-prod`. See Phases_and_Tasks.md Phase R2.
+// `tomodachi-prod`. See docs/Phases_and_Tasks.md Phase R2.
 
 export const firebaseConfig = {
   apiKey: "YOUR_API_KEY_HERE",

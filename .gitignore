@@ -4,8 +4,8 @@
 # Never commit seed page after use
 seed.html
 
-Tomodachi_Master_Plan.md
-Commercialization_Plan.md
+docs/Tomodachi_Master_Plan.md
+docs/Commercialization_Plan.md
 
 # T4 content per PROJECT_RULES.md §18.2 — never commit authoring artifacts
 # (content drafts, prompts, intermediate JSON, generated audio caches)

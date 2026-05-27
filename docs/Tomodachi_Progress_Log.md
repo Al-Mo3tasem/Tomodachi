@@ -16,6 +16,32 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-27 — Docs reorganization: all planning docs moved into `docs/`
+**Status:** ✅ DONE
+**Scope:** Repo layout | Docs
+**Summary:** Moved every planning + governance markdown file into a new `docs/` folder at the repo root, leaving `README.md` at root (so GitHub still renders it on the repo landing page). Project root is now visually clean: `index.html`, `css/`, `js/`, `docs/`, `favicon.svg`, `.gitignore`, `README.md` — no scattered .md files. Motivated by repo-tidiness preference; no functional change.
+
+**Files / Areas:**
+- **`git mv` (history preserved):** `PROJECT_RULES.md`, `Phases_and_Tasks.md`, `Tomodachi_Progress_Log.md`, `Learning_Log.md`, `CONTENT_GUIDELINES.md`, `Firestore_Rules.md` → `docs/<filename>`.
+- **Plain `mv` (gitignored, not in history):** `Tomodachi_Master_Plan.md`, `Commercialization_Plan.md` → `docs/<filename>`.
+- **`.gitignore`:** `Tomodachi_Master_Plan.md` → `docs/Tomodachi_Master_Plan.md`; same for `Commercialization_Plan.md`.
+- **`README.md`:** All six in-table markdown links and the §"Project structure" tree updated to use `docs/` prefix. Status paragraph rewritten to reflect that Phase R1 is now complete (was still saying "Currently in Phase R1").
+- **`docs/PROJECT_RULES.md` §1.1:** Added one-line note above the core-documents table explaining that all docs live under `docs/`, and that bare-filename references throughout this rules doc resolve to `docs/<filename>` from the repo root or as bare names when read from a sibling inside `docs/`. This avoids a sweep of every cross-reference inside the rules doc.
+- **`js/config/firebase.js`** and **`js/config/firebase.template.js`:** Two comment-only updates — references to `Commercialization_Plan.md` and `Phases_and_Tasks.md` now use the `docs/` prefix.
+
+**Cross-references intentionally left bare:** Markdown links between sibling docs inside `docs/` (e.g., `Learning_Log.md` linking to `PROJECT_RULES.md`, or `Tomodachi_Progress_Log.md` mentioning `Phases_and_Tasks.md`) still resolve correctly because both sides of the link are now co-located. Rewriting every internal reference to add `docs/` would be cosmetically consistent but functionally redundant and bloat the diff.
+
+**Verification:**
+- `git status` shows 6 renames (R), `.gitignore` modification, `README.md` modification, `js/config/firebase.js` + `js/config/firebase.template.js` modifications, `docs/PROJECT_RULES.md` + `docs/Tomodachi_Progress_Log.md` modifications. No untracked .md files at root.
+- `ls` at repo root shows only `README.md` (no other .md files).
+- `ls docs/` shows all 8 planning docs.
+- IDE-opened `Tomodachi_Master_Plan.md` tab will show "file not found" until reopened from the new path — flagged to user.
+
+**Open Follow-up:**
+- None for this task. Phase R2 prep continues separately.
+
+---
+
 ## 2026-05-26 — Phase R1 Closure: R1.02 + R1.11 + R1.12
 **Status:** ✅ DONE
 **Scope:** Firebase | Docs | Local filesystem

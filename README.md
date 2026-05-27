@@ -39,25 +39,25 @@ Content scope: full JLPT N5 + N4 (hiragana, katakana, ~1,500 vocab, ~300 kanji, 
 │   ├── games/              # Game modes: engine + zen + survival + duel + coop
 │   ├── audio/              # TTS + WebAudio sound effects
 │   └── ...                 # (i18n, ui, validators, analytics — added per phase)
-└── *.md                    # Planning + governance docs (see below)
+└── docs/                   # Planning + governance docs (see below)
 ```
 
-Full folder convention is in [PROJECT_RULES.md](PROJECT_RULES.md) §7.
+Full folder convention is in [docs/PROJECT_RULES.md](docs/PROJECT_RULES.md) §7.
 
 ## Documentation
 
 | Doc | Purpose |
 |---|---|
-| [PROJECT_RULES.md](PROJECT_RULES.md) | Technical conventions, file/folder rules, Codex/Claude task split, release checklist |
-| [CONTENT_GUIDELINES.md](CONTENT_GUIDELINES.md) | Bilingual writing standards (English + MSA Arabic), kanji mnemonic format, dialect policy |
-| [Phases_and_Tasks.md](Phases_and_Tasks.md) | Current phase + granular task list with dependencies |
-| [Tomodachi_Progress_Log.md](Tomodachi_Progress_Log.md) | Implementation history per task |
-| [Learning_Log.md](Learning_Log.md) | Technologies and decisions catalogued for skill growth |
-| [Firestore_Rules.md](Firestore_Rules.md) | Security rules and how to apply them via Firebase Console |
+| [docs/PROJECT_RULES.md](docs/PROJECT_RULES.md) | Technical conventions, file/folder rules, Codex/Claude task split, release checklist |
+| [docs/CONTENT_GUIDELINES.md](docs/CONTENT_GUIDELINES.md) | Bilingual writing standards (English + MSA Arabic), kanji mnemonic format, dialect policy |
+| [docs/Phases_and_Tasks.md](docs/Phases_and_Tasks.md) | Current phase + granular task list with dependencies |
+| [docs/Tomodachi_Progress_Log.md](docs/Tomodachi_Progress_Log.md) | Implementation history per task |
+| [docs/Learning_Log.md](docs/Learning_Log.md) | Technologies and decisions catalogued for skill growth |
+| [docs/Firestore_Rules.md](docs/Firestore_Rules.md) | Security rules and how to apply them via Firebase Console |
 
 ## Status
 
-Currently in **Phase R1** — brand rename from HiraQuest → Tomodachi + folder reorganization. See [Phases_and_Tasks.md](Phases_and_Tasks.md) for the full roadmap (R1 rename → R2 backend migration → R3 custom domain → L1 landing/waitlist → L2 closed beta → L3 public free → L4 Pro launch).
+**Phase R1** (brand rename HiraQuest → Tomodachi + folder reorg) is complete. Currently between R1 and R2. See [docs/Phases_and_Tasks.md](docs/Phases_and_Tasks.md) for the full roadmap (R1 rename → R2 backend migration → R3 custom domain → L1 landing/waitlist → L2 closed beta → L3 public free → L4 Pro launch).
 
 ## License
 

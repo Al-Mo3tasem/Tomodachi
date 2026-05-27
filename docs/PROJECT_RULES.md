@@ -42,6 +42,8 @@
 
 ### 1.1 Core documents
 
+All planning and governance documents live under `docs/` at the repo root. Filename references throughout this rules document use bare filenames (e.g., `Phases_and_Tasks.md`) — they resolve as `docs/<filename>` from the repo root, or as bare filenames when read from any sibling doc inside `docs/`.
+
 | Document | Purpose | Visibility | Owner |
 |---|---|---|---|
 | **`Phases_and_Tasks.md`** | What is planned. Authoritative phase + task list with dependencies. | TRACKED | Project lead |
