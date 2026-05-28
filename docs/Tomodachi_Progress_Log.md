@@ -63,6 +63,17 @@ This file records the important implementation, debugging, deployment, and docum
 
 **Next phase: L1 — Landing page + waitlist.** See `docs/Phases_and_Tasks.md` Phase L1 task list. First task L1.01: i18next setup (depends on R2.14 — done as of this entry).
 
+**🗓️ Scheduled cleanup on or after 2026-06-27 (R2.13 grace period elapses):**
+- Firebase's 30-day project-deletion grace for `hiraquest0` ends ~2026-06-27 (project decommissioned 2026-05-28). Once that date passes, `hiraquest0` is permanently deleted and the carve-out documentation becomes historical noise.
+- **Any Claude session orienting on the project after 2026-06-27 should pick up the following work:**
+  1. Remove the `## 🪪 hiraquest0 carve-out` section from `docs/Firestore_Rules.md` (sits between the R2.05 ruleset block and the Application sequence section).
+  2. Update `docs/Tomodachi_Master_Plan.md` §4.8 if any forward-looking language about hiraquest0 remains.
+  3. Update the "Where we are right now" line in `C:\Users\mouta\.claude\projects\d--MO3-LAP-MyProjects-Tomodachi\memory\tomodachi-commercialization.md` from "30-day Firebase recovery grace until ~2026-06-27" to "permanently deleted ~2026-06-27".
+  4. Write a small Progress Log entry titled "hiraquest0 carve-out removed (R2.13 grace period elapsed)".
+  5. Commit + push to main: `Remove hiraquest0 carve-out — R2.13 grace period elapsed`.
+- If hiraquest0 was restored within the grace window (project lead changed their mind), abort this cleanup and reschedule for the new deletion date.
+- A session-local cron (task `6c342964`, fires `17 9 27 6 *` = 2026-06-27 09:17 local) was also registered in the session that closed Phase R2, but it dies when that session ends; this doc note is the authoritative reminder.
+
 ---
 
 ## 2026-05-28 — Phase R2.11: cutover to `tomodachi-prod` complete
