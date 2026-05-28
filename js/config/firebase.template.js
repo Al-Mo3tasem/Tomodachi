@@ -8,8 +8,9 @@
 //    Firebase Console → ⚙️ Project Settings → General → Your apps →
 //    SDK setup and configuration → Config.
 //    - dev / staging values come from R2.01–R2.02 (Tomodachi Dev / Staging).
-//    - prod currently holds the legacy hiraquest0 values. R2.11 cutover
-//      flips prod to tomodachi-prod once data + Auth users are migrated.
+//    - prod values come from R2.03 (Tomodachi Prod). Post-R2.11 cutover,
+//      this is the active production project. The legacy hiraquest0
+//      project was decommissioned in R2.13.
 // 3. js/config/firebase.js IS deployed (GitHub Pages needs it). Firebase
 //    web API keys are safe to expose because they are domain-restricted.
 

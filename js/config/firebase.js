@@ -3,10 +3,11 @@
 // Three-environment switcher (dev / staging / prod) selected by hostname
 // per docs/PROJECT_RULES.md §6.2.
 //
-// `prod` currently holds the legacy `hiraquest0` values. The R2.11 cutover
-// flips `prod` to `tomodachi-prod` AFTER R2.08–R2.10 migrate data + Auth
-// users — do not edit configs.prod here. See docs/Phases_and_Tasks.md
-// Phase R2 for the full sequence.
+// As of R2.11 cutover (2026-05-28), `prod` points at `tomodachi-prod`.
+// The legacy `hiraquest0` project is decommissioned in R2.13. The
+// R2.08-R2.10 data migration tasks were skipped per project lead
+// decision (no important data on hiraquest0 to preserve — fresh start
+// on tomodachi-prod). See docs/Phases_and_Tasks.md Phase R2.
 // ============================================
 // Do NOT share this file publicly.
 
@@ -27,15 +28,16 @@ const configs = {
     messagingSenderId: "864790587559",
     appId: "1:864790587559:web:cb9dd6fc289aed0b239382"
   },
-  // R2.04: prod holds hiraquest0 values. R2.11 cutover flips this to
-  // tomodachi-prod AFTER R2.08–R2.10 migrate data + Auth users.
+  // R2.11 cutover (2026-05-28): prod now points at tomodachi-prod.
+  // R2.08-R2.10 data migration skipped per project lead decision.
+  // hiraquest0 is decommissioned at R2.13.
   prod: {
-    apiKey: "AIzaSyA4GjLylUNt9Dihv0rIucMdlMFtFQhlewA",
-    authDomain: "hiraquest0.firebaseapp.com",
-    projectId: "hiraquest0",
-    storageBucket: "hiraquest0.firebasestorage.app",
-    messagingSenderId: "546831266198",
-    appId: "1:546831266198:web:fbde52e91547a64217adb7"
+    apiKey: "AIzaSyAqhgl6yqjScjljsMgmy6KVCBwAiUC12WM",
+    authDomain: "tomodachi-prod.firebaseapp.com",
+    projectId: "tomodachi-prod",
+    storageBucket: "tomodachi-prod.firebasestorage.app",
+    messagingSenderId: "599781223087",
+    appId: "1:599781223087:web:41edcd915acd971709025a"
   }
 };
 
