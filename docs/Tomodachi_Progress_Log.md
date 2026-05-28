@@ -16,6 +16,55 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase R2 closure (R2.14): 3-environment Firebase topology complete; `hiraquest0` decommissioned
+**Status:** ✅ PHASE COMPLETE
+**Scope:** Backend topology | Code | Firebase | GCP | Cloudflare | Docs
+
+**Phase R2 in one sentence:** Migrated from a single legacy Firebase project (`hiraquest0`) holding live prod traffic to a clean three-environment topology (`tomodachi-dev` / `tomodachi-staging` / `tomodachi-prod`) backed by GitHub Pages (prod) + Cloudflare Pages (staging) + localhost (dev), with a hostname-based runtime config switcher and the legacy project decommissioned.
+
+**14-task scorecard:**
+- ✅ **R2.01-R2.03** — Three new Firebase projects created (`tomodachi-dev`, `-staging`, `-prod`) with Auth + Firestore enabled. Storage + Cloud Functions deferred (Spark tier; revisit at Blaze upgrade in L1).
+- ✅ **R2.04** — Hostname-based config switcher (`getEnv()` + `getFirebaseConfig()`) in `js/config/firebase.js`. Prod-debug-gate idiom introduced for verification logs (`env !== 'prod' || params.has('debug')`).
+- ✅ **R2.05** — Hardened Firestore ruleset applied to all 3 new projects. Introduced the `usernames/{lower}` doc-as-key uniqueness pattern (atomic via Firestore create semantics) — the option (d) workaround for the pre-existing pre-auth-users-read signup bug.
+- ✅ **R2.06** — Cloudflare Pages staging deploys live at `https://tomodachi-staging.pages.dev`. Workers-vs-Pages misstep + recovery on first attempt; URL pattern (`.pages.dev` vs `.workers.dev`) is the durable signal.
+- ✅ **R2.07** — 3-env topology end-to-end verified (Part A + cross-contamination check). Part B (prod-URL signup against `hiraquest0`) deferred as a documented limitation — `hiraquest0`'s older hardened ruleset has no `usernames/` block, so R2.05 signups can't complete there. Discovery: `hiraquest0` was on the older "Phase 2 recommended" hardened ruleset (NOT the broad catch-all that R2.05 + R2.06 closure entries had incorrectly assumed). Corrected in `docs/Firestore_Rules.md` carve-out section.
+- ⚠️ **R2.08-R2.10** — Data + Auth migration **SKIPPED** per project lead decision after `gcloud firestore export` hit the Blaze-tier requirement. Project lead had no important data on `hiraquest0` to preserve (single test account; stats/leaderboards/history all disposable). Trade: lost the data; saved the Blaze upgrade for L1 when it's actually needed for the registration-cap Cloud Function.
+- ✅ **R2.11** — Cutover commit (`202204e`) flipped `configs.prod` in `js/config/firebase.js` from `hiraquest0` values to `tomodachi-prod` values. Staging-first deploy: `git push origin main:staging` → verify on Cloudflare → then `git push origin main`. GitHub secret-scanning alert surfaced a real gap (three new projects' API keys hadn't had GCP-level restrictions); fixed during wrap-up by setting HTTP referrer + API restrictions per project (dev got API-only because GCP rejects `localhost` as a referrer domain).
+- ⚠️ **R2.12 (48h soak)** — Compressed to "immediate verification was clean" per project lead decision. Risk profile justified the compression: small user base (1 prod account), zero existing prod data to corrupt, cutover code was a pure config switch with no novel logic.
+- ✅ **R2.13** — `hiraquest0` decommissioned via Firebase Console → Project settings → Delete project. **30-day recovery grace period running** if anything surfaces by ~2026-06-27.
+- ✅ **R2.14 (this entry)** — Phase R2 closure paperwork.
+
+**Bugs / escalations surfaced and addressed during R2:**
+- **L1.20 (escalated from L1 into R2)** — `ensureUserProfile` self-heal raced `handleRegister` USERNAME_TAKEN cleanup, leaving orphan `users/` docs. v1 attempt (cleanup-after-race in `handleRegister` catch, commit `6384526`) didn't work — the racing writes landed AFTER cleanup ran. v2 fix (commit `cb48b64`) prevented the race entirely with a `_registrationInFlight` flag + extracted `enterAppAsUser` helper. Generalizable lesson captured in the L1.20 Learning Log entry: cleanup-after-race can't reliably close a race window it doesn't synchronize with; prevent-the-race via an inflight flag is the robust pattern.
+- **`hiraquest0` ruleset misidentified** in R2.05 + R2.06 closure entries as "broad catch-all"; actually was the older "Phase 2 recommended" hardened ruleset (no `usernames/` block, no duel-guest `guestId` carve-out). Discovered during R2.07 Part B verification. Corrected the carve-out section.
+- **Cloudflare Workers vs Pages misstep** in R2.06 first attempt — fixed by deleting the Worker and recreating as a Pages project. URL pattern `.workers.dev` vs `.pages.dev` is the durable diagnostic signal.
+- **GitHub secret-scanning + Firebase web API keys** — false-positive surfaced a real gap (no GCP-level key restrictions on new projects). Three-layer access model (Security Rules + Auth authorized domains + GCP key restrictions) documented in the R2.11 wrap-up Learning Log entry.
+
+**Carrying into Phase L1:**
+1. **`content_sets/` is empty on `tomodachi-prod`** — needs reseed during L2.A-L2.B content authoring (the planned-from-the-start path; L2.04 is the interactive authoring tool that rebuilds content from scratch). The app is stable but games can't render content cards until populated. Not a regression introduced by R2; just the natural consequence of skipping the data migration.
+2. **Blaze upgrade still pending** for `tomodachi-prod` — required at L1 for the Cloud Function registration gateway. Budget cap will be $1/mo per the R2.08 walkthrough.
+3. **L1.19** — `saveProfileSettings` race-condition refactor still open. The R2.05 ruleset accepts the current query-based approach post-auth; race exposure is benign at <50 users; L1 cleanup task.
+4. **L1.20 ✅ CLOSED** out of Phase L1 sequence via the v2 fix during R2 escalation.
+5. **Refactor splits deferred from R1.04** — `js/core/core.js` → 4 files; `js/audio/audio.js` → `tts.js` + `sfx.js`; `js/games/engine.js` → engine + zen + survival. Trigger: L2.C when new modules need to import from inside them.
+6. **Pre-existing R1.05a `localStorage` migration bug** in `js/core/core.js:16-17` (both `oldK` and `newK` use the same `'tomodachi-'` prefix; one should be `'hiraquest-'`). Silent no-op since the typo landed. Disposition unchanged: delete the shim at the next `core.js` touchpoint per the R2.04 closure entry.
+
+**Final state of the four Firebase projects:**
+- `hiraquest0` — scheduled for deletion (30-day grace until ~2026-06-27, then permanent).
+- `tomodachi-dev` — live; localhost target; R2.05 hardened rules; API key API-restricted only (no referrer restriction because of GCP's `localhost` rejection).
+- `tomodachi-staging` — live at `https://tomodachi-staging.pages.dev/`; R2.05 hardened rules; API key referrer-restricted (`*.pages.dev` + future `staging.tomodachi.com`) + API-restricted.
+- `tomodachi-prod` — live at `https://al-mo3tasem.github.io/Tomodachi/`; R2.05 hardened rules; API key referrer-restricted (`al-mo3tasem.github.io/*` + future `tomodachi.com/*`) + API-restricted; one real test account from R2.11 verification.
+
+**Learning Log entries written during R2:**
+- [Phase R2, Task R2.04] — Hostname-based environment selection + prod-debug-gate idiom
+- [Phase R2, Task R2.05] — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
+- [Phase R2, Task R2.06] — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
+- [Phase L1, Task L1.20] — Self-heal logic, invariant drift, and "cleanup-after-race vs prevent-the-race" (v1 attempt + v2 fix in one day)
+- [Phase R2, Task R2.11 wrap-up] — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
+
+**Next phase: L1 — Landing page + waitlist.** See `docs/Phases_and_Tasks.md` Phase L1 task list. First task L1.01: i18next setup (depends on R2.14 — done as of this entry).
+
+---
+
 ## 2026-05-28 — Phase R2.11: cutover to `tomodachi-prod` complete
 **Status:** ✅ DONE
 **Scope:** Code | Firebase | GCP | Docs
