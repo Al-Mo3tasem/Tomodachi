@@ -40,6 +40,17 @@ const ZEN_DURATIONS = [60, 180, 300, 420, 600];   // 1, 3, 5, 7, 10 minutes
 
 let pendingAvatar = '🌸';
 
+// L1.20 race-prevention flag (v2 fix). handleRegister sets this to true
+// before any Auth call and clears it in finally. The onAuthStateChanged
+// listener checks the flag and skips the post-auth UI flow (which is
+// what triggers ensureUserProfile) while it's true, so the listener
+// can't race in and write orphan docs. handleRegister itself triggers
+// the post-auth entry on success via enterAppAsUser(). The v1 fix
+// (delete-in-cleanup) couldn't reliably win the race because cleanup
+// may complete before the racing writes do — confirmed empirically in
+// R2.07 verification on tomodachi-dev.
+let _registrationInFlight = false;
+
 // ============================================
 // PROFILE HELPERS
 // ============================================
@@ -209,11 +220,14 @@ async function handleRegister(e) {
   }
 
   let cred = null;
+  _registrationInFlight = true;
   try {
     showLoading(true);
 
     // Step 1: create the Auth account so we have a real uid for the
-    // usernames write that follows.
+    // usernames write that follows. The onAuthStateChanged listener
+    // will fire as soon as this resolves, but L1.20's flag prevents
+    // it from racing into the post-auth UI flow.
     cred = await withTimeout(
       createUserWithEmailAndPassword(auth, email, password),
       'Creating Firebase Auth account',
@@ -285,7 +299,10 @@ async function handleRegister(e) {
       createdAt: serverTimestamp()
     }), 'Creating stats profile', 15000);
 
-    toast('Account created! Welcome to Tomodachi.', 'success');
+    // L1.20: onAuthStateChanged's post-auth flow was skipped earlier
+    // because _registrationInFlight was true. Trigger the entry now
+    // that registration is complete.
+    await enterAppAsUser(cred.user, true);
   } catch (err) {
     if (err.message === 'USERNAME_TAKEN') {
       showFormError(errorEl, 'Username already taken.');
@@ -294,6 +311,7 @@ async function handleRegister(e) {
     }
     console.error('Register error:', err);
   } finally {
+    _registrationInFlight = false;
     showLoading(false);
   }
 }
@@ -1129,32 +1147,52 @@ function attachListeners() {
 // INITIALIZATION
 // ============================================
 
+// Extracted from init() so handleRegister can trigger the post-auth
+// entry directly on successful registration (the onAuthStateChanged
+// listener skips this flow during registration to avoid the L1.20
+// race; handleRegister calls this here itself once registration is
+// complete).
+async function enterAppAsUser(user, isFreshRegistration = false) {
+  state.user = user;
+
+  try {
+    state.userData = await ensureUserProfile(user);
+  } catch (err) {
+    console.error('Profile load failed:', err);
+    state.userData = fallbackUserData(user);
+    toast(`Could not load your profile: ${err.message}`, 'error', 8000);
+  }
+
+  $('screen-auth')?.classList.remove('active');
+  $('app')?.classList.remove('hidden');
+
+  initPresence();
+  await loadContentSets();
+  goHome();
+  initDuelInvites();
+
+  const name = state.userData?.displayName || 'Player';
+  const greeting = isFreshRegistration
+    ? `Welcome to Tomodachi, ${name}!`
+    : `Welcome back, ${name}!`;
+  toast(greeting, 'success');
+}
+
 async function init() {
   setTheme(state.theme);
   attachListeners();
 
   onAuthStateChanged(auth, async (user) => {
+    // L1.20: handleRegister sets _registrationInFlight while it's mid-
+    // sequence. Skip the post-auth UI flow (and the ensureUserProfile
+    // self-heal inside it) during registration so they don't race the
+    // mainline. handleRegister calls enterAppAsUser itself on success.
+    if (user && _registrationInFlight) return;
+
     showLoading(true);
     try {
       if (user) {
-        state.user = user;
-
-        try {
-          state.userData = await ensureUserProfile(user);
-        } catch (err) {
-          console.error('Profile load failed:', err);
-          state.userData = fallbackUserData(user);
-          toast(`Could not load your profile: ${err.message}`, 'error', 8000);
-        }
-
-        $('screen-auth')?.classList.remove('active');
-        $('app')?.classList.remove('hidden');
-
-        initPresence();
-        await loadContentSets();
-        goHome();
-        initDuelInvites();
-        toast(`Welcome back, ${state.userData?.displayName || 'Player'}!`, 'success');
+        await enterAppAsUser(user, false);
       } else {
         cleanupGame();
         cleanupDuel();
