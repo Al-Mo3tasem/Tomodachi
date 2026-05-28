@@ -16,6 +16,44 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase R2.11: cutover to `tomodachi-prod` complete
+**Status:** ✅ DONE
+**Scope:** Code | Firebase | GCP | Docs
+**Summary:** Prod URL (`https://al-mo3tasem.github.io/Tomodachi/`) now routes to `tomodachi-prod` Firebase project. The R2.04 hostname-based config switcher carried this moment specifically: R2.11's code change was a config-only flip — `configs.prod` values in `js/config/firebase.js` swapped from `hiraquest0` to `tomodachi-prod`. Verified end-to-end: `?debug=1` shows `[firebase-init] env=prod projectId=tomodachi-prod`; fresh registration on prod URL writes 3 docs to `tomodachi-prod` Firestore; `hiraquest0` saw zero new traffic post-cutover.
+
+**Files / Areas (commit `202204e`, 10 files, +38 / -35):**
+- `js/config/firebase.js`: configs.prod values updated to `tomodachi-prod`; header + inline comments rewritten to reflect post-cutover state and the R2.08-R2.10 skip.
+- `js/config/firebase.template.js`: template comment updated to match.
+- Cache busters bumped to `?v=20260528c` on every import whose target's content changed transitively: `index.html` (app.js script tag), and every non-audio JS import line across `js/app.js`, `js/core/core.js`, `js/data/firebase.js`, `js/data/leaderboards.js`, `js/games/{coop,duel,engine}.js`. Audio.js imports (×4) and the CSS link in `index.html` intentionally stayed at older busters per strict §14.3 (their targets did not change).
+
+**Deploy sequence (staging-first per the deploy memory's R2.11 exception):**
+1. Committed locally on `main`: `202204e`.
+2. `git push origin main:staging` — pushed main's tip to remote staging branch. Cloudflare Pages redeployed the staging URL with the cutover code. Hostname selector continues to pick `staging` based on `.pages.dev` suffix, so staging URL kept routing to `tomodachi-staging`. Verification confirmed: env=staging projectId=tomodachi-staging unchanged; sign-in as the R2.06 test account worked.
+3. `git push origin main` — actual cutover. GitHub Pages redeployed; prod URL serves the new code.
+4. Project lead's prod verification confirmed env=prod projectId=tomodachi-prod and fresh signup landed in `tomodachi-prod` (NOT `hiraquest0`).
+
+**API key restrictions applied (gap surfaced by GitHub secret-scanning alert):**
+- GitHub's automated secret scanner emailed an alert flagging the `tomodachi-prod` Web API Key in commit `202204e`. This is a false-positive on Firebase's "API keys are public by design" model (see `PROJECT_RULES.md` §5.3 + Firebase docs), but it surfaced a real gap — the three new projects' API keys hadn't had GCP-level restrictions set yet (`hiraquest0`'s key was domain-restricted back on 2026-05-20; the new keys were inherited unrestricted).
+- Restrictions set during R2.11 wrap-up via GCP Console → APIs & Services → Credentials → Web API Key edit:
+  - `tomodachi-prod`: HTTP referrer restrictions (`https://al-mo3tasem.github.io/Tomodachi/*`, `https://al-mo3tasem.github.io/*`, `https://tomodachi.com/*`, `https://*.tomodachi.com/*`) + API restrictions (Identity Toolkit, Token Service, Cloud Firestore, Firebase Installations only).
+  - `tomodachi-staging`: HTTP referrer restrictions (`https://tomodachi-staging.pages.dev/*`, `https://staging.tomodachi.com/*`) + same API restrictions.
+  - `tomodachi-dev`: API restrictions only (GCP doesn't accept `localhost` / `127.0.0.1` as valid HTTP referrer domains; Application restrictions left at "None"). Acceptable given dev has no production data and is only accessed from localhost.
+- GitHub alert dismissed as "Used in tests" with explanatory comment per `PROJECT_RULES.md` §5.3.
+
+**Verification:**
+- `[firebase-init] env=prod projectId=tomodachi-prod` confirmed in DevTools Console on prod URL.
+- Fresh registration on prod URL succeeded; "Welcome to Tomodachi, {name}!" toast; 3 docs landed in `tomodachi-prod` Firestore (`usernames/{lower}`, `users/{uid}`, `stats/{uid}`); Authentication tab shows the new account.
+- `hiraquest0` Firestore + Authentication tabs showed zero new writes post-cutover.
+- Staging URL still works as designed (env=staging projectId=tomodachi-staging; sign-in works).
+
+**Open Follow-up:**
+1. **`content_sets/` collection is empty on `tomodachi-prod`** — the R2.08-R2.10 data migration was skipped, so the hiragana/katakana content the user might want to play with doesn't exist in `tomodachi-prod` yet. Project lead acknowledged this and is fine (Phase L2 content authoring rebuilds content from scratch via the L2.04 interactive authoring tool). The app is stable but games can't render content cards until `content_sets/` is populated. **Resolution path: Phase L2.A-L2.B content authoring** (the planned-from-the-start path; not a regression introduced by R2).
+2. **`R2.12 (48h soak)` compressed to "immediate verification was clean"** per project lead decision. Reasons: small user base (1 account on prod), zero existing prod data to corrupt, cutover code is purely a config switch with no novel logic, risk profile is low. Documented here so the timeline-compression decision is on record.
+3. **`R2.13 (decommission hiraquest0)` next** — project lead deletes the `hiraquest0` Firebase project from console. Two-week recovery grace period gives a safety net.
+4. **`R2.14 (Phase R2 closure)`** lands after R2.13 confirms.
+
+---
+
 ## 2026-05-28 — R2.07 closure + L1.20 v2 verified
 **Status:** ✅ DONE (R2.07 + L1.20)
 **Scope:** Docs (closure paperwork only — L1.20 v2 code shipped earlier today in `cb48b64`)

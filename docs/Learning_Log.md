@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase R2, Task R2.11 wrap-up]** — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
 - **[Phase L1, Task L1.20]** — Self-heal logic and the invariants it can quietly violate (landed during R2 escalation)
 - **[Phase R2, Task R2.06]** — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
 - **[Phase R2, Task R2.05]** — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
@@ -62,6 +63,53 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase R2, Task R2.11 wrap-up] — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
+**Date:** 2026-05-28
+**Contributor:** Claude (with project lead's hands-on GCP Console work)
+
+### Technology / Library Introduced
+- **GitHub Secret Scanning** — automated scanner that runs on every push to public repos, flagging strings matching known credential patterns (Google API keys, AWS keys, Stripe keys, etc.). Sends email alerts to repo owners. Useful for catching real leaks but doesn't know about vendor-specific exceptions like Firebase's public-by-design API keys.
+- **GCP API Key restrictions (two-axis)** — restriction system applied to any Google API key from GCP Console → APIs & Services → Credentials:
+  - **Application restrictions:** WHICH clients can use the key. Options: HTTP referrers (websites by URL pattern), IP addresses, Android apps, iOS apps, or None.
+  - **API restrictions:** WHICH Google APIs the key can invoke. Lets you allowlist specific APIs (e.g., "Cloud Firestore + Identity Toolkit + Token Service only") so even a leaked key can't invoke Cloud Storage or other services.
+
+### What it actually does (plain language)
+Firebase web API keys (the `AIzaSy...` strings in your firebase config) are intentionally public — they identify the project but don't grant access. Access comes from three other layers:
+
+1. **Firebase Security Rules** — the R2.05 ruleset on `tomodachi-prod` that controls which Firestore docs which authenticated UIDs can read/write. The actual security boundary.
+2. **Firebase Auth authorized domains** — the list under Authentication → Settings that controls which page domains can run sign-in flows. We added `al-mo3tasem.github.io` for prod just before R2.11.
+3. **GCP API Key restrictions** — the HTTP referrer + API allowlist set in GCP Console. The third defense layer; if you haven't set restrictions, an attacker with the key could potentially invoke un-allowlisted Google APIs that the project has access to.
+
+Firebase docs explicitly state the web key can be public, and `PROJECT_RULES.md` §5.3 documents this. But the GCP restrictions layer needs explicit setup — it doesn't default to anything useful. The three new projects (dev/staging/prod) hadn't had this done during R2.01-R2.03 setup (we skipped past it). R2.11 surfaced the gap when GitHub's scanner ran on the cutover commit and emailed us.
+
+The R2.11 wrap-up set HTTP referrer restrictions on `tomodachi-prod` (al-mo3tasem.github.io + future tomodachi.com domains) and `tomodachi-staging` (tomodachi-staging.pages.dev + future staging.tomodachi.com), plus API restrictions on all three projects (Identity Toolkit + Token Service + Firestore + Firebase Installations only). Dev got API restrictions only because GCP rejects `localhost` and `127.0.0.1` as valid HTTP referrer domains — accepted because dev has no production data and is only ever accessed from local machines.
+
+### Alternatives considered
+- **Move the API key out of the repo entirely (server-side proxy or env injection)** — would silence the GitHub alert but breaks the static-site model we built around. Rejected: massive over-engineering for a Firebase-as-intended use case.
+- **Make `js/config/firebase.js` gitignored and inject at deploy time** — possible but adds CI/CD complexity, and we don't have a build step today. Also doesn't actually help: the key still ends up public in the deployed JS bundle on GitHub Pages. Rejected.
+- **Apply GCP API Key restrictions** (the chosen path) — multi-layered defense in depth, matches Firebase's recommended model. Done in three Firebase consoles + three GCP consoles.
+- **Disable the GitHub secret-scanning alert globally** — wrong: we want the alerts for genuine leaks (e.g., if someone accidentally commits a Cloud Functions secret in Phase L2). Dismiss this specific alert; keep the system on.
+
+### Concepts to understand
+- **"Public by design" vs "secret"** — most API keys (Stripe secret keys, AWS credentials, OpenAI keys) ARE secrets and need to stay server-side. Firebase web keys explicitly aren't; they're vendor-designed for client-side embedding. Knowing the difference per provider is the actual skill — don't apply universal "API keys are secrets" reasoning when the vendor has explicitly carved out the opposite.
+- **HTTP referrer restriction caveats:** only works for browser-originated requests with a Referer header. Direct REST API calls (curl, Postman, custom scripts) can bypass it by setting or omitting the header. Useful as a deterrent for casual abuse, but not a cryptographic boundary. Real defense is Security Rules.
+- **`localhost` cannot be a GCP referrer.** GCP rejects `localhost` and `127.0.0.1` as Application Restriction values because they're not public hostnames. For dev keys, set Application restrictions to "None" and rely on API restrictions only. Accepted because dev projects have no production data.
+- **"Used in tests" dismissal reason on GitHub** is a close-but-not-quite fit for Firebase web keys; there's no "Vendor-recommended public key" option. The Firebase community generally picks "Used in tests" or "Won't fix" with an explanatory comment.
+
+### Tradeoffs accepted
+- **API key restrictions take ~5 minutes to propagate** globally after a Save. During R2.11 wrap-up, we set restrictions before pushing main to minimize the unrestricted-prod-key window. If we ever rotate a key (e.g., it's actually compromised), legitimate requests fail for 5 minutes until propagation catches up.
+- **Dev key has weaker restrictions** than prod/staging (no referrer restriction, only API restriction). Localhost limitation; accepted because the dev project has no production data and breaches there are low-impact.
+- **HTTP referrer restrictions can be spoofed** by malicious clients setting their own Referer header. UI-level deterrent, not a guarantee. The Security Rules layer is the real defense; restrictions are defense-in-depth.
+- **The GitHub alert system will keep firing on future Firebase-related commits** (e.g., if we ever rotate a key and commit the new one). Each alert has to be reviewed and dismissed. Acceptable cost — alternative is global disablement which loses the system's value for actual leaks.
+
+### Useful resources
+- [Firebase: API keys best practices](https://firebase.google.com/docs/projects/api-keys) — official "API keys are public by design" doc.
+- [GCP: Restricting API keys](https://cloud.google.com/docs/authentication/api-keys#restricting_an_api_key) — official restriction setup.
+- [GitHub secret scanning docs](https://docs.github.com/en/code-security/secret-scanning) — how the alert system works and how to dismiss alerts.
+- [docs/PROJECT_RULES.md §5.3](PROJECT_RULES.md) — our project's pre-existing position on Firebase config files being tracked + domain-restricted.
+
+---
 
 ## [Phase L1, Task L1.20] — Self-heal logic, invariant drift, and "cleanup-after-race vs prevent-the-race" (v1 attempt + v2 fix in one day)
 **Date:** 2026-05-28 (v1 and v2 both landed same day during Phase R2 escalation — see Progress Log)
