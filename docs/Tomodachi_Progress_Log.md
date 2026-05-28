@@ -16,6 +16,46 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — L1.20 escalated + landed; `hiraquest0` carve-out corrected; R2.07 partial
+**Status:** ✅ DONE (L1.20 fix + doc correction) | ⚠️ DEFERRED (R2.07 Part B against `hiraquest0`)
+**Scope:** Code | Docs | Process correction
+**Summary:** R2.07 Part B (fresh signup against prod URL → `hiraquest0`) surfaced two compounding issues:
+
+1. **L1.20 race confirmed for the third time in 48 hours.** The `ensureUserProfile`-races-`handleRegister`-cleanup bug created another orphan `users/` doc on `hiraquest0` after a failed signup attempt. Project lead approved escalating L1.20 out of Phase L1 sequence to land during R2 ("do the cleaner solution"). Per `PROJECT_RULES.md` §2.2, this parallel start is permissible because L1.20 has no dependency on any open R2 task — its deps (R2.05 + R2.06) are both closed.
+2. **`hiraquest0` is NOT on the broad catch-all** — discovered during this turn's diagnosis. The project actually runs on the older "Phase 2 recommended" hardened ruleset, applied at some unrecorded point in the past. The older ruleset has no `usernames/{username}` match block, so client writes to `usernames/X` are denied by default. That is why `handleRegister`'s usernames-write returned permission-denied (and the client mapped it to "Username already taken") regardless of which fresh username the user typed. The R2.05 and R2.06 closure entries' "broad catch-all" assertions about `hiraquest0` were wrong. The `hiraquest0` carve-out section of `docs/Firestore_Rules.md` was corrected to reflect actual state.
+
+**Files / Areas:**
+- `js/app.js` `handleRegister` — cleanup path enhanced. Now deletes `users/{uid}` + `stats/{uid}` (best-effort, ignore-not-exist) before deleting the Auth account, in that order. Firestore deletes need auth.uid context, so the order matters. Cleanup now fires for ANY failure at the usernames-write step (not only `permission-denied`), so race-orphans get cleaned up under transient failures too.
+- `js/app.js` new `reserveFallbackUsername(uid, emailLocalPart)` helper — retries `usernames/{candidate}` create with numeric suffix (`base`, `base_2`, `base_3`, …) up to 10 attempts. Returns the reserved name on success. On 10 consecutive `permission-denied` errors (collision or legacy-project rule-deny), logs a `console.warn` and returns the base name without a reservation (graceful degradation).
+- `js/app.js` `ensureUserProfile` — refactored to reserve a `usernames/{lower}` doc as part of the self-heal. Username derived from email's local part (existing behavior) but now also reserved via the helper above. Profile + stats writes unchanged.
+- `js/app.js` `fallbackUserData` — unchanged. Still used for display-only fallback in the auth-state error handler (the `ensureUserProfile` throw case).
+- `index.html` line 619 — cache buster bumped `?v=20260527b` → `?v=20260528a` per `PROJECT_RULES.md` §14 (only consumer of the changed `js/app.js`).
+- `docs/Firestore_Rules.md` `hiraquest0` carve-out section — full rewrite. Corrects the ruleset description (old hardened, not catch-all); documents the practical consequence (R2.05 signups fail on prod URL until R2.11 cutover); offers a workaround if a real signup is needed pre-R2.11 (apply full R2.05 ruleset to `hiraquest0` — lower risk than originally assumed since `hiraquest0` is already on hardened rules).
+
+**Verification:**
+- `node --check` passes on `js/app.js`.
+- L1.20 fix verification deferred to project lead's localhost retest against `tomodachi-dev` (which has the full R2.05 ruleset including `usernames/` block — the only env where the fix can be observed working end-to-end). Test plan:
+  1. Sign up a fresh email+username → 3 docs land in tomodachi-dev (`usernames/`, `users/`, `stats/`); Authentication tab shows the new account.
+  2. Sign up a second fresh email with the SAME username → "Username already taken" toast; verify Authentication tab shows zero leftover account from the second attempt; Firestore tabs show zero leftover `users/` or `stats/` docs from the second attempt.
+
+**R2.07 status:**
+- Part A (prod URL hostname-selector check) ✅ PASSED — `[firebase-init] env=prod projectId=hiraquest0` confirmed.
+- Part B (fresh signup on prod URL → `hiraquest0`) ⚠️ BLOCKED by `hiraquest0`'s missing `usernames/` rule. Documented as a known limitation in the carve-out section. **R2.07 acceptance modified:** pass on Parts A + the implicit cross-contamination check (which past dev/staging tests already validated by writing test users into their respective projects without any bleed-over).
+- R2.07 closure entry will land separately once project lead confirms the L1.20 fix works on `tomodachi-dev`.
+
+**Project-lead action needed (one-off cleanup of pre-fix orphan):**
+- Firebase Console → `hiraquest0` → Firestore Database → `users` → delete the doc with `uid: IzqKoEfdHKVgA3eOh4i3LO6MgVE2`.
+- Same for the `stats/IzqKoEfdHKVgA3eOh4i3LO6MgVE2` doc if it exists.
+- Same for any `presence/IzqKoEfdHKVgA3eOh4i3LO6MgVE2` doc if it exists.
+- The L1.20 fix prevents future occurrences but doesn't clean past ones.
+
+**Open Follow-up:**
+1. **R2.07 closure paperwork** — pending L1.20 verification on `tomodachi-dev`.
+2. **Phase L1 task tracker** — L1.20 description in `Phases_and_Tasks.md` is now obsolete (the work is done). Not renumbered because the convention is "description stays; status is tracked in Progress Log." Future readers will see "L1.20" in the phases doc and find the closure in this entry.
+3. **Decision pending: apply R2.05 ruleset to `hiraquest0` pre-R2.11?** Open question. Trade-off: unlocks prod-URL signups in the R2.11 window vs. touches a project we're about to decommission. Defer unless a real new-signup need surfaces in the window.
+
+---
+
 ## 2026-05-28 — Phase R2.06: Cloudflare Pages staging deploys (with Workers↔Pages misstep + recovery)
 **Status:** ✅ DONE
 **Scope:** Cloudflare | Firebase | Docs

@@ -53,6 +53,31 @@ function fallbackUserData(user) {
   };
 }
 
+// Try to reserve a usernames/{lower} doc as part of self-heal. Returns
+// the reserved name (which may have a numeric suffix on collision). If
+// 10 attempts all fail (collisions or rule-deny), returns the base name
+// without a reservation — degraded but the user can still play. Used by
+// ensureUserProfile when self-healing a profile-less Auth user. (L1.20.)
+async function reserveFallbackUsername(uid, emailLocalPart) {
+  const base = (emailLocalPart || 'player').toLowerCase().replace(/[^a-z0-9_]/g, '_') || 'player';
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const candidate = attempt === 0 ? base : `${base}_${attempt + 1}`;
+    try {
+      await setDoc(doc(db, 'usernames', candidate), {
+        uid,
+        createdAt: serverTimestamp()
+      });
+      return candidate;
+    } catch (err) {
+      if (err.code !== 'permission-denied') throw err;
+      // permission-denied = doc exists (collision) OR rules block (legacy
+      // project with no usernames/ block). Try the next candidate either way.
+    }
+  }
+  console.warn('[ensureUserProfile] No usernames/ slot available after 10 attempts; profile created without reservation. Future signup may collide.');
+  return base;
+}
+
 async function ensureUserProfile(user) {
   const userRef = doc(db, 'users', user.uid);
   const userDoc = await withTimeout(getDoc(userRef), 'Loading your profile', 15000);
@@ -61,9 +86,19 @@ async function ensureUserProfile(user) {
     return userDoc.data();
   }
 
+  // Self-heal path: registration partially completed. Reserve a username
+  // in usernames/{lower} so the R2.05 uniqueness invariant (one users/
+  // doc <-> one usernames/ reservation) holds for self-healed profiles
+  // too. Falls back gracefully on legacy projects with no usernames/
+  // rule (the reservation step silently degrades, profile still created).
+  const emailName = user.email?.split('@')[0] || 'player';
+  const username = await reserveFallbackUsername(user.uid, emailName);
+
   const profile = {
     uid: user.uid,
-    ...fallbackUserData(user),
+    username,
+    displayName: user.displayName || emailName,
+    avatarEmoji: '🌸',
     email: user.email || '',
     createdAt: serverTimestamp(),
     status: 'offline'
@@ -199,18 +234,28 @@ async function handleRegister(e) {
         15000
       );
     } catch (usernameErr) {
-      if (usernameErr.code === 'permission-denied') {
-        // Atomicity gate fired. Delete the orphan Auth account and
-        // surface "username taken" to the user.
+      // Any failure here means the registration didn't complete the
+      // usernames step. Clean up any docs ensureUserProfile may have
+      // raced in (best-effort), then the Auth account, then surface
+      // the right error. Firestore-deletes BEFORE Auth-delete because
+      // Firestore rules need auth.uid context. (L1.20 fix.)
+      if (cred?.user) {
+        const uid = cred.user.uid;
+        try { await deleteDoc(doc(db, 'users', uid)); } catch (e) { /* best-effort */ }
+        try { await deleteDoc(doc(db, 'stats', uid)); } catch (e) { /* best-effort */ }
         try { await cred.user.delete(); }
         catch (cleanupErr) { console.error('Auth cleanup failed:', cleanupErr); }
         cred = null;
+      }
+      if (usernameErr.code === 'permission-denied') {
+        // permission-denied at this point means EITHER the usernames doc
+        // already exists (atomicity gate fired — true collision) OR the
+        // project's rules don't permit usernames writes at all (e.g., the
+        // legacy hiraquest0 project; see docs/Firestore_Rules.md carve-out).
+        // We surface "Username already taken" in both cases — the UX is
+        // close enough, and the underlying cause shows up in console.
         throw new Error('USERNAME_TAKEN');
       }
-      // Other errors (network, timeout): the Auth account exists but
-      // the username isn't reserved. Propagate; the user can retry,
-      // and the unused Auth account is harmless until they log in
-      // (ensureUserProfile will self-heal the missing profile).
       throw usernameErr;
     }
 

@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase L1, Task L1.20]** — Self-heal logic and the invariants it can quietly violate (landed during R2 escalation)
 - **[Phase R2, Task R2.06]** — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
 - **[Phase R2, Task R2.05]** — Firestore uniqueness via doc-as-key collection (atomicity through create semantics)
 - **[Phase R2, Task R2.04]** — Hostname-based environment selection + prod-debug-gate idiom
@@ -61,6 +62,49 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase L1, Task L1.20] — Self-heal logic and the invariants it can quietly violate
+**Date:** 2026-05-28 (landed during Phase R2 escalation — see Progress Log)
+**Contributor:** Claude (with project lead's "do the cleaner solution" approval after the bug bit us a third time)
+
+### Technology / Library Introduced
+- **The "self-heal" pattern for partially-completed flows** — client-side code that runs on auth-state changes (or page loads) and reconciles inconsistent state into a known-good shape. Common shape: "if the user has Auth but no Firestore profile, create one." Tomodachi's `ensureUserProfile` is the canonical example, originally written pre-R2.05 to recover from signups that succeeded at the Auth step but dropped before the Firestore writes.
+- **Invariant-aware mainline cleanup** — when a mainline operation (signup) can fail partway, the cleanup needs to undo every state change the operation may have caused, NOT just the ones directly visible to the mainline function. R2.05's `handleRegister` cleanup originally deleted only the Auth account it had explicitly created, missing the fact that `ensureUserProfile` would race in and create Firestore docs in the background. R2.06 and R2.07 debugging surfaced this gap.
+
+### What it actually does (plain language)
+Pre-R2.05, the invariant Tomodachi tried to maintain was "every user has both an Auth account AND a `users/{uid}` Firestore profile." `ensureUserProfile` worked by creating the profile if missing — straightforward recovery.
+
+R2.05 added a third part to the invariant: "...AND a `usernames/{lower}` reservation that locks the username." The R2.05 signup flow honors this invariant by writing the usernames doc as the atomic gate step. But `ensureUserProfile` wasn't updated. When a signup failed mid-flow, two things would go wrong:
+
+1. The `onAuthStateChanged` listener fired the moment Auth succeeded — before the usernames step had a chance to fail. `ensureUserProfile` saw "no users/ doc" and created a fallback profile with an email-derived username. No `usernames/` reservation. **The new invariant was silently broken** — a users/ doc with a username that nothing in usernames/ guarded.
+2. The `handleRegister` cleanup, when the usernames step failed with permission-denied, deleted the Auth account but left the orphan users/ doc behind (because the cleanup only knew about Auth). **Real orphan in production data.**
+
+The L1.20 fix addresses both halves:
+- **`ensureUserProfile`** now tries to reserve a usernames/ doc when self-healing (via a new `reserveFallbackUsername` helper). If the base name is taken (collision) or the project's rules block usernames writes entirely (legacy `hiraquest0`), retry with numeric suffix. After 10 failures, degrade gracefully — write the profile without a reservation, log a console warning.
+- **`handleRegister` cleanup** now deletes any users/ + stats/ docs that may have been raced in, before deleting the Auth account. Order matters: Firestore deletes need auth.uid context, so they have to run first.
+
+### Alternatives considered
+- **A shared `isRegistering` flag** between `handleRegister` and `ensureUserProfile` — prevent the race by having `ensureUserProfile` skip self-heal during in-progress registration. Cleaner conceptually (eliminate the race rather than tolerate it). Rejected for now: requires module-level shared state, and the cleanup-after-race approach is simpler to reason about. Worth revisiting if the race surfaces in other code paths or if the orphan window becomes unacceptable.
+- **Server-side enforcement via Cloud Function** — write users + stats + usernames atomically in a Function on the server. Best correctness but requires Blaze tier and Functions deployment — same blocker that pushed us toward the doc-as-key pattern in R2.05. Future option for the Phase L1 registration gateway.
+- **Drop `ensureUserProfile` entirely** — remove the self-heal, trust signup to complete or fail atomically. Rejected: there's a real recovery use case (a previously-broken signup can be retried by re-login). Keep the self-heal, just fix it.
+
+### Concepts to understand
+- **Invariant drift** — when a refactor changes WHAT INVARIANTS a system maintains, every piece of code that touches those invariants needs review. R2.05 changed the user-state invariant from 2-part to 3-part; `ensureUserProfile` was the piece I forgot to audit. Future refactors: list the invariants before/after explicitly; grep for code that creates or modifies any piece of them.
+- **Listener-vs-mainline race** — `onAuthStateChanged` is event-driven; `handleRegister` is procedural. They run "in parallel" from the mainline's perspective. The listener doesn't know whether the mainline is mid-operation. Either (a) the mainline must defend against the listener (cleanup approach we took), or (b) the listener must defend against the mainline (flag approach considered above). Both work; the cleanup approach is more defensive and survives unknown future race sources.
+- **Best-effort cleanup with per-operation `try/catch`** — when cleaning up after a failure, each cleanup step can itself fail (network, race with another listener, doc doesn't exist). Wrap each step in its own try/catch so one failure doesn't abort the others. Verbose but correct.
+- **Graceful degradation under rule-deny** — the new `reserveFallbackUsername` retries the username write up to 10 times and degrades to "no reservation" if all fail. Makes the code robust against running on projects with different rules (R2.05 ruleset vs the legacy hardened ruleset on `hiraquest0`). The degraded user still gets a profile and can play — just without the uniqueness lock. Trade-off: silent inconsistency vs completely blocking the user. We picked silent inconsistency because `hiraquest0` is being decommissioned at R2.13 and the alternative was much worse UX.
+
+### Tradeoffs accepted
+- **The cleanup is best-effort, not transactional.** If the network drops between the Firestore deletes and the Auth delete, we have an orphan Auth account with no Firestore profile. The next attempt with that email would fail with `email-already-in-use`; the user would have to reset password or use a different email. Acceptable: better than the current orphan-Firestore situation, and rare.
+- **The reservation degrades silently on legacy projects.** When all 10 retries fail on a project without `usernames/` rule support (i.e., `hiraquest0` today), the user gets a profile without a reservation. A future signup with that same fallback username could collide. Accepted because `hiraquest0` will be decommissioned at R2.13, and the alternative (blocking the user from playing entirely) is worse UX.
+- **The race is mitigated, not eliminated.** If `onAuthStateChanged`-triggered `ensureUserProfile` writes the docs AFTER our cleanup runs (uncommon but possible — would need the listener callback to be very slow), we'd have orphans again. Window is small; workaround is the same (manual Console cleanup). The `isRegistering` flag approach above would eliminate this entirely; deferred unless it bites again.
+
+### Useful resources
+- `js/app.js` `handleRegister` + `ensureUserProfile` + `reserveFallbackUsername` — the L1.20 fix as landed.
+- `docs/Firestore_Rules.md` `hiraquest0` carve-out section — explains why `reserveFallbackUsername` needs the graceful-degradation path (the legacy project has no usernames/ rule).
+- [Firebase Auth onAuthStateChanged docs](https://firebase.google.com/docs/auth/web/manage-users#get_the_currently_signed-in_user) — when the listener fires and what state it sees.
+
+---
 
 ## [Phase R2, Task R2.06] — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
 **Date:** 2026-05-28

@@ -140,30 +140,49 @@ service cloud.firestore {
 until the R2.11 cutover migrates everything to `tomodachi-prod`. R2.13
 then decommissions `hiraquest0` entirely (project deletion).
 
-**The R2.05 ruleset is NOT applied to `hiraquest0`.** That project stays
-on its existing broad catch-all rule:
+**The R2.05 ruleset is NOT applied to `hiraquest0`.** That project runs
+on the older "Phase 2 recommended" hardened ruleset, applied at some
+unrecorded point in the past (predates this document's R2.05 rewrite —
+discovered during R2.07 Part B verification on 2026-05-28). The older
+ruleset:
 
-```
-match /{document=**} {
-  allow read, write: if request.auth != null;
-}
-```
+- Gates every collection's reads behind `request.auth != null` (correct
+  posture; users data stays auth-required).
+- Allows `participants` to update/delete `game_sessions` — but **without**
+  the duel-guest `guestId` carve-out. A duel guest joining a session would
+  fail under these rules; that flow has not been observed working
+  end-to-end on `hiraquest0` since the hardened rules were applied.
+- **Has no `usernames/{username}` match block at all.** Writes to
+  `usernames/X` fall through to no matching rule and are denied by
+  default.
 
-**Why:** applying new rules to a project being phased out in 2–4 weeks
-adds risk (we could break the live signup flow during a paste-publish
-mistake) for zero reward (the rules disappear with the project at R2.13).
-The `PROJECT_RULES.md` §15.3 "apply equivalent rules across envs" intent
-is about the active triumvirate (`-dev` / `-staging` / `-prod`), not the
-legacy project being retired.
+**Practical consequence:** the R2.05 signup flow (which writes to
+`usernames/{lower}` as the atomic uniqueness gate) **cannot complete on
+the prod URL while it routes to `hiraquest0`**. Signup attempts fail
+with the misleading "Username already taken" error (the client maps the
+permission-denied response from the usernames write to that message,
+regardless of whether the username is actually taken). **New signups on
+prod URL will work only after the R2.11 cutover** routes prod to
+`tomodachi-prod` (which has the full R2.05 ruleset). The L1.20 fix
+(`ensureUserProfile` self-heal + `handleRegister` cleanup) ensures the
+failure leaves no orphan state — Auth + Firestore docs are all cleaned
+up on failure — but signup itself still fails on `hiraquest0`.
 
-**One exception:** the R2.05 `usernames/` collection backfill (existing
-`users/` docs on `hiraquest0` getting matching `usernames/{lower}` docs)
-writes TO `hiraquest0` via manual Firestore Console clicks. No rule
-change required — the catch-all permits authenticated writes universally.
-R2.09 then imports the backfilled collection into `tomodachi-prod`.
+**Workaround if a real signup needs to happen on prod URL pre-R2.11:**
+apply the full R2.05 ruleset to `hiraquest0` (reversing this carve-out
+— adds the `usernames/` block + the duel-guest `guestId` permission).
+Lower risk than originally assumed because `hiraquest0` is already on
+hardened rules; the delta is just adding the new blocks, not loosening
+or tightening existing ones. Project lead approval required before
+applying.
+
+**Backfill exception that happened in R2.05:** the `usernames/almoatasim`
+doc was written via manual Firestore Console writes, which bypass
+Security Rules (admin-context writes). R2.09 will import that doc into
+`tomodachi-prod` along with the rest of `hiraquest0`'s data.
 
 **Decommission trigger:** R2.13 deletes the `hiraquest0` project. This
-carve-out section can be removed from the doc at that point.
+section can be removed at that point.
 
 ---
 
