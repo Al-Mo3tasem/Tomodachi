@@ -16,6 +16,30 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — R2.07 closure + L1.20 v2 verified
+**Status:** ✅ DONE (R2.07 + L1.20)
+**Scope:** Docs (closure paperwork only — L1.20 v2 code shipped earlier today in `cb48b64`)
+**Summary:** R2.07 closes with Part A verified and Part B documented as a known limitation pending R2.11 cutover. L1.20 v2 (the inflight-flag fix in `cb48b64`) verified end-to-end on `tomodachi-dev`: Test A (happy path) and Test B (collision with same username) both pass with zero orphan state.
+
+**R2.07 acceptance breakdown:**
+- ✅ Part A — prod URL hostname-selector check: `[firebase-init] env=prod projectId=hiraquest0` confirmed at `?debug=1`.
+- ⚠️ Part B — fresh signup against `hiraquest0`: cannot complete because the legacy project's hardened ruleset has no `usernames/` match block; every signup attempt fails with the misleading "Username already taken" error (now cleanly, without orphan state, thanks to L1.20 v2). Documented in `docs/Firestore_Rules.md` carve-out section. R2.11 cutover unblocks (prod URL will route to `tomodachi-prod` which has the full R2.05 ruleset).
+- ✅ Cross-contamination check (implicit, already passed): test users on `tomodachi-dev` and `tomodachi-staging` landed only in their respective projects; pre-fix orphan attempts on `hiraquest0` were misdirected writes (cleaned up), not bleed-over.
+
+**L1.20 v2 verification on `tomodachi-dev`:**
+- Test A (happy path): fresh email + fresh username → smooth transition to dashboard (no flash), "Welcome to Tomodachi, {name}!" toast, 3 docs landed (`usernames/`, `users/`, `stats/`).
+- Test B (collision): fresh email + SAME username → "Username already taken" toast with NO flash of dashboard; Authentication tab unchanged (only Test A's account); Firestore unchanged (only Test A's docs).
+
+**v1 → v2 design lesson (brief):** v1 (commit `6384526`) tried cleanup-after-race — delete orphan `users/{uid}` + `stats/{uid}` in `handleRegister`'s catch. Empirically failed because the racing writes from `ensureUserProfile` landed AFTER the cleanup ran; the deletes were no-ops at the moment they fired, then the writes landed. v2 (commit `cb48b64`) prevents the race entirely via a module-level `_registrationInFlight` flag that makes `onAuthStateChanged` skip its post-auth flow during registration. `handleRegister` then manually triggers the post-auth flow via a new `enterAppAsUser(user, isFreshRegistration)` helper extracted from the listener. Full design discussion + the "cleanup-after-race vs prevent-the-race" lesson in the updated `docs/Learning_Log.md` L1.20 entry.
+
+**Files / Areas:** Docs only this commit. Code shipped earlier today in `6384526` (v1, superseded) and `cb48b64` (v2, landed). `docs/Learning_Log.md` L1.20 entry rewritten to reflect the final v2 architecture + the v1 lesson. `docs/Phases_and_Tasks.md` R2.07 description unchanged (the acceptance carve-out for Part B is documented here + in the rules doc carve-out, not in the task description per convention).
+
+**Open Follow-up:**
+1. **R2.08 — `gcloud firestore export` from `hiraquest0`** is next. Joint task: Claude provides exact commands; user runs with gcloud CLI authenticated to the Google account that owns `hiraquest0`.
+2. **Pre-R2.08 user prerequisites:** gcloud CLI installed (`gcloud --version` to check); `gcloud auth login` with the Google account that owns `hiraquest0`; `gcloud config set project hiraquest0`. Walkthrough in the next message.
+
+---
+
 ## 2026-05-28 — L1.20 escalated + landed; `hiraquest0` carve-out corrected; R2.07 partial
 **Status:** ✅ DONE (L1.20 fix + doc correction) | ⚠️ DEFERRED (R2.07 Part B against `hiraquest0`)
 **Scope:** Code | Docs | Process correction
