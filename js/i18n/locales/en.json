@@ -1,0 +1,300 @@
+{
+  "common": {
+    "loading": "Loading Tomodachi…",
+    "back": "Back",
+    "back_to_dashboard": "← Back to Dashboard",
+    "dashboard": "Dashboard",
+    "cancel": "Cancel",
+    "save": "Save",
+    "play_again": "Play Again",
+    "rematch": "Rematch"
+  },
+  "auth": {
+    "brand": {
+      "title": "Tomodachi",
+      "subtitle": "Master Japanese, together"
+    },
+    "tab": {
+      "sign_in": "Sign In",
+      "create_account": "Create Account"
+    },
+    "field": {
+      "email": "Email",
+      "password": "Password",
+      "username": "Username",
+      "display_name": "Display Name"
+    },
+    "placeholder": {
+      "email": "you@example.com",
+      "password": "••••••",
+      "username": "almo3tasem",
+      "display_name": "Al Mo3tasem"
+    },
+    "hint": {
+      "username": "(lowercase, no spaces)",
+      "password": "(6+ characters)"
+    },
+    "button": {
+      "sign_in": "Sign In",
+      "create_account": "Create Account"
+    }
+  },
+  "nav": {
+    "settings_title": "Settings",
+    "logout": "Logout",
+    "user_default_name": "Player"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle_named": "Welcome back, {{name}}",
+    "friend": {
+      "waiting": "Waiting for friend…",
+      "status_offline": "Offline",
+      "status_online": "Online",
+      "status_in_game": "In a game",
+      "duel_btn": "Duel",
+      "online_toast": "{{name}} is online!"
+    },
+    "stat": {
+      "games": "Games",
+      "best_score": "Best Score",
+      "duel_record": "Duel W–L",
+      "coop_best": "Co-op Best",
+      "mastery_label": "Hiragana mastery"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "preview_empty": "Play games to see rankings!",
+      "view_full": "View Full Leaderboard"
+    },
+    "modes": {
+      "title": "Game Modes"
+    },
+    "history": {
+      "title": "Recent History",
+      "empty": "No games played yet.",
+      "could_not_load": "Could not load history.",
+      "result_won": "Won",
+      "result_lost": "Lost",
+      "result_draw": "Draw",
+      "vs_opponent": "vs {{name}}",
+      "score_pts": "{{score}} pts",
+      "accuracy": "{{percent}}% accuracy",
+      "all_cleared": "All cleared",
+      "team_run": "Team run"
+    }
+  },
+  "modes": {
+    "zen": {
+      "name": "Zen Mode",
+      "desc": "Timed practice — read or listen"
+    },
+    "survival": {
+      "name": "Survival Rush",
+      "desc": "Solo speed challenge"
+    },
+    "duel": {
+      "name": "Duel Mode",
+      "desc": "Real-time VS your friend"
+    },
+    "coop": {
+      "name": "Sync Match",
+      "desc": "Team up — beat the clock together"
+    }
+  },
+  "select": {
+    "title": "Set Up Your Game",
+    "subtitle": {
+      "default": "Choose which Hiragana to include",
+      "zen": "Set up your Zen Mode game",
+      "survival": "Set up your Survival Rush game",
+      "duel": "Set up your Duel — you are the host",
+      "coop": "Set up your Sync Match — you are the host"
+    },
+    "info": {
+      "zen": "🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.",
+      "survival": "🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.",
+      "duel": "⚔️ Real-time VS. You pick the characters and rules; both players race the same cards. Fastest correct answer takes the round. Pick at least 4 characters.",
+      "coop": "🤝 Team up! You both see the same card and must each clear it before a shared clock (5s per character) runs out. Pick at least 4 characters."
+    },
+    "option": {
+      "practice": "Practice",
+      "win_condition": "Win Condition",
+      "answer_with": "Answer With",
+      "session": "Session"
+    },
+    "seg": {
+      "read": "👁️ Read",
+      "listen": "👂 Listen",
+      "first_to_10": "🏁 First to 10",
+      "rounds_20": "🔟 20 Rounds",
+      "typing": "⌨️ Typing",
+      "choices": "🔘 Choices"
+    },
+    "panel": {
+      "premade": "Premade Sets",
+      "custom": "Custom Pick",
+      "select_all": "Select All",
+      "clear": "Clear"
+    },
+    "footer": {
+      "count_one": "{{count}} character selected",
+      "count_other": "{{count}} characters selected",
+      "difficulty": "Difficulty: {{multiplier}}×"
+    },
+    "start_button": {
+      "default": "Start Game",
+      "zen": "Start Game",
+      "survival": "Start Game",
+      "duel": "Send Challenge",
+      "coop": "Send Invite"
+    },
+    "listen_unsupported": "Listening practice needs browser speech support."
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Best scores by game and set size",
+    "loading": "Loading rankings…"
+  },
+  "settings": {
+    "title": "Settings",
+    "section": {
+      "profile": "Profile",
+      "danger_zone": "Danger Zone"
+    },
+    "profile": {
+      "avatar_label": "Avatar",
+      "save_btn": "Save Profile",
+      "username_label": "Username"
+    },
+    "row": {
+      "theme_name": "Dark Mode",
+      "theme_desc": "Switch between light and dark themes",
+      "audio_name": "Sound Effects",
+      "audio_desc": "Blips for correct, wrong, and win moments",
+      "notify_name": "Notifications",
+      "notify_desc": "Toast alerts when your friend comes online"
+    },
+    "danger": {
+      "description": "Reset all your progress — games played, scores, character mastery, duel record, and leaderboard entries. This cannot be undone.",
+      "start_btn": "Reset My Progress",
+      "type_to_confirm": "Type RESET to confirm",
+      "input_placeholder": "RESET",
+      "cancel_btn": "Cancel",
+      "confirm_btn": "Confirm Reset"
+    },
+    "version": "Tomodachi {{version}}",
+    "blocked_during_match": "Finish your match before opening Settings.",
+    "profile_save_failed": "Could not save profile: {{message}}",
+    "profile_updated": "Profile updated.",
+    "username_taken": "Username already taken.",
+    "reset_success": "Progress reset — fresh start!",
+    "reset_failed": "Reset failed: {{message}}"
+  },
+  "game": {
+    "exit_title": "Exit game",
+    "speak_title": "Hear pronunciation",
+    "pause": {
+      "title": "Paused",
+      "desc": "Your timer is frozen. Take your time.",
+      "resume_btn": "Resume"
+    },
+    "results": {
+      "title": "Complete",
+      "score_label": "Score",
+      "dashboard_btn": "Dashboard",
+      "play_again_btn": "Play Again"
+    }
+  },
+  "lobby": {
+    "title": "Lobby",
+    "status": "Waiting for opponent…",
+    "cancel_btn": "Cancel"
+  },
+  "duel": {
+    "forfeit_title": "Forfeit duel",
+    "round_label": "Round 1",
+    "you": "You",
+    "opponent": "Opponent",
+    "vs": "VS",
+    "get_ready": "Get ready…",
+    "stall": {
+      "title": "Opponent unreachable",
+      "desc": "Your opponent seems to have disconnected.",
+      "leave_btn": "Claim Win & Leave"
+    },
+    "result": {
+      "victory": "Victory!",
+      "dashboard_btn": "Dashboard",
+      "rematch_btn": "Rematch"
+    }
+  },
+  "coop": {
+    "leave_title": "Leave match",
+    "header": "🤝 Sync Match",
+    "you": "You",
+    "friend": "Friend",
+    "sync_up": "Sync up…",
+    "stall": {
+      "title": "Partner unreachable",
+      "desc": "Your teammate seems to have disconnected.",
+      "leave_btn": "End Match & Leave"
+    },
+    "result": {
+      "title_cleared": "All Cleared!",
+      "team_score_label": "Team Score",
+      "dashboard_btn": "Dashboard",
+      "again_btn": "Play Again"
+    }
+  },
+  "invite": {
+    "duel_title": "Duel Challenge!",
+    "coop_title": "Sync Match Invite!",
+    "duel_action": "wants to duel you.",
+    "coop_action": "wants to team up.",
+    "decline_btn": "Decline",
+    "accept_btn": "Accept"
+  },
+  "error": {
+    "auth": {
+      "invalid_email": "Invalid email address.",
+      "user_disabled": "This account has been disabled.",
+      "user_not_found": "No account found with this email.",
+      "wrong_password": "Incorrect password.",
+      "email_already_in_use": "An account already exists with this email.",
+      "weak_password": "Password must be at least 6 characters.",
+      "invalid_credential": "Invalid email or password.",
+      "invalid_login_credentials": "Invalid email or password.",
+      "too_many_requests": "Too many attempts. Please try again later.",
+      "network_request_failed": "Network error. Check your connection and try again.",
+      "operation_not_allowed": "Email/password login is not enabled in Firebase Authentication.",
+      "api_key_not_valid": "Firebase rejected this API key. Check the deployed config.",
+      "app_not_authorized": "This domain is not authorized for this Firebase app.",
+      "unauthorized_domain": "This domain is not authorized in Firebase Authentication settings.",
+      "fallback_with_code": "Authentication failed ({{code}}). Please try again.",
+      "fallback_generic": "Authentication failed. Please try again."
+    },
+    "form": {
+      "email_password_required": "Enter both email and password.",
+      "all_fields_required": "Fill in every field before creating an account.",
+      "username_format": "Username must be lowercase letters, numbers, or underscores only.",
+      "display_name_required": "Display name is required."
+    },
+    "username_taken": "Username already taken.",
+    "logout_failed": "Logout failed: {{message}}",
+    "profile_load_failed": "Could not load your profile: {{message}}",
+    "app_startup_failed": "App startup failed: {{message}}",
+    "content_sets_load_failed": "Failed to load Hiragana sets. Make sure the database is seeded.",
+    "friend_offline_for_mp": "Your friend needs to be online for multiplayer."
+  },
+  "toast": {
+    "welcome_new": "Welcome to Tomodachi, {{name}}!",
+    "welcome_back": "Welcome back, {{name}}!",
+    "signed_in": "Signed in. Loading dashboard…",
+    "profile_created": "Created your missing profile document."
+  },
+  "locale": {
+    "label_en": "EN",
+    "label_ar": "العربية"
+  }
+}

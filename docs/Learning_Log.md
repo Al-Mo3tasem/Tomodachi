@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase L1, Task L1.01]** — i18next + buildless CDN ES modules + data-i18n attribute substitution pattern
 - **[Phase R2, Task R2.11 wrap-up]** — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
 - **[Phase L1, Task L1.20]** — Self-heal logic and the invariants it can quietly violate (landed during R2 escalation)
 - **[Phase R2, Task R2.06]** — Cloudflare Workers vs Pages: when to use which (and how to tell what you created)
@@ -63,6 +64,61 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase L1, Task L1.01] — i18next + buildless CDN ES modules + data-i18n attribute substitution
+**Date:** 2026-05-28
+**Contributor:** Claude
+
+### Technology / Library Introduced
+- **i18next** — JavaScript internationalization framework. Solves three problems together: (1) looking up the right string for the current language given a hierarchical key (`auth.field.email`), (2) interpolating values into translated strings (`Welcome back, {{name}}`), (3) firing an event (`languageChanged`) so the UI can react when the user switches locale. In our stack it owns every user-facing string.
+  - **Version locked at:** `i18next@26.3.0` (current stable on npm as of 2026-05-28, verified via `https://registry.npmjs.org/i18next/latest`).
+- **i18next-browser-languagedetector** — companion plugin that picks the initial locale on first load by checking, in order: URL query (`?lang=ar`), `localStorage('tomodachi-lang')`, `navigator.language`, `<html lang>`. Solves the "what language should we start in?" problem without us writing detection logic by hand.
+  - **Version locked at:** `i18next-browser-languagedetector@8.2.1` (current stable; same verification).
+- **The `data-i18n` attribute substitution pattern** — instead of writing translated strings into templates, we mark DOM nodes with `data-i18n="auth.brand.title"` (or `data-i18n-attr="title:nav.settings_title"` for attributes, `data-i18n-placeholder="auth.placeholder.email"` for inputs). A DOM walker (`js/i18n/apply.js`) reads those markers and writes the looked-up value via `textContent` or `setAttribute`. Re-runs on `languageChanged`.
+
+### What it actually does (plain language)
+We're shipping the same app to two languages on day one (EN + AR) with full RTL coming in L1.02. That means every visible string needs two versions — and "every" is roughly 124 in HTML plus ~54 in JS toasts/errors today, more as Phase L2's lesson screens land. Doing this by hand (`if (locale === 'ar') string = 'X'; else string = 'Y'`) collapses fast.
+
+i18next handles the lookup mechanics: keys are dot-notation paths into a nested JSON, the current locale is a property on the i18next instance, and `t('key', { vars })` returns the right string with interpolations filled in. We give it two JSON resource bundles (`en.json`, `ar.json`), tell it the supported locales, and it manages the rest.
+
+The buildless ESM-via-CDN path keeps it consistent with the Firebase SDK pattern that's already in the project. Pinning the version in the URL (`@26.3.0`) means the exact same code loads every time — no surprise upgrades on Cloudflare-side cache changes.
+
+The `data-i18n` attribute approach over template-literal `t()` calls inside HTML means the EN text stays visible in the DOM as a fallback. If i18next fails to load (CDN outage, content-blocker extension, slow network), the page still renders something sensible. Once `apply.js` runs on init + on every locale switch, every wired node is overwritten with the looked-up value.
+
+### Alternatives considered
+- **Hand-rolled `t()` over a JSON file** — write a function that does `t = (key) => keys.reduce(...) || key;` and load JSON via `fetch`. Considered seriously: would avoid a runtime dependency, ~30 lines of code. Rejected because: (1) no language detector — we'd have to write the URL-param + localStorage + navigator.language stack ourselves, (2) no `languageChanged` event — we'd need our own pub/sub, (3) no interpolation pluralization (`count_one` / `count_other`) — we'd have to handle that ourselves, (4) zero ecosystem leverage — if Phase L2 wants context-sensitive lookups or namespaces, we'd reinvent them. The 50 KB i18next bundle is worth not writing those.
+- **FormatJS / `react-intl`** — industry standard for React apps. Rejected because we don't use React. FormatJS's `intl-messageformat` runtime could be used standalone, but its ICU MessageFormat syntax (`{count, plural, one{# item} other{# items}}`) is heavier-weight than we need for ~200 keys, and its primary value (compile-time extraction) requires a build step we don't have.
+- **Polyglot.js** — Airbnb's lightweight runtime. Smaller (~3 KB) and works without a build step. Rejected because: (1) no built-in language detector; (2) no `languageChanged` event for re-rendering; (3) maintenance has slowed (no major release since 2021); (4) i18next's ESM CDN distribution is better-supported than Polyglot's.
+- **Native `Intl` API only** — modern browsers ship `Intl.DateTimeFormat`, `Intl.NumberFormat`, etc. But they handle FORMATTING (dates, numbers, plurals) not the lookup problem (which string for this locale?). We'll layer `Intl` on top of i18next for date/number/currency formatting; it's complementary, not an alternative.
+- **Option chosen** — i18next via `jsdelivr/+esm` CDN. Best fit because: matches our buildless stack, has the language-detector plugin we need, has a community-maintained ESM distribution, version-pins cleanly in the import URL.
+
+### Concepts to understand
+- **"Buildless ES modules via CDN"** — modern browsers can `import` directly from any URL that serves an ES module. `https://cdn.jsdelivr.net/npm/<pkg>@<version>/+esm` is jsdelivr's ESM-transform endpoint: it takes any npm package and serves it as an ES module. Same shape as Firebase's `https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js` that's already in the project. No build step, no node_modules, no bundler config — just a URL with a version pin.
+- **`/+esm` suffix on jsdelivr URLs** — tells jsdelivr to serve an ES module build of the package (auto-converting CJS if needed). Without it you get the package's default entry point, which for some packages is CJS and won't `import` cleanly.
+- **`textContent` vs `innerHTML` for translated strings** — always `textContent`. If a translation value ever contains HTML (e.g., from a future Codex pass that slips in `<strong>` for emphasis), `textContent` renders it as literal text; `innerHTML` would execute it as markup. The trust boundary for translations is "data, not code" — keep it that way structurally.
+- **`new URL('./locales/en.json', import.meta.url)`** — resolves a relative path against the URL of the importing module, not against the page URL. Lets the i18n module sit at `js/i18n/index.js` and ask for `./locales/en.json` and get the right path (`/js/i18n/locales/en.json`) regardless of where the document base is. Without this, `fetch('./locales/en.json')` would resolve against the page URL and look in the wrong place.
+- **The "fallback locale" in i18next** — if a key is missing in the active locale, i18next falls back to `fallbackLng` (we set it to `'en'`). If the key is missing in EN too, `t()` returns the key string itself. This is actually a useful convention: in `formatAuthError`, we check `if (translated !== key) return translated` to detect "found vs missing" cleanly. No try/catch needed.
+- **Hierarchical key namespaces by **purpose**, not UI section** — `auth.field.email` (anywhere an email field is shown) is more reusable than `auth.login.email_label` (only the login screen). Cuts duplication when the same string appears in multiple screens.
+- **The `data-i18n*` attribute walker as a DOM-MutationObserver lite** — `apply.js` walks `document` on init and on every `languageChanged`. It does NOT observe DOM mutations — if app.js dynamically appends new nodes (e.g., the toast container or a future lesson card), those nodes' static i18n keys won't be picked up unless we call `applyTranslations(i18n, newRoot)` after the append. Acceptable: dynamic content in our app is either (a) JS-driven content where we use `t()` at append time, or (b) Firestore data (vocab cards, etc.) which is content not chrome.
+- **`<html lang>` vs `<html dir>`** — `lang` tells screen readers and the browser what language the content is in; `dir` controls text direction (LTR/RTL). They're separate concerns. L1.01 syncs `lang`; L1.02 syncs `dir`. We can have `lang="ar"` with `dir="ltr"` mid-development without breaking; it's just suboptimal for AR readers until L1.02.
+
+### Tradeoffs accepted
+- **~52 KB of JS (i18next + language-detector) over the wire on every page load.** Cached after the first load. Could be smaller if we shipped Polyglot or hand-rolled, but the dev velocity of i18next's `{{count, plural}}` interpolation and the language-detector plugin is worth the bytes. Revisit only if bundle size becomes a real CWV concern (won't at our scale).
+- **Two CDN dependencies in the critical path of every page load** (i18next + language-detector). If `cdn.jsdelivr.net` is down, the EN fallback text in HTML still renders (the page is usable). But the locale toggle won't work and the i18next runtime never loads. Acceptable: jsdelivr's uptime is excellent; Cloudflare is the backbone; the EN fallback covers the failure mode.
+- **`ar.json` ships with `[AR] ` placeholder values in L1.01.** Means AR mode shows `[AR] Sign In` etc. until L1.03 lands. Deliberate: makes the wiring visibly testable on day one without blocking on translation work. The cost is "AR mode looks broken until L1.03"; the benefit is "L1.01 closure isn't gated on Codex availability."
+- **DOM substitution via `data-i18n` attributes means index.html grows in size.** Every visible string has both the EN fallback content AND a `data-i18n="key"` attribute. The HTML file went from ~621 lines to ~692 lines as a result. Cost: slightly more HTML to scan. Benefit: page renders if i18next fails to load.
+- **Module-relative locale paths require `new URL('./locales/X.json', import.meta.url)`.** Slightly verbose syntax but the standard way to make module-relative `fetch` calls work in ES modules. Will recur if we add more JSON-loaded resources later.
+- **Cache buster strategy** — JSON files have their own `?v=YYYYMMDDl` query string just like JS files. Same strict §14.3 rule applies: bump on every changed import where the consumer references the changed file. We pay this attention cost on every translation update; pays back as guaranteed-fresh fetches on GitHub Pages' aggressive cache.
+
+### Useful resources
+- [i18next official docs](https://www.i18next.com/) — start at "Getting Started" then "API" → `init` options.
+- [i18next-browser-languagedetector docs](https://github.com/i18next/i18next-browser-languageDetector) — the `detection.order` array is the key knob.
+- [jsdelivr `/+esm` documentation](https://www.jsdelivr.com/esm) — how the ESM transform endpoint works.
+- [MDN: `import.meta.url`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta) — required reading for module-relative resource paths.
+- [PROJECT_RULES.md §11 (Bilingual Content Discipline)](PROJECT_RULES.md) + [§13.4 (i18n key naming)](PROJECT_RULES.md) — the project's standing rules this work implements.
+- [CONTENT_GUIDELINES.md §2 + §4 + §5](CONTENT_GUIDELINES.md) — the AR-side discipline the L1.03 Codex pass will enforce on top of the key skeleton L1.01 lands.
+
+---
 
 ## [Phase R2, Task R2.11 wrap-up] — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
 **Date:** 2026-05-28

@@ -2384,3 +2384,42 @@ body {
   .coop-shell { padding: var(--space-4); }
   .coop-pip { padding: var(--space-2) var(--space-3); }
 }
+
+/* ----- L1.01 locale toggle (EN | AR) ----- */
+/* Minimal styling for L1.01. L1.02 may revisit alongside the RTL pass. */
+.auth-locale-bar,
+.nav-locale-bar {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.auth-locale-bar {
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.locale-toggle {
+  background: transparent;
+  border: 1px solid var(--border, rgba(0,0,0,0.15));
+  color: var(--text-secondary, #666);
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.locale-toggle:hover {
+  border-color: var(--accent, #0a84ff);
+  color: var(--accent, #0a84ff);
+}
+
+.locale-toggle.active {
+  background: var(--accent, #0a84ff);
+  border-color: var(--accent, #0a84ff);
+  color: #fff;
+}

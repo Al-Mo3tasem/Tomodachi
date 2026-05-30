@@ -1,0 +1,300 @@
+{
+  "common": {
+    "loading": "[AR] Loading Tomodachi…",
+    "back": "[AR] Back",
+    "back_to_dashboard": "[AR] ← Back to Dashboard",
+    "dashboard": "[AR] Dashboard",
+    "cancel": "[AR] Cancel",
+    "save": "[AR] Save",
+    "play_again": "[AR] Play Again",
+    "rematch": "[AR] Rematch"
+  },
+  "auth": {
+    "brand": {
+      "title": "[AR] Tomodachi",
+      "subtitle": "[AR] Master Japanese, together"
+    },
+    "tab": {
+      "sign_in": "[AR] Sign In",
+      "create_account": "[AR] Create Account"
+    },
+    "field": {
+      "email": "[AR] Email",
+      "password": "[AR] Password",
+      "username": "[AR] Username",
+      "display_name": "[AR] Display Name"
+    },
+    "placeholder": {
+      "email": "[AR] you@example.com",
+      "password": "[AR] ••••••",
+      "username": "[AR] almo3tasem",
+      "display_name": "[AR] Al Mo3tasem"
+    },
+    "hint": {
+      "username": "[AR] (lowercase, no spaces)",
+      "password": "[AR] (6+ characters)"
+    },
+    "button": {
+      "sign_in": "[AR] Sign In",
+      "create_account": "[AR] Create Account"
+    }
+  },
+  "nav": {
+    "settings_title": "[AR] Settings",
+    "logout": "[AR] Logout",
+    "user_default_name": "[AR] Player"
+  },
+  "dashboard": {
+    "title": "[AR] Dashboard",
+    "subtitle_named": "[AR] Welcome back, {{name}}",
+    "friend": {
+      "waiting": "[AR] Waiting for friend…",
+      "status_offline": "[AR] Offline",
+      "status_online": "[AR] Online",
+      "status_in_game": "[AR] In a game",
+      "duel_btn": "[AR] Duel",
+      "online_toast": "[AR] {{name}} is online!"
+    },
+    "stat": {
+      "games": "[AR] Games",
+      "best_score": "[AR] Best Score",
+      "duel_record": "[AR] Duel W–L",
+      "coop_best": "[AR] Co-op Best",
+      "mastery_label": "[AR] Hiragana mastery"
+    },
+    "leaderboard": {
+      "title": "[AR] Leaderboard",
+      "preview_empty": "[AR] Play games to see rankings!",
+      "view_full": "[AR] View Full Leaderboard"
+    },
+    "modes": {
+      "title": "[AR] Game Modes"
+    },
+    "history": {
+      "title": "[AR] Recent History",
+      "empty": "[AR] No games played yet.",
+      "could_not_load": "[AR] Could not load history.",
+      "result_won": "[AR] Won",
+      "result_lost": "[AR] Lost",
+      "result_draw": "[AR] Draw",
+      "vs_opponent": "[AR] vs {{name}}",
+      "score_pts": "[AR] {{score}} pts",
+      "accuracy": "[AR] {{percent}}% accuracy",
+      "all_cleared": "[AR] All cleared",
+      "team_run": "[AR] Team run"
+    }
+  },
+  "modes": {
+    "zen": {
+      "name": "[AR] Zen Mode",
+      "desc": "[AR] Timed practice — read or listen"
+    },
+    "survival": {
+      "name": "[AR] Survival Rush",
+      "desc": "[AR] Solo speed challenge"
+    },
+    "duel": {
+      "name": "[AR] Duel Mode",
+      "desc": "[AR] Real-time VS your friend"
+    },
+    "coop": {
+      "name": "[AR] Sync Match",
+      "desc": "[AR] Team up — beat the clock together"
+    }
+  },
+  "select": {
+    "title": "[AR] Set Up Your Game",
+    "subtitle": {
+      "default": "[AR] Choose which Hiragana to include",
+      "zen": "[AR] Set up your Zen Mode game",
+      "survival": "[AR] Set up your Survival Rush game",
+      "duel": "[AR] Set up your Duel — you are the host",
+      "coop": "[AR] Set up your Sync Match — you are the host"
+    },
+    "info": {
+      "zen": "[AR] 🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.",
+      "survival": "[AR] 🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.",
+      "duel": "[AR] ⚔️ Real-time VS. You pick the characters and rules; both players race the same cards. Fastest correct answer takes the round. Pick at least 4 characters.",
+      "coop": "[AR] 🤝 Team up! You both see the same card and must each clear it before a shared clock (5s per character) runs out. Pick at least 4 characters."
+    },
+    "option": {
+      "practice": "[AR] Practice",
+      "win_condition": "[AR] Win Condition",
+      "answer_with": "[AR] Answer With",
+      "session": "[AR] Session"
+    },
+    "seg": {
+      "read": "[AR] 👁️ Read",
+      "listen": "[AR] 👂 Listen",
+      "first_to_10": "[AR] 🏁 First to 10",
+      "rounds_20": "[AR] 🔟 20 Rounds",
+      "typing": "[AR] ⌨️ Typing",
+      "choices": "[AR] 🔘 Choices"
+    },
+    "panel": {
+      "premade": "[AR] Premade Sets",
+      "custom": "[AR] Custom Pick",
+      "select_all": "[AR] Select All",
+      "clear": "[AR] Clear"
+    },
+    "footer": {
+      "count_one": "[AR] {{count}} character selected",
+      "count_other": "[AR] {{count}} characters selected",
+      "difficulty": "[AR] Difficulty: {{multiplier}}×"
+    },
+    "start_button": {
+      "default": "[AR] Start Game",
+      "zen": "[AR] Start Game",
+      "survival": "[AR] Start Game",
+      "duel": "[AR] Send Challenge",
+      "coop": "[AR] Send Invite"
+    },
+    "listen_unsupported": "[AR] Listening practice needs browser speech support."
+  },
+  "leaderboard": {
+    "title": "[AR] Leaderboard",
+    "subtitle": "[AR] Best scores by game and set size",
+    "loading": "[AR] Loading rankings…"
+  },
+  "settings": {
+    "title": "[AR] Settings",
+    "section": {
+      "profile": "[AR] Profile",
+      "danger_zone": "[AR] Danger Zone"
+    },
+    "profile": {
+      "avatar_label": "[AR] Avatar",
+      "save_btn": "[AR] Save Profile",
+      "username_label": "[AR] Username"
+    },
+    "row": {
+      "theme_name": "[AR] Dark Mode",
+      "theme_desc": "[AR] Switch between light and dark themes",
+      "audio_name": "[AR] Sound Effects",
+      "audio_desc": "[AR] Blips for correct, wrong, and win moments",
+      "notify_name": "[AR] Notifications",
+      "notify_desc": "[AR] Toast alerts when your friend comes online"
+    },
+    "danger": {
+      "description": "[AR] Reset all your progress — games played, scores, character mastery, duel record, and leaderboard entries. This cannot be undone.",
+      "start_btn": "[AR] Reset My Progress",
+      "type_to_confirm": "[AR] Type RESET to confirm",
+      "input_placeholder": "RESET",
+      "cancel_btn": "[AR] Cancel",
+      "confirm_btn": "[AR] Confirm Reset"
+    },
+    "version": "[AR] Tomodachi {{version}}",
+    "blocked_during_match": "[AR] Finish your match before opening Settings.",
+    "profile_save_failed": "[AR] Could not save profile: {{message}}",
+    "profile_updated": "[AR] Profile updated.",
+    "username_taken": "[AR] Username already taken.",
+    "reset_success": "[AR] Progress reset — fresh start!",
+    "reset_failed": "[AR] Reset failed: {{message}}"
+  },
+  "game": {
+    "exit_title": "[AR] Exit game",
+    "speak_title": "[AR] Hear pronunciation",
+    "pause": {
+      "title": "[AR] Paused",
+      "desc": "[AR] Your timer is frozen. Take your time.",
+      "resume_btn": "[AR] Resume"
+    },
+    "results": {
+      "title": "[AR] Complete",
+      "score_label": "[AR] Score",
+      "dashboard_btn": "[AR] Dashboard",
+      "play_again_btn": "[AR] Play Again"
+    }
+  },
+  "lobby": {
+    "title": "[AR] Lobby",
+    "status": "[AR] Waiting for opponent…",
+    "cancel_btn": "[AR] Cancel"
+  },
+  "duel": {
+    "forfeit_title": "[AR] Forfeit duel",
+    "round_label": "[AR] Round 1",
+    "you": "[AR] You",
+    "opponent": "[AR] Opponent",
+    "vs": "[AR] VS",
+    "get_ready": "[AR] Get ready…",
+    "stall": {
+      "title": "[AR] Opponent unreachable",
+      "desc": "[AR] Your opponent seems to have disconnected.",
+      "leave_btn": "[AR] Claim Win & Leave"
+    },
+    "result": {
+      "victory": "[AR] Victory!",
+      "dashboard_btn": "[AR] Dashboard",
+      "rematch_btn": "[AR] Rematch"
+    }
+  },
+  "coop": {
+    "leave_title": "[AR] Leave match",
+    "header": "[AR] 🤝 Sync Match",
+    "you": "[AR] You",
+    "friend": "[AR] Friend",
+    "sync_up": "[AR] Sync up…",
+    "stall": {
+      "title": "[AR] Partner unreachable",
+      "desc": "[AR] Your teammate seems to have disconnected.",
+      "leave_btn": "[AR] End Match & Leave"
+    },
+    "result": {
+      "title_cleared": "[AR] All Cleared!",
+      "team_score_label": "[AR] Team Score",
+      "dashboard_btn": "[AR] Dashboard",
+      "again_btn": "[AR] Play Again"
+    }
+  },
+  "invite": {
+    "duel_title": "[AR] Duel Challenge!",
+    "coop_title": "[AR] Sync Match Invite!",
+    "duel_action": "[AR] wants to duel you.",
+    "coop_action": "[AR] wants to team up.",
+    "decline_btn": "[AR] Decline",
+    "accept_btn": "[AR] Accept"
+  },
+  "error": {
+    "auth": {
+      "invalid_email": "[AR] Invalid email address.",
+      "user_disabled": "[AR] This account has been disabled.",
+      "user_not_found": "[AR] No account found with this email.",
+      "wrong_password": "[AR] Incorrect password.",
+      "email_already_in_use": "[AR] An account already exists with this email.",
+      "weak_password": "[AR] Password must be at least 6 characters.",
+      "invalid_credential": "[AR] Invalid email or password.",
+      "invalid_login_credentials": "[AR] Invalid email or password.",
+      "too_many_requests": "[AR] Too many attempts. Please try again later.",
+      "network_request_failed": "[AR] Network error. Check your connection and try again.",
+      "operation_not_allowed": "[AR] Email/password login is not enabled in Firebase Authentication.",
+      "api_key_not_valid": "[AR] Firebase rejected this API key. Check the deployed config.",
+      "app_not_authorized": "[AR] This domain is not authorized for this Firebase app.",
+      "unauthorized_domain": "[AR] This domain is not authorized in Firebase Authentication settings.",
+      "fallback_with_code": "[AR] Authentication failed ({{code}}). Please try again.",
+      "fallback_generic": "[AR] Authentication failed. Please try again."
+    },
+    "form": {
+      "email_password_required": "[AR] Enter both email and password.",
+      "all_fields_required": "[AR] Fill in every field before creating an account.",
+      "username_format": "[AR] Username must be lowercase letters, numbers, or underscores only.",
+      "display_name_required": "[AR] Display name is required."
+    },
+    "username_taken": "[AR] Username already taken.",
+    "logout_failed": "[AR] Logout failed: {{message}}",
+    "profile_load_failed": "[AR] Could not load your profile: {{message}}",
+    "app_startup_failed": "[AR] App startup failed: {{message}}",
+    "content_sets_load_failed": "[AR] Failed to load Hiragana sets. Make sure the database is seeded.",
+    "friend_offline_for_mp": "[AR] Your friend needs to be online for multiplayer."
+  },
+  "toast": {
+    "welcome_new": "[AR] Welcome to Tomodachi, {{name}}!",
+    "welcome_back": "[AR] Welcome back, {{name}}!",
+    "signed_in": "[AR] Signed in. Loading dashboard…",
+    "profile_created": "[AR] Created your missing profile document."
+  },
+  "locale": {
+    "label_en": "EN",
+    "label_ar": "العربية"
+  }
+}

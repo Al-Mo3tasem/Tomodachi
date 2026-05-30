@@ -32,11 +32,19 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
+import { initI18n, t, setLocale, getLocale } from './i18n/index.js?v=20260528d';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
-const MODE_NAMES = { zen: 'Zen Mode', survival: 'Survival Rush', duel: 'Duel Mode', coop: 'Sync Match' };
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
 const ZEN_DURATIONS = [60, 180, 300, 420, 600];   // 1, 3, 5, 7, 10 minutes
+
+// Looks up the localized name for a game mode. Falls back to the raw
+// type string if the key is missing (i18next returns the key on miss).
+function modeName(type) {
+  const key = `modes.${type}.name`;
+  const translated = t(key);
+  return translated === key ? type : translated;
+}
 
 let pendingAvatar = '🌸';
 
@@ -127,17 +135,17 @@ async function ensureUserProfile(user) {
     createdAt: serverTimestamp()
   }, { merge: true }), 'Creating missing stats profile', 15000);
 
-  toast('Created your missing profile document.', 'success', 5000);
+  toast(t('toast.profile_created'), 'success', 5000);
   return profile;
 }
 
 function renderUserIdentity() {
-  const displayName = state.userData?.displayName || 'Player';
+  const displayName = state.userData?.displayName || t('nav.user_default_name');
   const username = state.userData?.username || 'player';
   const avatar = state.userData?.avatarEmoji || '🌸';
 
   const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
-  set('dash-welcome', displayName);
+  set('dash-welcome-line', t('dashboard.subtitle_named', { name: displayName }));
   set('dash-displayname', displayName);
   set('dash-username', `@${username}`);
   set('dash-avatar', avatar);
@@ -150,25 +158,20 @@ function renderUserIdentity() {
 // ============================================
 
 function formatAuthError(code, fallbackMessage = '') {
-  const map = {
-    'auth/invalid-email': 'Invalid email address.',
-    'auth/user-disabled': 'This account has been disabled.',
-    'auth/user-not-found': 'No account found with this email.',
-    'auth/wrong-password': 'Incorrect password.',
-    'auth/email-already-in-use': 'An account already exists with this email.',
-    'auth/weak-password': 'Password must be at least 6 characters.',
-    'auth/invalid-credential': 'Invalid email or password.',
-    'auth/invalid-login-credentials': 'Invalid email or password.',
-    'auth/too-many-requests': 'Too many attempts. Please try again later.',
-    'auth/network-request-failed': 'Network error. Check your connection and try again.',
-    'auth/operation-not-allowed': 'Email/password login is not enabled in Firebase Authentication.',
-    'auth/api-key-not-valid': 'Firebase rejected this API key. Check the deployed config.',
-    'auth/app-not-authorized': 'This domain is not authorized for this Firebase app.',
-    'auth/unauthorized-domain': 'This domain is not authorized in Firebase Authentication settings.'
-  };
-  if (code && map[code]) return map[code];
+  if (code) {
+    // Firebase codes look like 'auth/invalid-email'. Map to i18n key
+    // shape: 'error.auth.invalid_email'.
+    const sub = code.replace(/^auth\//, '').replace(/-/g, '_');
+    const key = `error.auth.${sub}`;
+    const translated = t(key);
+    // i18next returns the key string itself when missing; treat that as
+    // "no translation available" and fall through.
+    if (translated !== key) return translated;
+  }
   if (fallbackMessage) return fallbackMessage;
-  return code ? `Authentication failed (${code}). Please try again.` : 'Authentication failed. Please try again.';
+  return code
+    ? t('error.auth.fallback_with_code', { code })
+    : t('error.auth.fallback_generic');
 }
 
 function showFormError(errorEl, message) {
@@ -184,14 +187,14 @@ async function handleLogin(e) {
   if (errorEl) errorEl.textContent = '';
 
   if (!email || !password) {
-    showFormError(errorEl, 'Enter both email and password.');
+    showFormError(errorEl, t('error.form.email_password_required'));
     return;
   }
 
   try {
     showLoading(true);
     await withTimeout(signInWithEmailAndPassword(auth, email, password), 'Signing in', 15000);
-    toast('Signed in. Loading dashboard…', 'success');
+    toast(t('toast.signed_in'), 'success');
   } catch (err) {
     showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Login error:', err);
@@ -210,12 +213,12 @@ async function handleRegister(e) {
   if (errorEl) errorEl.textContent = '';
 
   if (!/^[a-z0-9_]+$/.test(username)) {
-    showFormError(errorEl, 'Username must be lowercase letters, numbers, or underscores only.');
+    showFormError(errorEl, t('error.form.username_format'));
     return;
   }
 
   if (!displayName || !email || !password) {
-    showFormError(errorEl, 'Fill in every field before creating an account.');
+    showFormError(errorEl, t('error.form.all_fields_required'));
     return;
   }
 
@@ -305,7 +308,7 @@ async function handleRegister(e) {
     await enterAppAsUser(cred.user, true);
   } catch (err) {
     if (err.message === 'USERNAME_TAKEN') {
-      showFormError(errorEl, 'Username already taken.');
+      showFormError(errorEl, t('error.username_taken'));
     } else {
       showFormError(errorEl, formatAuthError(err.code, err.message));
     }
@@ -330,7 +333,7 @@ async function logout() {
     }
     await signOut(auth);
   } catch (err) {
-    toast('Logout failed: ' + err.message, 'error');
+    toast(t('error.logout_failed', { message: err.message }), 'error');
   }
 }
 
@@ -390,19 +393,37 @@ function renderFriend() {
   const inviteBtn = $('btn-invite');
 
   if (!p) {
-    if (nameEl) nameEl.textContent = 'Waiting for friend…';
-    if (statusEl) statusEl.innerHTML = `<span class="status-dot offline"></span><span class="status-text">Offline</span>`;
+    if (nameEl) nameEl.textContent = t('dashboard.friend.waiting');
+    if (statusEl) {
+      statusEl.innerHTML = '';
+      const dot = document.createElement('span');
+      dot.className = 'status-dot offline';
+      const text = document.createElement('span');
+      text.className = 'status-text';
+      text.textContent = t('dashboard.friend.status_offline');
+      statusEl.append(dot, text);
+    }
     if (inviteBtn) inviteBtn.disabled = true;
     return;
   }
 
   const isOnline = p.status === 'online' || p.status === 'in_game';
   const dotClass = p.status === 'in_game' ? 'in-game' : (isOnline ? 'online' : 'offline');
-  const statusText = p.status === 'in_game' ? 'In a game' : (isOnline ? 'Online' : 'Offline');
+  const statusText = p.status === 'in_game'
+    ? t('dashboard.friend.status_in_game')
+    : (isOnline ? t('dashboard.friend.status_online') : t('dashboard.friend.status_offline'));
 
   if (nameEl) nameEl.textContent = p.displayName || p.username || 'Friend';
   if (avatarEl) avatarEl.textContent = p.avatarEmoji || state.friend?.avatarEmoji || '🎮';
-  if (statusEl) statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span><span class="status-text">${statusText}</span>`;
+  if (statusEl) {
+    statusEl.innerHTML = '';
+    const dot = document.createElement('span');
+    dot.className = `status-dot ${dotClass}`;
+    const text = document.createElement('span');
+    text.className = 'status-text';
+    text.textContent = statusText;
+    statusEl.append(dot, text);
+  }
   if (inviteBtn) inviteBtn.disabled = !isOnline;
 
   if (isOnline) {
@@ -410,7 +431,7 @@ function renderFriend() {
     const now = Date.now();
     const notifyToggle = $('toggle-notify');
     if ((!lastToast || (now - parseInt(lastToast)) > 60000) && notifyToggle && notifyToggle.checked) {
-      toast(`${p.displayName || p.username} is online!`, 'success');
+      toast(t('dashboard.friend.online_toast', { name: p.displayName || p.username }), 'success');
       sessionStorage.setItem('last-online-toast', now.toString());
     }
   }
@@ -434,7 +455,7 @@ async function loadContentSets() {
     state.contentSets.sort((a, b) => (a.order || 0) - (b.order || 0));
   } catch (err) {
     console.error('Failed to load content sets:', err);
-    toast('Failed to load Hiragana sets. Make sure the database is seeded.', 'error');
+    toast(t('error.content_sets_load_failed'), 'error');
   }
 }
 
@@ -545,7 +566,7 @@ async function loadHistory() {
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      list.innerHTML = '<p class="empty-state">No games played yet.</p>';
+      list.innerHTML = `<p class="empty-state">${escapeText(t('dashboard.history.empty'))}</p>`;
       return;
     }
 
@@ -563,22 +584,31 @@ async function loadHistory() {
       let metaHtml;
       if (type === 'duel') {
         const iWon = data.winnerId === state.user.uid;
-        const result = data.isDraw ? 'Draw' : (iWon ? 'Won' : 'Lost');
+        const result = data.isDraw
+          ? t('dashboard.history.result_draw')
+          : (iWon ? t('dashboard.history.result_won') : t('dashboard.history.result_lost'));
         const cls = data.isDraw ? '' : (iWon ? 'res-win' : 'res-loss');
-        metaHtml = `<div class="history-score ${cls}">${result}</div>
-                    <div class="history-sub">vs ${escapeText(opponentNameFrom(data))}</div>`;
+        const oppText = t('dashboard.history.vs_opponent', { name: opponentNameFrom(data) });
+        metaHtml = `<div class="history-score ${cls}">${escapeText(result)}</div>
+                    <div class="history-sub">${escapeText(oppText)}</div>`;
       } else if (type === 'coop') {
-        metaHtml = `<div class="history-score">${(data.finalScore || 0).toLocaleString()} pts</div>
-                    <div class="history-sub">${data.endReason === 'cleared' ? 'All cleared' : 'Team run'}</div>`;
+        const scoreText = t('dashboard.history.score_pts', { score: (data.finalScore || 0).toLocaleString() });
+        const subText = data.endReason === 'cleared'
+          ? t('dashboard.history.all_cleared')
+          : t('dashboard.history.team_run');
+        metaHtml = `<div class="history-score">${escapeText(scoreText)}</div>
+                    <div class="history-sub">${escapeText(subText)}</div>`;
       } else {
-        metaHtml = `<div class="history-score">${(data.score || 0).toLocaleString()} pts</div>
-                    <div class="history-sub">${Math.round((data.accuracy || 0) * 100)}% accuracy</div>`;
+        const scoreText = t('dashboard.history.score_pts', { score: (data.score || 0).toLocaleString() });
+        const accText = t('dashboard.history.accuracy', { percent: Math.round((data.accuracy || 0) * 100) });
+        metaHtml = `<div class="history-score">${escapeText(scoreText)}</div>
+                    <div class="history-sub">${escapeText(accText)}</div>`;
       }
 
       item.innerHTML = `
         <div>
-          <div class="history-mode">${MODE_EMOJI[type] || '🎮'} ${MODE_NAMES[type] || type}</div>
-          <div class="history-date">${date}</div>
+          <div class="history-mode">${MODE_EMOJI[type] || '🎮'} ${escapeText(modeName(type))}</div>
+          <div class="history-date">${escapeText(date)}</div>
         </div>
         <div class="history-meta">${metaHtml}</div>
       `;
@@ -586,7 +616,7 @@ async function loadHistory() {
     });
   } catch (err) {
     console.error('History load error:', err);
-    list.innerHTML = '<p class="empty-state">Could not load history.</p>';
+    list.innerHTML = `<p class="empty-state">${escapeText(t('dashboard.history.could_not_load'))}</p>`;
   }
 }
 
@@ -628,8 +658,12 @@ function updateSelectionUI() {
   const diffEl = $('selection-difficulty');
   const startBtn = $('btn-start');
 
-  if (countEl) countEl.textContent = `${totalChars} character${totalChars !== 1 ? 's' : ''} selected`;
-  if (diffEl) diffEl.textContent = `Difficulty: ${multiplier}×`;
+  if (countEl) {
+    countEl.textContent = totalChars === 1
+      ? t('select.footer.count_one', { count: totalChars })
+      : t('select.footer.count_other', { count: totalChars });
+  }
+  if (diffEl) diffEl.textContent = t('select.footer.difficulty', { multiplier });
   if (startBtn) {
     const multiplayer = state.currentGameType === 'duel' || state.currentGameType === 'coop';
     startBtn.disabled = totalChars < (multiplayer ? 4 : 1);
@@ -766,36 +800,36 @@ function goToSelect(gameType) {
   const show = (el, on) => { if (el) el.style.display = on ? 'flex' : 'none'; };
 
   if (gameType === 'survival') {
-    if (subEl) subEl.textContent = 'Set up your Survival Rush game';
-    if (infoEl) infoEl.textContent = '🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.';
+    if (subEl) subEl.textContent = t('select.subtitle.survival');
+    if (infoEl) infoEl.textContent = t('select.info.survival');
     show(practiceRow, false); show(inputRow, false); show(durationRow, false); show(winconRow, false);
-    if (startBtn) startBtn.textContent = 'Start Game';
+    if (startBtn) startBtn.textContent = t('select.start_button.survival');
   } else if (gameType === 'duel') {
-    if (subEl) subEl.textContent = 'Set up your Duel — you are the host';
-    if (infoEl) infoEl.textContent = '⚔️ Real-time VS. You pick the characters and rules; both players race the same cards. Fastest correct answer takes the round. Pick at least 4 characters.';
+    if (subEl) subEl.textContent = t('select.subtitle.duel');
+    if (infoEl) infoEl.textContent = t('select.info.duel');
     show(practiceRow, false); show(durationRow, false);
     show(winconRow, true); show(inputRow, true);
     setWinCondition(state.winCondition);
     setDuelInput(state.duelInput);
-    if (startBtn) startBtn.textContent = 'Send Challenge';
+    if (startBtn) startBtn.textContent = t('select.start_button.duel');
   } else if (gameType === 'coop') {
-    if (subEl) subEl.textContent = 'Set up your Sync Match — you are the host';
-    if (infoEl) infoEl.textContent = '🤝 Team up! You both see the same card and must each clear it before a shared clock (5s per character) runs out. Pick at least 4 characters.';
+    if (subEl) subEl.textContent = t('select.subtitle.coop');
+    if (infoEl) infoEl.textContent = t('select.info.coop');
     show(practiceRow, false); show(durationRow, false); show(winconRow, false);
     show(inputRow, true);
     setCoopInput(state.coopInput);
-    if (startBtn) startBtn.textContent = 'Send Invite';
+    if (startBtn) startBtn.textContent = t('select.start_button.coop');
   } else {
     // Zen
-    if (subEl) subEl.textContent = 'Set up your Zen Mode game';
-    if (infoEl) infoEl.textContent = '🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.';
+    if (subEl) subEl.textContent = t('select.subtitle.zen');
+    if (infoEl) infoEl.textContent = t('select.info.zen');
     show(practiceRow, true); show(durationRow, true); show(winconRow, false);
 
     const listenBtn = document.querySelector('#seg-practice .seg-btn[data-practice="listen"]');
     if (listenBtn) {
       if (!isSpeechSupported()) {
         listenBtn.disabled = true;
-        listenBtn.title = 'Listening practice needs browser speech support.';
+        listenBtn.title = t('select.listen_unsupported');
         if (state.practiceType === 'listen') state.practiceType = 'read';
       } else {
         listenBtn.disabled = false;
@@ -807,7 +841,7 @@ function goToSelect(gameType) {
     // Snap any previously-stored duration onto the current option set.
     if (!ZEN_DURATIONS.includes(state.zenDuration)) state.zenDuration = 60;
     setZenDuration(state.zenDuration);
-    if (startBtn) startBtn.textContent = 'Start Game';
+    if (startBtn) startBtn.textContent = t('select.start_button.zen');
   }
 
   showScreen('screen-select');
@@ -819,7 +853,7 @@ function handleModeClick(mode) {
   if (mode === 'duel' || mode === 'coop') {
     const fp = state.friendPresence;
     if (!fp || fp.status === 'offline') {
-      toast('Your friend needs to be online for multiplayer.', 'warning', 4000);
+      toast(t('error.friend_offline_for_mp'), 'warning', 4000);
       return;
     }
   }
@@ -864,7 +898,7 @@ function renderAvatarPicker() {
 
 function openSettings() {
   if (isInDuel() || isInCoop()) {
-    toast('Finish your match before opening Settings.', 'info', 3500);
+    toast(t('settings.blocked_during_match'), 'info', 3500);
     return;
   }
   state.returnScreen = currentScreen() || 'screen-dashboard';
@@ -890,7 +924,7 @@ function showSettings() {
   if (errorEl) errorEl.textContent = '';
 
   const versionEl = $('settings-version');
-  if (versionEl) versionEl.textContent = `Tomodachi ${APP_CONFIG.version}`;
+  if (versionEl) versionEl.textContent = t('settings.version', { version: APP_CONFIG.version });
 
   renderAvatarPicker();
   cancelReset();
@@ -928,11 +962,11 @@ async function saveProfileSettings(e) {
   if (errorEl) errorEl.textContent = '';
 
   if (!displayName) {
-    showFormError(errorEl, 'Display name is required.');
+    showFormError(errorEl, t('error.form.display_name_required'));
     return;
   }
   if (!/^[a-z0-9_]+$/.test(username)) {
-    showFormError(errorEl, 'Username must be lowercase letters, numbers, or underscores only.');
+    showFormError(errorEl, t('error.form.username_format'));
     return;
   }
 
@@ -942,7 +976,7 @@ async function saveProfileSettings(e) {
     const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
     const takenByOther = usernameSnap.docs.some(docSnap => docSnap.id !== state.user.uid);
     if (takenByOther) {
-      showFormError(errorEl, 'Username already taken.');
+      showFormError(errorEl, t('settings.username_taken'));
       return;
     }
 
@@ -970,10 +1004,10 @@ async function saveProfileSettings(e) {
     };
 
     renderUserIdentity();
-    toast('Profile updated.', 'success');
+    toast(t('settings.profile_updated'), 'success');
   } catch (err) {
     console.error('Profile save failed:', err);
-    showFormError(errorEl, `Could not save profile: ${err.message}`);
+    showFormError(errorEl, t('settings.profile_save_failed', { message: err.message }));
   } finally {
     showLoading(false);
   }
@@ -1043,12 +1077,12 @@ async function resetProgress() {
 
     await removeUserFromLeaderboards(state.user.uid);
 
-    toast('Progress reset — fresh start!', 'success', 5000);
+    toast(t('settings.reset_success'), 'success', 5000);
     cancelReset();
     goHome();
   } catch (err) {
     console.error('Reset failed:', err);
-    toast('Reset failed: ' + err.message, 'error', 8000);
+    toast(t('settings.reset_failed', { message: err.message }), 'error', 8000);
   } finally {
     showLoading(false);
   }
@@ -1160,7 +1194,7 @@ async function enterAppAsUser(user, isFreshRegistration = false) {
   } catch (err) {
     console.error('Profile load failed:', err);
     state.userData = fallbackUserData(user);
-    toast(`Could not load your profile: ${err.message}`, 'error', 8000);
+    toast(t('error.profile_load_failed', { message: err.message }), 'error', 8000);
   }
 
   $('screen-auth')?.classList.remove('active');
@@ -1171,16 +1205,40 @@ async function enterAppAsUser(user, isFreshRegistration = false) {
   goHome();
   initDuelInvites();
 
-  const name = state.userData?.displayName || 'Player';
-  const greeting = isFreshRegistration
-    ? `Welcome to Tomodachi, ${name}!`
-    : `Welcome back, ${name}!`;
-  toast(greeting, 'success');
+  const name = state.userData?.displayName || t('nav.user_default_name');
+  toast(
+    t(isFreshRegistration ? 'toast.welcome_new' : 'toast.welcome_back', { name }),
+    'success'
+  );
+}
+
+// Wire the EN | AR locale toggles in both the auth-screen and nav bars.
+// Sets active state for visual feedback; setLocale's languageChanged event
+// re-walks the DOM (via i18n/index.js) so substitution stays in sync.
+function bindLocaleToggles() {
+  const update = () => {
+    const cur = getLocale();
+    document.querySelectorAll('.locale-toggle').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.locale === cur);
+    });
+  };
+  document.querySelectorAll('.locale-toggle').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await setLocale(btn.dataset.locale);
+      update();
+    });
+  });
+  update();
 }
 
 async function init() {
   setTheme(state.theme);
+  // initI18n must run BEFORE attachListeners + onAuthStateChanged so that
+  // t() is callable everywhere downstream (auth listener may call enter-
+  // AppAsUser immediately on cached session, which calls t() for toasts).
+  await initI18n();
   attachListeners();
+  bindLocaleToggles();
 
   onAuthStateChanged(auth, async (user) => {
     // L1.20: handleRegister sets _registrationInFlight while it's mid-
@@ -1207,7 +1265,7 @@ async function init() {
       }
     } catch (err) {
       console.error('App startup failed:', err);
-      toast(`App startup failed: ${err.message}`, 'error', 10000);
+      toast(t('error.app_startup_failed', { message: err.message }), 'error', 10000);
     } finally {
       showLoading(false);
     }

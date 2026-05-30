@@ -10,64 +10,85 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260526a">
+  <link rel="stylesheet" href="css/style.css?v=20260528d">
 </head>
 <body>
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay active">
     <div class="spinner"></div>
-    <p class="loading-text">Loading Tomodachi…</p>
+    <p class="loading-text" data-i18n="common.loading">Loading Tomodachi…</p>
   </div>
 
   <!-- ========== AUTH SCREEN ========== -->
   <section id="screen-auth" class="screen active">
     <div class="auth-container">
+      <div class="auth-locale-bar">
+        <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+        <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+      </div>
+
       <div class="brand">
         <div class="brand-icon">🏯</div>
-        <h1 class="brand-title">Tomodachi</h1>
-        <p class="brand-subtitle">Master Japanese, together</p>
+        <h1 class="brand-title" data-i18n="auth.brand.title">Tomodachi</h1>
+        <p class="brand-subtitle" data-i18n="auth.brand.subtitle">Master Japanese, together</p>
       </div>
 
       <div class="auth-card card-elevated">
         <div class="auth-tabs" id="auth-tabs">
-          <button class="auth-tab active" data-tab="login">Sign In</button>
-          <button class="auth-tab" data-tab="register">Create Account</button>
+          <button class="auth-tab active" data-tab="login" data-i18n="auth.tab.sign_in">Sign In</button>
+          <button class="auth-tab" data-tab="register" data-i18n="auth.tab.create_account">Create Account</button>
         </div>
 
         <form id="form-login" class="auth-form active" data-form="login">
           <div class="input-group">
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+            <label data-i18n="auth.field.email">Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com"
+                   data-i18n-placeholder="auth.placeholder.email"
+                   required autocomplete="email">
           </div>
           <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="login-password" placeholder="••••••" required autocomplete="current-password">
+            <label data-i18n="auth.field.password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••"
+                   data-i18n-placeholder="auth.placeholder.password"
+                   required autocomplete="current-password">
           </div>
-          <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+          <button type="submit" class="btn btn-primary btn-full" data-i18n="auth.button.sign_in">Sign In</button>
           <p class="form-error" id="login-error"></p>
         </form>
 
         <form id="form-register" class="auth-form" data-form="register">
           <div class="input-group">
-            <label>Username <span class="hint">(lowercase, no spaces)</span></label>
-            <input type="text" id="reg-username" placeholder="almo3tasem" required
-                   pattern="[a-z0-9_]+" autocomplete="username">
+            <label>
+              <span data-i18n="auth.field.username">Username</span>
+              <span class="hint" data-i18n="auth.hint.username">(lowercase, no spaces)</span>
+            </label>
+            <input type="text" id="reg-username" placeholder="almo3tasem"
+                   data-i18n-placeholder="auth.placeholder.username"
+                   required pattern="[a-z0-9_]+" autocomplete="username">
           </div>
           <div class="input-group">
-            <label>Display Name</label>
-            <input type="text" id="reg-displayname" placeholder="Al Mo3tasem" required autocomplete="name">
+            <label data-i18n="auth.field.display_name">Display Name</label>
+            <input type="text" id="reg-displayname" placeholder="Al Mo3tasem"
+                   data-i18n-placeholder="auth.placeholder.display_name"
+                   required autocomplete="name">
           </div>
           <div class="input-group">
-            <label>Email</label>
-            <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+            <label data-i18n="auth.field.email">Email</label>
+            <input type="email" id="reg-email" placeholder="you@example.com"
+                   data-i18n-placeholder="auth.placeholder.email"
+                   required autocomplete="email">
           </div>
           <div class="input-group">
-            <label>Password <span class="hint">(6+ characters)</span></label>
-            <input type="password" id="reg-password" placeholder="••••••" required minlength="6" autocomplete="new-password">
+            <label>
+              <span data-i18n="auth.field.password">Password</span>
+              <span class="hint" data-i18n="auth.hint.password">(6+ characters)</span>
+            </label>
+            <input type="password" id="reg-password" placeholder="••••••"
+                   data-i18n-placeholder="auth.placeholder.password"
+                   required minlength="6" autocomplete="new-password">
           </div>
-          <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+          <button type="submit" class="btn btn-primary btn-full" data-i18n="auth.button.create_account">Create Account</button>
           <p class="form-error" id="register-error"></p>
-          <p class="form-note">🔒 Only 2 accounts are allowed on Tomodachi.</p>
         </form>
       </div>
     </div>
@@ -85,12 +106,18 @@
         </div>
       </div>
       <div class="nav-right">
+        <div class="nav-locale-bar">
+          <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+          <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+        </div>
         <div class="nav-user">
           <span class="nav-avatar" id="nav-avatar">🌸</span>
           <span class="nav-name-text" id="nav-name">Player</span>
         </div>
-        <button class="nav-btn" id="btn-settings" title="Settings" aria-label="Settings">⚙️</button>
-        <button class="btn btn-ghost btn-sm" id="btn-logout">Logout</button>
+        <button class="nav-btn" id="btn-settings"
+                title="Settings" aria-label="Settings"
+                data-i18n-attr="title:nav.settings_title,aria-label:nav.settings_title">⚙️</button>
+        <button class="btn btn-ghost btn-sm" id="btn-logout" data-i18n="nav.logout">Logout</button>
       </div>
     </nav>
 
@@ -98,22 +125,24 @@
     <section id="screen-dashboard" class="screen">
       <div class="container">
         <header class="page-header">
-          <h1 class="page-title">Dashboard</h1>
-          <p class="page-subtitle">Welcome back, <span id="dash-welcome">Player</span></p>
+          <h1 class="page-title" data-i18n="dashboard.title">Dashboard</h1>
+          <p class="page-subtitle" id="dash-welcome-line">Welcome back, Player</p>
         </header>
 
         <div class="friend-bar" id="friend-bar">
           <div class="friend-bar-left">
             <div class="friend-bar-avatar" id="friend-avatar">🎮</div>
             <div class="friend-bar-text">
-              <div class="friend-bar-name" id="friend-name">Waiting for friend…</div>
+              <div class="friend-bar-name" id="friend-name" data-i18n="dashboard.friend.waiting">Waiting for friend…</div>
               <div class="friend-bar-status" id="friend-status">
                 <span class="status-dot offline"></span>
-                <span class="status-text">Offline</span>
+                <span class="status-text" data-i18n="dashboard.friend.status_offline">Offline</span>
               </div>
             </div>
           </div>
-          <button class="btn btn-secondary btn-sm" id="btn-invite" disabled>Duel</button>
+          <button class="btn btn-secondary btn-sm" id="btn-invite"
+                  data-i18n="dashboard.friend.duel_btn"
+                  disabled>Duel</button>
         </div>
 
         <div class="dashboard-grid">
@@ -129,24 +158,24 @@
             <div class="stats-grid">
               <div class="stat-box">
                 <div class="stat-value" id="stat-total">0</div>
-                <div class="stat-label">Games</div>
+                <div class="stat-label" data-i18n="dashboard.stat.games">Games</div>
               </div>
               <div class="stat-box">
                 <div class="stat-value" id="stat-best">0</div>
-                <div class="stat-label">Best Score</div>
+                <div class="stat-label" data-i18n="dashboard.stat.best_score">Best Score</div>
               </div>
               <div class="stat-box">
                 <div class="stat-value" id="stat-record">0–0</div>
-                <div class="stat-label">Duel W–L</div>
+                <div class="stat-label" data-i18n="dashboard.stat.duel_record">Duel W–L</div>
               </div>
               <div class="stat-box">
                 <div class="stat-value" id="stat-coop">0</div>
-                <div class="stat-label">Co-op Best</div>
+                <div class="stat-label" data-i18n="dashboard.stat.coop_best">Co-op Best</div>
               </div>
             </div>
             <div class="mastery-bar-wrap">
               <div class="mastery-bar-head">
-                <span>Hiragana mastery <span id="stat-mastered">0/46</span></span>
+                <span><span data-i18n="dashboard.stat.mastery_label">Hiragana mastery</span> <span id="stat-mastered">0/46</span></span>
                 <span id="mastery-percent">0%</span>
               </div>
               <div class="mastery-bar"><div class="mastery-bar-fill" id="mastery-fill"></div></div>
@@ -155,37 +184,37 @@
 
           <!-- Game Modes -->
           <div class="card modes-card">
-            <h3 class="card-title">Game Modes</h3>
+            <h3 class="card-title" data-i18n="dashboard.modes.title">Game Modes</h3>
             <div class="modes-list">
               <button class="mode-btn" data-mode="zen">
                 <span class="mode-emoji">🧘</span>
                 <div class="mode-details">
-                  <div class="mode-name">Zen Mode</div>
-                  <div class="mode-desc">Timed practice — read or listen</div>
+                  <div class="mode-name" data-i18n="modes.zen.name">Zen Mode</div>
+                  <div class="mode-desc" data-i18n="modes.zen.desc">Timed practice — read or listen</div>
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="survival">
                 <span class="mode-emoji">🔥</span>
                 <div class="mode-details">
-                  <div class="mode-name">Survival Rush</div>
-                  <div class="mode-desc">Solo speed challenge</div>
+                  <div class="mode-name" data-i18n="modes.survival.name">Survival Rush</div>
+                  <div class="mode-desc" data-i18n="modes.survival.desc">Solo speed challenge</div>
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="duel">
                 <span class="mode-emoji">⚔️</span>
                 <div class="mode-details">
-                  <div class="mode-name">Duel Mode</div>
-                  <div class="mode-desc">Real-time VS your friend</div>
+                  <div class="mode-name" data-i18n="modes.duel.name">Duel Mode</div>
+                  <div class="mode-desc" data-i18n="modes.duel.desc">Real-time VS your friend</div>
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="coop">
                 <span class="mode-emoji">🤝</span>
                 <div class="mode-details">
-                  <div class="mode-name">Sync Match</div>
-                  <div class="mode-desc">Team up — beat the clock together</div>
+                  <div class="mode-name" data-i18n="modes.coop.name">Sync Match</div>
+                  <div class="mode-desc" data-i18n="modes.coop.desc">Team up — beat the clock together</div>
                 </div>
                 <span class="mode-arrow">→</span>
               </button>
@@ -194,18 +223,18 @@
 
           <!-- Leaderboard -->
           <div class="card lb-card">
-            <h3 class="card-title">Leaderboard</h3>
+            <h3 class="card-title" data-i18n="dashboard.leaderboard.title">Leaderboard</h3>
             <div class="lb-preview" id="lb-preview">
-              <p class="empty-state">Play games to see rankings!</p>
+              <p class="empty-state" data-i18n="dashboard.leaderboard.preview_empty">Play games to see rankings!</p>
             </div>
-            <button class="btn btn-secondary btn-sm btn-full" id="btn-leaderboard">View Full Leaderboard</button>
+            <button class="btn btn-secondary btn-sm btn-full" id="btn-leaderboard" data-i18n="dashboard.leaderboard.view_full">View Full Leaderboard</button>
           </div>
 
           <!-- Recent History -->
           <div class="card history-card">
-            <h3 class="card-title">Recent History</h3>
+            <h3 class="card-title" data-i18n="dashboard.history.title">Recent History</h3>
             <div class="history-list" id="history-list">
-              <p class="empty-state">No games played yet.</p>
+              <p class="empty-state" data-i18n="dashboard.history.empty">No games played yet.</p>
             </div>
           </div>
         </div>
@@ -215,37 +244,37 @@
     <!-- ========== CHARACTER SELECT ========== -->
     <section id="screen-select" class="screen">
       <div class="container">
-        <button class="btn btn-ghost back-btn" id="btn-select-back">← Back to Dashboard</button>
+        <button class="btn btn-ghost back-btn" id="btn-select-back" data-i18n="common.back_to_dashboard">← Back to Dashboard</button>
         <header class="page-header">
-          <h1 class="page-title">Set Up Your Game</h1>
-          <p class="page-subtitle" id="select-subtitle">Choose which Hiragana to include</p>
+          <h1 class="page-title" data-i18n="select.title">Set Up Your Game</h1>
+          <p class="page-subtitle" id="select-subtitle" data-i18n="select.subtitle.default">Choose which Hiragana to include</p>
         </header>
 
         <div class="select-options card" id="select-options">
           <div class="select-options-info" id="select-options-info"></div>
           <div class="option-row" id="option-practice">
-            <span class="option-label">Practice</span>
+            <span class="option-label" data-i18n="select.option.practice">Practice</span>
             <div class="segmented" id="seg-practice">
-              <button type="button" class="seg-btn" data-practice="read">👁️ Read</button>
-              <button type="button" class="seg-btn" data-practice="listen">👂 Listen</button>
+              <button type="button" class="seg-btn" data-practice="read" data-i18n="select.seg.read">👁️ Read</button>
+              <button type="button" class="seg-btn" data-practice="listen" data-i18n="select.seg.listen">👂 Listen</button>
             </div>
           </div>
           <div class="option-row" id="option-wincon">
-            <span class="option-label">Win Condition</span>
+            <span class="option-label" data-i18n="select.option.win_condition">Win Condition</span>
             <div class="segmented" id="seg-wincon">
-              <button type="button" class="seg-btn" data-wincon="first_to_10">🏁 First to 10</button>
-              <button type="button" class="seg-btn" data-wincon="rounds_20">🔟 20 Rounds</button>
+              <button type="button" class="seg-btn" data-wincon="first_to_10" data-i18n="select.seg.first_to_10">🏁 First to 10</button>
+              <button type="button" class="seg-btn" data-wincon="rounds_20" data-i18n="select.seg.rounds_20">🔟 20 Rounds</button>
             </div>
           </div>
           <div class="option-row" id="option-input">
-            <span class="option-label">Answer With</span>
+            <span class="option-label" data-i18n="select.option.answer_with">Answer With</span>
             <div class="segmented" id="seg-input">
-              <button type="button" class="seg-btn" data-input="typing">⌨️ Typing</button>
-              <button type="button" class="seg-btn" data-input="multiple">🔘 Choices</button>
+              <button type="button" class="seg-btn" data-input="typing" data-i18n="select.seg.typing">⌨️ Typing</button>
+              <button type="button" class="seg-btn" data-input="multiple" data-i18n="select.seg.choices">🔘 Choices</button>
             </div>
           </div>
           <div class="option-row" id="option-duration">
-            <span class="option-label">Session</span>
+            <span class="option-label" data-i18n="select.option.session">Session</span>
             <div class="segmented" id="seg-duration">
               <button type="button" class="seg-btn" data-duration="60">1m</button>
               <button type="button" class="seg-btn" data-duration="180">3m</button>
@@ -259,15 +288,15 @@
         <div class="select-layout">
           <div class="select-panel">
             <div class="panel-header">
-              <h3>Premade Sets</h3>
-              <button class="btn btn-ghost btn-sm" id="btn-select-all">Select All</button>
+              <h3 data-i18n="select.panel.premade">Premade Sets</h3>
+              <button class="btn btn-ghost btn-sm" id="btn-select-all" data-i18n="select.panel.select_all">Select All</button>
             </div>
             <div class="sets-grid" id="sets-grid"></div>
           </div>
           <div class="select-panel">
             <div class="panel-header">
-              <h3>Custom Pick</h3>
-              <button class="btn btn-ghost btn-sm" id="btn-clear-custom">Clear</button>
+              <h3 data-i18n="select.panel.custom">Custom Pick</h3>
+              <button class="btn btn-ghost btn-sm" id="btn-clear-custom" data-i18n="select.panel.clear">Clear</button>
             </div>
             <div class="custom-grid" id="custom-grid"></div>
           </div>
@@ -278,7 +307,7 @@
             <span class="selection-count" id="selection-count">0 characters selected</span>
             <span class="selection-difficulty" id="selection-difficulty">Difficulty: 1.0×</span>
           </div>
-          <button class="btn btn-primary btn-lg" id="btn-start" disabled>Start Game</button>
+          <button class="btn btn-primary btn-lg" id="btn-start" data-i18n="select.start_button.default" disabled>Start Game</button>
         </div>
       </div>
     </section>
@@ -286,15 +315,15 @@
     <!-- ========== LEADERBOARD ========== -->
     <section id="screen-leaderboard" class="screen">
       <div class="container">
-        <button class="btn btn-ghost back-btn" id="btn-lb-back">← Back to Dashboard</button>
+        <button class="btn btn-ghost back-btn" id="btn-lb-back" data-i18n="common.back_to_dashboard">← Back to Dashboard</button>
         <header class="page-header">
-          <h1 class="page-title">Leaderboard</h1>
-          <p class="page-subtitle">Best scores by game and set size</p>
+          <h1 class="page-title" data-i18n="leaderboard.title">Leaderboard</h1>
+          <p class="page-subtitle" data-i18n="leaderboard.subtitle">Best scores by game and set size</p>
         </header>
         <div class="lb-modes" id="lb-modes"></div>
         <div class="lb-brackets" id="lb-brackets"></div>
         <div class="lb-list card" id="lb-list">
-          <p class="empty-state">Loading rankings…</p>
+          <p class="empty-state" data-i18n="leaderboard.loading">Loading rankings…</p>
         </div>
       </div>
     </section>
@@ -302,36 +331,45 @@
     <!-- ========== SETTINGS ========== -->
     <section id="screen-settings" class="screen">
       <div class="container">
-        <button class="btn btn-ghost back-btn" id="btn-settings-back">← Back</button>
+        <button class="btn btn-ghost back-btn" id="btn-settings-back" data-i18n="common.back">← Back</button>
         <header class="page-header">
-          <h1 class="page-title">Settings</h1>
+          <h1 class="page-title" data-i18n="settings.title">Settings</h1>
         </header>
 
         <div class="settings-card card">
           <form class="settings-section" id="form-profile">
-            <h3 class="settings-section-title">Profile</h3>
+            <h3 class="settings-section-title" data-i18n="settings.section.profile">Profile</h3>
             <div class="avatar-picker-wrap">
-              <span class="option-label">Avatar</span>
+              <span class="option-label" data-i18n="settings.profile.avatar_label">Avatar</span>
               <div class="avatar-picker" id="avatar-picker"></div>
             </div>
             <div class="settings-fields">
               <div class="input-group">
-                <label>Display Name</label>
-                <input type="text" id="settings-displayname" placeholder="Display name" required autocomplete="name">
+                <label data-i18n="auth.field.display_name">Display Name</label>
+                <input type="text" id="settings-displayname"
+                       placeholder="Display name"
+                       data-i18n-placeholder="auth.field.display_name"
+                       required autocomplete="name">
               </div>
               <div class="input-group">
-                <label>Username <span class="hint">(lowercase, no spaces)</span></label>
-                <input type="text" id="settings-username" placeholder="username" required pattern="[a-z0-9_]+" autocomplete="username">
+                <label>
+                  <span data-i18n="settings.profile.username_label">Username</span>
+                  <span class="hint" data-i18n="auth.hint.username">(lowercase, no spaces)</span>
+                </label>
+                <input type="text" id="settings-username"
+                       placeholder="username"
+                       data-i18n-placeholder="settings.profile.username_label"
+                       required pattern="[a-z0-9_]+" autocomplete="username">
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+            <button type="submit" class="btn btn-primary btn-sm" data-i18n="settings.profile.save_btn">Save Profile</button>
             <p class="form-error" id="settings-profile-error"></p>
           </form>
 
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Dark Mode</div>
-              <div class="setting-desc">Switch between light and dark themes</div>
+              <div class="setting-name" data-i18n="settings.row.theme_name">Dark Mode</div>
+              <div class="setting-desc" data-i18n="settings.row.theme_desc">Switch between light and dark themes</div>
             </div>
             <label class="toggle">
               <input type="checkbox" id="toggle-theme">
@@ -341,8 +379,8 @@
 
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Sound Effects</div>
-              <div class="setting-desc">Blips for correct, wrong, and win moments</div>
+              <div class="setting-name" data-i18n="settings.row.audio_name">Sound Effects</div>
+              <div class="setting-desc" data-i18n="settings.row.audio_desc">Blips for correct, wrong, and win moments</div>
             </div>
             <label class="toggle">
               <input type="checkbox" id="toggle-audio" checked>
@@ -352,8 +390,8 @@
 
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Notifications</div>
-              <div class="setting-desc">Toast alerts when your friend comes online</div>
+              <div class="setting-name" data-i18n="settings.row.notify_name">Notifications</div>
+              <div class="setting-desc" data-i18n="settings.row.notify_desc">Toast alerts when your friend comes online</div>
             </div>
             <label class="toggle">
               <input type="checkbox" id="toggle-notify" checked>
@@ -362,18 +400,21 @@
           </div>
 
           <div class="settings-section danger-zone">
-            <h3 class="settings-section-title danger-title">Danger Zone</h3>
-            <p class="danger-desc">
+            <h3 class="settings-section-title danger-title" data-i18n="settings.section.danger_zone">Danger Zone</h3>
+            <p class="danger-desc" data-i18n="settings.danger.description">
               Reset all your progress — games played, scores, character mastery,
               duel record, and leaderboard entries. This cannot be undone.
             </p>
-            <button type="button" class="btn btn-danger btn-sm" id="btn-reset-start">Reset My Progress</button>
+            <button type="button" class="btn btn-danger btn-sm" id="btn-reset-start" data-i18n="settings.danger.start_btn">Reset My Progress</button>
             <div class="reset-confirm" id="reset-confirm" hidden>
-              <label class="reset-label" for="reset-input">Type <strong>RESET</strong> to confirm</label>
-              <input type="text" class="reset-input" id="reset-input" autocomplete="off" autocapitalize="characters" placeholder="RESET">
+              <label class="reset-label" for="reset-input" data-i18n="settings.danger.type_to_confirm">Type RESET to confirm</label>
+              <input type="text" class="reset-input" id="reset-input"
+                     autocomplete="off" autocapitalize="characters"
+                     placeholder="RESET"
+                     data-i18n-placeholder="settings.danger.input_placeholder">
               <div class="reset-actions">
-                <button type="button" class="btn btn-ghost btn-sm" id="btn-reset-cancel">Cancel</button>
-                <button type="button" class="btn btn-danger btn-sm" id="btn-reset-confirm" disabled>Confirm Reset</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-reset-cancel" data-i18n="settings.danger.cancel_btn">Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-reset-confirm" data-i18n="settings.danger.confirm_btn" disabled>Confirm Reset</button>
               </div>
             </div>
           </div>
@@ -389,7 +430,9 @@
     <section id="screen-game" class="screen">
       <div class="game-shell" id="game-shell">
         <div class="game-hud">
-          <button class="icon-btn" id="game-exit" title="Exit game" aria-label="Exit game">✕</button>
+          <button class="icon-btn" id="game-exit"
+                  title="Exit game" aria-label="Exit game"
+                  data-i18n-attr="title:game.exit_title,aria-label:game.exit_title">✕</button>
           <div class="game-mode-label" id="game-mode-label">Game</div>
           <div class="game-hud-stats" id="game-hud-stats"></div>
         </div>
@@ -400,7 +443,9 @@
           <div class="game-streak" id="game-streak"></div>
           <div class="game-card" id="game-card">
             <div class="game-card-char" id="game-card-char">あ</div>
-            <button class="speak-btn" id="game-speak" title="Hear pronunciation" aria-label="Hear pronunciation">🔊</button>
+            <button class="speak-btn" id="game-speak"
+                    title="Hear pronunciation" aria-label="Hear pronunciation"
+                    data-i18n-attr="title:game.speak_title,aria-label:game.speak_title">🔊</button>
           </div>
           <div class="game-feedback" id="game-feedback"></div>
         </div>
@@ -410,25 +455,25 @@
       <div class="pause-overlay" id="pause-overlay">
         <div class="pause-card">
           <div class="pause-emoji">⏸️</div>
-          <h2 class="pause-title">Paused</h2>
-          <p class="pause-desc">Your timer is frozen. Take your time.</p>
-          <button class="btn btn-primary" id="pause-resume">Resume</button>
+          <h2 class="pause-title" data-i18n="game.pause.title">Paused</h2>
+          <p class="pause-desc" data-i18n="game.pause.desc">Your timer is frozen. Take your time.</p>
+          <button class="btn btn-primary" id="pause-resume" data-i18n="game.pause.resume_btn">Resume</button>
         </div>
       </div>
 
       <div class="results-overlay" id="results-overlay">
         <div class="results-card">
           <div class="results-emoji" id="results-emoji">🎉</div>
-          <h2 class="results-title" id="results-title">Complete</h2>
+          <h2 class="results-title" id="results-title" data-i18n="game.results.title">Complete</h2>
           <div class="results-score-block">
             <div class="results-score" id="results-score">0</div>
-            <div class="results-score-label" id="results-score-label">Score</div>
+            <div class="results-score-label" id="results-score-label" data-i18n="game.results.score_label">Score</div>
           </div>
           <div class="results-note" id="results-note"></div>
           <div class="results-stats" id="results-stats"></div>
           <div class="results-actions">
-            <button class="btn btn-secondary" id="results-home">Dashboard</button>
-            <button class="btn btn-primary" id="results-again">Play Again</button>
+            <button class="btn btn-secondary" id="results-home" data-i18n="game.results.dashboard_btn">Dashboard</button>
+            <button class="btn btn-primary" id="results-again" data-i18n="game.results.play_again_btn">Play Again</button>
           </div>
         </div>
       </div>
@@ -438,13 +483,13 @@
     <section id="screen-lobby" class="screen">
       <div class="container">
         <header class="page-header">
-          <h1 class="page-title" id="lobby-title">Lobby</h1>
+          <h1 class="page-title" id="lobby-title" data-i18n="lobby.title">Lobby</h1>
         </header>
         <div class="lobby-card card">
           <div class="spinner lobby-spinner"></div>
-          <h2 class="lobby-status" id="lobby-status">Waiting for opponent…</h2>
+          <h2 class="lobby-status" id="lobby-status" data-i18n="lobby.status">Waiting for opponent…</h2>
           <p class="text-secondary" id="lobby-detail"></p>
-          <button class="btn btn-secondary" id="lobby-cancel">Cancel</button>
+          <button class="btn btn-secondary" id="lobby-cancel" data-i18n="lobby.cancel_btn">Cancel</button>
         </div>
       </div>
     </section>
@@ -453,8 +498,10 @@
     <section id="screen-duel" class="screen">
       <div class="duel-shell">
         <div class="duel-topbar">
-          <button class="icon-btn" id="duel-exit" title="Forfeit" aria-label="Forfeit duel">✕</button>
-          <div class="duel-round-label" id="duel-round-label">Round 1</div>
+          <button class="icon-btn" id="duel-exit"
+                  title="Forfeit" aria-label="Forfeit duel"
+                  data-i18n-attr="title:duel.forfeit_title,aria-label:duel.forfeit_title">✕</button>
+          <div class="duel-round-label" id="duel-round-label" data-i18n="duel.round_label">Round 1</div>
           <div class="duel-topbar-spacer"></div>
         </div>
 
@@ -462,16 +509,16 @@
           <div class="duel-player duel-player-self" id="duel-self">
             <div class="duel-p-avatar" id="duel-self-avatar">🌸</div>
             <div class="duel-p-info">
-              <div class="duel-p-name" id="duel-self-name">You</div>
+              <div class="duel-p-name" id="duel-self-name" data-i18n="duel.you">You</div>
               <div class="duel-p-won" id="duel-self-won">🏆 0</div>
             </div>
             <div class="duel-p-score" id="duel-self-score">0</div>
           </div>
-          <div class="duel-vs-badge">VS</div>
+          <div class="duel-vs-badge" data-i18n="duel.vs">VS</div>
           <div class="duel-player duel-player-opp" id="duel-opp">
             <div class="duel-p-score" id="duel-opp-score">0</div>
             <div class="duel-p-info">
-              <div class="duel-p-name" id="duel-opp-name">Opponent</div>
+              <div class="duel-p-name" id="duel-opp-name" data-i18n="duel.opponent">Opponent</div>
               <div class="duel-p-won" id="duel-opp-won">🏆 0</div>
             </div>
             <div class="duel-p-avatar" id="duel-opp-avatar">🎮</div>
@@ -494,27 +541,27 @@
 
       <div class="duel-overlay" id="duel-countdown">
         <div class="duel-countdown-num" id="duel-countdown-num">3</div>
-        <p class="duel-countdown-text">Get ready…</p>
+        <p class="duel-countdown-text" data-i18n="duel.get_ready">Get ready…</p>
       </div>
 
       <div class="duel-overlay" id="duel-stall">
         <div class="pause-card">
           <div class="pause-emoji">📡</div>
-          <h2 class="pause-title">Opponent unreachable</h2>
-          <p class="pause-desc">Your opponent seems to have disconnected.</p>
-          <button class="btn btn-primary" id="duel-stall-leave">Claim Win &amp; Leave</button>
+          <h2 class="pause-title" data-i18n="duel.stall.title">Opponent unreachable</h2>
+          <p class="pause-desc" data-i18n="duel.stall.desc">Your opponent seems to have disconnected.</p>
+          <button class="btn btn-primary" id="duel-stall-leave" data-i18n="duel.stall.leave_btn">Claim Win &amp; Leave</button>
         </div>
       </div>
 
       <div class="results-overlay" id="duel-results">
         <div class="results-card">
           <div class="results-emoji" id="duel-result-emoji">🏆</div>
-          <h2 class="results-title" id="duel-result-title">Victory!</h2>
+          <h2 class="results-title" id="duel-result-title" data-i18n="duel.result.victory">Victory!</h2>
           <p class="duel-result-detail" id="duel-result-detail"></p>
           <div class="duel-result-scores" id="duel-result-scores"></div>
           <div class="results-actions">
-            <button class="btn btn-secondary" id="duel-result-home">Dashboard</button>
-            <button class="btn btn-primary" id="duel-result-rematch">Rematch</button>
+            <button class="btn btn-secondary" id="duel-result-home" data-i18n="duel.result.dashboard_btn">Dashboard</button>
+            <button class="btn btn-primary" id="duel-result-rematch" data-i18n="duel.result.rematch_btn">Rematch</button>
           </div>
         </div>
       </div>
@@ -524,8 +571,10 @@
     <section id="screen-coop" class="screen">
       <div class="coop-shell">
         <div class="duel-topbar">
-          <button class="icon-btn" id="coop-exit" title="Leave match" aria-label="Leave match">✕</button>
-          <div class="duel-round-label">🤝 Sync Match</div>
+          <button class="icon-btn" id="coop-exit"
+                  title="Leave match" aria-label="Leave match"
+                  data-i18n-attr="title:coop.leave_title,aria-label:coop.leave_title">✕</button>
+          <div class="duel-round-label" data-i18n="coop.header">🤝 Sync Match</div>
           <div class="duel-topbar-spacer"></div>
         </div>
 
@@ -542,13 +591,13 @@
         <div class="coop-team">
           <div class="coop-pip" id="coop-pip-self">
             <span class="coop-pip-avatar">🌸</span>
-            <span class="coop-pip-name">You</span>
+            <span class="coop-pip-name" data-i18n="coop.you">You</span>
             <span class="coop-pip-state">⏳</span>
           </div>
           <div class="coop-team-link">＋</div>
           <div class="coop-pip" id="coop-pip-opp">
             <span class="coop-pip-avatar">🎮</span>
-            <span class="coop-pip-name">Friend</span>
+            <span class="coop-pip-name" data-i18n="coop.friend">Friend</span>
             <span class="coop-pip-state">⏳</span>
           </div>
         </div>
@@ -565,31 +614,31 @@
 
       <div class="duel-overlay" id="coop-countdown">
         <div class="duel-countdown-num" id="coop-countdown-num">3</div>
-        <p class="duel-countdown-text">Sync up…</p>
+        <p class="duel-countdown-text" data-i18n="coop.sync_up">Sync up…</p>
       </div>
 
       <div class="duel-overlay" id="coop-stall">
         <div class="pause-card">
           <div class="pause-emoji">📡</div>
-          <h2 class="pause-title">Partner unreachable</h2>
-          <p class="pause-desc">Your teammate seems to have disconnected.</p>
-          <button class="btn btn-primary" id="coop-stall-leave">End Match &amp; Leave</button>
+          <h2 class="pause-title" data-i18n="coop.stall.title">Partner unreachable</h2>
+          <p class="pause-desc" data-i18n="coop.stall.desc">Your teammate seems to have disconnected.</p>
+          <button class="btn btn-primary" id="coop-stall-leave" data-i18n="coop.stall.leave_btn">End Match &amp; Leave</button>
         </div>
       </div>
 
       <div class="results-overlay" id="coop-results">
         <div class="results-card">
           <div class="results-emoji" id="coop-result-emoji">🎉</div>
-          <h2 class="results-title" id="coop-result-title">All Cleared!</h2>
+          <h2 class="results-title" id="coop-result-title" data-i18n="coop.result.title_cleared">All Cleared!</h2>
           <div class="results-score-block">
             <div class="results-score" id="coop-result-score">0</div>
-            <div class="results-score-label">Team Score</div>
+            <div class="results-score-label" data-i18n="coop.result.team_score_label">Team Score</div>
           </div>
           <p class="duel-result-detail" id="coop-result-detail"></p>
           <div class="results-stats" id="coop-result-stats"></div>
           <div class="results-actions">
-            <button class="btn btn-secondary" id="coop-result-home">Dashboard</button>
-            <button class="btn btn-primary" id="coop-result-again">Play Again</button>
+            <button class="btn btn-secondary" id="coop-result-home" data-i18n="coop.result.dashboard_btn">Dashboard</button>
+            <button class="btn btn-primary" id="coop-result-again" data-i18n="coop.result.again_btn">Play Again</button>
           </div>
         </div>
       </div>
@@ -600,12 +649,12 @@
       <div class="invite-card">
         <div class="invite-avatar" id="invite-avatar">🎮</div>
         <div class="invite-emoji" id="invite-emoji">⚔️</div>
-        <h2 class="invite-title" id="invite-title">Duel Challenge!</h2>
-        <p class="invite-text"><strong id="invite-from">Friend</strong> <span id="invite-text-action">wants to duel you.</span></p>
+        <h2 class="invite-title" id="invite-title" data-i18n="invite.duel_title">Duel Challenge!</h2>
+        <p class="invite-text"><strong id="invite-from">Friend</strong> <span id="invite-text-action" data-i18n="invite.duel_action">wants to duel you.</span></p>
         <div class="invite-details" id="invite-details"></div>
         <div class="invite-actions">
-          <button class="btn btn-secondary" id="invite-decline">Decline</button>
-          <button class="btn btn-primary" id="invite-accept">Accept</button>
+          <button class="btn btn-secondary" id="invite-decline" data-i18n="invite.decline_btn">Decline</button>
+          <button class="btn btn-primary" id="invite-accept" data-i18n="invite.accept_btn">Accept</button>
         </div>
       </div>
     </div>
@@ -616,6 +665,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528c"></script>
+  <script type="module" src="js/app.js?v=20260528d"></script>
 </body>
 </html>

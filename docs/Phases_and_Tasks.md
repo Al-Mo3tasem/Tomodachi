@@ -316,11 +316,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 
 **Outcome:** A public face on the brand. Interest captured while the product is still being built.
 
-### L1.01 — i18next setup
+### L1.01 — i18next setup ✅ DONE 2026-05-28
 **Deps:** R2.14 (backend migration done)
 **Owner:** Claude
 **Description:** Install i18next + i18next-browser-languagedetector via CDN ES module imports. Create `js/i18n/index.js` with init logic. Create `js/i18n/locales/en.json` and `js/i18n/locales/ar.json` with initial keys (auth.*, dashboard.*, common.*). Implement `t(key)` helper. Wire into `js/app.js`. Update all existing UI strings to use translation keys.
 **Acceptance:** Toggling locale at runtime updates all UI strings; missing keys log a warning; both languages render.
+**Closure:** Landed via i18next 26.3.0 + i18next-browser-languagedetector 8.2.1 via jsdelivr `/+esm`. 124 unique keys in `index.html` (via `data-i18n*` attributes), 54 static `t()` keys in `js/app.js`, full namespace tree in `en.json`. `ar.json` ships with `[AR] <en value>` placeholders pending L1.03's Codex AR pass. EN | AR toggle wired on auth screen + nav. `<html lang>` syncs on `languageChanged`; `<html dir>` is L1.02's job. Outdated `🔒 Only 2 accounts` form note removed in the same pass. See `Tomodachi_Progress_Log.md` 2026-05-28 entry for full detail + Learning Log entry for the i18next decision discussion.
 
 ### L1.02 — RTL infrastructure
 **Deps:** L1.01
