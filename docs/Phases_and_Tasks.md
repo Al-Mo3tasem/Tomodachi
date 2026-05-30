@@ -425,11 +425,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Share landing URL with personal network (friends, family, your existing channels) to capture initial 50 signups. This validates the funnel + provides social proof for later marketing.
 **Acceptance:** 50 confirmed (double-opted-in) emails in Brevo list.
 
-### L1.19 — Refactor `saveProfileSettings` to use `usernames/` atomic lock
+### L1.19 — Refactor `saveProfileSettings` to use `usernames/` atomic lock ✅ DONE 2026-05-28
 **Deps:** R2.05
 **Owner:** Claude
 **Description:** Bring the username-change path in `js/app.js` (`saveProfileSettings`) onto the same atomicity pattern that R2.05 established for the signup flow. Currently the function uses `query(collection(db, 'users'), where('username', '==', ...))` to check uniqueness — race-vulnerable when two users try to claim the same new username simultaneously. Refactor to: (1) create the new `usernames/{newLower}` doc as the atomic lock (relies on the R2.05 `allow create` rule); (2) delete the old `usernames/{oldLower}` doc; (3) update `users/{uid}.username`. ~30 LOC. Pattern matches the R2.05 signup flow refactor; reuse the same error-mapping idiom (`permission-denied` → "Username already taken").
 **Acceptance:** Username change in Settings uses the atomic pattern; `node --check` passes; race-test (two browser tabs racing on the same target username) shows one succeeds and one gets "Username already taken."
+**Closure:** Landed. Atomic pattern via `setDoc(usernames/{newLower}, {uid, createdAt})` mirrors `handleRegister`. Display-name-only fast path skips the usernames juggle. Failure between gate-claim and `users/` write triggers a synchronous rollback (`claimedNewUsername` flag) — distinct from L1.20's prevent-the-race pattern because there's no in-process listener competing here, only cross-window writers resolved by Firestore's create-semantics atomicity. Project lead's two-window race-test (step 5 of L1.19 test plan) confirmed: one window wins, one gets "Username already taken", Firestore state matches. See `Tomodachi_Progress_Log.md` 2026-05-28 entry + Learning Log entry on the in-process-vs-cross-window distinction.
 
 ### L1.20 — Make `ensureUserProfile` honor R2.05's `usernames/` invariant
 **Deps:** R2.05, R2.06

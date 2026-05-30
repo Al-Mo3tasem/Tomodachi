@@ -970,14 +970,57 @@ async function saveProfileSettings(e) {
     return;
   }
 
+  // L1.19: bring username CHANGE onto the same atomic pattern R2.05
+  // established for signup. The old code queried `users` for uniqueness
+  // — race-vulnerable when two users in Settings simultaneously try to
+  // claim the same available name. Refactor: claim the new
+  // usernames/{newLower} doc first (Firestore create semantics is the
+  // atomic gate per the R2.05 ruleset), release the old usernames/
+  // reservation, then update users/{uid}. The same permission-denied
+  // → "Username already taken" idiom as handleRegister.
+  const oldUsername = (state.userData?.username || '').toLowerCase();
+  const isUsernameChange = username !== oldUsername;
+
+  let claimedNewUsername = false;
   try {
     showLoading(true);
-    const usernameQuery = query(collection(db, 'users'), where('username', '==', username), limit(1));
-    const usernameSnap = await withTimeout(getDocs(usernameQuery), 'Checking username', 15000);
-    const takenByOther = usernameSnap.docs.some(docSnap => docSnap.id !== state.user.uid);
-    if (takenByOther) {
-      showFormError(errorEl, t('settings.username_taken'));
-      return;
+
+    if (isUsernameChange) {
+      // Atomic lock: create the new usernames/ doc. Rule allows create
+      // only when the doc doesn't already exist, so two simultaneous
+      // claims for the same name can never both win.
+      try {
+        await withTimeout(setDoc(doc(db, 'usernames', username), {
+          uid: state.user.uid,
+          createdAt: serverTimestamp()
+        }), 'Reserving username', 15000);
+        claimedNewUsername = true;
+      } catch (usernameErr) {
+        if (usernameErr.code === 'permission-denied') {
+          // Either a true collision (doc exists, atomicity gate fired)
+          // or the project rules don't permit usernames writes (legacy
+          // hiraquest0 carve-out). Same UX message in both cases.
+          showFormError(errorEl, t('settings.username_taken'));
+          return;
+        }
+        throw usernameErr;
+      }
+
+      // Release the old usernames/ reservation. Best-effort: if the
+      // user was self-healed by ensureUserProfile's graceful-degradation
+      // path (L1.20's reserveFallbackUsername hit 10 collisions and
+      // returned without a reservation) there may be no old doc to
+      // delete. deleteDoc on a non-existent doc is a no-op.
+      if (oldUsername) {
+        try {
+          await withTimeout(deleteDoc(doc(db, 'usernames', oldUsername)), 'Releasing old username', 15000);
+        } catch (releaseErr) {
+          // Non-fatal: the new reservation is the source of truth.
+          // A leftover usernames/{oldLower} doc is benign — its uid
+          // still matches the owner; only its display purpose is stale.
+          console.warn('[saveProfileSettings] Old usernames/ release failed:', releaseErr);
+        }
+      }
     }
 
     await withTimeout(updateProfile(state.user, { displayName }), 'Updating display name', 15000);
@@ -1006,6 +1049,18 @@ async function saveProfileSettings(e) {
     renderUserIdentity();
     toast(t('settings.profile_updated'), 'success');
   } catch (err) {
+    // If we claimed the new usernames/ doc but a later write failed,
+    // release the reservation so the user can retry without seeing a
+    // false "Username already taken" on the same name they just typed.
+    // No listener-race here (unlike L1.20) — this cleanup runs after
+    // the synchronous-failure path, not concurrent with another writer.
+    if (claimedNewUsername) {
+      try {
+        await deleteDoc(doc(db, 'usernames', username));
+      } catch (cleanupErr) {
+        console.warn('[saveProfileSettings] Rollback of new usernames/ reservation failed:', cleanupErr);
+      }
+    }
     console.error('Profile save failed:', err);
     showFormError(errorEl, t('settings.profile_save_failed', { message: err.message }));
   } finally {

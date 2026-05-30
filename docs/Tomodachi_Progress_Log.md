@@ -16,6 +16,40 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.19: `saveProfileSettings` atomic refactor onto `usernames/{lower}` lock
+**Status:** ✅ DONE
+**Scope:** Code | Docs
+**Summary:** Brought the username CHANGE path onto the same atomicity pattern R2.05 established for signup. Old code queried `users` where `username == X` for uniqueness, which is race-vulnerable: two users in Settings simultaneously claiming the same available name both see "free" and both write `users/{uid}.username` successfully → two `users/` docs sharing a username. New code uses Firestore's create-vs-update semantics on `usernames/{newLower}` as the atomic lock (mirrors `handleRegister` from R2.05, mirrors the `_registrationInFlight` discipline from L1.20). Sequence: claim `usernames/{newLower}` (atomic gate; permission-denied = taken) → release `usernames/{oldLower}` (best-effort) → update `users/{uid}` + presence. Failure between gate-claim and `users/` write triggers a synchronous rollback of the new reservation (no listener race here — unlike L1.20, the failure path runs after the synchronous-failure point, not concurrent with another writer).
+
+**Files / Areas (cache buster: `index.html` script tag `?v=20260528d → ?v=20260528e`; rest of imports unchanged):**
+- `js/app.js` `saveProfileSettings` (~30 LOC net change inside the function, ~70 LOC after factoring in the new try/catch shells and rollback path). Fast path for display-name-only changes (no username juggle) preserved. The old `query(... where('username', '==', X) ... limit(1))` block removed entirely — the new `usernames/` create is the uniqueness check.
+- No new imports — `deleteDoc` was already imported for the L1.20 cleanup path; reused here.
+
+**Pattern details:**
+- **Fast path (display-name only):** `username === oldUsername.toLowerCase()` → skip the `usernames/` writes; just update `users/{uid}` + presence. Saves two writes for the common case.
+- **Username-change path:**
+  1. `setDoc(usernames/{newLower}, {uid, createdAt})` — atomic gate. `permission-denied` → "Username already taken." (mirrors `handleRegister`'s exact idiom).
+  2. `deleteDoc(usernames/{oldLower})` — best-effort. Wrapped in its own try/catch; failure here is non-fatal (the new reservation is now the source of truth; a leftover `usernames/{old}` doc owned by the same uid is benign). Logged as `console.warn`.
+  3. `updateProfile(state.user, {displayName})` + `setDoc(users/{uid}, ...)` + presence write (best-effort) — same as before.
+  4. **Rollback:** if step 3 throws after step 1 succeeded, `claimedNewUsername` is true and the outer catch deletes `usernames/{newLower}`. This prevents the "I just tried to rename to X, the save failed, now X shows as taken on retry" UX bug.
+
+**What did NOT change:**
+- The cleanup story is structurally different from L1.20's: L1.20 needed a **prevent-the-race** approach because the racing actor was an asynchronous event listener (`onAuthStateChanged`). L1.19's race actors are two separate browsers — there's no in-process listener to fence off. Firestore's create-vs-update semantics is enough; one create wins, the other gets `permission-denied`. Documented in the inline comment above `claimedNewUsername`.
+- The hypothetical "orphan `users/` doc with username X but no `usernames/{X}` reservation" (would happen if L1.20's `reserveFallbackUsername` graceful-degradation hit 10 collisions, or pre-R2.05 data) is **not** detected by this refactor. The new user could claim `usernames/{X}` legitimately, leaving two `users/` docs sharing the username. Mitigation: tracked as a Future Considerations item — at <50 users on `tomodachi-prod` (and with no real pre-R2.05 data since R2 skipped migration), the risk is essentially zero. The L1 Cloud Function gateway will own longer-term invariant maintenance.
+
+**Verification:**
+- `node --check js/app.js` passes.
+- Project lead localhost race-test (5 scenarios) — display-name-only happy path ✓, username happy path ✓, single-user revert ✓, **cross-user race (two browsers claiming same name simultaneously) → one wins, one gets "Username already taken" ✓**. Optional self-heal-orphan + mid-save-failure paths not run; well-tested by L1.20's pattern.
+
+**L1.01 follow-up surfaced during this task:**
+- The `friend-name` and `friend-status` elements in `index.html` have `data-i18n="dashboard.friend.waiting"` / `data-i18n="dashboard.friend.status_offline"` attributes. When the locale toggle fires `languageChanged`, `apply.js` re-walks the DOM and resets those elements back to the translated "Waiting for friend…" — overwriting whatever `renderFriend()` wrote into them with the active friend's name/status. Bug only manifests on locale toggle while a friend is displayed; not a regression from L1.19. Fix: in `renderFriend`'s with-friend branch, remove the `data-i18n` attributes (so `apply.js` skips those nodes); in the no-friend branch, re-add them. Bundle into the next i18n-touching commit (likely L1.02 RTL infrastructure work).
+
+**Open Follow-up:**
+1. **L1.02 RTL infrastructure** is next on the L1 spine — `<html dir>` sync off `I18N_CONFIG.rtlLocales`, Cairo font import for AR text, `[dir="rtl"]` overrides for icon mirroring. Will bundle the L1.01 `friend-name`/`friend-status` `data-i18n` fix above.
+2. **Codex parallel work** still active: Spec A (L1.07 FAQ) and Spec B (L1.04 hero copy) handed to project lead for paste-into-Codex; output returns trigger §17.3 Claude review.
+
+---
+
 ## 2026-05-28 — Phase L1.01: i18next setup + en/ar JSON skeleton + locale toggle
 **Status:** ✅ DONE
 **Scope:** Code | Docs

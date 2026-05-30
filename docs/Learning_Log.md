@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase L1, Task L1.19]** — In-process listener races vs cross-window races (cleanup-after-failure is fine here, but cleanup-after-race wasn't in L1.20)
 - **[Phase L1, Task L1.01]** — i18next + buildless CDN ES modules + data-i18n attribute substitution pattern
 - **[Phase R2, Task R2.11 wrap-up]** — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
 - **[Phase L1, Task L1.20]** — Self-heal logic and the invariants it can quietly violate (landed during R2 escalation)
@@ -64,6 +65,64 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase L1, Task L1.19] — In-process listener races vs cross-window races, and why cleanup-after-failure works here when cleanup-after-race didn't in L1.20
+**Date:** 2026-05-28
+**Contributor:** Claude
+
+### Technology / Library Introduced
+No new tech. The interesting bit is the **decision rule** for picking between "prevent the race" (L1.20's `_registrationInFlight` flag) and "let the failure happen, then clean up" (L1.19's `claimedNewUsername` rollback). Both look like race-handling code; only one of them works for each scenario, and the deciding factor is structural — not stylistic.
+
+### What it actually does (plain language)
+L1.20 closed a race between `handleRegister` (mainline) and `ensureUserProfile` (an `onAuthStateChanged` listener), both running in the same browser tab, both potentially writing to `users/{uid}` and `usernames/{uid}`. L1.19 closed a race between two different browsers (or tabs, or devices) both trying to claim the same available username via Settings.
+
+Both are "races." Both code paths write to `usernames/`. But the structurally-correct fixes are different — and the L1.20 v1 attempt (cleanup-after-race) failing taught us why.
+
+### The two race shapes
+
+**L1.20: same-process listener race.**
+- Actor 1: `handleRegister` (procedural, runs to completion or throws)
+- Actor 2: `onAuthStateChanged` listener (fires async, registered globally, runs `ensureUserProfile` which writes to `users/`)
+- Both share `state.user` and the same Firestore `users/` collection in the same browser.
+- The listener fires AS SOON as Firebase Auth's `createUserWithEmailAndPassword` resolves (step 1 of handleRegister) — BEFORE step 2 (the `usernames/` write) decides if registration should succeed or roll back.
+- v1 fix: when step 2 fails, try to delete the docs `ensureUserProfile` may have written. **Doesn't work** — at the moment cleanup runs, the listener's writes may be in-flight (queued, traveling to Firestore, or about-to-be-issued). Cleanup deletes "nothing" and no-ops; the writes land afterward; orphan persists.
+- v2 fix (the one that landed): a module-level flag `_registrationInFlight` that the mainline sets at the start and clears in `finally`. The listener checks the flag at its entry and skips its post-auth flow during registration. Eliminates the race window entirely.
+
+**L1.19: cross-window race.**
+- Actor 1: window A's `saveProfileSettings` (procedural, in window A's JS process)
+- Actor 2: window B's `saveProfileSettings` (procedural, in window B's JS process, a completely separate browser context)
+- Shared state: only Firestore. No in-process state. No JS event listeners triggered by Actor A that Actor B sees.
+- The race is resolved by Firestore itself: of the two `setDoc(usernames/{X}, ...)` calls, exactly one is a "create" (no doc yet → succeeds per the R2.05 `allow create` rule) and the other is "create against an existing doc" → Firestore reinterprets as update → no `allow update` rule → permission-denied.
+- The losing window catches `permission-denied` synchronously in its own flow and shows "Username already taken." No cleanup needed; no orphan possible because the failing write never landed.
+- **Rollback only handles the unrelated case** where actor A successfully claims `usernames/{X}` but then `users/{uid}` update throws (network blip, transient error). That cleanup is synchronous to actor A's mainline — actor A explicitly knows it claimed the new doc (`claimedNewUsername = true`) and explicitly deletes it in the catch. **No race exists at this point**: no other actor is competing for `usernames/{X}` because actor A holds it (and any other concurrent attempt to claim the same name is already failing with permission-denied via the atomicity gate). Cleanup-after-failure reliably wins because there's no concurrent writer to outrace.
+
+### Why the L1.20 lesson doesn't generalize as "cleanup-after-X is always wrong"
+The lesson from L1.20 is narrower than it first sounded: **cleanup can't reliably close a race window where the racing actor is an asynchronous in-process event listener you don't synchronize with.** L1.20's `ensureUserProfile` was racing in the same JS process as `handleRegister`'s cleanup; the cleanup ran but the racing writes were still in flight.
+
+L1.19's "cleanup" is not closing a race at all. It's a deterministic rollback of a single-actor's own partial state in the synchronous failure path. The atomicity gate (Firestore create-semantics) already resolved the actual race in `usernames/{X}`; the rollback only matters for actor A's own subsequent failures, which are not concurrent with anyone else's writes to the same paths.
+
+### Decision rule (for future similar bugs)
+When you see a race, ask: **what are the actors, and do they share an in-process event-driven channel?**
+
+- **Actors share an in-process listener** (e.g., `onSnapshot`, `onAuthStateChanged`, custom event emitters) → prevent the race with shared in-process state (a flag, a queue, a mutex). Cleanup is unreliable because race windows here are inherently undefined-width.
+- **Actors share only the database** (no JS listener triggered by the other actor's writes mid-flow) → use the database's own atomicity primitives (create-semantics, transactions, optimistic locking). Cleanup is fine for an actor's own synchronous-failure path because no other actor is competing at that moment.
+
+### Concepts to understand
+- **"Race window"** — the time gap between "decision is made based on state X" and "state X is committed." If during that gap another actor can read the same X and make the same decision, both actors win. Closing the race means either (a) shrinking the gap to zero (atomic operation) or (b) ensuring no concurrent actor can run during the gap.
+- **`allow create` in Firestore rules as an atomicity primitive** — the rule's "doc-doesn't-exist semantics" gives you the gap-of-zero property for free, with no transaction overhead. R2.05 chose this over Cloud Functions transactions specifically because we were Spark-tier at the time. Still the right call now that we're Blaze: the lock-pattern is simpler than a transactional read-then-write would be.
+- **Best-effort cleanup that ISN'T about races** — releasing the old `usernames/{oldLower}` doc in L1.19 is best-effort because (a) it may not exist (graceful-degradation scenarios from L1.20), (b) failure to delete it doesn't leave the system incorrect (the new reservation is the source of truth; the leftover is benign), and (c) the failure mode is uncorrelated with the race. Different reason for the try/catch than the v1 L1.20 cleanup — same syntax but a fundamentally different role.
+- **`claimedNewUsername` flag pattern** — a single-actor "I did this, must undo on later failure" marker. Distinct from L1.20's `_registrationInFlight` which is a multi-actor "another part of me is busy, don't intrude" marker. Both are module-level mutable state; both express coordination. The first is intra-actor (single thread of execution); the second is inter-actor (mainline + listener).
+
+### Tradeoffs accepted
+- **Hypothetical orphan: `users/` doc with username X but no `usernames/{X}` reservation, then a new user claims `usernames/{X}` legitimately, leaving two `users/` docs sharing the name.** Possible only if L1.20's `reserveFallbackUsername` graceful-degradation hit 10 collisions on a previous self-heal — vanishingly rare at our scale. The L1 Cloud Function gateway will own longer-term invariant maintenance. Documented in the Progress Log entry's "what did NOT change" section.
+- **Cross-window rollback latency.** If actor A successfully claims `usernames/{newLower}` but the `users/` update fails, actor A's cleanup runs the delete asynchronously. During that ~hundred-millisecond window, the name is "owned by A but A's `users/` doc still has the old name." Acceptable: no other actor sees this transient state as confusing (they just see name X as taken, which they would after rollback too if A retries immediately). Self-resolves once rollback completes.
+
+### Useful resources
+- [docs/Firestore_Rules.md R2.05 ruleset](Firestore_Rules.md) — the `allow create` / no `allow update` pattern on `usernames/` that L1.19 relies on.
+- L1.20 Learning Log entry above — for the contrast.
+- Commit history: L1.20 v1 (`6384526`, cleanup-after-race, superseded) vs L1.20 v2 (`cb48b64`, prevent-the-race, landed) vs L1.19 (this commit, cleanup-after-failure-not-race, landed) — three patterns side-by-side in the same week.
+
+---
 
 ## [Phase L1, Task L1.01] — i18next + buildless CDN ES modules + data-i18n attribute substitution
 **Date:** 2026-05-28
