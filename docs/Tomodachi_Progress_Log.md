@@ -16,6 +16,42 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.05 (frame): three feature cards below hero — placeholder EN copy, Codex Spec D in flight
+**Status:** ✅ FRAME DONE (Codex copy swap-in pending Spec D return)
+**Scope:** Code | CSS | Content
+**Summary:** Built the L1.05 feature-cards section as the L1.04-style stub-vs-full pattern: structure + i18n keys + premium styling shipped now, the final reviewed copy swaps in when Codex returns Spec D's output. Three cards below the hero — `Arabic-first pedagogy` (the moat-claim), `Practice with friends` (social differentiator), `A pace that fits your life` (anti-Duolingo angle). Each card: emoji icon (🌍 / 👥 / 🌿) + 3-5 word title + 1-2 sentence body. Emoji icons match the brand's existing visual language (🏯 / 🧘 / 🔥 / 🤝 elsewhere) — consistent design language is itself a premium signal. Cards render in a 3-column grid on desktop, collapse to a 480px-max single-column on tablet+mobile. Subtle hover lift (translateY(-2px) + soft shadow + border-strong) per the premium-modern memory.
+
+**Side-fix bundled with this commit:** the hero's `flex: 1` would have collapsed to zero height the moment any sibling section was added under it inside `screen-landing` (flex-grow distributes remaining space; with features below taking finite space and nav+features < 100vh, hero's flex:1 would have stayed small). Replaced with `min-height: calc(100vh - 64px)` — hero always reserves a full viewport (minus nav). When features render below, screen-landing grows past 100vh and user scrolls. Premium-modern landing pattern (Linear / Stripe / Vercel all do this).
+
+**Files (cache busters → `?v=20260528j` for changed-target consumers):**
+- `index.html` — new `<section class="features">` after the hero, with `.features-grid` containing three `<article class="feature-card">` blocks. Each card has an `aria-hidden="true"` icon div + `data-i18n` title + body. Cache busters bumped on CSS link + app.js script.
+- `css/style.css` — `.hero { flex: 1 }` → `min-height: calc(100vh - 64px)` (with explanatory comment). New `.features` section + `.features-grid` (3-col desktop) + `.feature-card` (soft surface, subtle border, hover lift) + `.feature-icon` / `.feature-title` / `.feature-body` typography. Two responsive breakpoints: ≤900px stacks to 1-column with 520px max-width (premium feel — doesn't stretch cards full-viewport); ≤480px tightens padding.
+- `js/i18n/locales/en.json` — new `features.*` namespace: `arabic_first` + `multiplayer` + `calm_pace`, each with `title` + `body`. **Placeholder copy** authored by Claude as the L1.05 frame's stub-content; Codex Spec D will refine + the swap commit replaces these values with the §17.3-reviewed premium copy.
+- `js/i18n/locales/ar.json` — matching namespace with `[AR] ` placeholders (will be filled by Codex Spec C + Spec D outputs).
+- `js/i18n/index.js` — `loadLocale` URL bumped to `?v=20260528j`.
+- `js/app.js` — only change: bump `i18n/index.js` import to `?v=20260528j`.
+
+**Codex Spec D in flight:** `scripts/prompts/spec-d-feature-cards.txt` drafted with explicit **premium production-level standard** framing — copy needs to read like Linear / Notion / Stripe marketing, NOT generic SaaS. Includes a forbidden-words list (powerful, seamless, intuitive, revolutionary, unleash, leverage, elevate, etc.) Codex must avoid. Each of the 3 cards gets a primary + alternate version so the project lead can pick. After Spec D returns and §17.3 review completes, the integration commit swaps placeholder copy for reviewed copy and deletes `spec-d-feature-cards.txt` per the user's cleanup rule.
+
+**Verification (Claude-run automated checks):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- 139 unique `data-i18n*` keys in `index.html` (up from 133, +6 for the three cards × title + body), **all resolve in both locales**.
+- `features.*` keys all confirmed present in both `en.json` and `ar.json`.
+- Cache buster audit: `index.html` script + style → `?v=20260528j`; `app.js` import of `i18n/index.js` → `?v=20260528j`; `i18n/index.js` fetch URL → `?v=20260528j`. Unchanged-target imports stay at their prior busters.
+
+**Project lead visual verification (hand-off):** at the bottom of the chat reply.
+
+**Codex prompt cleanup (per user request 2026-05-28):** `scripts/prompts/spec-a-faq.txt` and `scripts/prompts/spec-b-hero.txt` deleted from disk now that Codex returned outputs and they're integrated/held. Only `spec-c-ar-translation.txt` (not yet run) and the new `spec-d-feature-cards.txt` (in flight) remain. After each spec's Codex output is integrated, the corresponding prompt file gets deleted in the same commit.
+
+**Open Follow-up:**
+1. **Spec D integration commit** — swap placeholder copy for Codex Spec D output (after §17.3 review). Same shape as the Spec B L1.04 hero integration. Will also delete `spec-d-feature-cards.txt`.
+2. **Spec C integration commit** — when project lead runs Spec C, the returned full `ar.json` replaces every `[AR] …` placeholder across the whole key set (including all the L1.04 + L1.05 ones added today). Will also delete `spec-c-ar-translation.txt`.
+3. **L1.06 screenshots** — next L1 surface task. The screenshots below the feature cards.
+4. **L1.07 FAQ** — already has Codex output reviewed and held in `scripts/output/codex-a-faq.json`; integration is mostly a structural lift.
+
+---
+
 ## 2026-05-28 — Phase L1.04 polish: premium back-button pill + CTA disabled-until-valid + mobile form stack
 **Status:** ✅ DONE (second L1.04 follow-up, after `81d6b59`)
 **Scope:** Code | CSS

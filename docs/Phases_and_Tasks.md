@@ -343,11 +343,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Acceptance:** Hero renders correctly in both languages; layout breathes; CTA is obvious.
 **Closure:** Landed ahead of L1.03 — the AR-side hero copy was already finalized via the L1.04 Codex Spec B review (Claude-corrected the `شخصًا` tamyiz issue in the counter line; picked v2 AR for the promise per §2.4 parallel-authoring). New `<section id="screen-landing">` is the unauthenticated default; the auth-screen is still fully functional, reachable via the landing-nav's "Sign in" button. Soft radial-gradient background, `clamp()` typography, one-shot 0.6s fade-in animation. Email-form submit stubbed (real Brevo POST is L1.08); counter stubbed at the 350 baseline (real Brevo count overlay is L1.09); both stubs explicitly tagged in code with the task ID that will replace them. 3 new locale keys ship with `[AR] ` placeholders for L1.03 Codex to fill (`hero.sign_in_link`, `auth.back_to_landing`, `toast.waitlist_stub`). See `Tomodachi_Progress_Log.md` 2026-05-28 entry + Learning Log entry on the stub-vs-full pattern.
 
-### L1.05 — Three feature cards (bilingual)
+### L1.05 — Three feature cards (bilingual) 🔵 FRAME DONE 2026-05-28
 **Deps:** L1.04
 **Owner:** Claude (structure) + Codex (copy drafts) → Claude (review)
 **Description:** Three cards below hero: (1) Arabic-first pedagogy, (2) Multiplayer with friends, (3) Calm pace, soft streaks. Each: icon + headline + 1-2 sentence description. Both languages.
 **Acceptance:** Cards render in both languages; copy matches voice guidelines.
+**Frame status:** HTML + CSS + i18n keys + placeholder EN copy shipped 2026-05-28. Three cards render below the hero, 3-column on desktop, 1-column on tablet/mobile. Hover lift + premium typography per the [[feedback-premium-modern-ux]] memory. **Awaiting Codex Spec D return** for the production-quality copy; integration commit replaces placeholder copy + deletes the spec file. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
 ### L1.06 — Screenshots section
 **Deps:** L1.05

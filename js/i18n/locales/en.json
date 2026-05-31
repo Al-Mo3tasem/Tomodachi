@@ -20,6 +20,20 @@
     "success_title": "You're on the list",
     "success_body": "We'll let you know when Tomodachi launches."
   },
+  "features": {
+    "arabic_first": {
+      "title": "Arabic-first pedagogy",
+      "body": "Lessons authored in Arabic, not translated from English. Grammar and mnemonics built on Arabic linguistic intuition."
+    },
+    "multiplayer": {
+      "title": "Practice with friends",
+      "body": "Real-time duels and co-op sessions. Race your friends through hiragana drills, or team up to clear sets together."
+    },
+    "calm_pace": {
+      "title": "A pace that fits your life",
+      "body": "A streak system that doesn't punish you for taking a day off. Adult learners deserve a rhythm that survives life."
+    }
+  },
   "auth": {
     "brand": {
       "title": "Tomodachi",

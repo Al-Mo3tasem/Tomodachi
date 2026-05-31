@@ -2533,7 +2533,11 @@ body {
 }
 
 .hero {
-  flex: 1;
+  /* Hero stays viewport-tall (minus nav) even when feature cards or
+   * other sections render below — user scrolls to reach them. Replaces
+   * the earlier `flex: 1` which would have collapsed the hero when
+   * stackable siblings were added inside screen-landing. */
+  min-height: calc(100vh - 64px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2686,6 +2690,82 @@ body {
   }
   .hero-cta {
     width: 100%;
+  }
+}
+
+/* ============================================================
+ * L1.05 — Feature cards section (below hero)
+ * Three cards: Arabic-first pedagogy / Multiplayer / Calm pace.
+ * Premium grid layout, subtle card surfaces, gentle hover lift.
+ * ============================================================ */
+
+.features {
+  padding: var(--space-8) var(--space-5);
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+.feature-card {
+  padding: var(--space-5);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: var(--border-strong);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: var(--space-3);
+}
+
+.feature-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-2);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.feature-body {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Tablet + mobile: stack vertically. Constrain max-width so cards
+ * don't stretch full viewport — keeps a single-column feel premium
+ * rather than utilitarian. */
+@media (max-width: 900px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin: 0 auto;
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .features {
+    padding: var(--space-6) var(--space-4);
+  }
+  .feature-card {
+    padding: var(--space-4);
   }
 }
 
