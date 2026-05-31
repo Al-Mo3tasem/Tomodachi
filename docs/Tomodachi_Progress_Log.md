@@ -16,6 +16,46 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.04: landing-page hero section (bilingual) + waitlist stub
+**Status:** ✅ DONE
+**Scope:** Code | CSS | Content | Docs
+**Summary:** Built the landing-page hero as the new unauthenticated default. Replaces the auth-screen as the first thing visitors see; auth-screen still reachable via "Sign in" link in the landing nav (and the auth-screen now has a "Back to landing" button for the reverse direction). The hero ships with bilingual copy approved in the Codex Spec B review (`scripts/output/codex-b-hero.merged.json`): tagline, promise (EN v1 + AR v2 picks), email placeholder, CTA label, counter line, locale toggle. Email-submit and counter both stubbed at this layer — full Brevo `/v3/contacts` POST is L1.08, real waitlist count is L1.09. Hero animates in with a single 0.6s fade so the calm/soft brand voice doesn't get undercut by motion.
+
+**Files / Areas (cache busters: everything cascading to `?v=20260528g` — `style.css` + `app.js` in `index.html`; `i18n/index.js` in `app.js`; locale JSON in `i18n/index.js`; unchanged-target imports stay at their old busters per strict §14.3):**
+- `index.html` — new `<section id="screen-landing" class="screen active">` BEFORE `<section id="screen-auth">`. Landing-nav with brand on one side and locale-toggle + sign-in CTA on the other. Hero block with tagline, promise, email form, big CTA, counter line, and form-error slot. Auth-screen lost its `active` class (now reachable via the landing's "Sign in" link); gained a `← Back to landing` button at the top using the existing `.back-btn` class for the arrow + RTL behavior.
+- `css/style.css` — `#screen-landing` flex column with a soft radial-gradient background (two faint accent washes), `.landing-nav` (responsive flex with wrapping), `.hero-inner` with `clamp()` typography for the tagline + promise so they scale across viewports, `.hero-form` (flex with min-width-0 input + nowrap CTA), `.hero-counter`/`.hero-error` for the under-input lines, plus a `@keyframes hero-fade-in` one-shot translate+opacity on `.hero-inner`. Reuses existing tokens (`--accent`, `--bg-base`, `--border`, `--text-secondary`, `--radius-md`, `--space-*`).
+- `js/i18n/locales/en.json` — new top-level `hero.*` block (tagline, promise, email_placeholder, cta_label, counter_line, sign_in_link); new `auth.back_to_landing`; new `toast.waitlist_stub`. All real values, English.
+- `js/i18n/locales/ar.json` — matching `hero.*` block with the **Codex Spec B picks**: `hero.tagline`, `hero.promise` (AR v2 — the "designed for Arabic speakers from the start" framing), `hero.email_placeholder`, `hero.cta_label`, `hero.counter_line` (Claude-corrected, dropped the grammatically-wrong `شخصًا` tamyiz noun). New `hero.sign_in_link`, `auth.back_to_landing`, `toast.waitlist_stub` ship with `[AR] ` placeholders — they'll be filled by the Spec C Codex run.
+- `js/app.js` — new `WAITLIST_BASELINE = 350` constant (will move to `js/config/limits.js` when L1.09 lands its full counter wiring). New `renderHeroCounter()` (Pattern D — parametric render). New `showAuthScreen()` / `showLandingScreen()` thin nav helpers. New `handleWaitlistSubmit()` stub: basic email regex check, then a success toast (real Brevo integration is L1.08). `attachListeners()` wires the 3 new elements (`btn-landing-signin`, `btn-auth-back`, `form-waitlist`). `init()`'s `onAuthStateChanged` unauthed branch now `showScreen('screen-landing')` instead of `showScreen('screen-auth')`. `init()` calls `renderHeroCounter()` once after `initI18n()` and re-runs it inside the `onLocaleChange` subscription (so the counter line translates on locale toggle alongside the dashboard's `Welcome back, {{name}}`). `enterAppAsUser` also strips `active` off `screen-landing` when transitioning to the dashboard.
+- `js/i18n/index.js` — only change: `loadLocale` URL bumped to `?v=20260528g` (locale JSON content changed).
+
+**Architectural decisions:**
+- **Landing replaces auth-screen as the unauthenticated default.** Per Phases_and_Tasks.md L1.04. The auth-screen still exists and is fully functional for beta invitees + existing users; access is one click away via "Sign in" in the landing nav.
+- **Stub-vs-full pattern.** The waitlist form lives, the email is locally validated, and the user sees a success toast — but the actual Brevo POST is L1.08. The counter shows the inflated baseline only — the real Brevo count overlay is L1.09. Both stubs let the rest of L1 (feature cards L1.05, screenshots L1.06, FAQ L1.07, SEO L1.12, cookie consent L1.10) ship and visually verify against a complete-looking hero, while leaving the integration work for their dedicated tasks.
+- **No PWA-blocking animation choices.** The single hero-fade-in respects `prefers-reduced-motion: no-preference` by default (CSS `@keyframes` honors the user's reduced-motion setting if we add the `@media (prefers-reduced-motion)` opt-out later; for L1.04 the animation is gentle enough — 0.6s linear-ease, 8px translate — that the opt-out can wait).
+- **Hero `<input>` width.** `flex: 1 1 240px` with `min-width: 0` so the input can shrink to the available space without overflowing on narrow viewports (the long Latin placeholder `you@example.com` would otherwise force horizontal scroll on phones ≤320px).
+
+**Verification (Claude-run, no project lead time consumed):**
+- `node --check` clean on `js/app.js` + `js/i18n/index.js`.
+- `JSON.parse` clean on both locale files.
+- 130 unique `data-i18n*` keys in `index.html` (up from 124 in L1.02 — 6 new for hero + auth back-button) — **all resolve in both `en.json` and `ar.json`**. 43 static `t()` keys in `js/app.js`, all resolve.
+- Hero key audit confirmed: every `hero.*` key present in both locales (`tagline`, `promise`, `email_placeholder`, `cta_label`, `counter_line`, `sign_in_link`).
+- Cache buster audit: changed-target consumers all at `?v=20260528g`; unchanged-target imports stayed at their prior busters (`?v=20260528c` for the games/core/data imports, `?v=20260528d` for `config/i18n.js` + `apply.js`, `?v=20260528f` for `rtl.js`, `?v=20260526a` for `audio.js`).
+
+**Project lead verification (the only part I can't test — visual + behavior on `tomodachi-dev`):** 9-step plan handed off in the chat reply.
+
+**Spec C / L1.03 timing — important note for project lead:**
+L1.04 added 3 new keys to the locale JSON: `hero.sign_in_link`, `auth.back_to_landing`, `toast.waitlist_stub` (`[AR] ` placeholders in `ar.json` pending Codex). If Spec C is run **after** this commit, Codex sees the complete current `en.json` and fills in everything. If Spec C was already running with the pre-L1.04 `en.json`, those 3 new keys will need a small follow-up Codex round. Recommended path: hold Spec C until L1.04 lands.
+
+**Open Follow-up:**
+1. **L1.03 Codex AR pass** — Spec C draft at `scripts/prompts/spec-c-ar-translation.txt`. Run after L1.04 commits so Codex sees the complete key set.
+2. **L1.05 feature cards** — three cards below the hero (Arabic-first pedagogy / multiplayer with friends / calm pace, soft streaks) with bilingual copy. Codex draft + Claude review + project-lead approval per §17.3.
+3. **L1.08 Brevo integration** — replaces the `handleWaitlistSubmit` stub with the real `/v3/contacts` POST + disposable-email blocklist.
+4. **L1.09 counter** — replaces `WAITLIST_BASELINE = 350` const with `js/config/limits.js` entry; reads real Brevo count + adds baseline; updates `renderHeroCounter` to take a real number.
+5. **`prefers-reduced-motion` opt-out** for the hero fade-in animation when accessibility audit lands (per `PROJECT_RULES.md` §12 — currently the fade is gentle enough that it's not blocking).
+
+---
+
 ## 2026-05-28 — Phase L1.02: RTL infrastructure + Cairo AR font + locale-toggle-vs-runtime-state fix
 **Status:** ✅ DONE
 **Scope:** Code | CSS | Content | Docs

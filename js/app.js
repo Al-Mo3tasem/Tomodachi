@@ -32,11 +32,17 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528f';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528g';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
 const ZEN_DURATIONS = [60, 180, 300, 420, 600];   // 1, 3, 5, 7, 10 minutes
+
+// L1.04 waitlist counter baseline. Per Commercialization_Plan.md the
+// visible number = real Brevo count + baseline (350). L1.04 ships the
+// baseline as a stubbed display; L1.09 wires the real Brevo count on
+// top of it. Move to js/config/limits.js when L1.09 lands.
+const WAITLIST_BASELINE = 350;
 
 // Looks up the localized name for a game mode. Falls back to the raw
 // type string if the key is missing (i18next returns the key on miss).
@@ -344,6 +350,43 @@ function switchAuthTab(tab) {
   document.querySelectorAll('.auth-form').forEach(f => {
     f.classList.toggle('active', f.dataset.form === tab);
   });
+}
+
+// ============================================
+// LANDING (unauthenticated default)
+// ============================================
+
+// Hero counter — parametric translation (Pattern D from L1.02). Re-rendered
+// on init AND on every locale change. L1.04 ships the baseline-only display;
+// L1.09 will wire the real Brevo count on top of the baseline.
+function renderHeroCounter() {
+  const el = $('hero-counter');
+  if (!el) return;
+  el.textContent = t('hero.counter_line', { count: WAITLIST_BASELINE });
+}
+
+function showAuthScreen() { showScreen('screen-auth'); }
+function showLandingScreen() { showScreen('screen-landing'); }
+
+async function handleWaitlistSubmit(e) {
+  e.preventDefault();
+  const emailEl = $('waitlist-email');
+  const errorEl = $('waitlist-error');
+  const email = emailEl ? emailEl.value.trim() : '';
+  if (errorEl) errorEl.textContent = '';
+
+  // Basic format check; the disposable-domain blocklist + Brevo
+  // integration lands in L1.08 (Commercialization_Plan §5).
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (errorEl) errorEl.textContent = t('error.auth.invalid_email');
+    return;
+  }
+
+  // L1.04 stub — the real Brevo /v3/contacts POST is L1.08. Showing the
+  // success toast now keeps the funnel-UX testable end-to-end while the
+  // backend is wired separately.
+  toast(t('toast.waitlist_stub'), 'success', 5000);
+  e.target.reset();
 }
 
 // ============================================
@@ -1173,6 +1216,11 @@ async function resetProgress() {
 // ============================================
 
 function attachListeners() {
+  // Landing (unauthenticated default)
+  $('btn-landing-signin')?.addEventListener('click', showAuthScreen);
+  $('btn-auth-back')?.addEventListener('click', showLandingScreen);
+  $('form-waitlist')?.addEventListener('submit', handleWaitlistSubmit);
+
   // Auth tabs + forms
   document.querySelectorAll('.auth-tab').forEach(btn => {
     btn.addEventListener('click', () => switchAuthTab(btn.dataset.tab));
@@ -1278,6 +1326,7 @@ async function enterAppAsUser(user, isFreshRegistration = false) {
   }
 
   $('screen-auth')?.classList.remove('active');
+  $('screen-landing')?.classList.remove('active');
   $('app')?.classList.remove('hidden');
 
   initPresence();
@@ -1320,11 +1369,16 @@ async function init() {
   attachListeners();
   bindLocaleToggles();
 
+  // Initial render for parametric strings the markup can't carry on its
+  // own (i.e., values that interpolate vars from JS state).
+  renderHeroCounter();
+
   // L1.02: re-run the parametric t() renders that apply.js can't update
   // on its own (it only handles static [data-i18n] nodes; vars like the
   // {{name}} in "Welcome back, {{name}}" live in JS state).
   onLocaleChange(() => {
     if (state.userData) renderUserIdentity();
+    renderHeroCounter();
   });
 
   onAuthStateChanged(auth, async (user) => {
@@ -1348,7 +1402,10 @@ async function init() {
         if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }
 
         $('app')?.classList.add('hidden');
-        showScreen('screen-auth');
+        // L1.04: unauthenticated users now land on the waitlist hero.
+        // The auth-screen is still reachable via the "Sign in" link in
+        // the landing nav.
+        showScreen('screen-landing');
       }
     } catch (err) {
       console.error('App startup failed:', err);

@@ -336,11 +336,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Codex drafts AR translations for every key in `en.json` per `CONTENT_GUIDELINES.md` §4 (voice) and §5 (dialect — default MSA). Claude reviews every string. Project lead final approval.
 **Acceptance:** `ar.json` has every key from `en.json` filled; reviewed; merged.
 
-### L1.04 — Landing page hero section (bilingual)
+### L1.04 — Landing page hero section (bilingual) ✅ DONE 2026-05-28
 **Deps:** L1.02, L1.03
 **Owner:** Claude (structure) + Codex (copy drafts) → Claude (review)
 **Description:** Replace the existing auth screen as the unauthenticated landing. Hero: brand name, one-line promise, EN/AR toggle, big email field, "Join Waitlist" button. Counter prominent below field. Background: clean, soft, calm (no animations beyond a subtle one-time hero fade).
 **Acceptance:** Hero renders correctly in both languages; layout breathes; CTA is obvious.
+**Closure:** Landed ahead of L1.03 — the AR-side hero copy was already finalized via the L1.04 Codex Spec B review (Claude-corrected the `شخصًا` tamyiz issue in the counter line; picked v2 AR for the promise per §2.4 parallel-authoring). New `<section id="screen-landing">` is the unauthenticated default; the auth-screen is still fully functional, reachable via the landing-nav's "Sign in" button. Soft radial-gradient background, `clamp()` typography, one-shot 0.6s fade-in animation. Email-form submit stubbed (real Brevo POST is L1.08); counter stubbed at the 350 baseline (real Brevo count overlay is L1.09); both stubs explicitly tagged in code with the task ID that will replace them. 3 new locale keys ship with `[AR] ` placeholders for L1.03 Codex to fill (`hero.sign_in_link`, `auth.back_to_landing`, `toast.waitlist_stub`). See `Tomodachi_Progress_Log.md` 2026-05-28 entry + Learning Log entry on the stub-vs-full pattern.
 
 ### L1.05 — Three feature cards (bilingual)
 **Deps:** L1.04

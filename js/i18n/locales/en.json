@@ -9,11 +9,20 @@
     "play_again": "Play Again",
     "rematch": "Rematch"
   },
+  "hero": {
+    "tagline": "Learn Japanese With Friends",
+    "promise": "Tomodachi teaches Japanese with Arabic-first bilingual lessons, duels, and co-op with friends.",
+    "email_placeholder": "your@email.com",
+    "cta_label": "Join Waitlist",
+    "counter_line": "{{count}}+ people already on the list",
+    "sign_in_link": "Already have an account? Sign in"
+  },
   "auth": {
     "brand": {
       "title": "Tomodachi",
       "subtitle": "Master Japanese, together"
     },
+    "back_to_landing": "Back to landing",
     "tab": {
       "sign_in": "Sign In",
       "create_account": "Create Account"
@@ -291,7 +300,8 @@
     "welcome_new": "Welcome to Tomodachi, {{name}}!",
     "welcome_back": "Welcome back, {{name}}!",
     "signed_in": "Signed in. Loading dashboard…",
-    "profile_created": "Created your missing profile document."
+    "profile_created": "Created your missing profile document.",
+    "waitlist_stub": "Thanks — we'll let you know when Tomodachi launches."
   },
   "locale": {
     "label_en": "EN",

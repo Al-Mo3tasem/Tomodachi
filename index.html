@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528f">
+  <link rel="stylesheet" href="css/style.css?v=20260528g">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -19,9 +19,47 @@
     <p class="loading-text" data-i18n="common.loading">Loading Tomodachi…</p>
   </div>
 
-  <!-- ========== AUTH SCREEN ========== -->
-  <section id="screen-auth" class="screen active">
+  <!-- ========== LANDING (unauthenticated default) ========== -->
+  <section id="screen-landing" class="screen active">
+    <header class="landing-nav">
+      <div class="landing-brand">
+        <span class="landing-brand-icon">🏯</span>
+        <span class="landing-brand-name">Tomodachi</span>
+      </div>
+      <div class="landing-nav-right">
+        <div class="landing-locale-bar">
+          <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+          <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-landing-signin" data-i18n="hero.sign_in_link">Already have an account? Sign in</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-inner">
+        <h1 class="hero-tagline" data-i18n="hero.tagline">Learn Japanese With Friends</h1>
+        <p class="hero-promise" data-i18n="hero.promise">Tomodachi teaches Japanese with Arabic-first bilingual lessons, duels, and co-op with friends.</p>
+
+        <form id="form-waitlist" class="hero-form">
+          <input type="email" id="waitlist-email"
+                 class="hero-email"
+                 placeholder="your@email.com"
+                 data-i18n-placeholder="hero.email_placeholder"
+                 required autocomplete="email">
+          <button type="submit" class="btn btn-primary btn-lg hero-cta" data-i18n="hero.cta_label">Join Waitlist</button>
+        </form>
+
+        <p class="hero-counter" id="hero-counter">350+ people already on the list</p>
+        <p class="form-error hero-error" id="waitlist-error"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== AUTH SCREEN (reachable via Sign In link on landing) ========== -->
+  <section id="screen-auth" class="screen">
     <div class="auth-container">
+      <button class="btn btn-ghost back-btn auth-back-btn" id="btn-auth-back" data-i18n="auth.back_to_landing">Back to landing</button>
+
       <div class="auth-locale-bar">
         <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
         <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
@@ -665,6 +703,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528f"></script>
+  <script type="module" src="js/app.js?v=20260528g"></script>
 </body>
 </html>

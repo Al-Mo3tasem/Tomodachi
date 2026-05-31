@@ -9,11 +9,20 @@
     "play_again": "[AR] Play Again",
     "rematch": "[AR] Rematch"
   },
+  "hero": {
+    "tagline": "تعلّم اليابانية مع أصدقائك",
+    "promise": "صُمّم «تومودَاتشي» للناطقين بالعربية منذ البداية، مع دراسة هادئة وتدريب جماعي بين الأصدقاء.",
+    "email_placeholder": "بريدك الإلكتروني",
+    "cta_label": "انضمّ للقائمة",
+    "counter_line": "{{count}}+ على القائمة بالفعل",
+    "sign_in_link": "[AR] Already have an account? Sign in"
+  },
   "auth": {
     "brand": {
       "title": "[AR] Tomodachi",
       "subtitle": "[AR] Master Japanese, together"
     },
+    "back_to_landing": "[AR] Back to landing",
     "tab": {
       "sign_in": "[AR] Sign In",
       "create_account": "[AR] Create Account"
@@ -291,7 +300,8 @@
     "welcome_new": "[AR] Welcome to Tomodachi, {{name}}!",
     "welcome_back": "[AR] Welcome back, {{name}}!",
     "signed_in": "[AR] Signed in. Loading dashboard…",
-    "profile_created": "[AR] Created your missing profile document."
+    "profile_created": "[AR] Created your missing profile document.",
+    "waitlist_stub": "[AR] Thanks — we'll let you know when Tomodachi launches."
   },
   "locale": {
     "label_en": "EN",

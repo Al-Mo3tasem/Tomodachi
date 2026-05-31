@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase L1, Task L1.04]** — The stub-vs-full pattern: shipping UI that looks complete while a backend integration is deliberately deferred
 - **[Phase L1, Task L1.02]** — CSS logical properties, the `data-i18n`-vs-runtime-state bug class, and three patterns for "translatable strings the user might read"
 - **[Phase L1, Task L1.19]** — In-process listener races vs cross-window races (cleanup-after-failure is fine here, but cleanup-after-race wasn't in L1.20)
 - **[Phase L1, Task L1.01]** — i18next + buildless CDN ES modules + data-i18n attribute substitution pattern
@@ -66,6 +67,60 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase L1, Task L1.04] — The stub-vs-full pattern: shipping UI that looks complete while a backend integration is deliberately deferred
+**Date:** 2026-05-28
+**Contributor:** Claude
+
+### Technology / Library Introduced
+No new tech. The interesting bit is a **build discipline** I'll lean on heavily for the rest of L1 — and that I want the project lead to recognize the shape of, because every backend-integration task between here and the public launch will use it.
+
+### What it actually does (plain language)
+L1.04's job was the landing-page hero. The hero has two pieces that *look* live but aren't: the **email-submit form** (target backend: Brevo `/v3/contacts`, owned by L1.08) and the **waitlist counter** (target source: Brevo contact count + baseline inflation, owned by L1.09).
+
+Both could have stayed dormant — render a coming-soon banner where the form would go, leave the counter as a literal "Coming soon!". That would be honest, but it would also mean the hero looks incomplete for **every visual task between L1.04 and L1.09**: feature cards (L1.05) get reviewed next to an empty hero, screenshots (L1.06) get captured against placeholder lorem-ipsum, FAQ (L1.07) gets typography-tuned next to a half-finished landing, SEO meta tags (L1.12) get authored without a complete visual reference.
+
+The stub-vs-full pattern instead:
+
+- **Build the UI fully** — every element in the DOM, every CSS rule, every i18n key, every interaction wired up.
+- **Stub the backend call at the boundary** — `handleWaitlistSubmit` validates the email format locally then shows a success toast. No Brevo POST. No network at all. The function exists, takes the email, behaves like the real thing will, except it doesn't persist anything.
+- **Use a real-looking placeholder value where a backend would supply one** — the counter shows `350+` (the baseline-only number) instead of `350+ + <real Brevo count>`. The render path is real (Pattern D parametric translation; `renderHeroCounter()` runs on init + locale change). Only the *input* number is fake.
+- **Tag the stub explicitly** — inline code comments naming the task that will replace each stub (`// L1.04 stub: full Brevo POST is L1.08.`). The replacement task can grep for "L1.04 stub" to find every site.
+- **Track the integration debt in the Progress Log's Open Follow-up + Phases_and_Tasks.md** — so the stubs don't drift into "permanent" by being forgotten.
+
+### Why this beats either extreme
+- **Better than dormant UI** — every downstream visual task can review against a hero that looks done. The brand voice, typography, animation, and proportions get tuned against a real-feeling artifact, not a draft.
+- **Better than premature full integration** — pulling Brevo + the counter source into L1.04 would have meant a much bigger commit, more files touched, more coupling between independent pieces. Each integration gets its own focused task with its own review and verification surface.
+- **The stub itself is testable** — the form validates email locally, the counter renders the right Pattern D translation, locale toggle works, the success toast fires. These are real bugs to catch now, not after L1.08+L1.09 land and the bugs are entangled with backend integration work.
+
+### When the pattern fits vs when it doesn't
+**Use it when:**
+- The UI surface is the focus of the task; the backend is a separable concern.
+- The backend integration is already planned and tracked as its own task.
+- The stub's behavior is locally honest (validates input, shows feedback the real one will, doesn't lie about success in a way that misleads).
+
+**Don't use it when:**
+- The UI's behavior depends on real backend response shapes (e.g., conditional rendering branches on data we'd have to mock comprehensively).
+- The stub would teach a wrong mental model (e.g., a stub that succeeds when the real one would routinely fail).
+- The integration is the actual point of the task (Brevo integration in L1.08 is the deliverable — you don't stub the deliverable).
+
+### Concepts to understand
+- **Vertical slicing.** Shipping a thin layer of a feature end-to-end (UI + stub for the backend) and then deepening one layer at a time (real backend) is the "agile" vertical-slice pattern. The alternative — "horizontal" slicing where you build the entire UI surface for L1, then the entire backend layer, then wire them together — gets in trouble when reality forces you to redesign a UI surface based on something you learned from the backend integration.
+- **Honest stubs vs deceptive ones.** A stub is honest when it tells the truth about what it *currently* does: `handleWaitlistSubmit` validates the email format and shows a "we'll let you know" toast. It's deceptive if it claims to have persisted the email (it didn't) or implies a contact ID (we have none). The toast wording "Thanks — we'll let you know when Tomodachi launches" works for both stub and full because both produce the same user-visible outcome at the moment of submission (the difference — whether Brevo actually has the email — surfaces later, in the launch email, not at the form).
+- **The replacement-discovery problem.** When you stub something, the future-you needs to be able to *find* every stub when implementing the full thing. Inline comments tagged with the future task ID (`// L1.04 stub — replaced by L1.08`) solve this with `grep`. Naming the stub function clearly (`handleWaitlistSubmit` vs `handleBrevoSubmit`) keeps the public API stable across the stub-to-full transition.
+- **Open Follow-up as integration-debt ledger.** Each stub creates a debt item. Tracked in the Progress Log's Open Follow-up section. The Open Follow-up grows over the task and shrinks as later tasks resolve items. If an Open Follow-up entry survives 3+ tasks, it's either real tech debt (worth a dedicated cleanup task) or it should be deleted (decision changed; the integration is no longer needed).
+
+### Tradeoffs accepted
+- **The user can submit an email and feel confident it landed somewhere** — but on `tomodachi-dev` and `tomodachi-staging` it doesn't actually land in Brevo until L1.08. Mitigated by L1.04 only being deployed to `dev` and `staging` for now; `tomodachi-prod` won't get this commit until L1.08 (and the surrounding L1 stack) is also ready and the full landing ships together.
+- **`WAITLIST_BASELINE = 350` is hardcoded** in `js/app.js` instead of in `js/config/limits.js` per `PROJECT_RULES.md` §5.1. L1.09 will move it. Tagged with a comment so the move is findable; not a "permanent" violation because L1.09 has the move on its task description.
+- **Two locale keys ship with `[AR] ` placeholders** (`hero.sign_in_link`, `auth.back_to_landing`, `toast.waitlist_stub`). Codex Spec C run will fill them. The cost is the AR-mode user sees `[AR] Already have an account? Sign in` until Spec C runs.
+
+### Useful resources
+- [Vertical slicing in agile](https://www.agilealliance.org/glossary/vertical-slicing/) — the canonical name for this pattern at the user-story level.
+- [Walking-skeleton pattern](https://wiki.c2.com/?WalkingSkeleton) — closely related; the idea of building thin end-to-end before deepening any layer.
+- L1.04 Progress Log entry — explicit list of which surfaces are stubbed and where they get replaced.
+
+---
 
 ## [Phase L1, Task L1.02] — CSS logical properties, the data-i18n-vs-runtime-state bug class, and three patterns for "translatable strings the user might read"
 **Date:** 2026-05-28
