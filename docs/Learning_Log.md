@@ -16,6 +16,7 @@
 
 *(Entries listed newest first.)*
 
+- **[Phase L1, Task L1.02]** — CSS logical properties, the `data-i18n`-vs-runtime-state bug class, and three patterns for "translatable strings the user might read"
 - **[Phase L1, Task L1.19]** — In-process listener races vs cross-window races (cleanup-after-failure is fine here, but cleanup-after-race wasn't in L1.20)
 - **[Phase L1, Task L1.01]** — i18next + buildless CDN ES modules + data-i18n attribute substitution pattern
 - **[Phase R2, Task R2.11 wrap-up]** — Firebase web API keys, GitHub secret-scanning false positives, and the three-layer access model
@@ -65,6 +66,84 @@ What we gave up by this choice, in case we ever need to revisit it. Be honest.
 ## Entries
 
 *(Entries appear below this line, newest first.)*
+
+## [Phase L1, Task L1.02] — CSS logical properties, the data-i18n-vs-runtime-state bug class, and three patterns for "translatable strings the user might read"
+**Date:** 2026-05-28
+**Contributor:** Claude
+
+### Technology / Library Introduced
+- **CSS logical properties** — modern CSS shorthand (`margin-inline-start`, `padding-inline-end`, `border-inline-start`, `inset-inline-start`, `text-align: start/end`, `padding-inline` for symmetric shorthand) that resolves direction at render time based on `<html dir>`. The "leading edge" / "trailing edge" abstraction replaces the physical "left" / "right" axis. Shipped in all major browsers by ~2021; effectively universal today.
+- **`:lang(X)` CSS pseudo-class** — selector that matches elements whose effective language is `X`. Inheritance follows the `<html lang>` attribute we sync from `js/i18n/rtl.js`. Lets us scope AR-specific font + line-height to AR content without selector cruft.
+- **The `data-i18n`-vs-runtime-state bug class** — not a "library", but a category of bug that emerges when L1.01's static attribute-driven i18n meets JS that writes dynamic values into the same DOM nodes. Worth a name because it'll recur in other languages, other code bases, anywhere "static markup + dynamic JS" cohabit on the same elements.
+
+### What it actually does (plain language)
+
+#### CSS logical properties — the model
+In LTR, "left margin" usually means "margin on the side closest to the start of the text" (because you read left-to-right). In RTL, the same intent — "margin near the text start" — needs to be on the RIGHT, because reading goes right-to-left. Physical CSS properties (`margin-left`) hardcode the side; logical properties (`margin-inline-start`) hardcode the *intent*. The browser resolves "which physical side is the start?" based on `<html dir>`.
+
+For our 11 conversions, the rule was: **if the property exists to express a relationship to text flow (margin near reading start, accent stripe on the leading edge, status text aligned to where values naturally end up), use logical**. If it exists to express a fixed geometric position regardless of language (the OFF state of a toggle slider — knobs ALWAYS sit on the left even in Arabic UIs), keep physical.
+
+The two physical-by-intent exceptions stay as `left: 2px` (toggle knob) and `.duel-player-opp` (in-game opponent block; will get its own bilingual audit at L2.C).
+
+#### The `data-i18n`-vs-runtime-state bug class
+
+L1.01 wired most of `index.html`'s static text via `data-i18n="key"` attributes that `js/i18n/apply.js` walks on init and on every `languageChanged` event. Clean for static content. But several elements in `index.html` carry `data-i18n` attributes that JS later overwrites with runtime values:
+
+- `friend-name` has `data-i18n="dashboard.friend.waiting"` for the empty state, but `renderFriend()` writes the friend's actual name into it when a friend is present.
+- `friend-status .status-text` has `data-i18n="dashboard.friend.status_offline"`, but `renderFriend()` rebuilds the span with the current online/in_game/offline state.
+- `select-subtitle`, `select-options-info`, `btn-start` have `data-i18n` defaults but `goToSelect()` rewrites them per-mode (zen / survival / duel / coop).
+
+The bug: on every locale toggle, `apply.js` walks the DOM and resets all these elements back to their static `data-i18n` defaults — clobbering the runtime state. User sees their friend's name flip to "Waiting for friend…", their select-screen subtitle flip back to the default placeholder, etc.
+
+Three patterns now in use to resolve this (depending on the kind of dynamic content):
+
+**Pattern A — static translatable text.** HTML has `data-i18n="key"`. JS never touches it. `apply.js` owns it on every languageChanged. *Example:* "Sign In" button.
+
+**Pattern B — dynamic translatable text** (value comes from state but the value IS a translation key). JS sets BOTH `data-i18n` to the current-state's key AND `textContent` via `t()`. On locale toggle, `apply.js` walks the DOM, sees the current `data-i18n` value, re-translates correctly. *Example:* friend-bar status text (Online / Offline / In a game keys vary by presence state); select-screen subtitle (zen vs survival vs duel vs coop keys vary by selected mode).
+
+**Pattern C — dynamic untranslatable text** (the value is a person's actual name, a username, a number — doesn't translate). JS removes `data-i18n` entirely and writes raw `textContent`. `apply.js` skips the node on locale toggle. *Example:* friend-bar friend-name when a friend is present; profile card display name; dashboard nav username.
+
+**Pattern D — parametric translatable text** (template with vars from JS state, e.g., `Welcome back, {{name}}`). `apply.js` can't update it on its own because the var values live in JS state, not in the markup. The fix is a new `onLocaleChange(handler)` hook from `i18n/index.js` that lets app code re-run the parametric render when locale changes. *Example:* `dashboard.subtitle_named` line in the dashboard header.
+
+### Why this taxonomy matters
+Each pattern has a different "who owns this DOM node" answer. The L1.01 v1 wiring assumed Pattern A everywhere, which broke patterns B, C, D. L1.02 makes the patterns explicit and uses each where appropriate. The cost is one extra line of code per dynamic-render site (set/remove `data-i18n`); the benefit is that locale toggle now works correctly across the entire surface regardless of whether content is static or dynamic.
+
+A reasonable refinement for later: build a small wrapper helper in `app.js` or `i18n/apply.js` like `setI18nDynamic(el, key, vars?)` that handles set-attribute + set-textContent in one call, so the pattern is harder to forget. For now, the inline pattern is short enough that explicit beats abstracted.
+
+### Alternatives considered
+- **Make `apply.js` skip elements that JS has touched** (e.g., tag them with `data-i18n-frozen`). Rejected: relies on JS to remember to tag; same forget-prone shape as the original bug. Pattern C's explicit `removeAttribute` is more honest.
+- **Move all i18n into JS** — drop `data-i18n` attributes entirely, have every translatable string rendered by `t()` at element-creation time, re-render on `languageChanged`. Rejected because L1.01's `data-i18n` approach has two big wins: (a) EN fallback content in the HTML so the page renders even if i18next CDN fails, (b) declarative locale wiring that a future contributor can grep for. The data-i18n approach is correct for static text; the fix is to handle the dynamic-text overlay properly.
+- **Use a real DOM observer (MutationObserver)** in `apply.js` so locale-toggle replays after every JS mutation. Rejected: overkill, fires constantly, has its own race conditions, doesn't actually solve the bug (it would still clobber values).
+
+For directional CSS:
+- **Keep physical properties everywhere, use `[dir="rtl"]` overrides for every directional rule.** Rejected: doubles the CSS surface for every directional rule. Logical properties handle it for free.
+- **Use `[dir="rtl"]` overrides only.** Rejected: same doubling cost, plus brittle when adding new rules.
+- **Logical properties for everything possible, `[dir="rtl"]` overrides only where logical can't reach** (icon mirroring like the back-button arrow which needs a different glyph in RTL). This is what we did.
+
+### Concepts to understand
+- **Inline axis vs block axis.** "Inline" = the direction text flows (horizontal for Latin/Arabic; could be vertical for languages like vertical-Japanese-text). "Block" = the direction lines stack. Logical properties operate on these axes, not on horizontal/vertical. For our use case (Latin + AR, both horizontal-text), inline = horizontal and block = vertical. Logical property `margin-inline-start` resolves to `margin-left` in LTR and `margin-right` in RTL.
+- **`text-align: start/end`** — the logical version of `text-align: left/right`. `start` means "the side where text begins" (left in LTR, right in RTL); `end` is the opposite. Catches `text-align: right` on `.history-meta` (the scores column should hug the trailing edge regardless of direction).
+- **`:lang(ar)` matches `<html lang="ar">` even when applied to nested elements.** It walks the language inheritance up the DOM. So `:lang(ar) p` matches any `<p>` inside `<html lang="ar">`. We use it to scope `--font-ar` and the increased line-height to AR content only, without selector noise.
+- **`<html dir>` vs `<html lang>`.** Both are HTML attributes. `lang` is for screen readers, hyphenation rules, spell-check, `:lang()` CSS matching; `dir` is for text flow direction (LTR / RTL). They're orthogonal — you could have `lang="ar" dir="ltr"` (Arabic content rendered LTR for some specialized reason), though we don't. We sync both off the i18next locale.
+- **CSS pseudo-element for direction-dependent glyphs.** The back-button arrow needs to point in the "back" direction — ← in LTR, → in RTL. Rather than baking the arrow into translation strings (where the AR translator might forget to flip it), we use `::before { content: "← "; }` with a `[dir="rtl"] ::before { content: "→ "; }` override. Decouples direction from content; the translation strings carry just "Back to Dashboard" / "Back to Dashboard" in AR (with no arrow), and CSS provides the arrow.
+- **`transform: scaleX(-1)` for glyph mirroring** — flips the visual rendering of an element horizontally. We use it for `.mode-arrow` (the `→` on game-mode cards) in RTL so it visually becomes ← without changing the underlying text character. Cheaper than two pseudo-element rules; works because we just want to mirror the GLYPH, not change it.
+
+### Tradeoffs accepted
+- **Two intentional physical-property exceptions** (`.toggle-slider`, `.duel-player-opp`). The toggle exception is durable — toggle UIs are conventionally LTR even in RTL apps. The duel-player-opp exception is L2.C debt — when in-game screens get a bilingual audit, this rule and the related JS strings in `duel.js` get the full pass.
+- **Cairo as the AR font.** Per `CONTENT_GUIDELINES.md` §13.4 — chosen for screen rendering quality + free OFL license + variety of weights. Tajawal as fallback. If Cairo ships with a missing glyph for technical content (e.g., a specific kanji-context need), we'd revisit. Unlikely.
+- **AR line-height: 1.7 vs Latin 1.5.** Per §13.5. Adds vertical air to AR pages compared to Latin. Some Latin readers might find AR pages "loose"; native AR readers expect it. Sticking with the project's standing rule.
+- **The `data-i18n` attribute-management pattern requires JS authors to remember.** When adding a new dynamic-text render site, the author has to remember to `setAttribute('data-i18n', key)` or `removeAttribute('data-i18n')` depending on whether the value translates. Forgettable. Mitigation: the three Patterns (A/B/C/D) are documented here and in the Progress Log; we'll add the `setI18nDynamic(el, key)` helper when it appears in 3+ places.
+- **Cairo font adds ~80 KB to the Google Fonts CSS request** (4 weights × Cairo subset). Cached after first load. Acceptable for the MENA target audience.
+
+### Useful resources
+- [MDN: CSS logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) — the canonical reference.
+- [CSS Tricks: Logical Properties for direction-aware CSS](https://css-tricks.com/css-logical-properties/) — accessible walkthrough with examples.
+- [The CSS `:lang()` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:lang) — matching language inheritance.
+- [Cairo font on Google Fonts](https://fonts.google.com/specimen/Cairo) — the font we picked for AR.
+- [PROJECT_RULES.md §12 (RTL / LTR Parity)](PROJECT_RULES.md) — our project's standing rules this work implements.
+- [PROJECT_RULES.md §13.4 + §13.5](PROJECT_RULES.md) — the Cairo + line-height decisions.
+
+---
 
 ## [Phase L1, Task L1.19] — In-process listener races vs cross-window races, and why cleanup-after-failure works here when cleanup-after-race didn't in L1.20
 **Date:** 2026-05-28

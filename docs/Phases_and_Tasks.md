@@ -323,11 +323,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Acceptance:** Toggling locale at runtime updates all UI strings; missing keys log a warning; both languages render.
 **Closure:** Landed via i18next 26.3.0 + i18next-browser-languagedetector 8.2.1 via jsdelivr `/+esm`. 124 unique keys in `index.html` (via `data-i18n*` attributes), 54 static `t()` keys in `js/app.js`, full namespace tree in `en.json`. `ar.json` ships with `[AR] <en value>` placeholders pending L1.03's Codex AR pass. EN | AR toggle wired on auth screen + nav. `<html lang>` syncs on `languageChanged`; `<html dir>` is L1.02's job. Outdated `🔒 Only 2 accounts` form note removed in the same pass. See `Tomodachi_Progress_Log.md` 2026-05-28 entry for full detail + Learning Log entry for the i18next decision discussion.
 
-### L1.02 — RTL infrastructure
+### L1.02 — RTL infrastructure ✅ DONE 2026-05-28
 **Deps:** L1.01
 **Owner:** Claude
 **Description:** Build `js/i18n/rtl.js` that sets `<html dir>` based on locale. Update `css/style.css` to use CSS logical properties (`margin-inline-start` etc.) wherever directional. Add `[dir="rtl"]` overrides for cases logical properties can't cover (icon mirroring). Add Cairo font import for AR text.
 **Acceptance:** Switching to AR mirrors the entire layout; icons that should mirror do (chevrons, arrows); icons that shouldn't don't (avatars, kana characters).
+**Closure:** Landed. `js/i18n/rtl.js` ships `applyDirection(locale)` wired into `i18n/index.js` init + every `languageChanged` event. 11 of 16 directional CSS properties converted to logical (`margin-inline-start`, `padding-inline`, `inset-inline-end`, `text-align: start/end`, `border-inline-start`); 2 kept physical by intent (toggle-slider knob — toggles are LTR even in AR UIs; `.duel-player-opp` — in-game, deferred to L2.C). Cairo font via `:lang(ar)` + AR line-height 1.7. Back-button arrow moved from i18n strings to CSS pseudo-element so the glyph flips with direction (← in LTR; → in RTL). `.mode-arrow` flipped via `transform: scaleX(-1)` in RTL. **Also bundled the L1.01-flagged data-i18n-clobbers-runtime-state bug fix** for friend bar + select-screen subtitle/info/start-button: introduced three explicit patterns (A static, B dynamic-translatable, C dynamic-untranslatable) plus a new `onLocaleChange()` hook for Pattern D (parametric interpolated strings like `Welcome back, {{name}}`). See `Tomodachi_Progress_Log.md` 2026-05-28 entry + Learning Log entry for the three-patterns taxonomy.
 
 ### L1.03 — Translate existing UI strings to AR
 **Deps:** L1.01

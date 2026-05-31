@@ -16,6 +16,46 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.02: RTL infrastructure + Cairo AR font + locale-toggle-vs-runtime-state fix
+**Status:** ✅ DONE
+**Scope:** Code | CSS | Content | Docs
+**Summary:** Second L1 task lands. Three threads of work bundled because they're interlocked: (1) RTL direction switching via new `js/i18n/rtl.js` wired into `i18n/index.js`'s `languageChanged` event; (2) Cairo font + AR line-height (1.7 vs Latin 1.5) per `CONTENT_GUIDELINES.md` §13.4 + §13.5; (3) fix for the data-i18n-clobbers-runtime-state bug I flagged at the end of L1.19 — `renderFriend` and `goToSelect` were writing dynamic strings into DOM nodes that still had `data-i18n` attributes from L1.01's HTML wiring, so the next locale toggle's `apply.js` walk would clobber the runtime value (friend name → "Waiting for friend…", select-screen subtitle → "Choose which Hiragana…", etc.). Resolved by having both functions explicitly manage the `data-i18n` attribute on their target nodes — set it to the current state's key when writing translatable values, remove it when writing untranslatable values (a person's actual name). Plus a new `onLocaleChange()` hook from `i18n/index.js` that app.js uses to re-run parametric `t()` calls that `apply.js` can't update on its own (the `Welcome back, {{name}}` line whose var lives in JS state).
+
+**Files / Areas (cache busters: `app.js`/`style.css` → `?v=20260528f` in `index.html`; `i18n/index.js` → `?v=20260528f` in `app.js`; locale JSON + new `rtl.js` → `?v=20260528f` in `i18n/index.js`; unchanged-target imports kept their old busters per strict §14.3):**
+- **NEW:** `js/i18n/rtl.js` — single export `applyDirection(locale)` that sets `<html dir>` based on `I18N_CONFIG.rtlLocales` membership. Idempotent.
+- **`js/i18n/index.js`** — imports `applyDirection`; calls it in `initI18n()` after `applyTranslations()` and again on every `i18next` `languageChanged` event. New `onLocaleChange(handler)` export for external `languageChanged` subscribers.
+- **`js/app.js`** — `renderFriend` rewritten to manage `data-i18n` attributes on `friend-name` (with-friend → `removeAttribute`; no-friend → `setAttribute` back to `dashboard.friend.waiting`) and on the dynamically-rebuilt `.status-text` span (each render sets `data-i18n` to the current online/offline/in_game key). `goToSelect` uses a `setI18n(el, key)` helper that sets both `data-i18n` AND `textContent` so locale toggle's `apply.js` re-translates per-mode subtitle/info/start-button text automatically. `init()` subscribes to `onLocaleChange` to re-run `renderUserIdentity()` (needed for the parametric `Welcome back, {{name}}` line).
+- **`css/style.css`** — `--font-ar` variable (`Cairo, Tajawal, Inter, …`) added at top alongside `--font-sans` and `--font-jp`. New `:lang(ar)` rule applies `--font-ar` + `line-height: 1.7`. 11 of 16 directional properties converted to logical (`margin-inline-start`, `padding-inline-start`, `inset-inline-start/end`, `text-align: start/end`, `border-inline-start`, `padding-inline` shorthand). The 2 intentional physical exceptions kept: `.toggle-slider::before { left: 2px }` (knob OFF state — toggle UIs are conventionally LTR even in RTL apps) and `.duel-player-opp { flex-direction: row-reverse; text-align: right; }` (in-game duel screen — deferred to L2.C alongside the other in-game module i18n migrations). Back-button arrow moved from i18n strings to CSS pseudo (`.back-btn::before { content: "← "; }` LTR; `[dir="rtl"] .back-btn::before { content: "→ "; }` RTL) so the glyph mirrors with direction without coupling to translation values. Mode-card "go in" arrow flipped via `[dir="rtl"] .mode-arrow { transform: scaleX(-1); }`.
+- **`index.html`** — Cairo added to Google Fonts URL (`&family=Cairo:wght@400;500;600;700`). Back-button fallback content stripped of literal `←` (now provided by CSS pseudo; doubling would render `← ←` if the i18n string ever shipped one).
+- **`js/i18n/locales/en.json`** — `common.back_to_dashboard` lost the leading `← `, now just "Back to Dashboard". `common.back` unchanged.
+- **`js/i18n/locales/ar.json`** — matching change to the `[AR] Back to Dashboard` placeholder.
+
+**Pattern notes:**
+- **The locale-toggle-vs-runtime-state bug class.** L1.01's `data-i18n` attribute approach is great for static text, but conflicts with any JS that writes dynamic values into the same nodes. Two patterns now in use side-by-side: (a) for **static** translatable text — `data-i18n` in HTML, `apply.js` owns it on every languageChanged; (b) for **dynamic** translatable text — JS sets `data-i18n` to the current-state's key AND `textContent`, so `apply.js` re-translates automatically on locale toggle. The third case — **parametric** translatable text (interpolated values from JS state) — needs an explicit `onLocaleChange` subscription that re-runs the JS computation.
+- **Direction is data, not magic** (PROJECT_RULES.md §12.1). `<html dir>` is the single signal; everything downstream reads from `I18N_CONFIG.rtlLocales`. Adding a new RTL locale (e.g., Hebrew) is one config change, zero CSS changes (logical properties handle it).
+- **Logical properties have nearly-universal browser support** as of 2026: `margin-inline-*`, `padding-inline-*`, `inset-inline-*`, `border-inline-*`, `text-align: start/end` all shipped in Chrome 87+, Firefox 66+, Safari 14.1+. Pre-2021 browsers (~0.1% of MENA traffic) would render physical fallback; acceptable.
+
+**Verification (run by Claude in the harness, no project lead time consumed):**
+- `node --check` passes on every changed JS module (`app.js`, `i18n/index.js`, `i18n/rtl.js`, plus the unchanged-but-tested `i18n/apply.js`, `config/i18n.js`).
+- Both locale JSON files parse cleanly (`JSON.parse`).
+- All 124 unique `data-i18n*` keys in `index.html` resolve in both `en.json` and `ar.json`. All 12 dynamic data-i18n keys set by `renderFriend` + `goToSelect` resolve too.
+- Final directional-property audit: 2 remaining usages (toggle-slider knob + duel-player-opp), both intentional and documented above.
+- Cache buster audit: changed-target consumers bumped to `?v=20260528f`; unchanged targets stayed at `?v=20260528c` / `?v=20260528d` / `?v=20260526a` per strict §14.3.
+
+**Project lead verification (the only part I can't test):**
+1. Hard refresh `http://localhost:8000/` — auth screen renders, EN active, no console errors.
+2. Click `العربية` toggle — the layout flips (button positions, alignment, the EN | AR toggle ordering, the back-button arrow → instead of ←); AR text renders in Cairo font (visibly different from Inter); the placeholder strings now show `[AR] ` prefix.
+3. DevTools → Elements tab: `<html lang="ar" dir="rtl">`.
+4. **Locale-toggle-vs-runtime-state regression check:** sign in to the dev account; if a friend doc exists in `presence/`, the friend bar shows their real name. Toggle locale; friend name STAYS the real name (doesn't reset to "Waiting for friend…"); status text DOES translate ("Online" ↔ "[AR] Online"). Navigate to character-select for Zen mode; the page subtitle, info text, and start button reflect Zen-specific copy; toggle locale; all three translate correctly without reverting to defaults. Return to dashboard; the "Welcome back, <name>" line translates correctly while the name stays as the user's actual name.
+5. Open Settings → click `← Back` — works (the arrow is now CSS-rendered and mirrors in AR).
+
+**Open Follow-up:**
+1. **L1.03** Codex AR pass is unblocked — the `en.json` key set is now stable for L1.02+. Spec C draft to be written when project lead's L1.02 verification confirms wiring. Will mirror Spec A/B structure; output is a complete `ar.json` body filling every key currently `[AR] <english>`.
+2. **In-game modules** (`js/games/duel.js`, `js/games/coop.js`, `js/games/engine.js`, `js/data/leaderboards.js`) still have hardcoded EN strings AND the one remaining physical CSS rule (`.duel-player-opp`). Migrate together when those modules are next touched (L2.C).
+3. **L1.04 hero** is the next L1 task — copy already drafted by Codex (Spec B) and reviewed; held in `scripts/output/codex-b-hero.merged.json` (T4, gitignored). Integration moves the hero copy into `en.json`/`ar.json` under the `hero.*` namespace and builds the landing-page hero section structure in `index.html`.
+
+---
+
 ## 2026-05-28 — Phase L1.19: `saveProfileSettings` atomic refactor onto `usernames/{lower}` lock
 **Status:** ✅ DONE
 **Scope:** Code | Docs

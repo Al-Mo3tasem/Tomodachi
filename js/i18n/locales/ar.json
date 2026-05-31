@@ -2,7 +2,7 @@
   "common": {
     "loading": "[AR] Loading Tomodachi…",
     "back": "[AR] Back",
-    "back_to_dashboard": "[AR] ← Back to Dashboard",
+    "back_to_dashboard": "[AR] Back to Dashboard",
     "dashboard": "[AR] Dashboard",
     "cancel": "[AR] Cancel",
     "save": "[AR] Save",

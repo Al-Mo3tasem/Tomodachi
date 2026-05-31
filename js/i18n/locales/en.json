@@ -2,7 +2,7 @@
   "common": {
     "loading": "Loading Tomodachi…",
     "back": "Back",
-    "back_to_dashboard": "← Back to Dashboard",
+    "back_to_dashboard": "Back to Dashboard",
     "dashboard": "Dashboard",
     "cancel": "Cancel",
     "save": "Save",

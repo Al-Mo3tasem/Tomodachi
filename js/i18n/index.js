@@ -16,11 +16,12 @@ import i18next from 'https://cdn.jsdelivr.net/npm/i18next@26.3.0/+esm';
 import LanguageDetector from 'https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@8.2.1/+esm';
 import { I18N_CONFIG } from '../config/i18n.js?v=20260528d';
 import { applyTranslations } from './apply.js?v=20260528d';
+import { applyDirection } from './rtl.js?v=20260528f';
 
 // Fetch a locale JSON next to this module so the path works regardless of
 // where the page is mounted (root, sub-path, file:// during dev).
 async function loadLocale(lang) {
-  const url = new URL(`./locales/${lang}.json?v=20260528d`, import.meta.url);
+  const url = new URL(`./locales/${lang}.json?v=20260528f`, import.meta.url);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load locale "${lang}": ${res.status}`);
   return res.json();
@@ -58,15 +59,31 @@ export async function initI18n() {
       returnEmptyString: false
     });
 
-  // Initial pass: walk the DOM and substitute every data-i18n* node.
+  // Initial pass: walk the DOM and substitute every data-i18n* node;
+  // sync <html lang> and <html dir>.
   applyTranslations(i18next);
   syncHtmlLang(i18next.language);
+  applyDirection(i18next.language);
 
   // Subsequent passes on every changeLanguage().
   i18next.on('languageChanged', (lng) => {
     applyTranslations(i18next);
     syncHtmlLang(lng);
+    applyDirection(lng);
   });
+}
+
+/**
+ * Subscribe to locale changes. The handler runs after applyTranslations
+ * has re-walked the DOM, so by the time it fires, every [data-i18n] node
+ * is already in the new locale. App-level code uses this hook to re-run
+ * parametric t() calls (e.g., `Welcome back, {{name}}`) that apply.js
+ * can't update on its own because the var values live in JS state, not
+ * in the markup.
+ * @param {(lng: string) => void} handler
+ */
+export function onLocaleChange(handler) {
+  i18next.on('languageChanged', handler);
 }
 
 // Mirror the active locale onto <html lang="..."> so screen readers + the

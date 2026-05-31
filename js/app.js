@@ -32,7 +32,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale } from './i18n/index.js?v=20260528d';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528f';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -393,13 +393,20 @@ function renderFriend() {
   const inviteBtn = $('btn-invite');
 
   if (!p) {
-    if (nameEl) nameEl.textContent = t('dashboard.friend.waiting');
+    // L1.02 fix: re-add data-i18n on the empty-state name so locale
+    // toggle's apply.js can pick it up. The with-friend branch below
+    // removes it (friend names don't translate).
+    if (nameEl) {
+      nameEl.setAttribute('data-i18n', 'dashboard.friend.waiting');
+      nameEl.textContent = t('dashboard.friend.waiting');
+    }
     if (statusEl) {
       statusEl.innerHTML = '';
       const dot = document.createElement('span');
       dot.className = 'status-dot offline';
       const text = document.createElement('span');
       text.className = 'status-text';
+      text.setAttribute('data-i18n', 'dashboard.friend.status_offline');
       text.textContent = t('dashboard.friend.status_offline');
       statusEl.append(dot, text);
     }
@@ -409,11 +416,16 @@ function renderFriend() {
 
   const isOnline = p.status === 'online' || p.status === 'in_game';
   const dotClass = p.status === 'in_game' ? 'in-game' : (isOnline ? 'online' : 'offline');
-  const statusText = p.status === 'in_game'
-    ? t('dashboard.friend.status_in_game')
-    : (isOnline ? t('dashboard.friend.status_online') : t('dashboard.friend.status_offline'));
+  const statusKey = p.status === 'in_game'
+    ? 'dashboard.friend.status_in_game'
+    : (isOnline ? 'dashboard.friend.status_online' : 'dashboard.friend.status_offline');
 
-  if (nameEl) nameEl.textContent = p.displayName || p.username || 'Friend';
+  if (nameEl) {
+    // L1.02 fix: remove data-i18n so locale-toggle's apply.js doesn't
+    // clobber the friend's real name back to "Waiting for friend…".
+    nameEl.removeAttribute('data-i18n');
+    nameEl.textContent = p.displayName || p.username || 'Friend';
+  }
   if (avatarEl) avatarEl.textContent = p.avatarEmoji || state.friend?.avatarEmoji || '🎮';
   if (statusEl) {
     statusEl.innerHTML = '';
@@ -421,7 +433,10 @@ function renderFriend() {
     dot.className = `status-dot ${dotClass}`;
     const text = document.createElement('span');
     text.className = 'status-text';
-    text.textContent = statusText;
+    // Status text DOES translate (Online / Offline / In a game) — set
+    // data-i18n to the current state's key so locale toggle propagates.
+    text.setAttribute('data-i18n', statusKey);
+    text.textContent = t(statusKey);
     statusEl.append(dot, text);
   }
   if (inviteBtn) inviteBtn.disabled = !isOnline;
@@ -799,30 +814,40 @@ function goToSelect(gameType) {
 
   const show = (el, on) => { if (el) el.style.display = on ? 'flex' : 'none'; };
 
+  // L1.02 fix: set data-i18n on the dynamic copy elements so locale
+  // toggle's apply.js re-translates them automatically. Without this,
+  // a locale switch on the select screen would clobber the mode-specific
+  // text back to the static "Choose which Hiragana to include" default.
+  const setI18n = (el, key) => {
+    if (!el || !key) return;
+    el.setAttribute('data-i18n', key);
+    el.textContent = t(key);
+  };
+
   if (gameType === 'survival') {
-    if (subEl) subEl.textContent = t('select.subtitle.survival');
-    if (infoEl) infoEl.textContent = t('select.info.survival');
+    setI18n(subEl, 'select.subtitle.survival');
+    setI18n(infoEl, 'select.info.survival');
     show(practiceRow, false); show(inputRow, false); show(durationRow, false); show(winconRow, false);
-    if (startBtn) startBtn.textContent = t('select.start_button.survival');
+    setI18n(startBtn, 'select.start_button.survival');
   } else if (gameType === 'duel') {
-    if (subEl) subEl.textContent = t('select.subtitle.duel');
-    if (infoEl) infoEl.textContent = t('select.info.duel');
+    setI18n(subEl, 'select.subtitle.duel');
+    setI18n(infoEl, 'select.info.duel');
     show(practiceRow, false); show(durationRow, false);
     show(winconRow, true); show(inputRow, true);
     setWinCondition(state.winCondition);
     setDuelInput(state.duelInput);
-    if (startBtn) startBtn.textContent = t('select.start_button.duel');
+    setI18n(startBtn, 'select.start_button.duel');
   } else if (gameType === 'coop') {
-    if (subEl) subEl.textContent = t('select.subtitle.coop');
-    if (infoEl) infoEl.textContent = t('select.info.coop');
+    setI18n(subEl, 'select.subtitle.coop');
+    setI18n(infoEl, 'select.info.coop');
     show(practiceRow, false); show(durationRow, false); show(winconRow, false);
     show(inputRow, true);
     setCoopInput(state.coopInput);
-    if (startBtn) startBtn.textContent = t('select.start_button.coop');
+    setI18n(startBtn, 'select.start_button.coop');
   } else {
     // Zen
-    if (subEl) subEl.textContent = t('select.subtitle.zen');
-    if (infoEl) infoEl.textContent = t('select.info.zen');
+    setI18n(subEl, 'select.subtitle.zen');
+    setI18n(infoEl, 'select.info.zen');
     show(practiceRow, true); show(durationRow, true); show(winconRow, false);
 
     const listenBtn = document.querySelector('#seg-practice .seg-btn[data-practice="listen"]');
@@ -841,7 +866,7 @@ function goToSelect(gameType) {
     // Snap any previously-stored duration onto the current option set.
     if (!ZEN_DURATIONS.includes(state.zenDuration)) state.zenDuration = 60;
     setZenDuration(state.zenDuration);
-    if (startBtn) startBtn.textContent = t('select.start_button.zen');
+    setI18n(startBtn, 'select.start_button.zen');
   }
 
   showScreen('screen-select');
@@ -1294,6 +1319,13 @@ async function init() {
   await initI18n();
   attachListeners();
   bindLocaleToggles();
+
+  // L1.02: re-run the parametric t() renders that apply.js can't update
+  // on its own (it only handles static [data-i18n] nodes; vars like the
+  // {{name}} in "Welcome back, {{name}}" live in JS state).
+  onLocaleChange(() => {
+    if (state.userData) renderUserIdentity();
+  });
 
   onAuthStateChanged(auth, async (user) => {
     // L1.20: handleRegister sets _registrationInFlight while it's mid-
