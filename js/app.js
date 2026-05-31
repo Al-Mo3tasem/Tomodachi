@@ -368,6 +368,15 @@ function renderHeroCounter() {
 function showAuthScreen() { showScreen('screen-auth'); }
 function showLandingScreen() { showScreen('screen-landing'); }
 
+// Basic email-shape check; the CTA stays disabled until this passes.
+// Same regex used in handleWaitlistSubmit so the gate is consistent.
+const WAITLIST_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function updateWaitlistSubmitState() {
+  const email = $('waitlist-email')?.value.trim() || '';
+  const submitBtn = $('waitlist-submit');
+  if (submitBtn) submitBtn.disabled = !WAITLIST_EMAIL_RE.test(email);
+}
+
 async function handleWaitlistSubmit(e) {
   e.preventDefault();
   const emailEl = $('waitlist-email');
@@ -376,8 +385,11 @@ async function handleWaitlistSubmit(e) {
   if (errorEl) errorEl.textContent = '';
 
   // Basic format check; the disposable-domain blocklist + Brevo
-  // integration lands in L1.08 (Commercialization_Plan §5).
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  // integration lands in L1.08 (Commercialization_Plan §5). The CTA
+  // is also gated by updateWaitlistSubmitState() on input events, so
+  // this is the second line of defense (paste of an invalid email or
+  // programmatic submit).
+  if (!email || !WAITLIST_EMAIL_RE.test(email)) {
     if (errorEl) errorEl.textContent = t('error.auth.invalid_email');
     return;
   }
@@ -1222,6 +1234,10 @@ function attachListeners() {
   $('btn-landing-signin')?.addEventListener('click', showAuthScreen);
   $('btn-auth-back')?.addEventListener('click', showLandingScreen);
   $('form-waitlist')?.addEventListener('submit', handleWaitlistSubmit);
+  // CTA stays disabled until the email matches a basic valid shape. The
+  // user can't click the button into an invalid-submit attempt — premium-
+  // modern affordance over the previous always-clickable form.
+  $('waitlist-email')?.addEventListener('input', updateWaitlistSubmitState);
 
   // Auth tabs + forms
   document.querySelectorAll('.auth-tab').forEach(btn => {

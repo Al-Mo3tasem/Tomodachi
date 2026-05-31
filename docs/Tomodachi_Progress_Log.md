@@ -16,6 +16,22 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.04 polish: premium back-button pill + CTA disabled-until-valid + mobile form stack
+**Status:** ✅ DONE (second L1.04 follow-up, after `81d6b59`)
+**Scope:** Code | CSS
+**Summary:** Three polish items from re-verification: (1) the auth-screen `← Back to landing` looked disconnected from the centered card area — restyled as a small pill matching the landing's Sign In pill, absolute-positioned in the top-leading corner with consistent design language across both surfaces; (2) the Join Waitlist CTA now starts disabled and only enables on a valid-shaped email — premium-modern affordance vs. the previous always-clickable form; (3) the form was wrapping awkwardly on phone viewports with a left-aligned CTA beneath a full-width input — now stacks vertically with both elements full-width at ≤600px, matching widths feel intentional and the CTA is centered relative to the input it sits below.
+
+**Files (cache busters: `style.css` + `app.js` → `?v=20260528i` in `index.html`):**
+- `css/style.css` — `.auth-back-btn` rewritten as a pill (border, 6/12 padding, 999px radius, transparent bg, secondary text color, hover → accent border + text). `position: absolute` top + inset-inline-start, with `#screen-auth .auth-container { position: relative }` establishing the positioning context. New `@media (max-width: 600px)` block: `.hero-form { flex-direction: column }` + `.hero-cta { width: 100% }` so both elements stack and stretch.
+- `index.html` — Join Waitlist button gained `id="waitlist-submit"` + `disabled` attribute (ships disabled by default).
+- `js/app.js` — new `WAITLIST_EMAIL_RE` constant + `updateWaitlistSubmitState()` function. Input event on `#waitlist-email` re-evaluates the gate and toggles `disabled` on the submit button. `handleWaitlistSubmit`'s own format check now reuses the shared regex (single source of truth between the input-gate and the submit-validation).
+
+**Verification:** `node --check` clean, 133 data-i18n keys still resolve in both locales, `#waitlist-submit` id confirmed present in HTML with `disabled` attribute. The `.btn:disabled` rule (`opacity: 0.45; cursor: not-allowed`) already in place from prior work picks up the new gating automatically.
+
+**Project lead re-verification:** test plan in the chat reply.
+
+---
+
 ## 2026-05-28 — Phase L1.04 follow-up: fix screen-landing display bug + premium inline success card + tighter mobile nav
 **Status:** ✅ DONE (immediate follow-up to `76fbedd`)
 **Scope:** Code | CSS | Content | Memory

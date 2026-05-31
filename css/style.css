@@ -2676,7 +2676,45 @@ body {
   }
 }
 
+/* Mobile/narrow form: stack input + CTA vertically so both render full-
+ * width and the CTA is centered relative to the input (no awkward
+ * left-aligned half-width button under a full-width input). Premium-
+ * modern: big tap targets, matching widths. */
+@media (max-width: 600px) {
+  .hero-form {
+    flex-direction: column;
+  }
+  .hero-cta {
+    width: 100%;
+  }
+}
+
+/* Premium pill matching the landing's Sign In pill (consistent design
+ * language across auth surfaces). Absolute-positioned in the top-leading
+ * corner of the auth-screen so it sits cleanly without disconnecting
+ * from the centered card area. */
 .auth-back-btn {
-  align-self: flex-start;
-  margin-bottom: var(--space-3);
+  position: absolute;
+  top: var(--space-4);
+  inset-inline-start: var(--space-4);
+  padding: 6px 12px;
+  border: 1px solid var(--border, rgba(0,0,0,0.15));
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text-secondary, #666);
+  align-self: auto;
+  margin-bottom: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  z-index: 1;
+}
+
+.auth-back-btn:hover {
+  border-color: var(--accent, #0a84ff);
+  color: var(--accent, #0a84ff);
+}
+
+#screen-auth .auth-container {
+  position: relative;
 }
