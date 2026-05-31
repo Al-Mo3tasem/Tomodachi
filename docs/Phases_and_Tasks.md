@@ -330,11 +330,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Acceptance:** Switching to AR mirrors the entire layout; icons that should mirror do (chevrons, arrows); icons that shouldn't don't (avatars, kana characters).
 **Closure:** Landed. `js/i18n/rtl.js` ships `applyDirection(locale)` wired into `i18n/index.js` init + every `languageChanged` event. 11 of 16 directional CSS properties converted to logical (`margin-inline-start`, `padding-inline`, `inset-inline-end`, `text-align: start/end`, `border-inline-start`); 2 kept physical by intent (toggle-slider knob — toggles are LTR even in AR UIs; `.duel-player-opp` — in-game, deferred to L2.C). Cairo font via `:lang(ar)` + AR line-height 1.7. Back-button arrow moved from i18n strings to CSS pseudo-element so the glyph flips with direction (← in LTR; → in RTL). `.mode-arrow` flipped via `transform: scaleX(-1)` in RTL. **Also bundled the L1.01-flagged data-i18n-clobbers-runtime-state bug fix** for friend bar + select-screen subtitle/info/start-button: introduced three explicit patterns (A static, B dynamic-translatable, C dynamic-untranslatable) plus a new `onLocaleChange()` hook for Pattern D (parametric interpolated strings like `Welcome back, {{name}}`). See `Tomodachi_Progress_Log.md` 2026-05-28 entry + Learning Log entry for the three-patterns taxonomy.
 
-### L1.03 — Translate existing UI strings to AR
+### L1.03 — Translate existing UI strings to AR ✅ DONE 2026-05-28
 **Deps:** L1.01
 **Owner:** Codex (drafts) → Claude (review per `CONTENT_GUIDELINES.md` §7)
 **Description:** Codex drafts AR translations for every key in `en.json` per `CONTENT_GUIDELINES.md` §4 (voice) and §5 (dialect — default MSA). Claude reviews every string. Project lead final approval.
 **Acceptance:** `ar.json` has every key from `en.json` filled; reviewed; merged.
+**Closure:** Codex Spec C run returned a full AR translation of all ~140 keys. §17.3 review found ~85% high quality with 4 specific issues (counter_line tamyiz regression, hero.promise less parallel-authored than current, success_title slightly stiff, duel_btn wrong meaning — see Progress Log entry for details). All 4 fixed via Claude surgical overrides. `ar.json` now ships 214 leaf keys with **zero `[AR] ` placeholders** for the first time since L1.01.
 
 ### L1.04 — Landing page hero section (bilingual) ✅ DONE 2026-05-28
 **Deps:** L1.02, L1.03
@@ -348,7 +349,8 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Owner:** Claude (structure) + Codex (copy drafts) → Claude (review)
 **Description:** Three cards below hero: (1) Arabic-first pedagogy, (2) Multiplayer with friends, (3) Calm pace, soft streaks. Each: icon + headline + 1-2 sentence description. Both languages.
 **Acceptance:** Cards render in both languages; copy matches voice guidelines.
-**Frame status:** HTML + CSS + i18n keys + placeholder EN copy shipped 2026-05-28. Three cards render below the hero, 3-column on desktop, 1-column on tablet/mobile. Hover lift + premium typography per the [[feedback-premium-modern-ux]] memory. **Awaiting Codex Spec D return** for the production-quality copy; integration commit replaces placeholder copy + deletes the spec file. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
+**Frame status:** HTML + CSS + i18n keys + placeholder EN copy shipped 2026-05-28. Three cards render below the hero, 3-column on desktop, 1-column on tablet/mobile. Hover lift + premium typography per the [[feedback-premium-modern-ux]] memory.
+**Closure:** Codex Spec D returned EN + AR copy at premium production quality (~95% per §17.3 review). v1 picks across all three cards integrated into both `en.json` and `ar.json`. Final titles: "Arabic From the Start" / «شرح عربي من الأصل»; "Duels and Co-Op" / «مبارزات وتعاون مع الأصدقاء»; "Pace Without Guilt" / «وتيرة بلا شعور بالذنب». v2 alternates preserved in `scripts/output/codex-d-feature-cards.json` for future reference.
 
 ### L1.06 — Screenshots section
 **Deps:** L1.05

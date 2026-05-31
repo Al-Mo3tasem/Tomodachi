@@ -16,6 +16,58 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.03 + L1.05 integration: Codex Spec C (full AR) + Spec D (feature cards) reviewed & merged
+**Status:** ✅ DONE (L1.03 fully closed; L1.05 fully closed)
+**Scope:** Content | Memory | Docs
+**Summary:** Two Codex outputs landed and integrated in one pass. **Spec C** translated the entire EN key set (~140 keys) into Modern Standard Arabic — `ar.json` now ships zero `[AR] ` placeholders for the first time since L1.01. **Spec D** authored bilingual copy for the three L1.05 feature cards at premium production quality; v1 picks (consistent across all three cards) replaced both my Claude-authored EN placeholders and the `[AR] ` placeholders. Saved a new `feedback-codex-direct-file-output` memory capturing the user's workflow change: every future Codex spec ends with "write your result to <path>" so the user is no longer the copy-paste pipe.
+
+**§17.3 quality review summary:**
+- **Spec D (feature cards):** ~95% — high quality across the board. AR is parallel-authored, not literal translation. EN avoids every word on the forbidden list. Specific phrasing throughout ("memory hooks", "guilt loops", "Miss a day? Your streak survives"). Picked v1 across all three cards for consistency + directness; v2 alternates retained in `scripts/output/codex-d-feature-cards.json` for future reference if any single card needs a swap.
+- **Spec C (full AR translation):** ~85% — majority high quality MSA. Four issues identified requiring Claude surgical fixes (chosen over a Codex revision round given the issues were small and targeted):
+  1. `hero.counter_line.ar` — Codex re-introduced the `شخصًا` tamyiz noun previously fixed during Spec B review (grammatically wrong outside the 11-99 count range). Override: kept the noun-dropped version `{{count}}+ على القائمة بالفعل` (robust at any count).
+  2. `hero.promise.ar` — Codex's output read more like a literal translation than a parallel-author. Override: kept the Spec-B-v2 sentence "صُمّم «تومودَاتشي» للناطقين بالعربية منذ البداية…" which captures the brand promise more directly.
+  3. `hero.success_title.ar` — Codex output "أصبحت على القائمة" reads slightly stiff. Override: replaced with "أنت الآن على القائمة" (warmer + more direct).
+  4. `dashboard.friend.duel_btn` — Codex output "بارز" is the wrong meaning ("prominent/featured" as adjective, not a duel verb). Override: replaced with the noun "مبارزة" — the common pattern for AR action buttons.
+
+**Files (cache busters cascade `?v=20260528k` for the locale-touching consumers):**
+- `js/i18n/locales/en.json` — `features.*` block updated to Spec D v1 EN (replaces my Claude-authored L1.05 placeholders).
+- `js/i18n/locales/ar.json` — **whole-file rewrite from Spec C output** with the 4 surgical overrides applied + Spec D v1 AR for `features.*`. Goes from ~30 `[AR] ` placeholders to zero. Net `+105 ar lines, -75 placeholder lines`.
+- `js/i18n/index.js` — `loadLocale` URL bumped to `?v=20260528k`.
+- `js/app.js` — only change: bump import of `i18n/index.js` to `?v=20260528k`.
+- `index.html` — script tag bumped (CSS unchanged this round).
+
+**Codex prompt cleanup per user request:** `scripts/prompts/spec-c-ar-translation.txt` and `scripts/prompts/spec-d-feature-cards.txt` deleted from disk (Codex done with both). `scripts/prompts/` is now empty. Raw Codex outputs preserved in `scripts/output/codex-c-ar-translation.json` and `scripts/output/codex-d-feature-cards.json` (T4-gitignored) for audit + future v2-alternates reference.
+
+**New feedback memory:** `feedback-codex-direct-file-output` saved. Every future Codex spec will end with "Write your output directly to `<exact path>`" so the user doesn't have to copy/paste big JSON blobs into chat. Quality assessment is required-not-optional: I run §17.3 review BEFORE integrating and flag specific AR-side issues so the user can choose between Claude surgical fixes vs Codex revision rounds.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- **Key parity**: 214 leaf keys in both `en.json` and `ar.json`; zero in-EN-but-not-AR, zero in-AR-but-not-EN.
+- **Zero `[AR] ` placeholders** remaining in `ar.json` (was ~30 before this commit — first time since L1.01 that AR is fully translated).
+- **Zero forbidden Egyptian markers** detected via the §5.3 scan list (يلّا, خلّاص, كده, دلوقتي, etc.).
+- All 4 Claude overrides confirmed applied at their target key paths.
+- Cache buster audit: `index.html` script + `app.js` import + `i18n/index.js` fetch URL all at `?v=20260528k`. CSS stays at `?v=20260528j` (unchanged this round).
+
+**Project lead visual verification (hand off):**
+1. Hard refresh `http://localhost:8000/`. Toggle `العربية`.
+2. The entire app should now render in real Arabic — no `[AR] ` prefixes anywhere. Verify the hero (tagline + promise + counter + CTA), the three feature cards (Arabic-first / Multiplayer / Calm pace), the sign-in pill, the auth-screen forms, the dashboard, the settings panel, the danger zone.
+3. Specifically check the 4 Claude-corrected keys:
+   - The under-input counter should read `350+ على القائمة بالفعل` (no `شخصًا` noun).
+   - The hero promise reads `صُمّم «تومودَاتشي» للناطقين بالعربية منذ البداية، مع دراسة هادئة وتدريب جماعي بين الأصدقاء.` (the Spec B v2 retained sentence).
+   - Submit a valid email → success card title reads `أنت الآن على القائمة`.
+   - On the dashboard (after sign-in), the friend bar's Duel button reads `مبارزة` (not `بارز`).
+4. Visual layout still mirrors correctly in RTL; Cairo font is rendering AR text.
+
+**Open Follow-up:**
+1. **L1.06 — screenshots section** is next on the L1 spine. Frame-first per the stub-vs-full pattern; real screen captures land when L2 content reseed makes the screens visually meaningful.
+2. **L1.07 — FAQ section.** Codex output already reviewed and held in `scripts/output/codex-a-faq.json`. Integration is mostly a structural lift below the feature cards.
+3. **Optional revisions to Spec C output.** Two minor stylistic notes (acceptable but not perfect):
+   - `select.footer.count_one` / `count_other` both use `حرف` — Arabic plurals have more forms (2 → `حرفان`; 3-10 → `أحرف`) but i18next exposes only `_one` / `_other`. Codex's compromise is structurally limited, not a Codex mistake. Acceptable.
+   - `modes.survival.name` translated as `تحدي البقاء السريع` rather than keeping Latin "Survival Rush" as a brand-side feature name. Reads naturally in AR; loses some of the EN punch. Acceptable.
+
+---
+
 ## 2026-05-28 — Phase L1.05 (frame): three feature cards below hero — placeholder EN copy, Codex Spec D in flight
 **Status:** ✅ FRAME DONE (Codex copy swap-in pending Spec D return)
 **Scope:** Code | CSS | Content

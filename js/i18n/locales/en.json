@@ -22,16 +22,16 @@
   },
   "features": {
     "arabic_first": {
-      "title": "Arabic-first pedagogy",
-      "body": "Lessons authored in Arabic, not translated from English. Grammar and mnemonics built on Arabic linguistic intuition."
+      "title": "Arabic From the Start",
+      "body": "Lessons are authored in Arabic, with grammar notes and memory hooks built for Arabic linguistic instincts."
     },
     "multiplayer": {
-      "title": "Practice with friends",
-      "body": "Real-time duels and co-op sessions. Race your friends through hiragana drills, or team up to clear sets together."
+      "title": "Duels and Co-Op",
+      "body": "Live duels and co-op sessions bring friends into the same drill, keeping practice social without slowing it down."
     },
     "calm_pace": {
-      "title": "A pace that fits your life",
-      "body": "A streak system that doesn't punish you for taking a day off. Adult learners deserve a rhythm that survives life."
+      "title": "Pace Without Guilt",
+      "body": "Miss a day? Your streak survives. Tomodachi keeps pace with real schedules, not guilt loops."
     }
   },
   "auth": {

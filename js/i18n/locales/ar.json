@@ -1,13 +1,13 @@
 {
   "common": {
-    "loading": "[AR] Loading Tomodachi…",
-    "back": "[AR] Back",
-    "back_to_dashboard": "[AR] Back to Dashboard",
-    "dashboard": "[AR] Dashboard",
-    "cancel": "[AR] Cancel",
-    "save": "[AR] Save",
-    "play_again": "[AR] Play Again",
-    "rematch": "[AR] Rematch"
+    "loading": "جارٍ تحميل «تومودَاتشي»…",
+    "back": "رجوع",
+    "back_to_dashboard": "العودة إلى لوحة التحكم",
+    "dashboard": "لوحة التحكم",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "play_again": "العب مجددًا",
+    "rematch": "إعادة المباراة"
   },
   "hero": {
     "tagline": "تعلّم اليابانية مع أصدقائك",
@@ -17,307 +17,307 @@
     "counter_line": "{{count}}+ على القائمة بالفعل",
     "sign_in_link": "تسجيل الدخول",
     "sign_in_aria": "تسجيل الدخول إلى حساب موجود",
-    "success_title": "[AR] You're on the list",
-    "success_body": "[AR] We'll let you know when Tomodachi launches."
+    "success_title": "أنت الآن على القائمة",
+    "success_body": "سنخبرك عند إطلاق «تومودَاتشي»."
   },
   "features": {
     "arabic_first": {
-      "title": "[AR] Arabic-first pedagogy",
-      "body": "[AR] Lessons authored in Arabic, not translated from English. Grammar and mnemonics built on Arabic linguistic intuition."
+      "title": "شرح عربي من الأصل",
+      "body": "دروس تُؤلَّف بالعربية منذ البداية، لا تُنقَل عن الإنجليزية، فتصل القواعد ومفاتيح التذكّر بما يوافق حسّ المتعلّم العربي."
     },
     "multiplayer": {
-      "title": "[AR] Practice with friends",
-      "body": "[AR] Real-time duels and co-op sessions. Race your friends through hiragana drills, or team up to clear sets together."
+      "title": "مبارزات وتعاون مع الأصدقاء",
+      "body": "تدخل أنت وأصدقاؤك التدريب نفسه: جولات مباشرة للمنافسة، وجلسات تعاون تُبقيكم حاضرين معًا."
     },
     "calm_pace": {
-      "title": "[AR] A pace that fits your life",
-      "body": "[AR] A streak system that doesn't punish you for taking a day off. Adult learners deserve a rhythm that survives life."
+      "title": "وتيرة بلا شعور بالذنب",
+      "body": "إن فاتك يوم، لا تنقطع سلسلة تقدّمك. يحافظ «تومودَاتشي» على إيقاع هادئ يناسب حياة مزدحمة."
     }
   },
   "auth": {
     "brand": {
-      "title": "[AR] Tomodachi",
-      "subtitle": "[AR] Master Japanese, together"
+      "title": "«تومودَاتشي»",
+      "subtitle": "أتقن اليابانية مع أصدقائك"
     },
-    "back_to_landing": "[AR] Back to landing",
+    "back_to_landing": "العودة إلى الصفحة الرئيسية",
     "tab": {
-      "sign_in": "[AR] Sign In",
-      "create_account": "[AR] Create Account"
+      "sign_in": "تسجيل الدخول",
+      "create_account": "إنشاء حساب"
     },
     "field": {
-      "email": "[AR] Email",
-      "password": "[AR] Password",
-      "username": "[AR] Username",
-      "display_name": "[AR] Display Name"
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "username": "اسم المستخدم",
+      "display_name": "الاسم الظاهر"
     },
     "placeholder": {
-      "email": "[AR] you@example.com",
-      "password": "[AR] ••••••",
-      "username": "[AR] almo3tasem",
-      "display_name": "[AR] Al Mo3tasem"
+      "email": "you@example.com",
+      "password": "••••••",
+      "username": "almo3tasem",
+      "display_name": "Al Mo3tasem"
     },
     "hint": {
-      "username": "[AR] (lowercase, no spaces)",
-      "password": "[AR] (6+ characters)"
+      "username": "(أحرف صغيرة، بلا مسافات)",
+      "password": "(6 أحرف أو أكثر)"
     },
     "button": {
-      "sign_in": "[AR] Sign In",
-      "create_account": "[AR] Create Account"
+      "sign_in": "تسجيل الدخول",
+      "create_account": "إنشاء حساب"
     }
   },
   "nav": {
-    "settings_title": "[AR] Settings",
-    "logout": "[AR] Logout",
-    "user_default_name": "[AR] Player"
+    "settings_title": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "user_default_name": "لاعب"
   },
   "dashboard": {
-    "title": "[AR] Dashboard",
-    "subtitle_named": "[AR] Welcome back, {{name}}",
+    "title": "لوحة التحكم",
+    "subtitle_named": "مرحبًا بعودتك، {{name}}",
     "friend": {
-      "waiting": "[AR] Waiting for friend…",
-      "status_offline": "[AR] Offline",
-      "status_online": "[AR] Online",
-      "status_in_game": "[AR] In a game",
-      "duel_btn": "[AR] Duel",
-      "online_toast": "[AR] {{name}} is online!"
+      "waiting": "في انتظار الصديق…",
+      "status_offline": "غير متصل",
+      "status_online": "متصل",
+      "status_in_game": "داخل لعبة",
+      "duel_btn": "مبارزة",
+      "online_toast": "{{name}} متصل الآن!"
     },
     "stat": {
-      "games": "[AR] Games",
-      "best_score": "[AR] Best Score",
-      "duel_record": "[AR] Duel W–L",
-      "coop_best": "[AR] Co-op Best",
-      "mastery_label": "[AR] Hiragana mastery"
+      "games": "الألعاب",
+      "best_score": "أفضل نتيجة",
+      "duel_record": "سجل المبارزات",
+      "coop_best": "أفضل نتيجة تعاونية",
+      "mastery_label": "إتقان الهيراغانا"
     },
     "leaderboard": {
-      "title": "[AR] Leaderboard",
-      "preview_empty": "[AR] Play games to see rankings!",
-      "view_full": "[AR] View Full Leaderboard"
+      "title": "لوحة الترتيب",
+      "preview_empty": "العب لترى الترتيب!",
+      "view_full": "عرض لوحة الترتيب كاملة"
     },
     "modes": {
-      "title": "[AR] Game Modes"
+      "title": "أوضاع اللعب"
     },
     "history": {
-      "title": "[AR] Recent History",
-      "empty": "[AR] No games played yet.",
-      "could_not_load": "[AR] Could not load history.",
-      "result_won": "[AR] Won",
-      "result_lost": "[AR] Lost",
-      "result_draw": "[AR] Draw",
-      "vs_opponent": "[AR] vs {{name}}",
-      "score_pts": "[AR] {{score}} pts",
-      "accuracy": "[AR] {{percent}}% accuracy",
-      "all_cleared": "[AR] All cleared",
-      "team_run": "[AR] Team run"
+      "title": "السجل الحديث",
+      "empty": "لم تُلعب أي ألعاب بعد.",
+      "could_not_load": "تعذّر تحميل السجل.",
+      "result_won": "فزت",
+      "result_lost": "خسرت",
+      "result_draw": "تعادل",
+      "vs_opponent": "ضد {{name}}",
+      "score_pts": "{{score}} نقطة",
+      "accuracy": "دقة {{percent}}%",
+      "all_cleared": "أُنجزت كلها",
+      "team_run": "جولة جماعية"
     }
   },
   "modes": {
     "zen": {
-      "name": "[AR] Zen Mode",
-      "desc": "[AR] Timed practice — read or listen"
+      "name": "وضع زن",
+      "desc": "تدرّب مؤقّت — قراءة أو استماع"
     },
     "survival": {
-      "name": "[AR] Survival Rush",
-      "desc": "[AR] Solo speed challenge"
+      "name": "تحدي البقاء السريع",
+      "desc": "تحدٍّ فردي سريع"
     },
     "duel": {
-      "name": "[AR] Duel Mode",
-      "desc": "[AR] Real-time VS your friend"
+      "name": "وضع المبارزة",
+      "desc": "مواجهة مباشرة مع صديقك"
     },
     "coop": {
-      "name": "[AR] Sync Match",
-      "desc": "[AR] Team up — beat the clock together"
+      "name": "المباراة المتزامنة",
+      "desc": "تعاونوا — وتغلّبوا على الوقت معًا"
     }
   },
   "select": {
-    "title": "[AR] Set Up Your Game",
+    "title": "اضبط لعبتك",
     "subtitle": {
-      "default": "[AR] Choose which Hiragana to include",
-      "zen": "[AR] Set up your Zen Mode game",
-      "survival": "[AR] Set up your Survival Rush game",
-      "duel": "[AR] Set up your Duel — you are the host",
-      "coop": "[AR] Set up your Sync Match — you are the host"
+      "default": "اختر أحرف الهيراغانا التي تريد تضمينها",
+      "zen": "اضبط لعبة وضع زن",
+      "survival": "اضبط تحدي البقاء السريع",
+      "duel": "اضبط مبارزتك — أنت المضيف",
+      "coop": "اضبط المباراة المتزامنة — أنت المضيف"
     },
     "info": {
-      "zen": "[AR] 🧘 Timed solo practice. Read the glyph, or switch to Listen to train your ear — audio never gives away a reading answer.",
-      "survival": "[AR] 🔥 Reading · typing · 3 lives. The clock speeds up every 5 correct answers — and your score scales with how many characters you pick.",
-      "duel": "[AR] ⚔️ Real-time VS. You pick the characters and rules; both players race the same cards. Fastest correct answer takes the round. Pick at least 4 characters.",
-      "coop": "[AR] 🤝 Team up! You both see the same card and must each clear it before a shared clock (5s per character) runs out. Pick at least 4 characters."
+      "zen": "🧘 تدرّب فردي مؤقّت. اقرأ الرمز، أو بدّل إلى الاستماع لتدرّب أذنك — لن يكشف الصوت إجابة القراءة.",
+      "survival": "🔥 قراءة · كتابة · 3 محاولات. تزداد سرعة المؤقّت بعد كل 5 إجابات صحيحة — وتزداد نتيجتك بحسب عدد الأحرف التي تختارها.",
+      "duel": "⚔️ مواجهة مباشرة. أنت تختار الأحرف والقواعد؛ ويتسابق اللاعبان على البطاقات نفسها. أسرع إجابة صحيحة تكسب الجولة. اختر 4 أحرف على الأقل.",
+      "coop": "🤝 كوّنوا فريقًا! تظهر لكما البطاقة نفسها، وعلى كل منكما حلّها قبل أن ينتهي المؤقّت المشترك (5 ثوانٍ لكل حرف). اختر 4 أحرف على الأقل."
     },
     "option": {
-      "practice": "[AR] Practice",
-      "win_condition": "[AR] Win Condition",
-      "answer_with": "[AR] Answer With",
-      "session": "[AR] Session"
+      "practice": "التدريب",
+      "win_condition": "شرط الفوز",
+      "answer_with": "طريقة الإجابة",
+      "session": "الجلسة"
     },
     "seg": {
-      "read": "[AR] 👁️ Read",
-      "listen": "[AR] 👂 Listen",
-      "first_to_10": "[AR] 🏁 First to 10",
-      "rounds_20": "[AR] 🔟 20 Rounds",
-      "typing": "[AR] ⌨️ Typing",
-      "choices": "[AR] 🔘 Choices"
+      "read": "👁️ قراءة",
+      "listen": "👂 استماع",
+      "first_to_10": "🏁 أول من يصل إلى 10",
+      "rounds_20": "🔟 20 جولة",
+      "typing": "⌨️ كتابة",
+      "choices": "🔘 اختيارات"
     },
     "panel": {
-      "premade": "[AR] Premade Sets",
-      "custom": "[AR] Custom Pick",
-      "select_all": "[AR] Select All",
-      "clear": "[AR] Clear"
+      "premade": "مجموعات جاهزة",
+      "custom": "اختيار مخصص",
+      "select_all": "تحديد الكل",
+      "clear": "مسح"
     },
     "footer": {
-      "count_one": "[AR] {{count}} character selected",
-      "count_other": "[AR] {{count}} characters selected",
-      "difficulty": "[AR] Difficulty: {{multiplier}}×"
+      "count_one": "تم تحديد {{count}} حرف",
+      "count_other": "تم تحديد {{count}} حرف",
+      "difficulty": "الصعوبة: {{multiplier}}×"
     },
     "start_button": {
-      "default": "[AR] Start Game",
-      "zen": "[AR] Start Game",
-      "survival": "[AR] Start Game",
-      "duel": "[AR] Send Challenge",
-      "coop": "[AR] Send Invite"
+      "default": "ابدأ اللعبة",
+      "zen": "ابدأ اللعبة",
+      "survival": "ابدأ اللعبة",
+      "duel": "أرسل التحدي",
+      "coop": "أرسل الدعوة"
     },
-    "listen_unsupported": "[AR] Listening practice needs browser speech support."
+    "listen_unsupported": "تدريب الاستماع يحتاج إلى دعم النطق في المتصفح."
   },
   "leaderboard": {
-    "title": "[AR] Leaderboard",
-    "subtitle": "[AR] Best scores by game and set size",
-    "loading": "[AR] Loading rankings…"
+    "title": "لوحة الترتيب",
+    "subtitle": "أفضل النتائج حسب اللعبة وحجم المجموعة",
+    "loading": "جارٍ تحميل الترتيب…"
   },
   "settings": {
-    "title": "[AR] Settings",
+    "title": "الإعدادات",
     "section": {
-      "profile": "[AR] Profile",
-      "danger_zone": "[AR] Danger Zone"
+      "profile": "الملف الشخصي",
+      "danger_zone": "منطقة الخطر"
     },
     "profile": {
-      "avatar_label": "[AR] Avatar",
-      "save_btn": "[AR] Save Profile",
-      "username_label": "[AR] Username"
+      "avatar_label": "الصورة الرمزية",
+      "save_btn": "حفظ الملف الشخصي",
+      "username_label": "اسم المستخدم"
     },
     "row": {
-      "theme_name": "[AR] Dark Mode",
-      "theme_desc": "[AR] Switch between light and dark themes",
-      "audio_name": "[AR] Sound Effects",
-      "audio_desc": "[AR] Blips for correct, wrong, and win moments",
-      "notify_name": "[AR] Notifications",
-      "notify_desc": "[AR] Toast alerts when your friend comes online"
+      "theme_name": "الوضع الداكن",
+      "theme_desc": "التبديل بين السمة الفاتحة والداكنة",
+      "audio_name": "المؤثرات الصوتية",
+      "audio_desc": "أصوات قصيرة للإجابات الصحيحة والخاطئة ولحظات الفوز",
+      "notify_name": "الإشعارات",
+      "notify_desc": "تنبيهات تظهر عندما يصبح صديقك متصلًا"
     },
     "danger": {
-      "description": "[AR] Reset all your progress — games played, scores, character mastery, duel record, and leaderboard entries. This cannot be undone.",
-      "start_btn": "[AR] Reset My Progress",
-      "type_to_confirm": "[AR] Type RESET to confirm",
+      "description": "إعادة ضبط كل تقدّمك — الألعاب التي لعبتها، والنتائج، وإتقان الأحرف، وسجل المبارزات، ومدخلات لوحة الترتيب. لا يمكن التراجع عن هذا الإجراء.",
+      "start_btn": "إعادة ضبط تقدّمي",
+      "type_to_confirm": "اكتب RESET للتأكيد",
       "input_placeholder": "RESET",
-      "cancel_btn": "[AR] Cancel",
-      "confirm_btn": "[AR] Confirm Reset"
+      "cancel_btn": "إلغاء",
+      "confirm_btn": "تأكيد إعادة الضبط"
     },
-    "version": "[AR] Tomodachi {{version}}",
-    "blocked_during_match": "[AR] Finish your match before opening Settings.",
-    "profile_save_failed": "[AR] Could not save profile: {{message}}",
-    "profile_updated": "[AR] Profile updated.",
-    "username_taken": "[AR] Username already taken.",
-    "reset_success": "[AR] Progress reset — fresh start!",
-    "reset_failed": "[AR] Reset failed: {{message}}"
+    "version": "«تومودَاتشي» {{version}}",
+    "blocked_during_match": "أنهِ مباراتك قبل فتح الإعدادات.",
+    "profile_save_failed": "تعذّر حفظ الملف الشخصي: {{message}}",
+    "profile_updated": "تم تحديث الملف الشخصي.",
+    "username_taken": "اسم المستخدم مستخدم بالفعل.",
+    "reset_success": "أُعيد ضبط التقدّم — بداية جديدة!",
+    "reset_failed": "تعذّرت إعادة الضبط: {{message}}"
   },
   "game": {
-    "exit_title": "[AR] Exit game",
-    "speak_title": "[AR] Hear pronunciation",
+    "exit_title": "الخروج من اللعبة",
+    "speak_title": "سماع النطق",
     "pause": {
-      "title": "[AR] Paused",
-      "desc": "[AR] Your timer is frozen. Take your time.",
-      "resume_btn": "[AR] Resume"
+      "title": "متوقف مؤقتًا",
+      "desc": "المؤقّت متوقف. خذ وقتك.",
+      "resume_btn": "استئناف"
     },
     "results": {
-      "title": "[AR] Complete",
-      "score_label": "[AR] Score",
-      "dashboard_btn": "[AR] Dashboard",
-      "play_again_btn": "[AR] Play Again"
+      "title": "اكتمل",
+      "score_label": "النتيجة",
+      "dashboard_btn": "لوحة التحكم",
+      "play_again_btn": "العب مجددًا"
     }
   },
   "lobby": {
-    "title": "[AR] Lobby",
-    "status": "[AR] Waiting for opponent…",
-    "cancel_btn": "[AR] Cancel"
+    "title": "الردهة",
+    "status": "في انتظار الخصم…",
+    "cancel_btn": "إلغاء"
   },
   "duel": {
-    "forfeit_title": "[AR] Forfeit duel",
-    "round_label": "[AR] Round 1",
-    "you": "[AR] You",
-    "opponent": "[AR] Opponent",
-    "vs": "[AR] VS",
-    "get_ready": "[AR] Get ready…",
+    "forfeit_title": "الانسحاب من المبارزة",
+    "round_label": "الجولة 1",
+    "you": "أنت",
+    "opponent": "الخصم",
+    "vs": "ضد",
+    "get_ready": "استعد…",
     "stall": {
-      "title": "[AR] Opponent unreachable",
-      "desc": "[AR] Your opponent seems to have disconnected.",
-      "leave_btn": "[AR] Claim Win & Leave"
+      "title": "تعذّر الوصول إلى الخصم",
+      "desc": "يبدو أن خصمك انقطع اتصاله.",
+      "leave_btn": "احتسب الفوز وغادر"
     },
     "result": {
-      "victory": "[AR] Victory!",
-      "dashboard_btn": "[AR] Dashboard",
-      "rematch_btn": "[AR] Rematch"
+      "victory": "فوز!",
+      "dashboard_btn": "لوحة التحكم",
+      "rematch_btn": "إعادة المباراة"
     }
   },
   "coop": {
-    "leave_title": "[AR] Leave match",
-    "header": "[AR] 🤝 Sync Match",
-    "you": "[AR] You",
-    "friend": "[AR] Friend",
-    "sync_up": "[AR] Sync up…",
+    "leave_title": "مغادرة المباراة",
+    "header": "🤝 المباراة المتزامنة",
+    "you": "أنت",
+    "friend": "الصديق",
+    "sync_up": "جارٍ المزامنة…",
     "stall": {
-      "title": "[AR] Partner unreachable",
-      "desc": "[AR] Your teammate seems to have disconnected.",
-      "leave_btn": "[AR] End Match & Leave"
+      "title": "تعذّر الوصول إلى الشريك",
+      "desc": "يبدو أن زميلك انقطع اتصاله.",
+      "leave_btn": "أنهِ المباراة وغادر"
     },
     "result": {
-      "title_cleared": "[AR] All Cleared!",
-      "team_score_label": "[AR] Team Score",
-      "dashboard_btn": "[AR] Dashboard",
-      "again_btn": "[AR] Play Again"
+      "title_cleared": "أُنجزت كلها!",
+      "team_score_label": "نتيجة الفريق",
+      "dashboard_btn": "لوحة التحكم",
+      "again_btn": "العب مجددًا"
     }
   },
   "invite": {
-    "duel_title": "[AR] Duel Challenge!",
-    "coop_title": "[AR] Sync Match Invite!",
-    "duel_action": "[AR] wants to duel you.",
-    "coop_action": "[AR] wants to team up.",
-    "decline_btn": "[AR] Decline",
-    "accept_btn": "[AR] Accept"
+    "duel_title": "تحدي مبارزة!",
+    "coop_title": "دعوة إلى المباراة المتزامنة!",
+    "duel_action": "يريد مبارزتك.",
+    "coop_action": "يريد التعاون معك.",
+    "decline_btn": "رفض",
+    "accept_btn": "قبول"
   },
   "error": {
     "auth": {
-      "invalid_email": "[AR] Invalid email address.",
-      "user_disabled": "[AR] This account has been disabled.",
-      "user_not_found": "[AR] No account found with this email.",
-      "wrong_password": "[AR] Incorrect password.",
-      "email_already_in_use": "[AR] An account already exists with this email.",
-      "weak_password": "[AR] Password must be at least 6 characters.",
-      "invalid_credential": "[AR] Invalid email or password.",
-      "invalid_login_credentials": "[AR] Invalid email or password.",
-      "too_many_requests": "[AR] Too many attempts. Please try again later.",
-      "network_request_failed": "[AR] Network error. Check your connection and try again.",
-      "operation_not_allowed": "[AR] Email/password login is not enabled in Firebase Authentication.",
-      "api_key_not_valid": "[AR] Firebase rejected this API key. Check the deployed config.",
-      "app_not_authorized": "[AR] This domain is not authorized for this Firebase app.",
-      "unauthorized_domain": "[AR] This domain is not authorized in Firebase Authentication settings.",
-      "fallback_with_code": "[AR] Authentication failed ({{code}}). Please try again.",
-      "fallback_generic": "[AR] Authentication failed. Please try again."
+      "invalid_email": "عنوان البريد الإلكتروني غير صالح.",
+      "user_disabled": "تم تعطيل هذا الحساب.",
+      "user_not_found": "لا يوجد حساب بهذا البريد الإلكتروني.",
+      "wrong_password": "كلمة المرور غير صحيحة.",
+      "email_already_in_use": "يوجد حساب بهذا البريد الإلكتروني بالفعل.",
+      "weak_password": "يجب أن تتكوّن كلمة المرور من 6 أحرف على الأقل.",
+      "invalid_credential": "البريد الإلكتروني أو كلمة المرور غير صحيح.",
+      "invalid_login_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيح.",
+      "too_many_requests": "محاولات كثيرة جدًا. يرجى المحاولة لاحقًا.",
+      "network_request_failed": "خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.",
+      "operation_not_allowed": "تسجيل الدخول بالبريد الإلكتروني وكلمة المرور غير مفعّل في Firebase Authentication.",
+      "api_key_not_valid": "رفض Firebase مفتاح API هذا. تحقّق من إعدادات النشر.",
+      "app_not_authorized": "هذا النطاق غير مصرّح له باستخدام تطبيق Firebase هذا.",
+      "unauthorized_domain": "هذا النطاق غير مصرّح به في إعدادات Firebase Authentication.",
+      "fallback_with_code": "فشلت المصادقة ({{code}}). حاول مرة أخرى.",
+      "fallback_generic": "فشلت المصادقة. حاول مرة أخرى."
     },
     "form": {
-      "email_password_required": "[AR] Enter both email and password.",
-      "all_fields_required": "[AR] Fill in every field before creating an account.",
-      "username_format": "[AR] Username must be lowercase letters, numbers, or underscores only.",
-      "display_name_required": "[AR] Display name is required."
+      "email_password_required": "أدخل البريد الإلكتروني وكلمة المرور.",
+      "all_fields_required": "املأ كل الحقول قبل إنشاء الحساب.",
+      "username_format": "يجب أن يتكوّن اسم المستخدم من أحرف إنجليزية صغيرة وأرقام وشرطات سفلية فقط.",
+      "display_name_required": "الاسم الظاهر مطلوب."
     },
-    "username_taken": "[AR] Username already taken.",
-    "logout_failed": "[AR] Logout failed: {{message}}",
-    "profile_load_failed": "[AR] Could not load your profile: {{message}}",
-    "app_startup_failed": "[AR] App startup failed: {{message}}",
-    "content_sets_load_failed": "[AR] Failed to load Hiragana sets. Make sure the database is seeded.",
-    "friend_offline_for_mp": "[AR] Your friend needs to be online for multiplayer."
+    "username_taken": "اسم المستخدم مستخدم بالفعل.",
+    "logout_failed": "تعذّر تسجيل الخروج: {{message}}",
+    "profile_load_failed": "تعذّر تحميل ملفك الشخصي: {{message}}",
+    "app_startup_failed": "تعذّر بدء التطبيق: {{message}}",
+    "content_sets_load_failed": "تعذّر تحميل مجموعات الهيراغانا. تأكّد من تجهيز قاعدة البيانات بالبيانات الأولية.",
+    "friend_offline_for_mp": "يجب أن يكون صديقك متصلًا للعب الجماعي."
   },
   "toast": {
-    "welcome_new": "[AR] Welcome to Tomodachi, {{name}}!",
-    "welcome_back": "[AR] Welcome back, {{name}}!",
-    "signed_in": "[AR] Signed in. Loading dashboard…",
-    "profile_created": "[AR] Created your missing profile document."
+    "welcome_new": "مرحبًا بك في «تومودَاتشي»، {{name}}!",
+    "welcome_back": "مرحبًا بعودتك، {{name}}!",
+    "signed_in": "تم تسجيل الدخول. جارٍ تحميل لوحة التحكم…",
+    "profile_created": "تم إنشاء مستند ملفك الشخصي المفقود."
   },
   "locale": {
     "label_en": "EN",
