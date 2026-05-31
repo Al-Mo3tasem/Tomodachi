@@ -42,6 +42,20 @@
     "page_title": "Tomodachi — Learn Japanese with Friends, Arabic-First",
     "meta_description": "A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace that doesn't punish you for taking a day off. Join the waitlist."
   },
+  "footer": {
+    "tagline": "Learn Japanese together",
+    "privacy_link": "Privacy",
+    "terms_link": "Terms",
+    "cookies_link": "Cookies",
+    "cookie_settings_link": "Cookie Settings",
+    "copyright": "© {{year}} Tomodachi"
+  },
+  "policy": {
+    "back_home": "← Back home",
+    "last_updated": "Last updated:",
+    "coming_soon_title": "Content coming soon",
+    "coming_soon_body": "This policy is being prepared. We're using Termly to generate baseline language, customizing for Tomodachi's specifics, and authoring the Arabic version natively. Check back soon."
+  },
   "consent": {
     "title": "Cookie preferences",
     "body": "Tomodachi uses essential cookies to run the app. Optional analytics and error-context cookies help us improve — your call.",

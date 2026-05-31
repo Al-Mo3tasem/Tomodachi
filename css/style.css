@@ -3191,6 +3191,193 @@ body {
 }
 
 /* ============================================================
+ * L1.13 — Landing footer + policy page shell
+ * Premium minimal footer: brand mark + tagline on one side,
+ * legal links + cookie-settings re-open on the other, copyright
+ * centered below on desktop / stacked on mobile.
+ * ============================================================ */
+
+.landing-footer {
+  margin-top: var(--space-12);
+  border-top: 1px solid var(--border);
+  padding: var(--space-7) var(--space-5) var(--space-6);
+  background: rgba(255, 255, 255, 0.4); /* subtle separation from gradient mesh */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.landing-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-5) var(--space-6);
+  align-items: center;
+}
+
+.landing-footer-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.landing-footer-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.landing-footer-tagline {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.landing-footer-links {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.landing-footer-links a,
+.landing-footer-link-btn {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.landing-footer-links a:hover,
+.landing-footer-link-btn:hover {
+  color: var(--accent);
+}
+
+.landing-footer-copyright {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 720px) {
+  .landing-footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .landing-footer-brand,
+  .landing-footer-links {
+    justify-content: center;
+  }
+}
+
+/* ----- Policy page shell (privacy.html / terms.html / cookies.html) ----- */
+
+.policy-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse 60% 40% at 8% -5%,  rgba(79, 70, 229, 0.06), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 92% 105%, rgba(236, 72, 153, 0.05), transparent 70%),
+    var(--bg-base);
+}
+
+.policy-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.policy-nav .landing-brand {
+  text-decoration: none;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+}
+
+.policy-back {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  font-weight: 600;
+}
+
+.policy-back:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.policy {
+  flex: 1;
+  padding: var(--space-10) var(--space-5);
+}
+
+.policy-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.policy-content h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+}
+
+.policy-meta {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-8);
+}
+
+.policy-placeholder {
+  padding: var(--space-6);
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.policy-placeholder h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--text-primary);
+}
+
+.policy-placeholder p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================================
  * L1.10 — Cookie consent banner + customize modal
  * Per PROJECT_RULES.md §19. Lightweight, premium-modern.
  * Banner: bottom-pinned card, slide-up entrance, non-blocking
