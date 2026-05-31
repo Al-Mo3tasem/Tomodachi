@@ -34,6 +34,10 @@
       "body": "Miss a day? Your streak survives. Tomodachi keeps pace with real schedules, not guilt loops."
     }
   },
+  "screenshots": {
+    "section_title": "Inside Tomodachi",
+    "section_subtitle": "A peek at the dashboard, gameplay, and leaderboard."
+  },
   "auth": {
     "brand": {
       "title": "Tomodachi",

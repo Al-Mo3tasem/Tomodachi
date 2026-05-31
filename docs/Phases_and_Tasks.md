@@ -352,11 +352,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Frame status:** HTML + CSS + i18n keys + placeholder EN copy shipped 2026-05-28. Three cards render below the hero, 3-column on desktop, 1-column on tablet/mobile. Hover lift + premium typography per the [[feedback-premium-modern-ux]] memory.
 **Closure:** Codex Spec D returned EN + AR copy at premium production quality (~95% per §17.3 review). v1 picks across all three cards integrated into both `en.json` and `ar.json`. Final titles: "Arabic From the Start" / «شرح عربي من الأصل»; "Duels and Co-Op" / «مبارزات وتعاون مع الأصدقاء»; "Pace Without Guilt" / «وتيرة بلا شعور بالذنب». v2 alternates preserved in `scripts/output/codex-d-feature-cards.json` for future reference.
 
-### L1.06 — Screenshots section
+### L1.06 — Screenshots section 🔵 FRAME DONE 2026-05-28
 **Deps:** L1.05
 **Owner:** User (captures) + Claude (markup)
 **Description:** 3-4 product screens showing current state of app: dashboard, duel, lesson preview, leaderboard. Bilingual versions (capture each screen in both EN and AR after L1.03). Optimized (WebP, ~150KB each).
 **Acceptance:** Screenshots load on both desktop and mobile; correct language version shown based on toggle.
+**Frame status:** Section structure + phone-frame placeholders + i18n keys shipped 2026-05-28. Three phone-frame cards (Dashboard / Duel / Leaderboard) with distinct soft gradients + 友 watermark + premium hover lift. New `screenshots.*` namespace (section_title + section_subtitle, both languages). **Awaiting real screen captures** post-L2 content reseed when the app screens are visually meaningful. Real-image swap is a small content-only commit. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
 ### L1.07 — FAQ section
 **Deps:** L1.05

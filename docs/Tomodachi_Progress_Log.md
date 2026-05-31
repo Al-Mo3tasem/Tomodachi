@@ -16,6 +16,44 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.06 (frame): screenshots section with premium phone-frame placeholders
+**Status:** ✅ FRAME DONE (real screen captures swap in post-L2 content reseed)
+**Scope:** Code | CSS | Content
+**Summary:** Built the L1.06 screenshots section as a stub-vs-full pattern: HTML + CSS + i18n shipped now with elegant phone-frame placeholders; real screen captures swap in via a small content-only commit when L2.A-L2.B content reseed makes the screens visually meaningful (the app currently can't render content cards because `content_sets/` is empty on `tomodachi-prod`). Three cards — Dashboard / Duel Mode / Leaderboard — in a 3-column grid on desktop, 1-column on tablet/mobile with constrained max-width (280px) so phone frames don't stretch full-viewport (a premium aesthetic decision per [[feedback-premium-modern-ux]]). New section heading "Inside Tomodachi" / «نظرة على «تومودَاتشي»» + subtitle, both languages authored inline (short strings, frozen MSA idioms — no Codex round needed).
+
+**Premium-modern design notes (per `feedback-premium-modern-ux`):**
+- **Phone-frame styling** instead of bare image cards: 8px dark bezel (#1c1c1e — actual phone-hardware color, works in both light + dark themes), 32px corner radius, faint notch hint at top (56×14px), aspect-ratio 9/19.5 (modern phone proportion).
+- **Soft elevation** — 0 24px 48px primary shadow + 0 8px 16px ambient shadow. On hover: translateY(-4px) + amplified shadow. Subtle 0.3s ease transition.
+- **Three distinct soft gradients** per placeholder — neutral-gray for Dashboard, soft-pink for Duel, soft-amber for Leaderboard — so the cards differentiate at a glance even when the content is placeholder. Each gradient is light → very light (no busy patterns), keeping the premium-clean feel.
+- **Brand-kanji watermark** 友 at 5rem in 5% opacity, dead center of each placeholder. Signals "screen content coming" without faking UI elements that would look half-baked. More felt than seen.
+- **Section heading** "Inside Tomodachi" (magazine-style, short, doesn't overpromise) — `clamp(1.5rem, 3vw, 2rem)` responsive typography, -0.02em letter-spacing for premium tightness.
+- **No section background** — section sits in screen-landing's existing soft-gradient background, no panel/box around it (Stripe/Linear pattern; the cards themselves provide the visual anchor).
+
+**Files (cache busters cascade `?v=20260528l`):**
+- `index.html` — new `<section class="screenshots">` after the features section, inside `screen-landing`. Three `<figure class="screenshot-card">` blocks with header + grid. Existing i18n keys reused for captions (`common.dashboard`, `modes.duel.name`, `leaderboard.title`) — no duplication. Two new keys: `screenshots.section_title` + `screenshots.section_subtitle`.
+- `css/style.css` — new `.screenshots` section (~110 lines). Phone-frame CSS includes `::before` pseudo-element for the notch, `::after` pseudo-element on `.screenshot-placeholder` for the 友 watermark, three `.placeholder-*` variants for the gradient distinction, responsive breakpoints (≤900px stacks to 280px-max single column; ≤480px tightens padding).
+- `js/i18n/locales/en.json` — `screenshots.*` namespace added: `section_title: "Inside Tomodachi"`, `section_subtitle: "A peek at the dashboard, gameplay, and leaderboard."`.
+- `js/i18n/locales/ar.json` — matching keys: `section_title: "نظرة على «تومودَاتشي»"` (parallel-authored — "A look at Tomodachi" reads more naturally in AR than literal "Inside"), `section_subtitle: "لمحة عن لوحة التحكم، واللعب، ولوحة الترتيب."` (frozen MSA, Arabic comma).
+- `js/i18n/index.js` — `loadLocale` URL bumped to `?v=20260528l`.
+- `js/app.js` — bump import of `i18n/index.js` to `?v=20260528l`.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- **216 leaf keys balanced** between en.json and ar.json (+2 from the 214 of the previous commit), zero parity diff.
+- 142 `data-i18n*` keys in `index.html`, all resolve in both locales.
+- `screenshots.*` keys confirmed in both locales.
+- Cache buster audit: all locale-touching consumers at `?v=20260528l`.
+
+**Project lead visual verification (hand off):** at the bottom of the chat reply.
+
+**Open Follow-up:**
+1. **Real screen captures**, EN + AR, mobile + desktop. After L2 content reseed makes the screens visually meaningful (vocab cards rendering, leaderboard with names, duel UI with actual content), you capture the 6 screens (Dashboard / Duel / Leaderboard × EN / AR). I optimize to WebP at ~150KB each per the task description, swap them into the `.screenshot-placeholder` slots, and remove the gradient + watermark styling. Small content-only commit.
+2. **L1.07 — FAQ section** is next. Codex output already reviewed and held in `scripts/output/codex-a-faq.json`. Integration is a structural lift: build the accordion HTML + CSS below the screenshots, wire keys, swap in the reviewed copy.
+3. **`prefers-reduced-motion`** opt-out for the hover lifts (currently the 4px translate is gentle enough to not warrant gating; revisit during the broader accessibility audit at L1.14+).
+
+---
+
 ## 2026-05-28 — Phase L1.03 + L1.05 integration: Codex Spec C (full AR) + Spec D (feature cards) reviewed & merged
 **Status:** ✅ DONE (L1.03 fully closed; L1.05 fully closed)
 **Scope:** Content | Memory | Docs

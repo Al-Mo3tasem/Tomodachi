@@ -2769,6 +2769,165 @@ body {
   }
 }
 
+/* ============================================================
+ * L1.06 — Screenshots section (below features)
+ * Premium phone-frame placeholders for now; real screen captures
+ * swap in when L2 content reseed makes the screens visually
+ * meaningful. Three cards side-by-side on desktop, single-column
+ * stack on tablet/mobile (constrained max-width so the phone
+ * frames don't stretch full-viewport on mobile — that would feel
+ * utilitarian, not premium).
+ * ============================================================ */
+
+.screenshots {
+  padding: var(--space-8) var(--space-5);
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.screenshots-header {
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+
+.section-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 auto;
+  max-width: 520px;
+  line-height: 1.55;
+}
+
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+  justify-items: center;
+}
+
+.screenshot-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 260px;
+}
+
+/* Phone-frame placeholder. Fixed dark bezel works in both light and
+ * dark themes — actual phone hardware is dark regardless of OS theme.
+ * When real screenshots ship, the .screenshot-placeholder gets replaced
+ * by an <img> inside the frame. The frame itself stays. */
+.screenshot-frame {
+  width: 100%;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 32px;
+  border: 8px solid #1c1c1e;
+  background: #1c1c1e;
+  overflow: hidden;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.06);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Faint notch hint at the top — gives the frame a phone identity
+ * without overcomplicating with a full Dynamic Island shape. */
+.screenshot-frame::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 14px;
+  background: #1c1c1e;
+  border-radius: 0 0 10px 10px;
+  z-index: 2;
+}
+
+.screenshot-card:hover .screenshot-frame {
+  transform: translateY(-4px);
+  box-shadow:
+    0 32px 56px rgba(0, 0, 0, 0.14),
+    0 12px 20px rgba(0, 0, 0, 0.08);
+}
+
+.screenshot-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Faint brand-kanji watermark — signals "screen content coming"
+ * without putting fake UI elements that would look half-baked.
+ * 5% opacity keeps it almost invisible, more felt than seen. */
+.screenshot-placeholder::after {
+  content: '友';
+  font-family: var(--font-jp);
+  font-size: 5rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.05);
+  line-height: 1;
+}
+
+/* Three distinct soft gradients per screen, so the cards differentiate
+ * at a glance even when the content is just placeholder. Mapped to
+ * each game-mode's existing emoji color palette. */
+.placeholder-dashboard {
+  background: linear-gradient(180deg, #ffffff 0%, #eef2f8 100%);
+}
+
+.placeholder-duel {
+  background: linear-gradient(180deg, #ffffff 0%, #fdf0f0 100%);
+}
+
+.placeholder-leaderboard {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7e8 100%);
+}
+
+.screenshot-card figcaption {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+  letter-spacing: -0.005em;
+}
+
+/* Tablet + mobile: single column with constrained max-width so the
+ * phone frame doesn't stretch full-viewport. Same premium pattern as
+ * the features grid. */
+@media (max-width: 900px) {
+  .screenshots-grid {
+    grid-template-columns: 1fr;
+    max-width: 280px;
+    margin: 0 auto;
+    gap: var(--space-7);
+  }
+}
+
+@media (max-width: 480px) {
+  .screenshots {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
 /* Premium pill matching the landing's Sign In pill (consistent design
  * language across auth surfaces). Absolute-positioned in the top-leading
  * corner of the auth-screen so it sits cleanly without disconnecting
