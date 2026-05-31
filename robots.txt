@@ -1,0 +1,7 @@
+# Tomodachi robots.txt (L1.12)
+# Allow all well-behaved crawlers; declare sitemap location.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://al-mo3tasem.github.io/Tomodachi/sitemap.xml

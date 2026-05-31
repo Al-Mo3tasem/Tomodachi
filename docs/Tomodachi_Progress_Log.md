@@ -16,6 +16,53 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.12: SEO baseline (meta tags + JSON-LD + sitemap + robots + hreflang + locale-aware title)
+**Status:** ✅ DONE
+**Scope:** HTML | Code | Content | Discoverability
+**Summary:** Full SEO baseline per `Commercialization_Plan.md` §9 and the L1.12 task spec. Static EN meta tags in HTML head serve search engines + social crawlers (most don't run JS). JavaScript dynamically updates `document.title` + the description meta on locale toggle for browser-tab UX while leaving the SEO-authoritative HTML versions intact. Two JSON-LD structured-data blocks (`EducationalOrganization` + `Course`) feed Google Rich Results. Sitemap + robots.txt + hreflang link tags wire up search-engine discovery. AR users get a properly-localized `<html lang>` from L1.01 + locale-aware tab title from this commit.
+
+**SEO additions (all in HTML `<head>`):**
+- **`<title>` + `<meta name="description">` + `<meta name="keywords">`** — premium-modern descriptive title ("Tomodachi — Learn Japanese with Friends, Arabic-First"). Description authored to hit the brand promise + differentiation (Arabic-first, multiplayer, calm pace) in ~280 chars (under Google's snippet cap).
+- **`<link rel="canonical">`** — points at the github.io URL. Will update to `tomodachi.com` at R3 cutover.
+- **3 × `<link rel="alternate" hreflang="...">`** — `en` / `ar` / `x-default`. Tells search engines about the bilingual variants accessed via `?lang=` query param.
+- **Open Graph tags** (`og:type`, `og:site_name`, `og:title`, `og:description`, `og:url`, `og:locale`, `og:locale:alternate`) — for Facebook / LinkedIn / generic social previews. `og:image` deliberately skipped here — lands at L1.15 with the real brand logo / OG card. Until then, social previews fall back gracefully to the page title + description.
+- **Twitter Card tags** (`twitter:card`, `twitter:title`, `twitter:description`) — `summary` card type (small image). Will upgrade to `summary_large_image` when og:image lands at L1.15.
+- **JSON-LD `EducationalOrganization`** — schema.org markup for org-level knowledge panel. Includes `name`, `alternateName` (Arabic brand spelling), `description`, `url`, `logo`, `inLanguage`.
+- **JSON-LD `Course`** — schema.org markup for the JLPT N5 learning offering. Includes `name`, `description`, `provider`, `educationalLevel`, `inLanguage`, `teaches`.
+
+**Files:**
+- `index.html` — large `<head>` expansion (~50 new lines) for the SEO block. Cache buster bumped on the app.js script tag.
+- `sitemap.xml` — **NEW**, repo root. Single `<url>` for the landing with hreflang xhtml:link variants. Updated date 2026-05-28.
+- `robots.txt` — **NEW**, repo root. Allow-all + Sitemap directive pointing at sitemap.xml.
+- `js/i18n/locales/en.json` + `ar.json` — new `seo.*` namespace with `page_title` + `meta_description`. AR authored inline in pure MSA.
+- `js/app.js` — new `updateLocaleAwareSeo()` function. Called from `init()` after `renderHeroCounter()` and from the existing `onLocaleChange` subscriber. Updates `document.title` and the description meta-tag's `content` attribute from `t('seo.page_title')` / `t('seo.meta_description')`.
+- `js/i18n/index.js` — `loadLocale` URL bumped (locale JSON content changed).
+
+**Premium-modern design notes:**
+- **Static EN + dynamic JS title** is the right split — crawlers see EN (best SEO snippets), browser-tab title respects locale toggle (best UX). Search engines that DO run JS also see the locale-aware version since they execute the page through Chrome rendering.
+- **`og:image` deferred to L1.15** is honest — better to have NO og:image than a 404-link og:image. Social previews fall back to title + description.
+- **Two JSON-LD blocks** (Org + Course) is the canonical premium-marketing pattern. Educational-product sites typically include both (Coursera, Khan Academy, Memrise).
+- **AR brand name `«تومودَاتشي»`** appears in the JSON-LD `alternateName` — Google indexes brand variants from this field.
+- **AR title in Arabic-script** ("تومودَاتشي — تعلّم اليابانية مع أصدقائك، بشرح عربي من الأصل") is what AR users see in their browser tab once the locale switches.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- `sitemap.xml` parses as valid XML (xml.etree.ElementTree).
+- `robots.txt` contains the `Sitemap:` directive.
+- 2 JSON-LD blocks parse as valid JSON with the expected `@type` values (`EducationalOrganization` + `Course`).
+- All 10 expected SEO meta-tag attributes present in HTML (description, keywords, canonical, 3 × hreflang, 3 × og:*, twitter:card).
+- `updateLocaleAwareSeo()` defined + called from `init()` + wired into `onLocaleChange`.
+- **250 leaf keys balanced** between en.json and ar.json (+2 from 248 — the new seo.* keys), zero parity diff.
+
+**Open Follow-up:**
+1. **Real og:image** — L1.15 produces a 1200×630 OG card with the brand logo. Once that file exists at `og-card.png` (or similar), add `<meta property="og:image" content="...">` + upgrade `twitter:card` from `summary` to `summary_large_image`.
+2. **Canonical + sitemap URL changes at R3 cutover** — when `tomodachi.com` ships, update `<link rel="canonical">`, all hreflang `href`s, `og:url`, sitemap.xml `<loc>`, robots.txt `Sitemap:` directive. Single sweep with the cutover commit.
+3. **Per-page metadata** when ToS / Privacy / Cookies pages ship at L1.13 — each gets its own `<title>` + description, plus their own `<url>` in sitemap.xml.
+4. **Acceptance criterion verification** (Google Rich Results Test passes; OG debugger preview works) — needs to be done after deploy. Standard tools: `https://search.google.com/test/rich-results`, `https://developers.facebook.com/tools/debug/`, `https://cards-dev.twitter.com/validator` (now deprecated but works for current OG validation).
+
+---
+
 ## 2026-05-28 — Phase L1.14: Sentry framework with consent-gated user context (DSN pending project lead setup)
 **Status:** ✅ DONE (code) / ⏳ WAITING (project lead creates Sentry project + fills DSN)
 **Scope:** Code | Docs

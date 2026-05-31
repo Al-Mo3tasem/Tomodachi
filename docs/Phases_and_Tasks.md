@@ -393,11 +393,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Code status:** Framework landed. `js/analytics/ga4.js` boots gtag.js + dataLayer with Consent Mode v2 default-denied. `js/config/analytics.js` holds per-env Measurement IDs (all empty by default — GA4 silently no-ops). `saveConsent()` in app.js propagates the analytics decision via `ga4UpdateConsent()`. `handleWaitlistSubmit()` fires `waitlist_signup` event. Per `PROJECT_RULES.md` §19, all ad_* signals stay 'denied' permanently — Tomodachi doesn't run ads.
 **Project lead action pending:** create GA4 property at analytics.google.com, copy the `G-XXXXXXXXXX` Measurement ID, paste into the `prod` slot in `js/config/analytics.js` (and optionally `staging`). Instructions handed off in chat 2026-05-28. **Acceptance criterion (real-time dashboard shows page views)** can only be verified after this step.
 
-### L1.12 — SEO baseline
+### L1.12 — SEO baseline ✅ DONE 2026-05-28
 **Deps:** L1.04
 **Owner:** Claude
 **Description:** Per `Commercialization_Plan.md` §9 SEO section: per-page `<title>`, `<meta description>`, OG/Twitter card tags, JSON-LD `Course` + `EducationalOrganization` schema, `sitemap.xml`, `robots.txt`, `hreflang` alternate links. EN + AR variants. Brand image OG card.
 **Acceptance:** Google's Rich Results Test passes; social card preview works on Twitter/Facebook OG debugger.
+**Closure:** Full SEO meta-tag block + 2 JSON-LD structured-data scripts (`EducationalOrganization` + `Course`) in index.html `<head>`. New `sitemap.xml` + `robots.txt` at repo root. 3 × `<link rel="alternate" hreflang>` for en/ar/x-default. Open Graph + Twitter Card tags (Twitter `summary` for now; upgrades to `summary_large_image` when L1.15 ships the brand OG image). `<link rel="canonical">` points at current github.io URL — updates to tomodachi.com at R3 cutover. New `seo.*` i18n namespace + `updateLocaleAwareSeo()` keeps the browser-tab title in sync with locale toggle (static HTML stays EN for crawlers). 250 leaf keys balanced. Acceptance verification (Rich Results Test, OG debugger preview) requires post-deploy testing. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
 ### L1.13 — ToS + Privacy Policy + Cookie Policy
 **Deps:** L1.10

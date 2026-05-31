@@ -3,7 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tomodachi</title>
+
+  <!-- ===== SEO baseline (L1.12) ===== -->
+  <title>Tomodachi — Learn Japanese with Friends, Arabic-First</title>
+  <meta name="description" content="A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace that doesn't punish you for taking a day off. Join the waitlist.">
+  <meta name="keywords" content="Japanese learning, JLPT N5, Arabic-first, MENA, bilingual learning app, hiragana, katakana, Japanese for Arabic speakers">
+  <meta name="author" content="Tomodachi">
+  <link rel="canonical" href="https://al-mo3tasem.github.io/Tomodachi/">
+
+  <!-- hreflang variants (en, ar, default). The URL query-param routes
+       to the locale via L1.01 language detector. -->
+  <link rel="alternate" hreflang="en" href="https://al-mo3tasem.github.io/Tomodachi/?lang=en">
+  <link rel="alternate" hreflang="ar" href="https://al-mo3tasem.github.io/Tomodachi/?lang=ar">
+  <link rel="alternate" hreflang="x-default" href="https://al-mo3tasem.github.io/Tomodachi/">
+
+  <!-- Open Graph (Facebook, LinkedIn, generic social) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tomodachi">
+  <meta property="og:title" content="Tomodachi — Learn Japanese with Friends, Arabic-First">
+  <meta property="og:description" content="A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace that doesn't punish you for taking a day off.">
+  <meta property="og:url" content="https://al-mo3tasem.github.io/Tomodachi/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_SA">
+  <!-- og:image will be added at L1.15 when the brand logo / OG card lands.
+       Until then, social previews fall back to the page title + description. -->
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tomodachi — Learn Japanese with Friends, Arabic-First">
+  <meta name="twitter:description" content="A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace that doesn't punish you for taking a day off.">
+
+  <!-- Structured data: EducationalOrganization + Course (Schema.org).
+       Google Rich Results uses these for the knowledge panel + course
+       cards. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Tomodachi",
+    "alternateName": "تومودَاتشي",
+    "description": "Bilingual EN + AR Japanese language-learning app, MENA-first, with multiplayer practice and a calm pace.",
+    "url": "https://al-mo3tasem.github.io/Tomodachi/",
+    "logo": "https://al-mo3tasem.github.io/Tomodachi/favicon.svg",
+    "inLanguage": ["en", "ar"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Japanese N5 with Arabic-First Pedagogy",
+    "description": "Learn Japanese kana, vocabulary, and grammar through bilingual Arabic + English lessons authored natively in Arabic.",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "Tomodachi",
+      "url": "https://al-mo3tasem.github.io/Tomodachi/"
+    },
+    "educationalLevel": "Beginner",
+    "inLanguage": ["en", "ar"],
+    "teaches": "Japanese language (JLPT N5)"
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
   <link rel="apple-touch-icon" href="favicon.svg?v=2">
   <meta name="theme-color" content="#F5F5F7">
@@ -903,6 +964,6 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528r"></script>
+  <script type="module" src="js/app.js?v=20260528s"></script>
 </body>
 </html>

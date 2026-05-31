@@ -38,6 +38,10 @@
     "section_title": "Inside Tomodachi",
     "section_subtitle": "A peek at the dashboard, gameplay, and leaderboard."
   },
+  "seo": {
+    "page_title": "Tomodachi — Learn Japanese with Friends, Arabic-First",
+    "meta_description": "A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace that doesn't punish you for taking a day off. Join the waitlist."
+  },
   "consent": {
     "title": "Cookie preferences",
     "body": "Tomodachi uses essential cookies to run the app. Optional analytics and error-context cookies help us improve — your call.",

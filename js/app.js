@@ -32,7 +32,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528o';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528s';
 import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260528q';
 import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260528r';
 
@@ -376,6 +376,25 @@ function renderHeroCounter() {
   const el = $('hero-counter');
   if (!el) return;
   el.textContent = t('hero.counter_line', { count: WAITLIST_BASELINE });
+}
+
+// L1.12: keep the browser-tab title in sync with the active locale.
+// The static <title> in index.html serves search engines + social
+// crawlers (EN — bots typically don't run JS). This function takes
+// over for browser-tab UX so AR users see the AR title in their tab.
+// Also updates the meta description for any browsers that surface it
+// in page-info panels. The static description in index.html (EN)
+// remains the SEO-authoritative version.
+function updateLocaleAwareSeo() {
+  const titleKey = t('seo.page_title');
+  if (titleKey && titleKey !== 'seo.page_title') {
+    document.title = titleKey;
+  }
+  const descMeta = document.querySelector('meta[name="description"]');
+  const descKey = t('seo.meta_description');
+  if (descMeta && descKey && descKey !== 'seo.meta_description') {
+    descMeta.setAttribute('content', descKey);
+  }
 }
 
 function showAuthScreen() { showScreen('screen-auth'); }
@@ -1528,6 +1547,9 @@ async function init() {
   // Initial render for parametric strings the markup can't carry on its
   // own (i.e., values that interpolate vars from JS state).
   renderHeroCounter();
+  // L1.12: locale-aware document.title + meta description (the static
+  // ones in index.html stay as EN for crawlers).
+  updateLocaleAwareSeo();
 
   // L1.11: boot GA4 with Consent Mode v2 default-denied. If a prior
   // consent decision exists in localStorage, propagate it immediately
@@ -1552,6 +1574,7 @@ async function init() {
   onLocaleChange(() => {
     if (state.userData) renderUserIdentity();
     renderHeroCounter();
+    updateLocaleAwareSeo();
   });
 
   onAuthStateChanged(auth, async (user) => {
