@@ -420,11 +420,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** The favicon placeholder from R1.06 needs a real Tomodachi logo. Options: hire a designer (Mostaql/Fiverr ~$50-100) OR craft a simple wordmark + 友 lock-up ourselves. Lock the choice; produce logo assets (SVG + 32px + 192px + 512px PNG for PWA).
 **Acceptance:** Logo files in `assets/brand/`; favicon, PWA icons, OG image all use the consistent logo.
 
-### L1.16 — PWA install manifest
+### L1.16 — PWA install manifest ✅ DONE 2026-05-28
 **Deps:** L1.15
 **Owner:** Claude
 **Description:** Create `manifest.json` with name, short_name, icons (PWA sizes), theme_color, background_color, display: "standalone". Link from `index.html`. Add install banner trigger (Chrome's `beforeinstallprompt`). Online-only — no service worker yet (full offline is deferred per `Commercialization_Plan.md` §11).
 **Acceptance:** Chrome's Application tab shows valid manifest; install banner appears after engagement criteria met.
+**Closure:** `manifest.json` at repo root with all PWA-required fields (name, short_name, start_url + scope as relative paths, display: standalone, brand-indigo theme_color #4F46E5, SVG icon with sizes "any" + maskable purpose). iOS Safari PWA meta tags in HTML head. New `#btn-install` pill in landing nav (hidden by default), revealed when Chrome fires `beforeinstallprompt`. Click triggers `.prompt()` + tracks GA4 events (`pwa_install_accepted` / `pwa_install_dismissed` / `pwa_install_completed`). Real 192/512 PNG icons land at L1.15 with the logo design — until then SVG icon works for Chrome 96+ installability.
 
 ### L1.17 — Deploy landing to staging, then prod
 **Deps:** L1.06–L1.16
