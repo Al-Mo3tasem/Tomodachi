@@ -142,7 +142,8 @@
   "nav": {
     "settings_title": "الإعدادات",
     "logout": "تسجيل الخروج",
-    "user_default_name": "لاعب"
+    "user_default_name": "لاعب",
+    "install_app": "تثبيت التطبيق"
   },
   "dashboard": {
     "title": "لوحة التحكم",

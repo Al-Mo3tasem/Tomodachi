@@ -142,7 +142,8 @@
   "nav": {
     "settings_title": "Settings",
     "logout": "Logout",
-    "user_default_name": "Player"
+    "user_default_name": "Player",
+    "install_app": "Install app"
   },
   "dashboard": {
     "title": "Dashboard",

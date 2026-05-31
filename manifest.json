@@ -1,0 +1,22 @@
+{
+  "name": "Tomodachi — Learn Japanese with Friends, Arabic-First",
+  "short_name": "Tomodachi",
+  "description": "A Japanese language-learning app authored natively in Arabic. Duels and co-op with friends, a calm pace.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F5F5F7",
+  "theme_color": "#4F46E5",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "lifestyle"]
+}

@@ -2564,6 +2564,33 @@ body {
   color: var(--accent, #0a84ff);
 }
 
+/* L1.16: install-app pill. Hidden by default — JS shows it when
+ * Chrome's beforeinstallprompt fires (so the button only appears for
+ * users who CAN install). Brand-accent styling so it reads as a soft
+ * primary action vs the Sign In pill's secondary outline. */
+.btn-install {
+  padding: 6px 12px;
+  border: 1px solid var(--brand-primary);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+}
+
+.btn-install:hover {
+  background: var(--brand-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-install[hidden] {
+  display: none;
+}
+
 .hero {
   /* Hero sized at ~80vh — features section peeks higher above the fold
    * per project lead's "bring the cards up a few pixels" feedback

@@ -21,7 +21,7 @@ import { applyDirection } from './rtl.js?v=20260528f';
 // Fetch a locale JSON next to this module so the path works regardless of
 // where the page is mounted (root, sub-path, file:// during dev).
 async function loadLocale(lang) {
-  const url = new URL(`./locales/${lang}.json?v=20260528t`, import.meta.url);
+  const url = new URL(`./locales/${lang}.json?v=20260528u`, import.meta.url);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load locale "${lang}": ${res.status}`);
   return res.json();

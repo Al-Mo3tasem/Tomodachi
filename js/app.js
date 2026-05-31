@@ -32,7 +32,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528t';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528u';
 import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260528q';
 import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260528r';
 
@@ -376,6 +376,47 @@ function renderHeroCounter() {
   const el = $('hero-counter');
   if (!el) return;
   el.textContent = t('hero.counter_line', { count: WAITLIST_BASELINE });
+}
+
+// L1.16: PWA install prompt handling. Chrome / Edge / Samsung Internet
+// fire `beforeinstallprompt` when the app is installable (HTTPS + valid
+// manifest + user engagement criteria). We defer Chrome's default mini-
+// infobar, stash the event, and reveal an "Install app" pill in the
+// landing nav. Clicking the pill calls `.prompt()` on the stashed event,
+// which opens the native install dialog. On `appinstalled` we hide the
+// pill again. iOS Safari doesn't support this API — iOS users add via
+// Share → Add to Home Screen (works without our button thanks to the
+// apple-mobile-web-app-* meta tags in index.html).
+let _deferredInstallPrompt = null;
+
+function setupInstallPrompt() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    _deferredInstallPrompt = e;
+    const btn = $('btn-install');
+    if (btn) btn.hidden = false;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    _deferredInstallPrompt = null;
+    const btn = $('btn-install');
+    if (btn) btn.hidden = true;
+    ga4TrackEvent('pwa_install_completed');
+  });
+
+  $('btn-install')?.addEventListener('click', async () => {
+    if (!_deferredInstallPrompt) return;
+    _deferredInstallPrompt.prompt();
+    try {
+      const choice = await _deferredInstallPrompt.userChoice;
+      ga4TrackEvent(
+        choice.outcome === 'accepted' ? 'pwa_install_accepted' : 'pwa_install_dismissed'
+      );
+    } catch { /* user closed dialog without choosing — no-op */ }
+    _deferredInstallPrompt = null;
+    const btn = $('btn-install');
+    if (btn) btn.hidden = true;
+  });
 }
 
 // L1.13a: render the footer's locale-aware copyright with the current
@@ -1569,6 +1610,9 @@ async function init() {
   // L1.12: locale-aware document.title + meta description (the static
   // ones in index.html stay as EN for crawlers).
   updateLocaleAwareSeo();
+  // L1.16: register PWA install-prompt handlers. The Install pill stays
+  // hidden until Chrome fires `beforeinstallprompt`.
+  setupInstallPrompt();
 
   // L1.11: boot GA4 with Consent Mode v2 default-denied. If a prior
   // consent decision exists in localStorage, propagate it immediately

@@ -68,10 +68,16 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
   <link rel="apple-touch-icon" href="favicon.svg?v=2">
   <meta name="theme-color" content="#F5F5F7">
+
+  <!-- ===== PWA install manifest (L1.16) ===== -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tomodachi">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528t">
+  <link rel="stylesheet" href="css/style.css?v=20260528u">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -92,6 +98,7 @@
           <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
           <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
         </div>
+        <button type="button" id="btn-install" class="btn-install" data-i18n="nav.install_app" hidden>Install app</button>
         <button type="button" id="btn-landing-signin"
                 data-i18n="hero.sign_in_link"
                 data-i18n-attr="aria-label:hero.sign_in_aria"
@@ -983,6 +990,6 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528t"></script>
+  <script type="module" src="js/app.js?v=20260528u"></script>
 </body>
 </html>
