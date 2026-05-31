@@ -16,6 +16,52 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — L1 polish round: brand identity + animated card borders + premium SVG icons + richer background + hero peek
+**Status:** ✅ DONE
+**Scope:** CSS | HTML | Content (visual identity)
+**Summary:** Five visual-polish items from project lead's L1.07 review, bundled into one commit. (1) Brand color identity — indigo + sakura-rose + amber palette replacing the generic Apple-blue accent across both light + dark themes. (2) Multi-gradient mesh background on `screen-landing` in brand colors — non-solid premium feel (Stripe / Linear surface convention). (3) Hero shortened from `calc(100vh - 64px)` to `85vh` so the top of the features section peeks above the fold — Option A from the earlier scroll-cue discussion. (4) Animated rotating conic-gradient border on `.feature-card` hover — Vercel / Linear / Anthropic-tier card-interaction polish, pure CSS via `@property` and `@keyframes`. (5) Premium inline-SVG icons (Lucide MIT — `languages`, `users`, `waves`) replacing the L1.05 emoji icons; each card has its own brand-color tint (indigo / rose / amber) for visual rhythm.
+
+**Brand palette tokens (added to `:root`):**
+- `--brand-primary: #4F46E5` (Indigo 600) — primary actions, links, identity
+- `--brand-primary-deep: #4338CA` (Indigo 700) — hover / active
+- `--brand-primary-soft: rgba(79, 70, 229, 0.10)` — indigo wash surfaces
+- `--brand-accent: #EC4899` (Sakura rose / Pink 500) — warmth, second accent
+- `--brand-accent-soft: rgba(236, 72, 153, 0.08)` — rose wash surfaces
+- `--brand-amber: #F59E0B` (Amber 500) — third color for variety
+- `--brand-amber-soft: rgba(245, 158, 11, 0.08)` — amber wash surfaces
+
+Existing `--accent`, `--accent-hover`, `--accent-light` redirected to brand tokens in both `[data-theme="light"]` and `[data-theme="dark"]` blocks — the whole UI now picks up brand indigo without per-element overrides. Reference set: Stripe indigo, Linear violet, Notion subtle warmth, Japanese 藍 traditional indigo + sakura nod.
+
+**Visual changes by surface:**
+- **Landing background:** four soft radial gradients (indigo top-left, rose bottom-right, amber mid-right, diffuse indigo center) layered over `--bg-base`. Premium non-solid feel without busy noise.
+- **Hero:** `min-height: 85vh` (was full viewport). Top of `<section class="features">` now peeks above the fold, signaling there's more content below.
+- **Feature cards:** premium animated border on hover. `::before` pseudo-element with conic gradient (`from var(--angle)`) rotates 360° over 4s. `@property --angle` declaration makes the angle animatable. `prefers-reduced-motion` opt-out included. Card itself lifts -4px with a soft brand-tinted glow shadow (indigo + rose at low opacity).
+- **Feature icons:** 44×44 rounded tiles. Each tile has brand-color-tinted background + matching stroke icon (1.5px stroke, line-style). Per-card variation via `:nth-child` so each card has its own identity: card-1 indigo, card-2 sakura-rose, card-3 amber.
+- **Screenshot placeholders:** the three gradients in `.placeholder-dashboard` / `.placeholder-duel` / `.placeholder-leaderboard` now use the brand-soft tokens — visually ties the section into the same identity as the feature-card icons (indigo / rose / amber threading through both surfaces).
+
+**Files (only HTML + CSS this round — no JS/JSON changes):**
+- `css/style.css` — brand palette tokens added to `:root` (~10 new variables). `--accent` redirected in both theme blocks. `#screen-landing.active` background replaced with the 4-layer mesh. `.hero` min-height adjusted. `.feature-card` rewrites the hover state (new shadow, transparent border for the gradient peek-through). New `.feature-card::before` with conic gradient. New `@property --angle` + `@keyframes rotate-conic-border` + `prefers-reduced-motion` opt-out. `.feature-icon` rewritten for SVG container styling (44×44 tile). New `:nth-child` rules for per-card icon color. `.placeholder-*` gradients use brand-soft tokens. Net +~70 lines across the polish.
+- `index.html` — three `<div class="feature-icon">` blocks replaced their emoji with inline `<svg>` markup (Lucide MIT-licensed paths inline). Cache buster bumped on the CSS link.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js` (no JS changes; running anyway).
+- Both locale JSON files parse.
+- CSS brace count: 515 open / 515 close — balanced.
+- 159 `data-i18n*` keys in `index.html`, all resolve in both locales.
+- Brand tokens confirmed present: `--brand-primary` / `--brand-accent` / `--brand-amber` + the soft variants. `--accent: var(--brand-primary)` redirect confirmed in light theme.
+- `@property --angle` + `@keyframes rotate-conic-border` confirmed present.
+- All three feature-card emoji removed; replaced by 3 inline SVG markup blocks confirmed.
+- Cache busters: CSS `?v=20260528n` (changed); app.js + i18n `?v=20260528m` (unchanged this round — strict §14.3).
+
+**Note from project lead (deferred follow-up):** content review on screenshots + FAQ sections can come later — they liked both for now. Specifically tagged: "my comments can be later after we excel content if you want." Will revisit after Codex content rounds for L2.
+
+**Open Follow-up:**
+1. **L1.10 cookie consent banner** is next — premium-modern banner with Accept All / Reject Non-Essential / Customize, gating GA4 + Sentry user-context per `PROJECT_RULES.md` §19.
+2. **In-app emoji** (game-mode buttons 🧘/🔥/⚔️/🤝, friend bar 🎮/🌸, etc.) NOT replaced this round — they're inside the authed app surface, not the landing. Can revisit if user wants those upgraded too.
+3. **Browser support for `@property`** — Chrome 85+, Firefox 128+, Safari 16.4+. All shipped 18+ months. Pre-2024 browsers (<1% of MENA traffic) would see the static conic gradient (no rotation animation) — graceful degradation, not blocking.
+
+---
+
 ## 2026-05-28 — Phase L1.07: FAQ section with premium one-at-a-time accordion
 **Status:** ✅ DONE
 **Scope:** Code | CSS | Content

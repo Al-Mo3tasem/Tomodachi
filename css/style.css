@@ -9,22 +9,36 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-jp: 'Noto Sans JP', sans-serif;
   --font-ar: 'Cairo', 'Tajawal', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  
+
+  /* === Tomodachi Brand Palette ===
+   * Indigo + sakura-pink + amber. Nods to Japanese aesthetic (traditional
+   * indigo 藍, sakura petals, kintsugi gold) without being kitschy. Premium
+   * SaaS-tier saturation. Works on both light and dark backgrounds.
+   * Reference set: Stripe indigo, Linear violet, Notion subtle warmth.
+   */
+  --brand-primary:       #4F46E5;   /* Indigo 600 — primary actions, links */
+  --brand-primary-deep:  #4338CA;   /* Indigo 700 — hover, active */
+  --brand-primary-soft:  rgba(79, 70, 229, 0.10);  /* indigo-tinted wash */
+  --brand-accent:        #EC4899;   /* Sakura rose / Pink 500 — warmth, accent moments */
+  --brand-accent-soft:   rgba(236, 72, 153, 0.08); /* rose-tinted wash */
+  --brand-amber:         #F59E0B;   /* Amber 500 — tertiary, for third-color variety */
+  --brand-amber-soft:    rgba(245, 158, 11, 0.08);
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 28px;
   --radius-full: 9999px;
-  
+
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
   --shadow-xl: 0 16px 48px rgba(0,0,0,0.12);
-  
+
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  
+
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -49,10 +63,11 @@
   --text-secondary: #86868B;
   --text-tertiary: #A1A1A6;
   --text-inverse: #FFFFFF;
-  
-  --accent: #0071E3;
-  --accent-hover: #0051A2;
-  --accent-light: rgba(0,113,227,0.1);
+
+  /* Accent redirected to brand indigo (L1 polish 2026-05-28). */
+  --accent: var(--brand-primary);
+  --accent-hover: var(--brand-primary-deep);
+  --accent-light: var(--brand-primary-soft);
   
   --border: rgba(0,0,0,0.08);
   --border-strong: rgba(0,0,0,0.16);
@@ -77,10 +92,11 @@
   --text-secondary: #8E8E93;
   --text-tertiary: #636366;
   --text-inverse: #1D1D1F;
-  
-  --accent: #0A84FF;
-  --accent-hover: #409CFF;
-  --accent-light: rgba(10,132,255,0.15);
+
+  /* Accent redirected to brand indigo (L1 polish 2026-05-28). */
+  --accent: var(--brand-primary);
+  --accent-hover: var(--brand-primary-deep);
+  --accent-light: var(--brand-primary-soft);
   
   --border: rgba(255,255,255,0.1);
   --border-strong: rgba(255,255,255,0.2);
@@ -2471,14 +2487,23 @@ body {
  * selector has higher specificity than the class, so an unscoped
  * `display: flex` here would keep the landing visible even after
  * showScreen('screen-auth') flipped its .active class — caught during
- * L1.04 verification. */
+ * L1.04 verification.
+ *
+ * Premium gradient mesh background (L1 polish 2026-05-28): four soft
+ * radial gradients in brand colors create the "non-solid premium feel"
+ * pattern. Indigo top-left + sakura-rose bottom-right + amber mid-right
+ * + diffuse indigo center — never quite a solid color, never busy
+ * enough to fight the foreground. Reference: Stripe / Linear marketing
+ * surfaces. */
 #screen-landing.active {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 15% -10%, rgba(10, 132, 255, 0.06), transparent 50%),
-    radial-gradient(circle at 90% 110%, rgba(255, 90, 160, 0.05), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 8% -5%,  rgba(79, 70, 229, 0.10), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 92% 105%, rgba(236, 72, 153, 0.08), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 95% 35%, rgba(245, 158, 11, 0.05), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 60%, rgba(79, 70, 229, 0.03), transparent 80%),
     var(--bg-base);
 }
 
@@ -2533,11 +2558,12 @@ body {
 }
 
 .hero {
-  /* Hero stays viewport-tall (minus nav) even when feature cards or
-   * other sections render below — user scrolls to reach them. Replaces
-   * the earlier `flex: 1` which would have collapsed the hero when
-   * stackable siblings were added inside screen-landing. */
-  min-height: calc(100vh - 64px);
+  /* Hero sized at ~85vh so the top of the features section peeks above
+   * the fold — premium-modern cue that there's more content below
+   * (L1 polish 2026-05-28). Was full viewport (calc(100vh - 64px)) but
+   * that hid the rest of the page from anyone who didn't think to scroll.
+   * 85vh is the Stripe/Vercel/Linear convention for landing-page heros. */
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2714,23 +2740,99 @@ body {
 }
 
 .feature-card {
+  position: relative;
+  z-index: 0; /* stacking context — keeps ::before behind card content */
   padding: var(--space-5);
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Premium animated conic-gradient border (L1 polish 2026-05-28).
+ * Sits 1.5px outside the card; the card's own background covers the
+ * middle, leaving a thin rainbow ring of brand colors. Hidden by default,
+ * fades in + rotates on hover. Reference: Vercel, Linear, Anthropic cards.
+ * @property is needed because gradient angle isn't transitionable by
+ * default — the property declaration makes it animatable. */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    var(--brand-primary),
+    var(--brand-accent),
+    var(--brand-amber),
+    var(--brand-accent),
+    var(--brand-primary)
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  border-color: var(--border-strong);
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 32px rgba(79, 70, 229, 0.10),
+    0 4px 12px rgba(236, 72, 153, 0.06);
+  border-color: transparent; /* lets the conic gradient peek through */
 }
 
+.feature-card:hover::before {
+  opacity: 1;
+  animation: rotate-conic-border 4s linear infinite;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-conic-border {
+  to { --angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card:hover::before { animation: none; }
+}
+
+/* Premium SVG icon container — 44×44 rounded tile with brand-tinted
+ * background and brand-colored stroke icon. Per-card color variation
+ * via :nth-child to create visual rhythm across the row.
+ * (Replaces the L1.05 emoji icons per L1 polish 2026-05-28.) */
 .feature-icon {
-  font-size: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
   line-height: 1;
-  margin-bottom: var(--space-3);
+}
+
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.feature-card:nth-child(1) .feature-icon {
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
+}
+
+.feature-card:nth-child(2) .feature-icon {
+  background: var(--brand-accent-soft);
+  color: var(--brand-accent);
+}
+
+.feature-card:nth-child(3) .feature-icon {
+  background: var(--brand-amber-soft);
+  color: var(--brand-amber);
 }
 
 .feature-title {
@@ -2887,19 +2989,20 @@ body {
   line-height: 1;
 }
 
-/* Three distinct soft gradients per screen, so the cards differentiate
- * at a glance even when the content is just placeholder. Mapped to
- * each game-mode's existing emoji color palette. */
+/* Three distinct soft gradients per screen, tinted with brand colors so
+ * the screenshot section reads as part of the same visual identity as
+ * the feature-card icon tints (indigo / sakura-rose / amber).
+ * (Brand-token tinted per L1 polish 2026-05-28.) */
 .placeholder-dashboard {
-  background: linear-gradient(180deg, #ffffff 0%, #eef2f8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-primary-soft) 100%);
 }
 
 .placeholder-duel {
-  background: linear-gradient(180deg, #ffffff 0%, #fdf0f0 100%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-accent-soft) 100%);
 }
 
 .placeholder-leaderboard {
-  background: linear-gradient(180deg, #ffffff 0%, #fff7e8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-amber-soft) 100%);
 }
 
 .screenshot-card figcaption {
