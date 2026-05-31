@@ -16,6 +16,44 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.11: GA4 + Consent Mode v2 framework (Measurement ID pending project lead setup)
+**Status:** ✅ DONE (code) / ⏳ WAITING (project lead creates GA4 property + fills Measurement ID)
+**Scope:** Code | Docs
+**Summary:** GA4 wired with Consent Mode v2 default-denied per the L1.10 consent contract. `js/analytics/ga4.js` boots gtag.js when a Measurement ID is configured for the current environment; `js/config/analytics.js` holds the per-env IDs (all empty by default — GA4 silently no-ops until project lead pastes their real `G-XXXXXXXXXX` ID in). When user grants analytics via the L1.10 consent banner, `saveConsent()` propagates the decision to `gtag('consent', 'update', ...)`, flipping `analytics_storage` to `'granted'`. Two events documented per `PROJECT_RULES.md` §22.7: `page_view` (auto) + `waitlist_signup` (fired from `handleWaitlistSubmit`). Per `PROJECT_RULES.md` §19, Tomodachi does NOT run ads — `ad_storage`, `ad_user_data`, `ad_personalization` all stay `'denied'` permanently in the gtag consent calls.
+
+**Files (cache busters cascade `?v=20260528q` for the changed-target consumers):**
+- **NEW:** `js/config/analytics.js` — per-env Measurement IDs (`dev` / `staging` / `prod`, all empty by default) + `getMeasurementId()` lookup that imports `getEnv()` from `firebase.js`. ~25 lines including extensive header documentation.
+- **NEW:** `js/analytics/ga4.js` — `initGA4()` boots gtag.js + dataLayer + Consent Mode v2 defaults. `updateConsent(allowed)` flips `analytics_storage` between `granted` and `denied`. `trackEvent(name, params)` fires custom events. All three no-op cleanly when `getMeasurementId()` returns `''` (no-Measurement-ID env). ~95 lines including extensive comments + the Consent Mode v2 spec details inline.
+- `js/app.js` — added `initGA4` / `updateConsent as ga4UpdateConsent` / `trackEvent as ga4TrackEvent` imports. `init()` calls `initGA4()` after `renderHeroCounter()` (so the script tag injection happens once, asynchronously). After `initGA4()`, reads any existing localStorage consent and propagates via `ga4UpdateConsent()` — so a returning visitor with `analytics: true` saved doesn't see a momentarily-denied state. `saveConsent()` now also calls `ga4UpdateConsent(decision.analytics)` so live banner-button clicks flip the gtag consent state without page reload. `handleWaitlistSubmit()` calls `ga4TrackEvent('waitlist_signup', { source: 'landing_hero' })` on the success-card path.
+- `index.html` — script src for `app.js` bumped to `?v=20260528q`.
+
+**Premium UX integration:**
+- **Zero visual change** from L1.11 alone — the GA4 framework is invisible to users. Consent banner UX, animations, copy — all unchanged.
+- **Performance:** `gtag.js` is `async`, doesn't block render. Only loads when a Measurement ID is configured (so dev/staging never load it under default config).
+- **Default-denied is GDPR-compliant** — until user grants analytics in the L1.10 banner, gtag sends only the anonymized "consent-mode ping" with no PII.
+- **`wait_for_update: 500`** in the `consent default` call gives our localStorage decision time to propagate before the first `page_view` fires. Past 500ms, gtag proceeds with default-denied (no PII).
+
+**Documented events (per `PROJECT_RULES.md` §22.7):**
+| Event name | When it fires | Parameters | Stage |
+|---|---|---|---|
+| `page_view` | Auto-fired by `gtag('config', ...)` on init | `page_location`, `page_title` (auto-collected by GA4) | L1.11 |
+| `waitlist_signup` | After client-side email-shape validation passes in `handleWaitlistSubmit` (currently fires on success-card render — L1.04 stub. L1.08 will move this to fire on Brevo POST success) | `source: 'landing_hero'` | L1.11 (stub-tied) |
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js`, `analytics/ga4.js`, `config/analytics.js`, `i18n/index.js`.
+- Both locale JSON files parse (no JSON changes this commit; running for completeness).
+- All expected JS markers present: GA4 imports in app.js, `saveConsent → ga4UpdateConsent` propagation, `waitlist_signup` event call, `init() → initGA4()`, startup consent propagation, `wait_for_update`, default `analytics_storage: 'denied'`, `ad_storage` permanently denied, `dev/prod measurement IDs empty by default`, `getMeasurementId` exported.
+
+**Project lead external action (FOLLOW-UP — not blocking this commit):** detailed numbered instructions to create a GA4 property + paste the Measurement ID — handed off in the chat reply.
+
+**Open Follow-up:**
+1. **Project lead creates GA4 property + paste Measurement ID** into `js/config/analytics.js`'s `prod` slot (and `staging` slot if you want separate staging analytics). Instructions in chat reply.
+2. **L1.14 Sentry** is next — reads `loadConsent().errorContext` like L1.11 reads `loadConsent().analytics`.
+3. **L1.08 Brevo integration** — when it lands, `waitlist_signup` event will move from firing on success-card render to firing on Brevo POST success. Same event name, same param shape, just better-tied to actual conversion.
+4. **Real-time GA4 dashboard verification** (L1.11 acceptance criterion) can only be done after step 1 above + at least one consent-granted page load on the prod URL.
+
+---
+
 ## 2026-05-28 — Phase L1.10: cookie consent banner + customize modal
 **Status:** ✅ DONE
 **Scope:** Code | CSS | Content

@@ -385,11 +385,13 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Acceptance:** Banner shows on first visit; clicking Accept sets storage; clicking Reject also sets storage (with `denied` value); banner doesn't reappear within the 1-year window unless user clicks the footer "Cookie Settings" link.
 **Closure:** Premium-modern slide-up banner + customize modal landed. Three buttons (Reject Non-Essential / Customize / Accept All), non-blocking, no X close button (GDPR-compliant). Customize modal has Essential always-on + Analytics toggle + Error-monitoring toggle, with Cancel/Save Preferences actions. Decision persists as `{ v, decidedAt, expiresAt, analytics, errorContext }` in `tomodachi-consent` localStorage key with 365-day TTL. Gating consumption (GA4 + Sentry user-context) is L1.11 + L1.14 work — they read `loadConsent().analytics` and `.errorContext` respectively. Footer "Cookie Settings" re-open link deferred to L1.17 staging deploy when footer ships with ToS/Privacy links from L1.13. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
-### L1.11 — GA4 integration with Consent Mode v2
+### L1.11 — GA4 integration with Consent Mode v2 🔵 CODE DONE 2026-05-28 (project lead Measurement-ID setup pending)
 **Deps:** L1.10
 **Owner:** Claude
 **Description:** Add GA4 (Google Tag) script. Default consent state: denied (per Consent Mode v2 spec). On user Accept: `gtag('consent', 'update', {ad_storage: 'granted', analytics_storage: 'granted'})`. Define initial events: `page_view`, `waitlist_signup`.
 **Acceptance:** GA4 real-time dashboard shows page views after consent granted; no events fire before consent.
+**Code status:** Framework landed. `js/analytics/ga4.js` boots gtag.js + dataLayer with Consent Mode v2 default-denied. `js/config/analytics.js` holds per-env Measurement IDs (all empty by default — GA4 silently no-ops). `saveConsent()` in app.js propagates the analytics decision via `ga4UpdateConsent()`. `handleWaitlistSubmit()` fires `waitlist_signup` event. Per `PROJECT_RULES.md` §19, all ad_* signals stay 'denied' permanently — Tomodachi doesn't run ads.
+**Project lead action pending:** create GA4 property at analytics.google.com, copy the `G-XXXXXXXXXX` Measurement ID, paste into the `prod` slot in `js/config/analytics.js` (and optionally `staging`). Instructions handed off in chat 2026-05-28. **Acceptance criterion (real-time dashboard shows page views)** can only be verified after this step.
 
 ### L1.12 — SEO baseline
 **Deps:** L1.04

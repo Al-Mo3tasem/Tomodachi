@@ -33,6 +33,7 @@ import {
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
 import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528o';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260528q';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -406,6 +407,9 @@ function loadConsent() {
 // Persist a decision with 1-year expiry. Shape:
 //   { v, decidedAt, expiresAt, analytics, errorContext }
 // L1.11 (GA4) + L1.14 (Sentry) read these flags to gate user context.
+// L1.11: also propagates the analytics decision to GA4 immediately so
+// Consent Mode v2 flips analytics_storage to granted/denied without
+// requiring a page reload.
 function saveConsent({ analytics, errorContext }) {
   const now = Date.now();
   const decision = {
@@ -420,6 +424,7 @@ function saveConsent({ analytics, errorContext }) {
   } catch (err) {
     console.warn('[consent] Failed to persist decision:', err);
   }
+  ga4UpdateConsent(decision.analytics);
   return decision;
 }
 
@@ -501,6 +506,12 @@ async function handleWaitlistSubmit(e) {
   $('form-waitlist')?.setAttribute('hidden', '');
   $('hero-counter')?.setAttribute('hidden', '');
   $('waitlist-success')?.removeAttribute('hidden');
+
+  // L1.11: GA4 event. Honors Consent Mode v2 — when analytics_storage
+  // is 'denied', gtag sends only the anonymized consent-mode ping
+  // (no user data). Source param lets us tell apart hero submits from
+  // future per-section CTAs if we add them.
+  ga4TrackEvent('waitlist_signup', { source: 'landing_hero' });
 }
 
 // ============================================
@@ -1499,6 +1510,14 @@ async function init() {
   // Initial render for parametric strings the markup can't carry on its
   // own (i.e., values that interpolate vars from JS state).
   renderHeroCounter();
+
+  // L1.11: boot GA4 with Consent Mode v2 default-denied. If a prior
+  // consent decision exists in localStorage, propagate it immediately
+  // so the user doesn't see the consent banner reappear after
+  // accepting once. No-ops when the env has no Measurement ID set.
+  initGA4();
+  const existingConsent = loadConsent();
+  if (existingConsent) ga4UpdateConsent(existingConsent.analytics);
 
   // L1.10: show the cookie consent banner if no valid decision is on
   // file. Idempotent — no-op once a decision is saved (with 1-year TTL).
