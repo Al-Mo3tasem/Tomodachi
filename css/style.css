@@ -2499,12 +2499,19 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* L1 polish-2 (2026-05-28): SVG noise texture (feTurbulence) added as
+   * the top background layer over the existing 4-gradient mesh. Subtle
+   * film-grain that breaks the "solid" feeling per project lead's
+   * feedback. Encoded as a 200×200 inline SVG; tiled by background-size.
+   * Reference: Stripe / Linear / Vercel marketing surfaces. */
   background:
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"),
     radial-gradient(ellipse 60% 40% at 8% -5%,  rgba(79, 70, 229, 0.10), transparent 70%),
     radial-gradient(ellipse 50% 35% at 92% 105%, rgba(236, 72, 153, 0.08), transparent 70%),
     radial-gradient(ellipse 40% 30% at 95% 35%, rgba(245, 158, 11, 0.05), transparent 70%),
     radial-gradient(ellipse 80% 60% at 50% 60%, rgba(79, 70, 229, 0.03), transparent 80%),
     var(--bg-base);
+  background-size: 200px 200px, auto, auto, auto, auto, auto;
 }
 
 .landing-nav {
@@ -2558,12 +2565,10 @@ body {
 }
 
 .hero {
-  /* Hero sized at ~85vh so the top of the features section peeks above
-   * the fold — premium-modern cue that there's more content below
-   * (L1 polish 2026-05-28). Was full viewport (calc(100vh - 64px)) but
-   * that hid the rest of the page from anyone who didn't think to scroll.
-   * 85vh is the Stripe/Vercel/Linear convention for landing-page heros. */
-  min-height: 85vh;
+  /* Hero sized at ~80vh — features section peeks higher above the fold
+   * per project lead's "bring the cards up a few pixels" feedback
+   * (L1 polish-2 2026-05-28). Was 85vh in the prior polish round. */
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2726,11 +2731,62 @@ body {
  * ============================================================ */
 
 .features {
-  padding: var(--space-8) var(--space-5);
+  padding: var(--space-6) var(--space-5) var(--space-8);
   max-width: 1120px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* L1 polish-2 (2026-05-28): wrapper around the 3-card grid that hosts
+ * the SVG "marching glow" border. Tracing the outer perimeter of the
+ * group (not each card individually) makes the cards feel like one
+ * bordered unit. On individual card hover, this group border fades
+ * via `:has()` and the per-card conic-gradient border takes over.
+ * Reference: Anthropic Console, Vercel marketing, Linear pricing. */
+.features-wrap {
+  position: relative;
+  padding: 4px; /* breathing room so the SVG border doesn't clip the cards */
+}
+
+.features-border-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.features-border-svg rect {
+  fill: none;
+  stroke: url(#features-border-gradient);
+  stroke-width: 1.5;
+  /* `pathLength="100"` normalizes the rect's perimeter to 100 units, so
+   * the dash + gap below work the same regardless of viewport size.
+   * 18 units of glow + 100 units of gap = ONE glow visible at a time
+   * traveling around the perimeter. Loop = -118 to restart cleanly. */
+  stroke-dasharray: 18, 100;
+  stroke-dashoffset: 0;
+  animation: features-border-trace 12s linear infinite;
+  transition: opacity 0.4s ease;
+  opacity: 0.55;
+}
+
+@keyframes features-border-trace {
+  to { stroke-dashoffset: -118; }
+}
+
+/* When any card in the group is hovered, the group border fades out so
+ * the focus shifts to the hovered card's own animated border. The
+ * :has() selector lights this up in all modern browsers (Chrome 105+,
+ * Firefox 121+, Safari 15.4+ — all shipped 18+ months). */
+.features-wrap:has(.feature-card:hover) .features-border-svg rect {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .features-border-svg rect { animation: none; }
 }
 
 .features-grid {
@@ -2891,7 +2947,9 @@ body {
 
 .screenshots-header {
   text-align: center;
-  margin-bottom: var(--space-7);
+  /* L1 polish-2 (2026-05-28): more breathing room between subtitle and
+   * phone frames per project lead's feedback. Was space-7 (28px). */
+  margin-bottom: var(--space-12);
 }
 
 .section-title {
