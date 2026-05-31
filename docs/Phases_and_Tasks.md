@@ -378,11 +378,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Counter shows real waitlist count + 350 baseline. Reads count from Brevo (or from a single Firestore doc updated by Cloud Function on each signup — TBD based on Brevo API latency). Updates in real-time when a new signup happens. Caps at 1,000.
 **Acceptance:** Counter displays correctly; increments on signup; doesn't exceed 1,000.
 
-### L1.10 — Cookie consent banner (EN + AR)
+### L1.10 — Cookie consent banner (EN + AR) ✅ DONE 2026-05-28
 **Deps:** L1.03
 **Owner:** Claude
 **Description:** Lightweight homemade banner per `PROJECT_RULES.md` §19. Three buttons: Accept All, Reject Non-Essential, Customize. EN + AR copy in i18n files. On Accept: localStorage `consent.{date}` saved (1-year expiry). On Reject: GA4 and Sentry user-context disabled.
 **Acceptance:** Banner shows on first visit; clicking Accept sets storage; clicking Reject also sets storage (with `denied` value); banner doesn't reappear within the 1-year window unless user clicks the footer "Cookie Settings" link.
+**Closure:** Premium-modern slide-up banner + customize modal landed. Three buttons (Reject Non-Essential / Customize / Accept All), non-blocking, no X close button (GDPR-compliant). Customize modal has Essential always-on + Analytics toggle + Error-monitoring toggle, with Cancel/Save Preferences actions. Decision persists as `{ v, decidedAt, expiresAt, analytics, errorContext }` in `tomodachi-consent` localStorage key with 365-day TTL. Gating consumption (GA4 + Sentry user-context) is L1.11 + L1.14 work — they read `loadConsent().analytics` and `.errorContext` respectively. Footer "Cookie Settings" re-open link deferred to L1.17 staging deploy when footer ships with ToS/Privacy links from L1.13. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
 ### L1.11 — GA4 integration with Consent Mode v2
 **Deps:** L1.10

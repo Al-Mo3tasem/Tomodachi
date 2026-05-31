@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528n">
+  <link rel="stylesheet" href="css/style.css?v=20260528o">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -823,7 +823,68 @@
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- ========== COOKIE CONSENT BANNER (L1.10) ========== -->
+  <div id="consent-banner" class="consent-banner" role="region"
+       aria-labelledby="consent-title" aria-describedby="consent-body" hidden>
+    <div class="consent-card">
+      <div class="consent-text">
+        <h3 class="consent-title" id="consent-title" data-i18n="consent.title">Cookie preferences</h3>
+        <p class="consent-body" id="consent-body" data-i18n="consent.body">Tomodachi uses essential cookies to run the app. Optional analytics and error-context cookies help us improve — your call.</p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="btn-consent btn-consent-secondary" id="btn-consent-reject" data-i18n="consent.reject">Reject non-essential</button>
+        <button type="button" class="btn-consent btn-consent-secondary" id="btn-consent-customize" data-i18n="consent.customize">Customize</button>
+        <button type="button" class="btn-consent btn-consent-primary" id="btn-consent-accept" data-i18n="consent.accept">Accept all</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== COOKIE CUSTOMIZE MODAL (L1.10) ========== -->
+  <div id="consent-modal" class="consent-modal" role="dialog"
+       aria-labelledby="consent-modal-title" aria-modal="true" hidden>
+    <div class="consent-modal-backdrop" id="consent-modal-backdrop"></div>
+    <div class="consent-modal-card">
+      <header class="consent-modal-header">
+        <h2 class="consent-modal-title" id="consent-modal-title" data-i18n="consent.modal_title">Cookie preferences</h2>
+        <p class="consent-modal-subtitle" data-i18n="consent.modal_subtitle">Choose which categories to allow. You can change this any time from Settings.</p>
+      </header>
+      <div class="consent-modal-body">
+        <div class="consent-row">
+          <div class="consent-row-info">
+            <div class="consent-row-name" data-i18n="consent.essential_name">Essential</div>
+            <div class="consent-row-desc" data-i18n="consent.essential_desc">Required for sign-in and core app features. Cannot be disabled.</div>
+          </div>
+          <span class="consent-row-required" data-i18n="consent.always_on">Always on</span>
+        </div>
+        <div class="consent-row">
+          <div class="consent-row-info">
+            <div class="consent-row-name" data-i18n="consent.analytics_name">Analytics</div>
+            <div class="consent-row-desc" data-i18n="consent.analytics_desc">Helps us understand which features get used. Aggregated, never sold.</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="consent-toggle-analytics" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="consent-row">
+          <div class="consent-row-info">
+            <div class="consent-row-name" data-i18n="consent.error_name">Error monitoring</div>
+            <div class="consent-row-desc" data-i18n="consent.error_desc">Captures error reports with your account info attached, so we can debug faster. Errors are still captured without it, just anonymously.</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="consent-toggle-error" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="consent-modal-actions">
+        <button type="button" class="btn-consent btn-consent-secondary" id="btn-consent-modal-cancel" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn-consent btn-consent-primary" id="btn-consent-modal-save" data-i18n="consent.save">Save preferences</button>
+      </div>
+    </div>
+  </div>
+
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528m"></script>
+  <script type="module" src="js/app.js?v=20260528o"></script>
 </body>
 </html>

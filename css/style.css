@@ -3132,6 +3132,266 @@ body {
   }
 }
 
+/* ============================================================
+ * L1.10 — Cookie consent banner + customize modal
+ * Per PROJECT_RULES.md §19. Lightweight, premium-modern.
+ * Banner: bottom-pinned card, slide-up entrance, non-blocking
+ * (page is scrollable while banner shows; user MUST choose to
+ * dismiss — no X close button, GDPR-compliant).
+ * Modal: standard centered overlay with backdrop blur, scale+fade
+ * entrance, ESC to close, click-backdrop to close.
+ * ============================================================ */
+
+.consent-banner {
+  position: fixed;
+  bottom: var(--space-4);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  width: calc(100% - var(--space-6) * 2);
+  max-width: 720px;
+  animation: consent-slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[dir="rtl"] .consent-banner {
+  transform: translateX(50%);
+}
+
+.consent-banner[hidden] { display: none; }
+
+@keyframes consent-slide-up {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+[dir="rtl"] .consent-banner {
+  animation-name: consent-slide-up-rtl;
+}
+
+@keyframes consent-slide-up-rtl {
+  from { opacity: 0; transform: translateX(50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(50%) translateY(0); }
+}
+
+.consent-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.consent-text {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.consent-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-1);
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
+}
+
+.consent-body {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.consent-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.btn-consent {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-consent-secondary {
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-consent-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-consent-primary {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+.btn-consent-primary:hover {
+  background: var(--brand-primary-deep);
+  transform: translateY(-1px);
+}
+
+/* ----- Customize Modal ----- */
+.consent-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.consent-modal[hidden] { display: none; }
+
+.consent-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: consent-fade-in 0.3s ease both;
+}
+
+.consent-modal-card {
+  position: relative;
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
+  animation: consent-modal-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes consent-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes consent-modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.consent-modal-header {
+  padding: var(--space-5) var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.consent-modal-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-1);
+  letter-spacing: -0.01em;
+}
+
+.consent-modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.consent-modal-body {
+  padding: var(--space-3) var(--space-6);
+}
+
+.consent-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.consent-row:last-child {
+  border-bottom: none;
+}
+
+.consent-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.consent-row-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.consent-row-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.consent-row-required {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.consent-modal-actions {
+  padding: var(--space-4) var(--space-6) var(--space-5);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+
+/* Banner mobile: stack text + buttons vertically; buttons full-width */
+@media (max-width: 600px) {
+  .consent-banner {
+    bottom: var(--space-3);
+    width: calc(100% - var(--space-4) * 2);
+  }
+  .consent-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-4);
+  }
+  .consent-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+  .btn-consent {
+    width: 100%;
+    padding: 10px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent-banner,
+  .consent-modal-backdrop,
+  .consent-modal-card {
+    animation: none;
+  }
+}
+
 /* Premium pill matching the landing's Sign In pill (consistent design
  * language across auth surfaces). Absolute-positioned in the top-leading
  * corner of the auth-screen so it sits cleanly without disconnecting

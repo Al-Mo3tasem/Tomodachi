@@ -16,6 +16,56 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.10: cookie consent banner + customize modal
+**Status:** ✅ DONE
+**Scope:** Code | CSS | Content
+**Summary:** Premium-modern cookie consent surface per `PROJECT_RULES.md` §19. Slide-up bottom banner with three buttons (Reject Non-Essential / Customize / Accept All) — non-blocking so the landing stays scrollable while the decision is pending, but the user has to choose one of the three to dismiss (no X close button — GDPR-compliant). Customize button opens a centered modal with backdrop blur, three rows (Essential always-on / Analytics toggle / Error monitoring toggle), Cancel + Save Preferences. Decision persists to `localStorage` with a 1-year TTL; the gate is read by L1.11 (GA4) + L1.14 (Sentry user-context) when those land.
+
+**Premium-modern design choices:**
+- **Banner is non-blocking** — page stays scrollable while the banner is on screen. Most landings block; we don't. Premium feels less aggressive. The banner does NOT have an X close button — three actions ARE the dismissal paths.
+- **Slide-up entrance** — 0.4s cubic-bezier, gentle. The banner pops in once `init()` confirms no valid decision is on file.
+- **RTL-aware animation** — separate `consent-slide-up-rtl` keyframe handles the inverted X-translation for AR locale (the `translateX(-50%)` vs `translateX(50%)` centering trick).
+- **Brand-primary primary action** — Accept All uses `--brand-primary` (the new indigo from the polish round). Ghost-style secondary buttons for Reject + Customize.
+- **Customize modal** is standard premium-overlay shape: backdrop blur (6px), scale+fade entrance (0.97 → 1), max-height with scroll, ESC + backdrop-click both close. Modal closing does NOT save; the banner reappears underneath unless the user saved.
+- **Two toggles in Customize** — Analytics + Error monitoring. Essential is hard-coded "Always on" (no toggle, just a label) — GDPR pattern.
+- **Mobile**: banner stacks vertically with full-width buttons. Modal padding tightens.
+- **`prefers-reduced-motion` opt-out** for all consent animations.
+
+**State persistence:**
+- localStorage key: `tomodachi-consent`
+- Shape: `{ v: 1, decidedAt, expiresAt, analytics: bool, errorContext: bool }`
+- TTL: 365 days (then banner re-shows per §19.2)
+- Versioned (`v: 1`) so a future schema change can invalidate older decisions cleanly
+- `loadConsent()` returns `null` on missing / malformed / expired / wrong-version
+- `saveConsent({ analytics, errorContext })` writes with computed expiry
+
+**Files (cache busters cascade `?v=20260528o`):**
+- `index.html` — new `#consent-banner` (slide-up card with title + body + 3 buttons) and `#consent-modal` (overlay + backdrop + card with 3 rows + cancel/save). Both placed after the toast container, outside any `<section class="screen">` so they overlay all screens. 28 `data-i18n` attributes on consent strings + 1 on `common.cancel`.
+- `css/style.css` — `.consent-banner` (fixed-bottom, RTL-aware center + slide-up keyframes), `.consent-card` (flex layout with text + actions, wraps on mobile), `.btn-consent` + `-primary` / `-secondary` variants, `.consent-modal` + backdrop + card with fade/scale entrance, `.consent-row` (label + toggle), mobile breakpoint stacking, `prefers-reduced-motion` opt-out. Net +~190 lines.
+- `js/app.js` — `loadConsent` / `saveConsent` / `showConsentBannerIfNeeded` / `openConsentModal` / `closeConsentModal` / `handleConsentAccept` / `handleConsentReject` / `handleConsentModalSave` / `onConsentModalKeydown`. Two new constants: `CONSENT_STORAGE_KEY`, `CONSENT_VERSION`, `CONSENT_TTL_MS`. `attachListeners` wires the 6 click handlers + 1 keydown listener. `init()` calls `showConsentBannerIfNeeded()` after `bindLocaleToggles()`.
+- `js/i18n/locales/en.json` + `ar.json` — new `consent.*` namespace (15 keys). AR authored inline in frozen MSA: "تفضيلات ملفات تعريف الارتباط", "رفض غير الأساسي", "قبول الكل", etc. Standard MENA-app phrasing.
+- `js/i18n/index.js` — `loadLocale` URL bumped.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- CSS brace count: 563 open / 563 close — balanced.
+- **248 leaf keys balanced** between en.json and ar.json (+15 from 233 — consent.* namespace), zero parity diff.
+- 175 `data-i18n*` keys in `index.html`, all resolve in both locales.
+- All 15 consent.* keys confirmed in both locales.
+- All 9 consent JS functions confirmed defined.
+- `showConsentBannerIfNeeded()` confirmed wired in `init()`.
+
+**Project lead visual verification (hand off):** at the bottom of the chat reply.
+
+**Open Follow-up:**
+1. **L1.11 (GA4 + Consent Mode v2)** — reads `loadConsent().analytics` to gate analytics_storage. The default-deny consent-mode pattern.
+2. **L1.14 (Sentry)** — reads `loadConsent().errorContext` to gate user-context attachment. Errors are still captured without it (anonymously); the toggle controls whether the user's `uid` + `email` are attached to error events.
+3. **Re-open from Settings** — `PROJECT_RULES.md` §19 mentions a "Cookie Settings" link in the footer. Not yet built (no footer yet). Will land alongside the L1.17 staging deploy when the footer ships with ToS / Privacy links per L1.13.
+4. **In-app emoji UI** in nav / friend bar / mode buttons — still emoji-based. Not on the L1 landing-page critical path; defer review until L2.C.
+
+---
+
 ## 2026-05-28 — L1 polish round: brand identity + animated card borders + premium SVG icons + richer background + hero peek
 **Status:** ✅ DONE
 **Scope:** CSS | HTML | Content (visual identity)

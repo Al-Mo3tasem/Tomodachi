@@ -32,7 +32,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528m';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528o';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -43,6 +43,14 @@ const ZEN_DURATIONS = [60, 180, 300, 420, 600];   // 1, 3, 5, 7, 10 minutes
 // baseline as a stubbed display; L1.09 wires the real Brevo count on
 // top of it. Move to js/config/limits.js when L1.09 lands.
 const WAITLIST_BASELINE = 350;
+
+// L1.10 cookie consent — localStorage key + 1-year expiry per
+// PROJECT_RULES.md §19.2. The actual gating of GA4 + Sentry user-
+// context happens at L1.11 + L1.14; L1.10 just captures + stores the
+// decision so those tasks can read it.
+const CONSENT_STORAGE_KEY = 'tomodachi-consent';
+const CONSENT_VERSION = 1;
+const CONSENT_TTL_MS = 365 * 24 * 60 * 60 * 1000;
 
 // Looks up the localized name for a game mode. Falls back to the raw
 // type string if the key is missing (i18next returns the key on miss).
@@ -375,6 +383,98 @@ function updateWaitlistSubmitState() {
   const email = $('waitlist-email')?.value.trim() || '';
   const submitBtn = $('waitlist-submit');
   if (submitBtn) submitBtn.disabled = !WAITLIST_EMAIL_RE.test(email);
+}
+
+// ============================================
+// COOKIE CONSENT (L1.10)
+// ============================================
+
+// Read the stored decision. Returns null if absent / malformed / expired.
+function loadConsent() {
+  try {
+    const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.v !== CONSENT_VERSION) return null;
+    if (!parsed.expiresAt || Date.now() > parsed.expiresAt) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+// Persist a decision with 1-year expiry. Shape:
+//   { v, decidedAt, expiresAt, analytics, errorContext }
+// L1.11 (GA4) + L1.14 (Sentry) read these flags to gate user context.
+function saveConsent({ analytics, errorContext }) {
+  const now = Date.now();
+  const decision = {
+    v: CONSENT_VERSION,
+    decidedAt: now,
+    expiresAt: now + CONSENT_TTL_MS,
+    analytics: !!analytics,
+    errorContext: !!errorContext
+  };
+  try {
+    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(decision));
+  } catch (err) {
+    console.warn('[consent] Failed to persist decision:', err);
+  }
+  return decision;
+}
+
+function hideConsentBanner() {
+  $('consent-banner')?.setAttribute('hidden', '');
+}
+
+function showConsentBannerIfNeeded() {
+  if (loadConsent()) return;
+  $('consent-banner')?.removeAttribute('hidden');
+}
+
+function openConsentModal() {
+  const modal = $('consent-modal');
+  if (!modal) return;
+  // Sync toggles with the current saved decision (or defaults).
+  const current = loadConsent();
+  const analyticsToggle = $('consent-toggle-analytics');
+  const errorToggle = $('consent-toggle-error');
+  if (analyticsToggle) analyticsToggle.checked = current ? current.analytics : true;
+  if (errorToggle) errorToggle.checked = current ? current.errorContext : true;
+  modal.removeAttribute('hidden');
+  // Focus the first interactive element for keyboard users.
+  setTimeout(() => $('consent-toggle-analytics')?.focus(), 100);
+}
+
+function closeConsentModal() {
+  $('consent-modal')?.setAttribute('hidden', '');
+}
+
+function handleConsentAccept() {
+  saveConsent({ analytics: true, errorContext: true });
+  hideConsentBanner();
+}
+
+function handleConsentReject() {
+  saveConsent({ analytics: false, errorContext: false });
+  hideConsentBanner();
+}
+
+function handleConsentModalSave() {
+  const analytics = !!$('consent-toggle-analytics')?.checked;
+  const errorContext = !!$('consent-toggle-error')?.checked;
+  saveConsent({ analytics, errorContext });
+  closeConsentModal();
+  hideConsentBanner();
+}
+
+// ESC closes the customize modal (banner stays visible — user still
+// needs to choose). Click-outside-card closes too. Both per modal UX
+// conventions; the banner itself is non-dismissible without choosing.
+function onConsentModalKeydown(e) {
+  if (e.key === 'Escape' && !$('consent-modal')?.hasAttribute('hidden')) {
+    closeConsentModal();
+  }
 }
 
 async function handleWaitlistSubmit(e) {
@@ -1239,6 +1339,15 @@ function attachListeners() {
   // modern affordance over the previous always-clickable form.
   $('waitlist-email')?.addEventListener('input', updateWaitlistSubmitState);
 
+  // Cookie consent (L1.10) — banner buttons + customize modal wiring.
+  $('btn-consent-accept')?.addEventListener('click', handleConsentAccept);
+  $('btn-consent-reject')?.addEventListener('click', handleConsentReject);
+  $('btn-consent-customize')?.addEventListener('click', openConsentModal);
+  $('btn-consent-modal-save')?.addEventListener('click', handleConsentModalSave);
+  $('btn-consent-modal-cancel')?.addEventListener('click', closeConsentModal);
+  $('consent-modal-backdrop')?.addEventListener('click', closeConsentModal);
+  document.addEventListener('keydown', onConsentModalKeydown);
+
   // Auth tabs + forms
   document.querySelectorAll('.auth-tab').forEach(btn => {
     btn.addEventListener('click', () => switchAuthTab(btn.dataset.tab));
@@ -1390,6 +1499,10 @@ async function init() {
   // Initial render for parametric strings the markup can't carry on its
   // own (i.e., values that interpolate vars from JS state).
   renderHeroCounter();
+
+  // L1.10: show the cookie consent banner if no valid decision is on
+  // file. Idempotent — no-op once a decision is saved (with 1-year TTL).
+  showConsentBannerIfNeeded();
 
   // L1.02: re-run the parametric t() renders that apply.js can't update
   // on its own (it only handles static [data-i18n] nodes; vars like the

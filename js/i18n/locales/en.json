@@ -38,6 +38,23 @@
     "section_title": "Inside Tomodachi",
     "section_subtitle": "A peek at the dashboard, gameplay, and leaderboard."
   },
+  "consent": {
+    "title": "Cookie preferences",
+    "body": "Tomodachi uses essential cookies to run the app. Optional analytics and error-context cookies help us improve — your call.",
+    "reject": "Reject non-essential",
+    "customize": "Customize",
+    "accept": "Accept all",
+    "modal_title": "Cookie preferences",
+    "modal_subtitle": "Choose which categories to allow. You can change this any time from Settings.",
+    "essential_name": "Essential",
+    "essential_desc": "Required for sign-in and core app features. Cannot be disabled.",
+    "analytics_name": "Analytics",
+    "analytics_desc": "Helps us understand which features get used. Aggregated, never sold.",
+    "error_name": "Error monitoring",
+    "error_desc": "Captures error reports with your account info attached, so we can debug faster. Errors are still captured without it, just anonymously.",
+    "always_on": "Always on",
+    "save": "Save preferences"
+  },
   "faq": {
     "section_title": "Common questions",
     "launch": {
