@@ -34,6 +34,7 @@ import {
 } from './games/coop.js?v=20260528c';
 import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528o';
 import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260528q';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260528r';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -346,6 +347,9 @@ async function logout() {
         lastSeen: serverTimestamp()
       }, { merge: true });
     }
+    // L1.14: clear Sentry user context before sign-out so subsequent
+    // errors during/after logout don't carry the previous user's id.
+    sentrySetUserContext(null);
     await signOut(auth);
   } catch (err) {
     toast(t('error.logout_failed', { message: err.message }), 'error');
@@ -425,6 +429,15 @@ function saveConsent({ analytics, errorContext }) {
     console.warn('[consent] Failed to persist decision:', err);
   }
   ga4UpdateConsent(decision.analytics);
+  // L1.14: Sentry user-context attachment follows errorContext + sign-in
+  // state. If user just revoked errorContext: clear context immediately.
+  // If user just granted it AND is signed in: attach. The setUserContext
+  // helper internally re-checks the consent flag too (belt-and-suspenders).
+  if (state.user && decision.errorContext) {
+    sentrySetUserContext({ uid: state.user.uid, email: state.user.email });
+  } else {
+    sentrySetUserContext(null);
+  }
   return decision;
 }
 
@@ -1463,6 +1476,11 @@ async function enterAppAsUser(user, isFreshRegistration = false) {
     toast(t('error.profile_load_failed', { message: err.message }), 'error', 8000);
   }
 
+  // L1.14: attach Sentry user context (uid + email) so subsequent
+  // errors carry the user identity. Internally gated by consent
+  // .errorContext — no-op when consent is denied or unset.
+  sentrySetUserContext({ uid: user.uid, email: user.email });
+
   $('screen-auth')?.classList.remove('active');
   $('screen-landing')?.classList.remove('active');
   $('app')?.classList.remove('hidden');
@@ -1516,6 +1534,11 @@ async function init() {
   // so the user doesn't see the consent banner reappear after
   // accepting once. No-ops when the env has no Measurement ID set.
   initGA4();
+  // L1.14: boot Sentry. SDK is lazy-loaded only when a DSN is set in
+  // js/config/sentry.js; otherwise no-op. Errors capture anonymously
+  // by default; user context attaches separately on enterAppAsUser
+  // (and only if consent.errorContext is granted).
+  initSentry();
   const existingConsent = loadConsent();
   if (existingConsent) ga4UpdateConsent(existingConsent.analytics);
 

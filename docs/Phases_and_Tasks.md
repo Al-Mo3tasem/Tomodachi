@@ -405,11 +405,13 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Description:** Per `PROJECT_RULES.md` §19 and `Commercialization_Plan.md` §8: generate baseline policies via Termly free tier. Claude customizes for our specifics. Author the AR version per `CONTENT_GUIDELINES.md`. Publish at `/privacy.html`, `/terms.html`, `/cookies.html`.
 **Acceptance:** All 3 pages live in both languages; linked from footer.
 
-### L1.14 — Sentry integration
+### L1.14 — Sentry integration 🔵 CODE DONE 2026-05-28 (project lead DSN setup + source-maps upload pending)
 **Deps:** L1.11
 **Owner:** Claude → User (Sentry account)
 **Description:** Create Sentry project. Add Sentry SDK to `js/analytics/sentry.js`. Configure: project DSN, release version (from a constant or build script), source maps upload on deploy. Initialize after consent granted (anonymized) or after login (with user context).
 **Acceptance:** Sentry captures a test error; user context attached after login; source maps work in error stack traces.
+**Code status:** Framework landed. `js/analytics/sentry.js` lazy-loads `@sentry/browser@8.40.0` via dynamic import (zero bytes ship when DSN unset). `js/config/sentry.js` holds per-env DSNs (all empty by default). `setUserContext()` attaches `{ uid, email }` only when both `loadConsent().errorContext` is true AND the user is signed in. `enterAppAsUser` / `logout` / `saveConsent` all call into Sentry to keep the user context in sync with state + consent. Defensive `beforeSend` hook in the Sentry init re-validates consent on every outgoing event (belt-and-suspenders).
+**Project lead action pending:** (a) create Sentry project at sentry.io, copy DSN, paste into `js/config/sentry.js`'s `prod` slot; (b) configure source-maps upload via sentry-cli (manual or GitHub Actions). Instructions handed off in chat 2026-05-28. **Acceptance criteria** verifiable after step (a); source-maps requirement after step (b).
 
 ### L1.15 — Logo and brand identity refinement
 **Deps:** L1.04

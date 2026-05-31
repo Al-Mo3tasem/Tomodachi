@@ -16,6 +16,47 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.14: Sentry framework with consent-gated user context (DSN pending project lead setup)
+**Status:** ✅ DONE (code) / ⏳ WAITING (project lead creates Sentry project + fills DSN)
+**Scope:** Code | Docs
+**Summary:** Sentry error reporting wired with consent-gated user context per `PROJECT_RULES.md` §19.1: errors capture anonymously the moment Sentry initializes; the user's `uid` + `email` only attach when both the L1.10 consent banner has granted `errorContext` AND the user is signed in. `@sentry/browser@8.40.0` is lazy-loaded via dynamic import — zero bytes ship in dev / staging / any prod where the DSN isn't configured. `setUserContext()` is called on `enterAppAsUser` (attach), `logout` (clear), and `saveConsent` (attach-or-clear based on the new toggle state). A defensive `beforeSend` hook in the Sentry init also re-checks the consent flag on every event, in case a later code path tries to attach context without going through `setUserContext()` — belt-and-suspenders.
+
+**Files (cache busters cascade `?v=20260528r` for changed-target consumers):**
+- **NEW:** `js/config/sentry.js` — per-env DSNs (`dev` / `staging` / `prod`, all empty by default) + `getSentryDsn()` lookup. ~28 lines including extensive header documentation.
+- **NEW:** `js/analytics/sentry.js` — `initSentry()` lazy-imports `@sentry/browser@8.40.0` from jsdelivr ESM CDN when a DSN is configured. `setUserContext(user|null)` attaches/clears (internally re-checks consent). `captureException(err, context)` + `captureMessage(msg, level)` wrappers. `_consentGranted()` private helper reads `tomodachi-consent` localStorage directly (avoids a circular import with app.js's `loadConsent`). ~120 lines including the Consent Mode-equivalent `beforeSend` scrub. SDK pinned to v8.40.0 — version intentionally bumped per upgrade cycle, never via "latest".
+- `js/app.js` — new `initSentry` + `setUserContext as sentrySetUserContext` imports. `init()` calls `initSentry()` after `initGA4()`. `enterAppAsUser()` calls `sentrySetUserContext({ uid, email })` after the user profile loads (or fallback). `logout()` calls `sentrySetUserContext(null)` before `signOut` so subsequent errors during/after sign-out don't carry the previous user's id. `saveConsent()` attaches-or-clears user context based on the new `errorContext` flag + current `state.user`.
+- `index.html` — script src for `app.js` bumped to `?v=20260528r`.
+
+**Consent integration matrix:**
+| User state | consent.errorContext | Sentry user context | What happens |
+|---|---|---|---|
+| Signed out | denied (or unset) | (none) | Errors capture anonymously |
+| Signed out | granted | (none) | Errors capture anonymously (no user to attach yet) |
+| Signed in | denied | (none) | Errors capture anonymously (consent gates context) |
+| Signed in | granted | uid + email attached | Errors carry full user context |
+| Toggles consent while signed in | denied → granted | attached after Save | `saveConsent` propagates to Sentry immediately |
+| Toggles consent while signed in | granted → denied | cleared after Save | `saveConsent` clears the context immediately |
+
+**Premium-engineering details:**
+- **Lazy-loaded SDK** — `await import('https://cdn.jsdelivr.net/npm/@sentry/browser@8.40.0/+esm')` only runs when initSentry() is called WITH a valid DSN. dev / staging / no-DSN-prod = zero SDK download. Keeps initial-page weight light per the premium-modern feedback memory's "performance counts" implication.
+- **Init promise cached** in `_initInFlight` so concurrent `initSentry()` calls don't re-trigger the dynamic import. Subsequent calls await the same promise.
+- **No tracing, no replays, no auto-instrumentation** — `integrations: []` + `tracesSampleRate: 0`. Tomodachi just wants error reporting; performance monitoring would be a separate (Blaze-tier) cost.
+- **Defensive `beforeSend` scrub** — even if some future code path calls `Sentry.setUser()` directly without going through our `setUserContext()` helper, the `beforeSend` hook re-validates consent on every outgoing event and strips `event.user` if consent is denied. Two layers of consent enforcement.
+- **`_consentGranted()` reads localStorage directly** instead of importing `loadConsent` from app.js — avoids a circular import that would prevent the Sentry module from loading independently.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js`, `analytics/sentry.js`, `config/sentry.js`, `analytics/ga4.js`, `config/analytics.js`.
+- All 13 expected JS markers present: Sentry imports in app.js, `initSentry()` in init, user-context attach in `enterAppAsUser`, clear in `logout`, conditional attach in `saveConsent`, version-pinned SDK, `beforeSend` consent scrub, `_consentGranted` helper, direct-localStorage-read pattern, `tracesSampleRate: 0`, empty `integrations`, empty default DSN, `getSentryDsn` exported.
+
+**Project lead external action (FOLLOW-UP — not blocking this commit):** detailed numbered instructions to create a Sentry project + paste the DSN — handed off in the chat reply.
+
+**Open Follow-up:**
+1. **Project lead creates Sentry project + paste DSN** into `js/config/sentry.js`'s `prod` slot. Instructions in chat reply. After that step, errors on prod will report.
+2. **Source maps upload on deploy** (per Phases_and_Tasks.md L1.14 acceptance criterion). Sentry's `sentry-cli` can be wired into the GitHub Actions deploy step OR a manual `sentry-cli releases files <version> upload-sourcemaps <dir>` invocation. Deferred until project lead confirms Sentry property is created.
+3. **Real error capture verification** (L1.14 acceptance criterion) — only testable after the DSN is in place. Trigger a deliberate error on prod after signing in with errorContext granted; verify the event appears in Sentry dashboard with `user.id` + `user.email` attached.
+
+---
+
 ## 2026-05-28 — Phase L1.11: GA4 + Consent Mode v2 framework (Measurement ID pending project lead setup)
 **Status:** ✅ DONE (code) / ⏳ WAITING (project lead creates GA4 property + fills Measurement ID)
 **Scope:** Code | Docs
