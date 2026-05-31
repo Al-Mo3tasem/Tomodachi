@@ -38,6 +38,41 @@
     "section_title": "Inside Tomodachi",
     "section_subtitle": "A peek at the dashboard, gameplay, and leaderboard."
   },
+  "faq": {
+    "section_title": "Common questions",
+    "launch": {
+      "question": "When is Tomodachi launching?",
+      "answer": "Tomodachi does not have a fixed launch date yet. We are holding release until the learning experience and Arabic quality meet the bar, and waitlist members will be invited to the closed beta first."
+    },
+    "free": {
+      "question": "Is it free?",
+      "answer": "The first beta wave will be free. Later, Tomodachi will add a Pro tier for power-user features, while the free experience stays substantial."
+    },
+    "mobile": {
+      "question": "Will there be a mobile app?",
+      "answer": "Tomodachi already works on mobile in the browser, and it supports home-screen installation as a PWA. Native iOS and Android apps are on the roadmap, but they are not the first release target."
+    },
+    "arabic_first": {
+      "question": "Why Arabic-first?",
+      "answer": "Most Japanese-learning apps start in English and treat Arabic as a later layer. Tomodachi authors Arabic pedagogy natively — explanations written by people thinking in Arabic — so grammar, memory cues, and examples feel closer to the learner."
+    },
+    "levels": {
+      "question": "What Japanese levels will be covered?",
+      "answer": "Tomodachi starts with JLPT N5: kana, about 800 vocabulary items, about 100 kanji, and N5 grammar. N4 follows after that, while N3 and beyond remain roadmap items, not promises."
+    },
+    "data": {
+      "question": "How is my data handled?",
+      "answer": "We store the minimum needed to run the product: email, display name, and game results. We do not sell data, the full privacy policy lives at /privacy, and deleting your account from Settings removes everything."
+    },
+    "pro_cost": {
+      "question": "What will Pro cost?",
+      "answer": "Final pricing is not set. We are planning regional pricing around $2/month equivalent for Egypt, roughly 70 EGP, and around $4/month equivalent for Gulf countries, with affordability as the main goal."
+    },
+    "dialect": {
+      "question": "I don't speak Egyptian Arabic — will it work for me?",
+      "answer": "Yes. All content ships in Modern Standard Arabic, so Arabic readers can use it regardless of dialect, with no Egyptian colloquialisms or region-specific wording that excludes Gulf, Levantine, or Maghrebi users."
+    }
+  },
   "auth": {
     "brand": {
       "title": "Tomodachi",

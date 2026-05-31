@@ -16,6 +16,46 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.07: FAQ section with premium one-at-a-time accordion
+**Status:** ✅ DONE
+**Scope:** Code | CSS | Content
+**Summary:** L1.07 landed. Eight Q&A pairs from the Codex Spec A run (reviewed and held in `scripts/output/codex-a-faq.json` since 2026-05-28 earlier today) integrated under a `faq.*` namespace in both locales. The accordion uses native `<details name="faq-group">` so opening one question auto-closes any other that's open — premium-modern pattern with **zero JS** (modern browsers honor the `name` attribute as a grouping signal). Plus / minus marker swaps via the `[open]` attribute selector — no animation library, no JS, pure CSS state.
+
+**Premium-modern design choices (per `feedback-premium-modern-ux`):**
+- **Native `<details>` over a JS-driven accordion** — accessibility + keyboard support for free, no library, smaller bundle. The `name="faq-group"` attribute gives one-at-a-time auto-close (Chrome 120+ / Firefox 130+ / Safari 17.2+ — all shipped 18+ months by now).
+- **+/− marker over rotating chevron** — used by Stripe and Linear's FAQs. Clearer state signal than rotated chevrons; works with no animation library.
+- **Subtle bordered rows** (1px top + per-item bottom) instead of card-shaped items with backgrounds — Linear-style. Less visual noise, cleaner read.
+- **Active state coloring** — when an item is `[open]`, the question + marker pick up the accent color. Subtle but premium signal.
+- **Generous spacing** — var(--space-4) vertical padding per row; `letter-spacing: -0.005em` on questions for that tightened-display-font feel.
+- **Container constrained to 720px** — readable line-length for FAQ answers. FAQ-sections shouldn't sprawl as wide as feature grids.
+- **No subtitle** under the section heading — premium FAQ sections (Apple, Stripe) often drop the subtitle. Just the "Common questions" heading and the items themselves.
+
+**Codex Spec A quality (re-confirmed):** ~95% — already reviewed earlier today before saving to T4. Integration is mostly a structural lift. AR side is real authored MSA (not literal translation), uses the brand voice ("نحن نكتب الشرح العربي من داخله…"), no Egyptian dialect markers, Arabic punctuation throughout.
+
+**Files (cache busters cascade `?v=20260528m`):**
+- `index.html` — new `<section class="faq">` after the screenshots section. Eight `<details class="faq-item" name="faq-group">` blocks, each with a `<summary class="faq-question">` + `<div class="faq-answer">`. New `faq.section_title` key + 8 × `{ question, answer }` pairs.
+- `css/style.css` — new `.faq` section (~80 lines). Includes the `summary::-webkit-details-marker { display: none }` reset for Webkit's default disclosure triangle + `::marker { content: '' }` for Firefox/modern engines. Custom `::after` marker on `.faq-question` for the `+` → `−` swap. Hover color shift + open-state accent. Mobile breakpoint tightens padding + question font-size.
+- `js/i18n/locales/en.json` — new `faq.*` namespace: `section_title` + 8 × `{ question, answer }`. Reviewed copy from Spec A.
+- `js/i18n/locales/ar.json` — matching namespace with the Spec A reviewed AR translations. `faq.section_title: "أسئلة شائعة"` authored inline (frozen MSA idiom). All 17 faq.* keys present in both locales.
+- `js/i18n/index.js` + `js/app.js` — cache buster bumps only.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js` + `i18n/index.js`.
+- Both locale JSON files parse.
+- **233 leaf keys balanced** between en.json and ar.json (+17 from 216 — `faq.section_title` + 8 questions + 8 answers), zero parity diff.
+- 159 `data-i18n*` keys in `index.html`, all resolve in both locales.
+- All 17 faq.* keys confirmed present in both locales.
+
+**Project lead visual verification (hand off):** at the bottom of the chat reply.
+
+**Open Follow-up:**
+1. **L1.08 — Brevo integration** (real waitlist POST). Replaces `handleWaitlistSubmit`'s success-card stub with a `/v3/contacts` POST + double opt-in handling + disposable-email blocklist per `Commercialization_Plan.md` §5. Pre-req: project lead creates a Brevo account + contact list + API key + stores the key in a Cloud Function env var (Brevo API keys are server-only per `PROJECT_RULES.md` §5.3).
+2. **L1.09 — counter with baseline inflation.** Reads real Brevo count via the Cloud Function, adds the 350 baseline, replaces the `WAITLIST_BASELINE` hardcoded const + moves it to `js/config/limits.js`.
+3. **L1.10 — Cookie consent banner.** Per `PROJECT_RULES.md` §19. Lightweight homemade banner with Accept All / Reject Non-Essential / Customize.
+4. **Real screenshot captures** (L1.06 follow-up) still awaiting L2 content reseed.
+
+---
+
 ## 2026-05-28 — Phase L1.06 (frame): screenshots section with premium phone-frame placeholders
 **Status:** ✅ FRAME DONE (real screen captures swap in post-L2 content reseed)
 **Scope:** Code | CSS | Content

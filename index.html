@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528l">
+  <link rel="stylesheet" href="css/style.css?v=20260528m">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -107,6 +107,46 @@
           </div>
           <figcaption data-i18n="leaderboard.title">Leaderboard</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section class="faq">
+      <header class="faq-header">
+        <h2 class="section-title" data-i18n="faq.section_title">Common questions</h2>
+      </header>
+      <div class="faq-list">
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.launch.question">When is Tomodachi launching?</summary>
+          <div class="faq-answer" data-i18n="faq.launch.answer">Tomodachi does not have a fixed launch date yet. We are holding release until the learning experience and Arabic quality meet the bar, and waitlist members will be invited to the closed beta first.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.free.question">Is it free?</summary>
+          <div class="faq-answer" data-i18n="faq.free.answer">The first beta wave will be free. Later, Tomodachi will add a Pro tier for power-user features, while the free experience stays substantial.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.mobile.question">Will there be a mobile app?</summary>
+          <div class="faq-answer" data-i18n="faq.mobile.answer">Tomodachi already works on mobile in the browser, and it supports home-screen installation as a PWA. Native iOS and Android apps are on the roadmap, but they are not the first release target.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.arabic_first.question">Why Arabic-first?</summary>
+          <div class="faq-answer" data-i18n="faq.arabic_first.answer">Most Japanese-learning apps start in English and treat Arabic as a later layer. Tomodachi authors Arabic pedagogy natively — explanations written by people thinking in Arabic — so grammar, memory cues, and examples feel closer to the learner.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.levels.question">What Japanese levels will be covered?</summary>
+          <div class="faq-answer" data-i18n="faq.levels.answer">Tomodachi starts with JLPT N5: kana, about 800 vocabulary items, about 100 kanji, and N5 grammar. N4 follows after that, while N3 and beyond remain roadmap items, not promises.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.data.question">How is my data handled?</summary>
+          <div class="faq-answer" data-i18n="faq.data.answer">We store the minimum needed to run the product: email, display name, and game results. We do not sell data, the full privacy policy lives at /privacy, and deleting your account from Settings removes everything.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.pro_cost.question">What will Pro cost?</summary>
+          <div class="faq-answer" data-i18n="faq.pro_cost.answer">Final pricing is not set. We are planning regional pricing around $2/month equivalent for Egypt, roughly 70 EGP, and around $4/month equivalent for Gulf countries, with affordability as the main goal.</div>
+        </details>
+        <details class="faq-item" name="faq-group">
+          <summary class="faq-question" data-i18n="faq.dialect.question">I don't speak Egyptian Arabic — will it work for me?</summary>
+          <div class="faq-answer" data-i18n="faq.dialect.answer">Yes. All content ships in Modern Standard Arabic, so Arabic readers can use it regardless of dialect, with no Egyptian colloquialisms or region-specific wording that excludes Gulf, Levantine, or Maghrebi users.</div>
+        </details>
       </div>
     </section>
   </section>
@@ -759,6 +799,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528l"></script>
+  <script type="module" src="js/app.js?v=20260528m"></script>
 </body>
 </html>

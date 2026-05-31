@@ -359,11 +359,12 @@ Update all imports. Bump `?v=` cache-busters. `node --check` every module.
 **Acceptance:** Screenshots load on both desktop and mobile; correct language version shown based on toggle.
 **Frame status:** Section structure + phone-frame placeholders + i18n keys shipped 2026-05-28. Three phone-frame cards (Dashboard / Duel / Leaderboard) with distinct soft gradients + 友 watermark + premium hover lift. New `screenshots.*` namespace (section_title + section_subtitle, both languages). **Awaiting real screen captures** post-L2 content reseed when the app screens are visually meaningful. Real-image swap is a small content-only commit. See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
-### L1.07 — FAQ section
+### L1.07 — FAQ section ✅ DONE 2026-05-28
 **Deps:** L1.05
 **Owner:** Codex (drafts) → Claude (review) → User (final approval)
 **Description:** 6-8 questions: "When is it launching?", "Is it free?", "Mobile app?", "Why Arabic-first?", "What content levels?", "How is my data handled?", "Pro pricing?", "I'm not an Egyptian Arabic speaker — will it work for me?". Both languages.
 **Acceptance:** Renders in both languages; accordion-style expand/collapse works.
+**Closure:** Codex Spec A reviewed copy (8 Q&A pairs) integrated under `faq.*` namespace in both locales. Accordion uses native `<details name="faq-group">` — one-at-a-time auto-close with zero JS. Custom +/− marker via `[open]` attribute selector, subtle bordered rows, accent-color shift on open. Premium-modern pattern (Stripe / Linear style). See `Tomodachi_Progress_Log.md` 2026-05-28 entry.
 
 ### L1.08 — Email signup → Brevo integration
 **Deps:** L1.04
