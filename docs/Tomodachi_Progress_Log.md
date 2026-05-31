@@ -16,6 +16,45 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-05-28 — Phase L1.04 follow-up: fix screen-landing display bug + premium inline success card + tighter mobile nav
+**Status:** ✅ DONE (immediate follow-up to `76fbedd`)
+**Scope:** Code | CSS | Content | Memory
+**Summary:** L1.04 verification surfaced three issues — one real bug, one UX upgrade, one mobile-layout tighten. All three resolved in this commit. Saved a new feedback memory ([[feedback-premium-modern-ux]]) for the standing principle the user articulated: every design + UX decision defaults to the Linear/Notion/Stripe-tier pattern, not the conservative one.
+
+**Issues resolved:**
+
+1. **`#screen-landing` CSS specificity bug.** The L1.04 rule `#screen-landing { display: flex }` had ID-level specificity (0,1,0,0) that overrode the base `.screen { display: none }` rule (0,0,1,0), so screen-landing was ALWAYS visible — even when `showScreen()` flipped its `.active` class to switch to screen-auth or screen-dashboard. **Consequence:** the landing-nav "Sign in" button appeared dead (screen-auth was being activated correctly underneath, but the landing's `min-height: 100vh` covered it). Same root cause for the "welcome toast appears on top of landing on refresh" — `enterAppAsUser` correctly switched to screen-dashboard, but screen-landing kept painting. **Fix:** moved the layout properties to `#screen-landing.active` (specificity 0,1,1,0) so they apply only when the active class is present. Base `.screen { display: none }` is the unconditional hide rule for non-active screens.
+
+2. **Top-corner toast for waitlist success was the wrong feedback pattern.** Per user feedback: "i think a more modern ux will be that a pop up appears in middle rather than on top corner!". Premium-modern landing pages (Linear / Notion / Stripe) use inline state transformation — the form area becomes a success card in the same vertical position. **Fix:** added `<div id="waitlist-success">` with a green check-icon circle + title + body. On submit success, `handleWaitlistSubmit` hides `#form-waitlist` + `#hero-counter` and reveals the success card. Same `hero-fade-in` animation, no layout shift. The toast call removed. Stale `toast.waitlist_stub` key dropped from both locale files.
+
+3. **Mobile nav layout wrapping.** At ≤480px the brand + locale-toggle + "Already have an account? Sign in" wrapped across 3 rows, pushing the hero content far below the fold. Per the premium-modern feedback memory, the nav should NOT wrap into stacked rows. **Fix:** shortened the sign-in label from "Already have an account? Sign in" → just "Sign in" (the page state — visitor on a waitlist landing — already implies the rest). Added a `data-i18n-attr="aria-label:hero.sign_in_aria"` carrying the full "Sign in to existing account" text for screen readers. Styled `#btn-landing-signin` as a discreet pill with border + hover state instead of the previous text-button look. Added a `@media (max-width: 480px)` block that shrinks nav padding + sign-in button size so brand + EN/AR toggle + Sign-in pill all sit on one row down to 320px width. Removed `flex-wrap: wrap` from `.landing-nav`.
+
+**Files / Areas (cache busters cascade `?v=20260528g → ?v=20260528h`):**
+- `css/style.css` — `#screen-landing` → `#screen-landing.active` scoping for layout properties. Removed `flex-wrap` from `.landing-nav`. New `#btn-landing-signin` pill styling + hover. New `.waitlist-success` block (centered card, green check icon, title, body) + its `[hidden]` rule. New `@keyframes` already in place; success card uses the existing `hero-fade-in`. New `@media (max-width: 480px)` mobile-tightening rules.
+- `index.html` — `#btn-landing-signin` lost the `btn btn-ghost btn-sm` classes (its own dedicated styling now), gained `aria-label` + `data-i18n-attr` for accessibility. Added `<div id="waitlist-success" hidden>` immediately after the error slot. Cache busters bumped.
+- `js/app.js` — `handleWaitlistSubmit` no longer calls `toast()`; hides the form + counter elements, reveals the success card. Inline comments updated to point at the feedback memory.
+- `js/i18n/locales/en.json` — `hero.sign_in_link` shortened to "Sign in". New `hero.sign_in_aria` ("Sign in to existing account"). New `hero.success_title` ("You're on the list"). New `hero.success_body` ("We'll let you know when Tomodachi launches."). Removed unused `toast.waitlist_stub`.
+- `js/i18n/locales/ar.json` — matching changes. `hero.sign_in_link` filled with the universal Arabic "تسجيل الدخول" + `hero.sign_in_aria` "تسجيل الدخول إلى حساب موجود" (both are frozen MSA idioms that don't need Codex review — every major MENA-targeted app uses these). `hero.success_title` + `hero.success_body` ship with `[AR] ` placeholders pending Spec C.
+- `js/i18n/index.js` — `loadLocale` URL bumped.
+
+**New feedback memory:** `feedback-premium-modern-ux` saved at `C:\Users\mouta\.claude\projects\d--MO3-LAP-MyProjects-Tomodachi\memory\` — captures the standing principle that every design + UX decision should default to premium-modern, not safe-conservative. Applies to every future task that touches user-visible UI.
+
+**Verification (Claude-run from the harness, per the [[feedback-test-locally-when-possible]] discipline):**
+- `node --check` clean on `js/app.js` + `js/i18n/index.js`.
+- Both locale JSON files parse.
+- 133 unique `data-i18n*` keys in `index.html` (up from 130, +3 for `hero.sign_in_aria` + `hero.success_title` + `hero.success_body`), all resolve in both locales.
+- 42 static `t()` keys in app.js (down 1 from 43 — `toast.waitlist_stub` removed), all resolve.
+- Cache buster cascade: `index.html` script + style → `?v=20260528h`; `app.js` import of `i18n/index.js` → `?v=20260528h`; `i18n/index.js` fetch URL → `?v=20260528h`. Unchanged-target imports stayed at their prior busters.
+
+**Project lead re-verification (visual-only, hand off):**
+1. Hard refresh `http://localhost:8000/` while signed out (incognito or after sign-out).
+2. Landing renders. Click `Sign in` (now a small pill in the top-right, not a wrapped-text link) → **lands on the auth-screen** (the bug is dead). Click `← Back to landing` → returns to hero.
+3. Type a valid email → click `Join Waitlist` → **the form area inline-transforms into the centered success card** (green check icon, "You're on the list", "We'll let you know when Tomodachi launches"). No top-corner toast.
+4. Refresh while signed in to a `tomodachi-dev` account → **lands on the dashboard, NOT the landing page** (the bug is dead). The welcome toast appears over the dashboard, which is the expected behavior.
+5. Mobile responsive (Chrome DevTools, 365×811): landing-nav fits on ONE row (brand on left, EN/AR + Sign-in pill on right), hero content closer to the visible area, no horizontal scroll.
+
+---
+
 ## 2026-05-28 — Phase L1.04: landing-page hero section (bilingual) + waitlist stub
 **Status:** ✅ DONE
 **Scope:** Code | CSS | Content | Docs

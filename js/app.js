@@ -32,7 +32,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528g';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528h';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -382,11 +382,13 @@ async function handleWaitlistSubmit(e) {
     return;
   }
 
-  // L1.04 stub — the real Brevo /v3/contacts POST is L1.08. Showing the
-  // success toast now keeps the funnel-UX testable end-to-end while the
-  // backend is wired separately.
-  toast(t('toast.waitlist_stub'), 'success', 5000);
-  e.target.reset();
+  // L1.04 stub — the real Brevo /v3/contacts POST is L1.08. Premium-
+  // modern feedback: hide the form + counter, fade in an inline success
+  // card in the same vertical position. Beats the top-corner toast for
+  // a celebration moment (saved as feedback-premium-modern-ux memory).
+  $('form-waitlist')?.setAttribute('hidden', '');
+  $('hero-counter')?.setAttribute('hidden', '');
+  $('waitlist-success')?.removeAttribute('hidden');
 }
 
 // ============================================

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528g">
+  <link rel="stylesheet" href="css/style.css?v=20260528h">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -31,7 +31,10 @@
           <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
           <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
         </div>
-        <button type="button" class="btn btn-ghost btn-sm" id="btn-landing-signin" data-i18n="hero.sign_in_link">Already have an account? Sign in</button>
+        <button type="button" id="btn-landing-signin"
+                data-i18n="hero.sign_in_link"
+                data-i18n-attr="aria-label:hero.sign_in_aria"
+                aria-label="Sign in to existing account">Sign in</button>
       </div>
     </header>
 
@@ -51,6 +54,12 @@
 
         <p class="hero-counter" id="hero-counter">350+ people already on the list</p>
         <p class="form-error hero-error" id="waitlist-error"></p>
+
+        <div class="waitlist-success" id="waitlist-success" hidden>
+          <div class="waitlist-success-icon" aria-hidden="true">✓</div>
+          <h2 class="waitlist-success-title" data-i18n="hero.success_title">You're on the list</h2>
+          <p class="waitlist-success-body" data-i18n="hero.success_body">We'll let you know when Tomodachi launches.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -703,6 +712,6 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260528g"></script>
+  <script type="module" src="js/app.js?v=20260528h"></script>
 </body>
 </html>

@@ -15,7 +15,10 @@
     "email_placeholder": "بريدك الإلكتروني",
     "cta_label": "انضمّ للقائمة",
     "counter_line": "{{count}}+ على القائمة بالفعل",
-    "sign_in_link": "[AR] Already have an account? Sign in"
+    "sign_in_link": "تسجيل الدخول",
+    "sign_in_aria": "تسجيل الدخول إلى حساب موجود",
+    "success_title": "[AR] You're on the list",
+    "success_body": "[AR] We'll let you know when Tomodachi launches."
   },
   "auth": {
     "brand": {
@@ -300,8 +303,7 @@
     "welcome_new": "[AR] Welcome to Tomodachi, {{name}}!",
     "welcome_back": "[AR] Welcome back, {{name}}!",
     "signed_in": "[AR] Signed in. Loading dashboard…",
-    "profile_created": "[AR] Created your missing profile document.",
-    "waitlist_stub": "[AR] Thanks — we'll let you know when Tomodachi launches."
+    "profile_created": "[AR] Created your missing profile document."
   },
   "locale": {
     "label_en": "EN",

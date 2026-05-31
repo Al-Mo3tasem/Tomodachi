@@ -2466,7 +2466,13 @@ body {
  * the "Sign in" link in the landing-nav.
  * ============================================================ */
 
-#screen-landing {
+/* #screen-landing layout properties scoped to .active so they don't
+ * override the base `.screen { display: none }` hiding rule. The ID
+ * selector has higher specificity than the class, so an unscoped
+ * `display: flex` here would keep the landing visible even after
+ * showScreen('screen-auth') flipped its .active class — caught during
+ * L1.04 verification. */
+#screen-landing.active {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -2480,8 +2486,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4) var(--space-6);
-  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-5);
   gap: var(--space-3);
 }
 
@@ -2499,13 +2504,32 @@ body {
 .landing-nav-right {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .landing-locale-bar {
   display: inline-flex;
   gap: 4px;
+}
+
+/* Sign-in CTA on landing — short label ("Sign in") with discreet
+ * border. Premium-modern pattern: don't disguise the affordance with
+ * "Already have an account?" preamble; the page state already implies
+ * it. Visible button styling so it doesn't look like body text. */
+#btn-landing-signin {
+  padding: 6px 12px;
+  border: 1px solid var(--border, rgba(0,0,0,0.15));
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text-primary, inherit);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+#btn-landing-signin:hover {
+  border-color: var(--accent, #0a84ff);
+  color: var(--accent, #0a84ff);
 }
 
 .hero {
@@ -2581,9 +2605,75 @@ body {
   min-height: 1.25rem;
 }
 
+/* Premium inline success state — replaces the form when the waitlist
+ * submit succeeds. Centered card with a confidence-check icon, title,
+ * body. Same vertical position as the form so the layout doesn't jump.
+ * Premium-modern pattern (Linear / Notion / Stripe) over top-corner
+ * toast for a celebration moment. */
+.waitlist-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  max-width: 460px;
+  margin: 0 auto;
+  animation: hero-fade-in 0.4s ease-out both;
+}
+
+.waitlist-success[hidden] { display: none; }
+
+.waitlist-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--success, #34c759);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.25);
+}
+
+.waitlist-success-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.waitlist-success-body {
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #666);
+  margin: 0;
+  line-height: 1.55;
+  max-width: 360px;
+}
+
 @keyframes hero-fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile: keep the landing-nav on one row even at 320px, with the
+ * locale-bar + sign-in pill compact enough to fit alongside the
+ * brand. Premium-modern: nav doesn't wrap into stacked rows. */
+@media (max-width: 480px) {
+  .landing-nav {
+    padding: var(--space-3) var(--space-4);
+  }
+  .landing-brand-name {
+    font-size: 0.95rem;
+  }
+  .landing-nav-right {
+    gap: 6px;
+  }
+  #btn-landing-signin {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
 }
 
 .auth-back-btn {
