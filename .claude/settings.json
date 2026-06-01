@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node --check js/app.js)",
+      "Bash(git check-ignore *)",
+      "Bash(node --check js/i18n/index.js)",
+      "Bash(node --check js/i18n/rtl.js)",
+      "Bash(node --check js/i18n/apply.js)",
+      "Bash(node --check js/config/i18n.js)",
+      "Bash(node --check js/config/analytics.js)",
+      "Bash(node --check js/analytics/ga4.js)",
+      "Bash(node --check js/analytics/sentry.js)",
+      "Bash(node --check js/config/sentry.js)",
+      "Bash(git commit -m 'L1.16 done in Phases_and_Tasks.md *)",
+      "Bash(node --check js/policy-init.js)",
+      "Bash(node -e \"const en=require\\('./js/i18n/locales/en.json'\\); const ar=require\\('./js/i18n/locales/ar.json'\\); console.log\\('en keys:', JSON.stringify\\(en\\).length, 'chars'\\); console.log\\('ar keys:', JSON.stringify\\(ar\\).length, 'chars'\\); console.log\\('en.policy.privacy.title =', JSON.stringify\\(en.policy.privacy.title\\)\\); console.log\\('en.policy.terms.title =', JSON.stringify\\(en.policy.terms.title\\)\\); console.log\\('en.policy.cookies.title =', JSON.stringify\\(en.policy.cookies.title\\)\\); console.log\\('ar.policy.back_home =', JSON.stringify\\(ar.policy.back_home\\)\\); console.log\\('ar.policy.privacy.title =', JSON.stringify\\(ar.policy.privacy.title\\)\\); console.log\\('JSON OK'\\);\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s \"http://localhost:8765/privacy.html\")",
+      "Bash(kill %1)",
+      "Bash(xargs -r kill -9)",
+      "Bash(ls scripts/prompts/)",
+      "Bash(ls scripts/)",
+      "Bash(ls -la firebase.json .firebaserc)",
+      "Bash(cat firebase.json)",
+      "Bash(cat .firebaserc)",
+      "Bash(node --check js/config/functions.js)",
+      "Bash(node --check functions/index.js)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('firebase.json', 'utf8'\\)\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('.firebaserc', 'utf8'\\)\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('functions/package.json', 'utf8'\\)\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('manifest.json', 'utf8'\\)\\)\")"
+    ]
+  }
+}

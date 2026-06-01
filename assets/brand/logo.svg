@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" role="img" aria-label="Tomodachi">
+  <title>Tomodachi</title>
+
+  <!-- Scarf U-curve — back layer (the shadow behind the front-fold) -->
+  <path d="M 30 110
+           C 30 180, 95 200, 120 200
+           C 145 200, 210 180, 210 110
+           L 210 138
+           C 210 200, 145 220, 120 220
+           C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+
+  <!-- Scarf U-curve — front face (the crimson body) -->
+  <path d="M 30 110
+           C 30 180, 95 200, 120 200
+           C 145 200, 210 180, 210 110
+           L 210 130
+           C 210 195, 145 213, 120 213
+           C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+
+  <!-- Left trailing tail — deep scarf, matches right for symmetry -->
+  <path d="M 30 165
+           C 18 178, 14 195, 8 218
+           L 24 200
+           L 32 218
+           L 38 178 Z" fill="#7F1D1D"/>
+
+  <!-- Right trailing tail — deep scarf -->
+  <path d="M 210 165
+           C 222 178, 226 195, 232 218
+           L 216 200
+           L 208 218
+           L 202 178 Z" fill="#7F1D1D"/>
+
+  <!-- 友 character — held above the scarf cradle -->
+  <text x="120" y="135" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif"
+        font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+</svg>

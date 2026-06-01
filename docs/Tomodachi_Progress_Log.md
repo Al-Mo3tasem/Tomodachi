@@ -16,6 +16,292 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-01 — Phase L1.15: scarf-motif logo locked in + full brand-palette migration
+**Status:** ✅ DONE (code, assets, palette migration)
+**Scope:** Brand | Assets | HTML | CSS | Manifest | OG/Twitter
+**Summary:** Direction C (The Embrace) from the second concepts round, with knit-stitch texture as the only polish on top, locked in as the production mark. Inspired by Mikasa's red scarf from Attack on Titan as a friendship motif — the form itself is in the visual commons; we use it without naming the IP. To viewers who know, it lands instantly; to anyone who doesn't, it reads as a warm protective garment cradling the 友 character. Brand palette migrated from generic-startup indigo + sakura-rose to scarf-crimson + warm tan — fully cascaded through CSS variables and the small handful of raw rgba() values that bypassed them.
+
+**Files (cache busters cascade `?v=20260601c` for changed-target consumers):**
+- **NEW:** `assets/brand/logo.svg` — primary mark, 240×280 viewBox. Two-layer scarf cradle (deep `#7F1D1D` shadow + `#B91C1C` knit-textured front), top-fold highlight in `#DC2626`, two trailing tails (crimson on left, deeper on right for depth), 友 character above in Noto Sans JP 900. Includes `<pattern id="knit">` for cable-knit ribbing + `<filter id="fabric-noise">` for the organic fabric break-up. Texture is visible at primary-mark size, gracefully fades to solid red at favicon size due to subpixel rendering.
+- **REPLACED:** `favicon.svg` (root) — same composition as logo.svg but on a rounded warm-paper `#FAF8F2` background so the mark stays visible on browser tab bars regardless of background color. 100×100 viewBox.
+- **NEW:** `assets/brand/og-card.svg` — 1200×630 social-preview card. Soft warm-paper radial-gradient background, scaled-up logo on the left (with stronger knit pattern since canvas is huge), three-line text block on the right ("Tomodachi" 84pt + "Learn Japanese with friends." 34pt + descriptor 26pt × 2 lines), subtle URL stamp at the bottom-right. This closes the L1.12 follow-up #1 ("real og:image — deferred from L1.12 until L1.15 ships").
+- `index.html` — four 🏯 emoji replaced with `<img src="assets/brand/logo.svg?v=...">` (landing nav line 93, landing footer line 268, auth-screen brand line 295, dashboard nav line 368). New `<meta property="og:image">` + `og:image:width/height/alt`. Twitter card upgraded from `summary` to `summary_large_image` with matching `twitter:image` + alt. New `<meta name="theme-color" content="#B91C1C">` for mobile-browser chrome.
+- `privacy.html`, `terms.html`, `cookies.html` — favicon link cache-buster bumped to match.
+- `manifest.json` — `theme_color: #4F46E5` → `#B91C1C`, `background_color: #F5F5F7` → `#FAF8F2`. PWA icon path stays at `favicon.svg` (the new file).
+- `css/style.css` — palette migration. The five brand tokens at `:root` rewritten:
+  - `--brand-primary` indigo `#4F46E5` → scarf crimson `#B91C1C`
+  - `--brand-primary-deep` indigo `#4338CA` → scarf deep `#7F1D1D`
+  - `--brand-primary-soft` indigo wash → scarf wash `rgba(185, 28, 28, 0.10)`
+  - `--brand-accent` sakura `#EC4899` → warm tan `#C8A975`
+  - `--brand-accent-soft` rose wash → tan wash `rgba(200, 169, 117, 0.10)`
+  - `--brand-amber` unchanged
+  - **NEW:** `--brand-paper #FAF8F2` for explicit warm-cream references
+  Five raw rgba() values that bypassed the variables also migrated: hero mesh gradient (lines 2509-2512), card-shadow stack (lines 2862-2863), policy-page background gradient (lines 3321-3322). New CSS rules for `.brand-icon img`, `.landing-brand-icon img`, `.nav-icon img` so the new SVG mark sits at the right size in each context.
+
+**Design decisions:**
+- **Knit texture as the only polish on C.** User explicitly said "i like it already" — so no compositional changes. Texture added because it elevates the scarf from a flat shape to a believable object, and it degrades gracefully at small sizes (the pattern just becomes solid color, no broken micro-detail).
+- **AoT signal handled by visual cues only.** No name, no logo, no character. The shape of the scarf + the crimson color do the work for viewers who recognize them. For viewers who don't, the mark reads as "scarf cradling 友" — still on-brand for a friendship-themed app.
+- **Texture applied only to the scarf, not the 友.** The character stays clean black ink, anchoring the composition and remaining legible at every size.
+- **One favicon, used everywhere.** Rather than maintain separate favicon / header / app-icon files, the favicon.svg serves all three contexts via different `<img>` sizings. SVG scales perfectly; one source of truth, less drift over time.
+- **Theme-color metadata everywhere.** Both `<meta name="theme-color">` (browser chrome) AND manifest `theme_color` (PWA on Android), both set to the scarf crimson. Means the address bar color, status bar, and the Chrome "install app" UI all match the brand now.
+
+**Automated checks (all green):**
+- All three SVG assets serve 200 on the local http.server smoke test.
+- `index.html` references `assets/brand/logo.svg` exactly 4 times (matching the 4 emoji replacements).
+- `manifest.json` parses as valid JSON.
+- CSS migration verified: **5 rgba(185, 28, 28, ...) scarf references** present (gradient stops + shadow); **0 rgba(79, 70, 229, ...) indigo references** remaining; **0 #4F46E5 hardcoded indigo references** remaining.
+- Favicon cache-buster bumped consistently across `index.html` + `privacy.html` + `terms.html` + `cookies.html`.
+
+**Open Follow-up:**
+1. **`firebase deploy --only functions`** still pending from L1.09 — that ships the live `getWaitlistCount` so the hero counter starts ticking up.
+2. **`git push` to main** to ship everything else (logo, palette, policies, GA4/Sentry config) live via GitHub Pages auto-deploy. Order doesn't matter — functions and static deploy independently.
+3. **OG card PNG fallback** — `og-card.svg` is SVG, which most modern platforms (Slack, Discord, modern WhatsApp) render correctly. **Twitter and Facebook still prefer PNG/JPG**, though they degrade gracefully. If the OG card looks broken on Twitter/Facebook previews after deploy, follow-up to convert SVG → PNG via an online tool (sharp / inkscape / squoosh.app) and update the `og:image` URL to the PNG version. Acceptable as a sub-hour follow-up; not blocking the L1 close.
+4. **Smoke-test the live mark** — after `git push`, open the live landing in a few browsers (Chrome, Safari, Firefox, mobile Safari) and confirm the SVG renders crisply. Check the OG preview in Twitter card validator and Facebook OG debugger.
+5. **Locked palette → AR aesthetic check** — the Cairo font on the AR landing will look different against scarf-crimson than it did against indigo. Visual review post-deploy; if anything reads off, a per-locale CSS tweak is easy.
+
+---
+
+## 2026-06-01 — L1.09 (counter) + L1.15 (logo concepts) shipped
+**Status:** ✅ CODE DONE for both / ⏳ WAITING (project lead deploys L1.09 functions + picks A/B/C for L1.15)
+**Scope:** Cloud Functions | Client | Brand
+**Summary:** L1.08 verified end-to-end on prod (fresh email with `LOCALE=AR` round-tripped to Brevo with all three custom attributes populated). Moving to the parallel L1.09 + L1.15 round. L1.09 adds the `getWaitlistCount` HTTPS function and wires the hero counter to display real Brevo count + 350 baseline capped at 1000. L1.15 produces three distinct visual logo directions ("Calligraphy" / "Geometric" / "Bond") as a single side-by-side preview HTML for project-lead pick.
+
+**L1.09 files:**
+- `functions/index.js` — new exported `getWaitlistCount` HTTPS function. GET endpoint, same CORS allow-list + secrets binding as `submitWaitlist`. Calls Brevo `GET /v3/contacts/lists/{listId}` and surfaces `body.totalSubscribers` only (blacklisted contacts excluded from the social-proof number). Returns `{ ok: true, count }` on success or a structured error code on failure. No in-function caching — pre-launch traffic doesn't justify it.
+- `js/app.js` — new `WAITLIST_DISPLAY_CAP = 1000` constant + `cachedWaitlistRealCount` module-level cache + `computeDisplayCount()` helper. `renderHeroCounter()` now uses `computeDisplayCount()` instead of the bare baseline. New async `fetchAndApplyWaitlistCount()` fires once at landing-page boot — silently upgrades the displayed number from baseline-only to real + baseline once Brevo returns. Silent failure on error (counter is decorative; no toast / error UI).
+- `index.html` — `app.js` cache buster → `?v=20260601b`.
+
+**L1.09 design decisions:**
+- **Render baseline first, then upgrade.** The page never shows a blank counter or a "loading…" placeholder. Visitor always sees `350+` (or higher) immediately; the number quietly shifts up by 5-50 once Brevo responds.
+- **350 baseline + 1000 cap, both in the client.** Server returns raw count from Brevo; client owns the display math. Keeps the function pure and the display logic with the rest of the landing copy.
+- **Silent fallback to baseline-only on error.** A counter is social proof, not load-bearing UI. A "Couldn't reach the server" error here would be uglier than a slightly-stale "350+".
+
+**L1.15 deliverable:** `assets/brand/concepts.html` — self-contained preview file. Three concepts:
+- **A — Calligraphy.** Bold 友 in Noto Sans JP weight 900 on warm paper, sakura-rose dot in upper-right (ink-seal feel). Cormorant Garamond serif wordmark. Vibe: editorial premium, Muji + Murakami.
+- **B — Geometric.** 友 in solid indigo rounded square, sakura-rose accent dot. Tight Inter Bold wordmark. Vibe: Linear/Notion/Vercel — but with a heart.
+- **C — Bond.** Two overlapping circles (indigo + sakura, mix-blend-mode multiply) with 友 in the intersection. Inter Bold wordmark. Vibe: the multiplayer/co-op promise pictured literally.
+
+Each concept shows: large primary mark, header lockup (light + dark backgrounds), 32px + 16px favicon sizes, plus a strengths/tradeoffs panel. Decision bar at bottom prompts A/B/C pick.
+
+**Automated checks (all green):**
+- `node --check` clean on `app.js`, `functions/index.js`.
+- `assets/brand/concepts.html` serves (HTTP 200 via local http.server) with all 3 concepts rendering.
+
+**Open Follow-up (project lead actions):**
+
+1. **Pick a logo direction** — open `assets/brand/concepts.html` in your browser (double-click the file, or via the local http.server you may already have running). Open the live landing alongside it. Pick A, B, or C. Tell me the choice; I produce the final SVG + favicon.svg + icon-192.png + icon-512.png + og-card.png, wire them into the manifest + index.html + sitemap.
+
+2. **Deploy L1.09** — same flow as the L1.08 deploy:
+   ```powershell
+   cd "d:\MO3 LAP\MyProjects\Tomodachi"
+   firebase deploy --only functions
+   ```
+   This time deployment is fast (~30 sec) because Cloud Build has already provisioned. The CLI will detect that `submitWaitlist` is unchanged and that `getWaitlistCount` is new, deploy only the new one. After deploy, the live landing's counter will quietly tick up to `<real> + 350` on the next page load.
+
+3. **Static-site push** can happen anytime after these two steps — `git push` to `main`, GitHub Pages auto-deploys. Will pick up: L1.09 client changes + L1.13b policies + L1.11/L1.14 config + cache-buster bumps. (No specific order needed; the static side and the functions side deploy independently.)
+
+---
+
+## 2026-06-01 — L1.11 + L1.14: GA4 Measurement ID + Sentry DSN filled in (project lead setup complete; deploys awaited)
+**Status:** ✅ DONE (config in place) / ⏳ WAITING (push to live + smoke-test on prod)
+**Scope:** Config | Cache-busters
+**Summary:** Project lead completed the GA4 property + Sentry project setup walkthroughs (2026-06-01). Pasted the resulting credentials into the per-env config files: GA4 `G-W98QV657BE` into `js/config/analytics.js` prod slot; Sentry DSN (Germany region, EU data residency — `o4511486659919872.ingest.de.sentry.io/4511486683250768`) into `js/config/sentry.js` prod slot. Dev and staging slots stay blank by design — we don't want localhost / Cloudflare-staging traffic polluting prod analytics or error reports. Cache-buster cascade: `analytics.js` + `sentry.js` content changed → `analytics/ga4.js` + `analytics/sentry.js` import URLs bump → `app.js` import URLs bump → `index.html` script-tag bumps. Bumped to `?v=20260601a`.
+
+**Files:**
+- `js/config/analytics.js` — line 24 `prod:    'G-W98QV657BE'` + comment trail noting create-date.
+- `js/config/sentry.js` — line 26 `prod:    'https://...@o4511486659919872.ingest.de.sentry.io/...'` + comment noting `.de` region for EU data residency.
+- `js/analytics/ga4.js` line 19 — `analytics.js` import URL → `?v=20260601a`.
+- `js/analytics/sentry.js` line 16 — `sentry.js` import URL → `?v=20260601a`.
+- `js/app.js` lines 37-38 — `analytics/ga4.js` + `analytics/sentry.js` import URLs → `?v=20260601a`.
+- `index.html` — `js/app.js` script tag → `?v=20260601a`.
+
+**Notes on the Sentry region:**
+- DSN host is `.ingest.de.sentry.io` — Sentry's German data center. Project lead picked this during signup, likely the default for EU-region signups. Means error reports are stored in Frankfurt rather than US-East. Good for GDPR (data-residency requirements) + matches the `/privacy.html` clause about "data may be processed in the European Union" — accurate.
+- No code change needed — `@sentry/browser` SDK auto-routes to whichever ingest region the DSN points at.
+
+**Notes on the GA4 ID:**
+- `G-W98QV657BE` is the production property. The GA4 Real-Time Dashboard will start showing events the moment a live user accepts the consent banner (Consent Mode v2 keeps `analytics_storage` denied until then; without consent, GA4 still sends anonymized "ping" signals for aggregate measurement only).
+
+**Automated checks (all green):**
+- `node --check` clean on `analytics.js`, `sentry.js`, `analytics/ga4.js`, `analytics/sentry.js`, `app.js`.
+- Grep confirms both values landed in the correct slot of their respective config files.
+
+**Acceptance (verifiable post-deploy of static site):**
+- GA4 Real-Time dashboard at `analytics.google.com` → Tomodachi property → Real-Time → shows landing-page hits when traffic flows.
+- Sentry Issues tab at `sentry.io/issues/?project=4511486683250768` → captures the first error from prod.
+- L1.10 consent banner gates both: deny analytics → no GA4 events fire; deny error-monitoring → Sentry captures errors but with no user context attached.
+
+**Open Follow-up:**
+1. **Static-site deploy** required to make these live — `git push` to `main` triggers GitHub Pages auto-deploy (per `[[tomodachi-deploy-workflow]]` memory).
+2. **L1.08 Brevo deploy** still pending — project lead has API key + list ID 2 captured but postponed the Firebase Functions deploy round.
+3. **Source-map upload to Sentry** for L3+ when error volume justifies. Adds ~5 min to each release cycle via `sentry-cli`.
+
+---
+
+## 2026-06-01 — L1.08 status update: Brevo credentials captured, deploy postponed
+**Status:** 🟡 PARTIAL (API key + list ID 2 captured; Firebase Functions deploy deferred to a later session)
+**Scope:** Coordination note
+**Summary:** Project lead has the Brevo API key (stored in their password manager, NOT in the repo, NOT in chat) and confirmed Brevo list ID = `2`. The Firebase Functions deploy round (`firebase functions:secrets:set BREVO_API_KEY` + `.env.tomodachi-prod` with `BREVO_LIST_ID=2` + `firebase deploy --only functions`) is deferred. Until that deploy completes, the live waitlist form will hit a Cloud Function URL that returns 404 — `handleWaitlistSubmit` catches that as the `network` branch and shows the localized "Couldn't reach the server" error. Pre-deploy users on the live landing see the form behave gracefully, just without persistence.
+
+**What to remember when resuming:**
+- Brevo API key lives in the project lead's password manager. NEVER paste it into chat — paste straight into `firebase functions:secrets:set BREVO_API_KEY` when prompted.
+- `BREVO_LIST_ID=2` goes into `functions/.env.tomodachi-prod` (gitignored).
+- Single opt-in is the locked decision — no DOI template setup needed (see corrected step 6 in the L1.08 entry).
+- After deploy: smoke-test with the `curl` command in the L1.08 entry's step 14.
+
+**Open Follow-up:** Resume L1.08 deploy in the next session, or batch it with the L1.17 staging→prod deploy round.
+
+---
+
+## 2026-05-31 — Phase L1.08: Brevo waitlist integration (Cloud Function + client) ✅ CODE DONE / ⏳ WAITING (project lead Brevo + Firebase deploy)
+**Status:** ✅ DONE (code, config, i18n) / ⏳ WAITING (project lead: Brevo account → API key → list ID → list-level DOI → Firebase Functions deploy)
+**Scope:** Code | Cloud Functions | Config | i18n | Firebase | Brevo
+**Summary:** Replaced the L1.04 `handleWaitlistSubmit` stub (which just showed the success card without persisting anything) with a real Cloud Function-backed integration. New `functions/` directory scaffolds Firebase Cloud Functions v2 on Node 20 (CommonJS). The `submitWaitlist` HTTPS function validates email + checks a disposable-domain blocklist + POSTs to Brevo's `/v3/contacts` endpoint with locale + source metadata + a SIGNUP_DATE attribute. CORS is allow-listed to the three Tomodachi front-end origins (github.io, Cloudflare Pages staging, localhost). The Brevo API key uses `defineSecret` so it lives in GCP Secret Manager — never in plain env or any committed file per `PROJECT_RULES.md` §5.3. The list ID, which is non-sensitive, uses `defineString` from a per-project `.env.<projectId>` file. On the client, `handleWaitlistSubmit` now disables the submit button + swaps the label to `t('hero.submitting')` during the fetch, maps 6 server-side error codes onto 5 user-friendly i18n strings, and preserves the premium-modern in-place success-card transformation from L1.04.
+
+**Files (cache busters cascade `?v=20260531b` for changed-target consumers):**
+- **NEW:** `functions/package.json` — Node 20 engine, `firebase-functions ^6.0.0`, `firebase-admin ^13.0.0`, `eslint ^9.0.0` dev. Predeploy hook runs `npm run lint`.
+- **NEW:** `functions/.gitignore` — `node_modules/`, `.env*`, `firebase-debug.log`, `.runtimeconfig.json`. Anything that could leak secrets stays out of git.
+- **NEW:** `functions/.eslintrc.json` — flat `eslint:recommended` + `no-unused-vars` with `_`-prefix ignore. Keeps the predeploy lint hook honest without being noisy.
+- **NEW:** `functions/index.js` — the `submitWaitlist` `onRequest` function. Highlights: `defineSecret('BREVO_API_KEY')` + `defineString('BREVO_LIST_ID')` for credentials, `cors:` allow-list of the three Tomodachi origins, `maxInstances: 10` cap, hard-coded 30-disposable-domain blocklist (mailinator, guerrillamail, 10minutemail, yopmail, etc.), structured-error response map (`invalid_email` / `disposable_email` / `brevo_not_configured` / `brevo_misconfigured` / `brevo_unreachable` / `brevo_auth` / `brevo_error`), special-case 200 OK on Brevo's `duplicate_parameter` 400 (already-subscribed users see the success card with a `alreadySubscribed: true` flag forwarded to GA4). ~165 lines.
+- **NEW:** `firebase.json` — repo-root Firebase project config. `functions` codebase points at `functions/`. Emulators block defines port 5001 for the Functions emulator + port 4000 for the Emulator UI.
+- **NEW:** `.firebaserc` — three project aliases (`dev` → tomodachi-dev, `staging` → tomodachi-staging, `prod` → tomodachi-prod). `default` aliased to `dev`. `firebase use prod` etc. switches deploy targets.
+- **NEW:** `js/config/functions.js` — `getFunctionsBaseUrl()` + `getFunctionUrl(name)` helpers. Returns `http://localhost:5001/tomodachi-dev/us-central1` for dev (Functions emulator), and `https://us-central1-tomodachi-{staging,prod}.cloudfunctions.net` for the two cloud envs. Uses the same `getEnv()` hostname switcher as `js/config/firebase.js`.
+- `js/app.js` — new `getFunctionUrl` import + new `WAITLIST_ERROR_KEYS` map + fully rewritten `handleWaitlistSubmit`. Server-side error codes map onto these user-facing i18n keys:
+  - `invalid_email` → `error.waitlist.invalid_email`
+  - `disposable_email` → `error.waitlist.disposable_email`
+  - `brevo_not_configured` / `_misconfigured` / `_auth` → `error.waitlist.not_ready` (deploy not complete yet)
+  - `brevo_unreachable` / `brevo_error` → `error.waitlist.network`
+  - `method_not_allowed` / unknown → `error.waitlist.unknown`
+  - Network-layer (fetch rejected) → `error.waitlist.network`
+  Loading state: disable the submit button + swap text to `t('hero.submitting')` during the round-trip; restore on either branch in a `finally{}`.
+- `js/i18n/locales/en.json` — new `hero.submitting` + new `error.waitlist.*` subtree (5 keys: invalid_email, disposable_email, not_ready, network, unknown).
+- `js/i18n/locales/ar.json` — matching MSA translations for the same 6 new keys. Pure MSA per CONTENT_GUIDELINES.md §5; no Egyptian markers.
+- `js/i18n/index.js` — `loadLocale` URL bumped to `?v=20260531b` (locale JSON content changed again on top of L1.13b).
+- `js/policy-init.js` — `i18n/index.js` import URL bumped to `?v=20260531b` (target content changed).
+- `index.html` — `js/app.js` script-tag cache buster bumped to `?v=20260531b`.
+- `privacy.html`, `terms.html`, `cookies.html` — `js/policy-init.js` script-tag cache busters bumped to `?v=20260531b`.
+
+**Architecture decisions:**
+- **HTTPS request, not callable.** The waitlist form is on the LANDING page, before any Firebase Auth. Dragging the `firebase/functions` SDK module into the landing critical-path just to call one public endpoint is bundle-bloat. Plain `fetch()` + CORS in the function is simpler, fewer moving parts, easier to debug.
+- **`defineSecret` for the API key, `defineString` for the list ID.** Per `PROJECT_RULES.md` §5.3 + §19, the Brevo API key must live in Secret Manager — it can authorize calls against the Brevo account. The list ID is just a number that names a list inside the account; not sensitive.
+- **CORS allow-list, not `cors: true`.** Lock down to `al-mo3tasem.github.io` + `*.pages.dev` + `localhost`. Reduces the surface for cross-site abuse of the public endpoint, doesn't impact legitimate traffic.
+- **`updateEnabled: false` on the Brevo POST.** Makes a second submit of the same email return 400 `duplicate_parameter`, which we surface as a friendly "already on the list" (200 OK with `alreadySubscribed: true`) instead of silently re-adding them. Tracks as a normal `waitlist_signup` GA4 event with `already_subscribed: true` for funnel analysis.
+- **Double opt-in at the list level, not via the DOI endpoint.** Brevo lets you enable DOI on a list — when enabled, the basic `/v3/contacts` add triggers Brevo to send the confirmation email automatically. This is simpler than the `/v3/contacts/doubleOptinConfirmation` endpoint (which needs a templateId + redirect URL passed explicitly). The Brevo setup steps below cover enabling DOI on the list.
+- **30 hardcoded disposable domains, not the disposable-email-domains npm package.** Conservative — we'd rather let through a few mailinator users than block legitimate addresses on a long heuristic list. If signup quality becomes a real problem, swap to the maintained list.
+- **No per-IP rate limiting in the function.** Waitlist phase doesn't need it; `maxInstances: 10` is a soft cap and Brevo's own rate limits protect downstream. Add Firestore/Redis-backed rate limiting at Phase L4 if abuse becomes real.
+- **Static EN fallback in HTML markup, AR via data-i18n** — same as the rest of the app. The CTA button gets the localized "Submitting…" label via `t()` because button text changes at runtime; the i18n key for the localized label is the standard pattern.
+
+**Premium-modern UX preserved:**
+- The L1.04 inline success-card transformation (form + counter hide, success card fades in vertically in place) survives untouched.
+- Loading-state button feedback ("Submitting…" label + disabled state) is new. Beats the bare-fetch with no feedback during 200-800ms round-trips.
+- Error messages are conversational, not legalistic ("Couldn't reach the server. Check your connection and try again." beats "fetch failed with status 502").
+- `already_subscribed` users see the same success card as first-time joiners — no embarrassing "you already signed up" error. They get a green-check celebration just like everyone else. GA4 differentiates via the event property for funnel analysis.
+
+**Automated checks (all green):**
+- `node --check` clean on every touched JS file: `app.js`, `config/functions.js`, `i18n/index.js`, `policy-init.js`, `functions/index.js`.
+- Both locale JSON files parse, 376 leaves each, parity balanced (+6 new keys both sides since L1.13b).
+- `firebase.json` + `.firebaserc` + `functions/package.json` all parse as valid JSON.
+- Six new i18n keys all resolve in both en.json and ar.json: `hero.submitting`, `error.waitlist.{invalid_email,disposable_email,not_ready,network,unknown}`.
+
+**Open Follow-up — Project Lead actions (numbered, in order):**
+
+***Brevo setup (one-time, ~10 min):***
+1. Go to `https://www.brevo.com/`. Sign up for a free account if you don't have one — Brevo's free tier covers up to 300 emails/day and unlimited contacts, more than enough for waitlist phase.
+2. Verify your account via the email Brevo sends. Complete the brief profile prompts (company info — "Tomodachi" / personal project is fine).
+3. Top-right menu → click your initial → **SMTP & API** → **API Keys** tab → **Generate a new API key**. Name it `tomodachi-prod-functions`. Copy the key immediately (Brevo shows it only once).
+4. Left sidebar → **Contacts** → **Lists** → **Create a new list**. Name: `Tomodachi Waitlist`. Save.
+5. Click the list you just created. The URL now contains the list ID: `https://app.brevo.com/contact/list/{ID}`. Note the numeric ID.
+6. **Skip DOI for waitlist phase — recommended.** Brevo configures DOI per sign-up *form* (Marketing > Forms), not per *list* — and since we POST to `/v3/contacts` from our own Cloud Function instead of using Brevo's hosted form, list-level DOI does not apply. Pre-launch industry standard is single opt-in (Notion, Linear, Cal.com all use it for waitlists) — the user explicitly clicked our CTA, so consent is implicit. If we later want true DOI, the API endpoint is `/v3/contacts/doubleOptinConfirmation` with a template ID + redirect URL — that's a Phase L4 upgrade, not L1.
+
+***Firebase Functions deploy (one-time, ~10 min):***
+7. **Upgrade tomodachi-prod to Blaze (already done per R2.11).** If staging or dev also need Functions, upgrade those too. `https://console.firebase.google.com/project/tomodachi-prod/usage/details` → Modify plan → Blaze with the existing $1/mo budget cap (already configured per R2.11).
+8. If you don't have it: `npm install -g firebase-tools`. Login: `firebase login`. From the repo root: `firebase use prod` (uses .firebaserc).
+9. Install function deps: `cd functions && npm install` (run from the `functions/` directory, NOT repo root).
+10. Set the Brevo API key as a Secret Manager secret: from `functions/`, run `firebase functions:secrets:set BREVO_API_KEY`. When prompted, paste the API key from step 3. (This stores it in GCP Secret Manager, encrypted at rest, never visible in plain text again.)
+11. Set the Brevo list ID as a param: still in `functions/`, create a file `.env.tomodachi-prod` with one line: `BREVO_LIST_ID=<id_from_step_5>`. (No quotes. The `.env.*` file is gitignored — never commit it.)
+12. From the repo root, deploy: `firebase deploy --only functions`. First deploy takes ~3-5 min while Cloud Build provisions the function.
+13. Verify in the Firebase Console: `https://console.firebase.google.com/project/tomodachi-prod/functions` should now show `submitWaitlist` with a URL like `https://us-central1-tomodachi-prod.cloudfunctions.net/submitWaitlist`.
+14. Smoke-test from a shell (curl), substituting a real email:
+    ```
+    curl -X POST https://us-central1-tomodachi-prod.cloudfunctions.net/submitWaitlist \
+      -H "Content-Type: application/json" \
+      -d '{"email":"<your_email>@gmail.com","locale":"en","source":"landing_hero"}'
+    ```
+    Expected: `{"ok":true}`. Check your inbox — Brevo's DOI email should arrive within a minute. Confirm via the link. Then check the Brevo list in the dashboard: the contact should show as confirmed (not "unsubscribed").
+15. Once smoke-test passes, the live waitlist form on `https://al-mo3tasem.github.io/Tomodachi/` will start writing real signups.
+
+***Staging-environment setup (optional, recommended before prod):***
+16. Repeat steps 7-14 with `firebase use staging` and a separate `.env.tomodachi-staging` file pointing at a SEPARATE Brevo list (e.g., "Tomodachi Waitlist — Staging") so staging tests don't pollute the real waitlist. Same Brevo API key is fine — Brevo doesn't separate by environment.
+
+***Local-emulator testing (any time):***
+17. From `functions/`, run `firebase emulators:start --only functions`. The function is reachable at `http://localhost:5001/tomodachi-dev/us-central1/submitWaitlist`. The client's `getFunctionUrl()` automatically points at the emulator when accessed via `localhost`. NOTE: the emulator doesn't read GCP Secret Manager — to test the Brevo POST locally, you need to either (a) export `BREVO_API_KEY` in the shell before starting the emulator, or (b) accept that the emulator will return `brevo_not_configured` (good for testing UI error paths).
+
+**Acceptance criteria (verifiable after step 14):**
+- Form submission on the live landing creates a contact in the Brevo list.
+- Brevo DOI confirmation email is sent and the link works.
+- Confirmed contacts show in the Brevo list dashboard.
+- Already-subscribed users see the success card again (no embarrassing error).
+- Disposable-domain emails (try `test@mailinator.com`) are blocked with a clear error message.
+- Invalid-format emails are blocked.
+
+**Defer to later:**
+- **L1.09 — visible counter** depends on this task. Once Brevo is live + the list is collecting, L1.09 wires the real Brevo count (via a second Cloud Function that queries `/v3/contacts/lists/{listId}/contacts` for a count + caches) + adds the WAITLIST_BASELINE on top.
+- **Source-maps + Sentry release tagging** for the function — defer until error volume justifies the setup work.
+- **L4 rate limiting** — if abuse becomes real (>50 signups/min from a single IP, etc.), add a per-IP token-bucket via Firestore.
+
+---
+
+## 2026-05-31 — Phase L1.13b: ToS + Privacy + Cookie Policy drafts (in-house, EN authored; AR pending Codex Spec G)
+**Status:** ✅ DONE (EN content + i18n scaffolding) / ⏳ WAITING (Codex Spec G fills AR translations)
+**Scope:** Content | HTML | Code | CSS | i18n
+**Summary:** Pivoted off external generators (PrivacyPolicies.com paywalls every relevant question — $24 for GA4 support, $34 for GDPR, $14 for email tools = ~$72 just for Privacy alone, plus separate fees for Terms + Cookies). Drafted all three policies in-house in Tomodachi voice — calm, direct, naming our actual stack (Firebase, Brevo, GA4, Sentry) instead of generic boilerplate. Each policy is wired with `data-i18n` per the same pattern as the rest of the app: EN values inline as fallback, AR placeholders empty so i18next's `returnEmptyString: false` + `fallbackLng: 'en'` makes AR users see EN content until Codex Spec G fills the AR. Locale toggle works on each policy page via a tiny new `js/policy-init.js` bootstrap that mirrors `app.js:bindLocaleToggles()` without dragging Firebase / GA4 / Sentry into the policy-page bundle.
+
+**Files (cache busters cascade `?v=20260531a` for changed-target consumers):**
+- `privacy.html` — fully rewritten. Lead paragraph + 11 sections (Who we are / Information we collect [4 sub-categories] / How we use it [5-bullet list] / Third-party services we use [Firebase / Brevo / GA4 / Sentry sub-sections] / Cookies / Your rights [5-bullet list] / How long we keep data [5-bullet list] / Children / International users / Changes / Contact). 59 unique `data-i18n` keys.
+- `terms.html` — fully rewritten. 13 sections (Accepting these terms / What Tomodachi is / Eligibility / Your account / Acceptable use [6-bullet list] / Content & IP / Beta status / Account termination / Disclaimers / Limitation of liability / Changes / Governing law [Egypt + EU consumer-protection carveout] / Contact).
+- `cookies.html` — fully rewritten. 9 sections (What cookies are / Essential cookies [4-bullet list including `tomodachi-lang`, `tomodachi-theme`, `tomodachi-consent` named explicitly] / Analytics cookies [GA4 `_ga` / `_ga_*` named] / Error-monitoring cookies [Sentry session id named] / How to control your choices / Third parties / Changes / Contact).
+- **NEW:** `js/policy-init.js` — ~30 lines. Bootstraps `initI18n()` from the shared i18n module and binds the locale-toggle buttons. No Firebase, no GA4, no Sentry — policy pages are legal pages, not app surfaces.
+- `css/style.css` — replaced the old `.policy-placeholder*` rules (3 stubs) with proper policy article typography: `.policy-content h2/h3/p/ul/li/a`, the lede paragraph, `.policy-nav-actions` for the right-side cluster (locale toggle + back pill), `.policy-back::before` + `[dir="rtl"] .policy-back::before` for the direction-aware back arrow (matching the existing `.back-btn::before` pattern). Plus `:lang(ar) .policy-content` Cairo font binding + `line-height: 1.85` per `CONTENT_GUIDELINES.md` §13.5.
+- `js/i18n/locales/en.json` — three new nested key trees `policy.privacy.*`, `policy.terms.*`, `policy.cookies.*` (111 new leaves total). Removed the placeholder `policy.coming_soon_title` + `policy.coming_soon_body` keys (their host stubs are gone). Tweaked `policy.back_home` from `← Back home` to `Back home` (arrow moved to CSS pseudo-element).
+- `js/i18n/locales/ar.json` — matching empty-string scaffolds for all 111 new leaves. Removed the AR placeholder coming-soon keys. Fixed `policy.back_home` similarly + dropped the directional arrow character.
+- `js/i18n/index.js` — `loadLocale` URL bumped to `?v=20260531a` (locale JSON content changed).
+- `js/app.js` — i18n import URL bumped (i18n/index.js content changed).
+- `index.html` — `css/style.css` + `js/app.js` cache busters bumped (both targets' content changed).
+
+**Why not a generator (PrivacyPolicies.com walkthrough findings):**
+- I initially recommended PrivacyPolicies.com's free tier. User went through the wizard and found the realistic cost for Tomodachi's stack would be ~$72 just for Privacy (GA4 + GDPR + email-tool selectors all carry $14-$34 paywalls), with similar fees on the separate Terms + Cookies wizards. Total realistic outlay $150-200.
+- Also: the wizard's email-tool dropdown lists GetResponse, Mailchimp, Mailerlite, etc., but **NOT Brevo** (formerly Sendinblue), which is what Tomodachi actually uses per `Commercialization_Plan.md` + L1.08 task. User had selected GetResponse by mistake — would have produced a policy with the wrong vendor named.
+- Generator output for a stack this small (4 user-data fields, 1 collection, 3 third parties) needs heavy customization anyway. In-house drafting:
+  1. Costs $0
+  2. Voices each clause in Tomodachi-tone (calm, direct, no legalese-bloat)
+  3. Names our actual stack: Firebase + Brevo + GA4 + Sentry
+  4. Is honest about pre-launch state ("we are in waitlist phase", "Pro tier pricing is not final, you will see it before being asked to pay")
+  5. Drafted as plain prose with i18n keys ready for Codex Spec G AR translation
+  6. Equally lawyer-reviewable later — when revenue justifies (~Phase L4 Pro launch), a lawyer reviews ANY baseline at the same per-hour cost
+
+**Premium-modern design notes:**
+- **textContent over innerHTML** in apply.js is a security stance — I initially included inline `<strong>` / `<a>` / `<code>` in translation values, hit the wall that `textContent` clobbers them, and rephrased the affected paragraphs so cross-policy navigation happens via the landing footer instead of inline links. Cleaner i18n, no innerHTML injection vector. Five JSON values rephrased + matching HTML simplified.
+- **`policy-back::before` content-swap** for the direction-aware back arrow matches the existing `.back-btn::before` pattern (CSS lines 2463-2468). Single source of truth for the arrow direction; the i18n string carries only the text, not the glyph.
+- **EN-fallback for AR until Spec G** is the right interim state — an AR user clicking `/privacy` today sees the polished EN policy (acceptable for a pre-launch waitlist page) rather than a `[AR pending]` placeholder. The empty-string scaffolds in `ar.json` give Codex a clean target shape to fill.
+- **`:lang(ar) .policy-content` typography binding** applies Cairo font + 1.85 line-height to AR policy pages per CONTENT_GUIDELINES.md §13.5. Long-form legal text needs the extra vertical breathing room more than short UI labels do.
+- **No analytics or Sentry on policy pages** is the right call — legal pages are low-traffic, and loading the full app bundle just to render a 600-word document is bloat. `policy-init.js` is ~30 lines and only loads i18next + the locale JSON.
+
+**Automated checks (all green):**
+- `node --check` clean on `policy-init.js`, `i18n/index.js`, `app.js`.
+- Both locale JSON files parse via `require()`.
+- All 115 unique `data-i18n` keys across the three policy pages resolve in en.json (0 missing).
+- All 115 resolve in ar.json (0 missing) — 111 are intentional empty-string scaffolds for Spec G; the other 4 (`locale.label_en`, `locale.label_ar`, `policy.back_home`, `policy.last_updated`) carry real AR values.
+- Localhost smoke test: `python -m http.server` serves all 3 policy pages (200), `policy-init.js` (200), both locale JSONs (200).
+
+**Open Follow-up:**
+1. **Codex Spec G — AR translation of all 3 policies.** Spec prompt drafted at `scripts/prompts/spec-g-policy-ar.md` (next step). Codex fills the 111 empty AR strings + writes output back to `js/i18n/locales/ar.json`. Claude reviews per `PROJECT_RULES.md` §17.3 — same flow as Spec C / Spec D. Expected to land in the next session.
+2. **Lawyer review before public free launch (L3 / L4).** Tomodachi will go from waitlist → closed beta → free public → Pro. The shift from closed beta to free public is when paying counsel becomes worth it. The in-house draft is the baseline a lawyer reviews; the cost is the same whether the baseline came from a generator or from this PR.
+3. **`/privacy`, `/terms`, `/cookies` in sitemap.xml** — currently sitemap.xml only lists the landing URL with hreflang variants. Add three more `<url>` blocks for the policy pages (with hreflang `en` / `ar` / `x-default` for each) when AR is complete via Spec G.
+4. **Consent banner "Cookie Settings" link wiring.** The Cookie Policy mentions a Cookie Settings link in the homepage footer. That link already exists (`footer.cookie_settings_link`) and opens the L1.10 consent modal. No change needed — just confirming the cross-reference is accurate.
+5. **Real domain at R3 cutover.** Same as the L1.12 follow-up: when `tomodachi.com` ships, update the `canonical` URL in each policy page.
+
+---
+
 ## 2026-05-28 — Phase L1.12: SEO baseline (meta tags + JSON-LD + sitemap + robots + hreflang + locale-aware title)
 **Status:** ✅ DONE
 **Scope:** HTML | Code | Content | Discoverability

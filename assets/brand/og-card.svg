@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Tomodachi — Learn Japanese with Friends, Arabic-First">
+  <title>Tomodachi — Learn Japanese with Friends, Arabic-First</title>
+  <defs>
+    <!-- Background paper warmth — soft radial gradient -->
+    <radialGradient id="paper-bg" cx="20%" cy="30%" r="100%">
+      <stop offset="0%" stop-color="#FAF8F2"/>
+      <stop offset="100%" stop-color="#F0EBDF"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#paper-bg)"/>
+
+  <!-- Mark on the left — scaled-up version of the primary logo -->
+  <g transform="translate(80 95) scale(2)">
+    <!-- Scarf back shadow -->
+    <path d="M 30 110
+             C 30 180, 95 200, 120 200
+             C 145 200, 210 180, 210 110
+             L 210 138
+             C 210 200, 145 220, 120 220
+             C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+    <!-- Scarf front (solid crimson) -->
+    <path d="M 30 110
+             C 30 180, 95 200, 120 200
+             C 145 200, 210 180, 210 110
+             L 210 130
+             C 210 195, 145 213, 120 213
+             C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+    <!-- Left tail (deep, matches right for symmetry) -->
+    <path d="M 30 165 C 18 178, 14 195, 8 218 L 24 200 L 32 218 L 38 178 Z" fill="#7F1D1D"/>
+    <!-- Right tail -->
+    <path d="M 210 165 C 222 178, 226 195, 232 218 L 216 200 L 208 218 L 202 178 Z" fill="#7F1D1D"/>
+    <!-- 友 character -->
+    <text x="120" y="135" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif"
+          font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+  </g>
+
+  <!-- Text block on the right -->
+  <text x="610" y="280" font-family="Inter, sans-serif" font-weight="800" font-size="84"
+        letter-spacing="-2" fill="#18181B">Tomodachi</text>
+  <text x="610" y="345" font-family="Inter, sans-serif" font-weight="600" font-size="34"
+        letter-spacing="-0.5" fill="#7F1D1D">Learn Japanese with friends.</text>
+  <text x="610" y="395" font-family="Inter, sans-serif" font-weight="400" font-size="26"
+        letter-spacing="-0.2" fill="#52525B">Arabic-first lessons. Duels and co-op.</text>
+  <text x="610" y="430" font-family="Inter, sans-serif" font-weight="400" font-size="26"
+        letter-spacing="-0.2" fill="#52525B">A pace that doesn't punish a missed day.</text>
+
+  <!-- Subtle bottom-right URL -->
+  <text x="1140" y="595" font-family="ui-monospace, Menlo, monospace" font-weight="500"
+        font-size="20" text-anchor="end" fill="#A1A1AA">al-mo3tasem.github.io/Tomodachi</text>
+</svg>

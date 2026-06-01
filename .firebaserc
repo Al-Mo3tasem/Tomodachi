@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "tomodachi-dev",
+    "dev": "tomodachi-dev",
+    "staging": "tomodachi-staging",
+    "prod": "tomodachi-prod"
+  },
+  "targets": {},
+  "etags": {}
+}

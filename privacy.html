@@ -7,11 +7,11 @@
   <meta name="description" content="Tomodachi's privacy policy: what data we collect, how it's used, and how to delete it.">
   <link rel="canonical" href="https://al-mo3tasem.github.io/Tomodachi/privacy.html">
   <meta name="robots" content="index, follow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260601d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528t">
+  <link rel="stylesheet" href="css/style.css?v=20260601c">
 </head>
 <body class="policy-page">
   <header class="policy-nav">
@@ -19,23 +19,105 @@
       <span class="landing-brand-icon">🏯</span>
       <span class="landing-brand-name">Tomodachi</span>
     </a>
-    <a href="./" class="policy-back">← Back home</a>
+    <div class="policy-nav-actions">
+      <div class="landing-locale-bar">
+        <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+        <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+      </div>
+      <a href="./" class="policy-back" data-i18n="policy.back_home">Back home</a>
+    </div>
   </header>
 
   <main class="policy">
     <article class="policy-content">
-      <h1>Privacy Policy</h1>
-      <p class="policy-meta">Last updated: <time datetime="2026-05-28">May 28, 2026</time></p>
+      <h1 data-i18n="policy.privacy.title">Privacy Policy</h1>
+      <p class="policy-meta">
+        <span data-i18n="policy.last_updated">Last updated:</span>
+        <time datetime="2026-05-31">May 31, 2026</time>
+      </p>
 
-      <!-- L1.13b TODO: paste customized Termly Privacy Policy content here.
-           Source: project lead generates via Termly free tier; Claude
-           customizes for Tomodachi specifics + authors AR translation. -->
-      <div class="policy-placeholder">
-        <h2>Content coming soon</h2>
-        <p>This privacy policy is being prepared. We're using Termly to generate baseline language, customizing for Tomodachi's specifics, and authoring the Arabic version natively. Check back soon.</p>
-        <p style="margin-top: 1rem; font-size: 0.875rem;">In short: we store the minimum data needed to run the app (email, display name, game results). We don't sell data. You can delete your account from Settings — that removes everything.</p>
-      </div>
+      <p class="policy-lede" data-i18n="policy.privacy.intro_p">Tomodachi is a Japanese language-learning app currently in waitlist phase. This policy explains what data we collect, why we collect it, and the controls you have over it. It is written to be readable — if anything here is unclear, contact us and we will fix the wording.</p>
+
+      <h2 data-i18n="policy.privacy.who_h">Who we are</h2>
+      <p data-i18n="policy.privacy.who_p">Tomodachi is built and operated by Al Moutasem Hamdi as an independent project. The web app lives at https://al-mo3tasem.github.io/Tomodachi/ and is in pre-launch beta. For privacy questions, contact betterme@bytepluslife.com.</p>
+
+      <h2 data-i18n="policy.privacy.collect_h">Information we collect</h2>
+      <p data-i18n="policy.privacy.collect_intro_p">We collect the minimum needed to run the product. The categories below are exhaustive — nothing else is gathered.</p>
+
+      <h3 data-i18n="policy.privacy.collect_account_h">Account information</h3>
+      <p data-i18n="policy.privacy.collect_account_p">When you create an account, we store your email, a chosen username, and a display name. Your password is handled by Firebase Authentication and is never visible to us in any form.</p>
+
+      <h3 data-i18n="policy.privacy.collect_activity_h">App activity</h3>
+      <p data-i18n="policy.privacy.collect_activity_p">As you use the app, we store game results — score, accuracy, mode, and timestamp — along with your in-app settings, such as theme and audio preference. We also keep a short-lived presence flag so the friend system can show when you are online.</p>
+
+      <h3 data-i18n="policy.privacy.collect_waitlist_h">Waitlist signup</h3>
+      <p data-i18n="policy.privacy.collect_waitlist_p">If you join the pre-launch waitlist, we store the email address you submit. That is the entire record. You can unsubscribe any time using the link at the bottom of any waitlist email.</p>
+
+      <h3 data-i18n="policy.privacy.collect_technical_h">Technical data</h3>
+      <p data-i18n="policy.privacy.collect_technical_p">Our hosting provider receives standard request data — IP address, browser type, and referring page — as part of serving the site. This data is held briefly for security and abuse prevention. We do not use it to build a profile of you.</p>
+
+      <h2 data-i18n="policy.privacy.use_h">How we use this information</h2>
+      <p data-i18n="policy.privacy.use_intro_p">Each category above maps to a specific purpose:</p>
+      <ul>
+        <li data-i18n="policy.privacy.use_li_run">Run the app — sign you in, save your progress, restore it on your next visit.</li>
+        <li data-i18n="policy.privacy.use_li_sync">Sync game results across the devices you use to sign in.</li>
+        <li data-i18n="policy.privacy.use_li_multiplayer">Power multiplayer — show your display name and presence to the friend you duel or co-op with.</li>
+        <li data-i18n="policy.privacy.use_li_improve">Improve the product through aggregated analytics, only if you accept analytics cookies.</li>
+        <li data-i18n="policy.privacy.use_li_announce">Send the occasional launch update if you joined the waitlist. Nothing else.</li>
+      </ul>
+
+      <h2 data-i18n="policy.privacy.third_h">Third-party services we use</h2>
+      <p data-i18n="policy.privacy.third_intro_p">Tomodachi relies on the following providers. Each one processes a specific slice of data for a specific reason.</p>
+
+      <h3 data-i18n="policy.privacy.third_firebase_h">Firebase (Google)</h3>
+      <p data-i18n="policy.privacy.third_firebase_p">Firebase handles authentication, our database, and parts of our hosting. Your account record and game results live in Firestore, replicated across Google Cloud regions. Firebase is governed by Google's privacy policy.</p>
+
+      <h3 data-i18n="policy.privacy.third_brevo_h">Brevo</h3>
+      <p data-i18n="policy.privacy.third_brevo_p">Brevo, formerly Sendinblue, holds the waitlist email list and sends the confirmation and launch emails. Your email stays in Brevo until you unsubscribe or the waitlist closes.</p>
+
+      <h3 data-i18n="policy.privacy.third_ga_h">Google Analytics 4</h3>
+      <p data-i18n="policy.privacy.third_ga_p">Google Analytics measures aggregate usage of the landing page and app. It loads only after you accept analytics cookies. IP addresses are anonymized where supported. We do not link analytics data to your account.</p>
+
+      <h3 data-i18n="policy.privacy.third_sentry_h">Sentry</h3>
+      <p data-i18n="policy.privacy.third_sentry_p">Sentry captures error reports if something crashes. It loads only after you accept error-monitoring cookies. Reports include the stack trace and, if you are signed in, your username — never your password and never the content of your input fields.</p>
+
+      <h2 data-i18n="policy.privacy.cookies_h">Cookies and local storage</h2>
+      <p data-i18n="policy.privacy.cookies_p">Tomodachi uses a small set of essential cookies and browser storage for sign-in and preferences. Optional analytics and error-monitoring cookies are loaded only with your consent. The Cookie Policy, linked from the homepage footer, lists every cookie by name.</p>
+
+      <h2 data-i18n="policy.privacy.rights_h">Your rights</h2>
+      <p data-i18n="policy.privacy.rights_intro_p">Regardless of where you live, you have the following controls over your data. We honor these globally.</p>
+      <ul>
+        <li data-i18n="policy.privacy.rights_li_access">Access — request a copy of the data we hold about you.</li>
+        <li data-i18n="policy.privacy.rights_li_correct">Correct — fix anything inaccurate from your Profile settings, or by email if Profile cannot reach it.</li>
+        <li data-i18n="policy.privacy.rights_li_delete">Delete — remove your account from Settings. This wipes your account record, game history, and presence data within 30 days.</li>
+        <li data-i18n="policy.privacy.rights_li_withdraw">Withdraw consent — change cookie preferences any time using the Cookie Settings link in the footer.</li>
+        <li data-i18n="policy.privacy.rights_li_portability">Portability — request your data in a portable JSON export by email.</li>
+      </ul>
+
+      <h2 data-i18n="policy.privacy.retain_h">How long we keep data</h2>
+      <p data-i18n="policy.privacy.retain_intro_p">Retention is bounded — nothing is kept indefinitely:</p>
+      <ul>
+        <li data-i18n="policy.privacy.retain_li_account">Account record — kept while your account exists, removed within 30 days of deletion.</li>
+        <li data-i18n="policy.privacy.retain_li_results">Game results — same lifecycle as your account.</li>
+        <li data-i18n="policy.privacy.retain_li_waitlist">Waitlist email — kept until you unsubscribe or the waitlist closes.</li>
+        <li data-i18n="policy.privacy.retain_li_errors">Error reports — 90 days, then automatically purged from Sentry.</li>
+        <li data-i18n="policy.privacy.retain_li_analytics">Analytics — 14 months, the default for Google Analytics 4.</li>
+      </ul>
+
+      <h2 data-i18n="policy.privacy.children_h">Children</h2>
+      <p data-i18n="policy.privacy.children_p">Tomodachi is not directed to users under 13. We do not knowingly collect data from children. If you believe a child has created an account, contact us and we will remove the data.</p>
+
+      <h2 data-i18n="policy.privacy.international_h">International users</h2>
+      <p data-i18n="policy.privacy.international_p">Tomodachi runs on Google Cloud infrastructure, which means data may be processed in the United States and the European Union. By using Tomodachi you consent to that processing. Users in the European Union have rights under the GDPR; we honor those rights for everyone, not only EU residents.</p>
+
+      <h2 data-i18n="policy.privacy.changes_h">Changes to this policy</h2>
+      <p data-i18n="policy.privacy.changes_p">When this policy changes, we update the date at the top. Material changes are highlighted on the homepage for 30 days, and waitlist members receive a short email summary.</p>
+
+      <h2 data-i18n="policy.privacy.contact_h">Contact</h2>
+      <p data-i18n="policy.privacy.contact_p">Questions about privacy, a data request, or a concern — reach us at betterme@bytepluslife.com. We aim to reply within seven days.</p>
     </article>
   </main>
+
+  <script type="module" src="js/policy-init.js?v=20260531b"></script>
 </body>
 </html>

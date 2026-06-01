@@ -21,7 +21,7 @@ import { getEnv } from './firebase.js?v=20260528c';
 const measurementIds = {
   dev:     '', // localhost — keep blank so dev sessions don't pollute prod analytics
   staging: '', // Cloudflare Pages staging — fill in if/when we want separate staging analytics
-  prod:    ''  // GitHub Pages prod — fill in after creating the GA4 property
+  prod:    'G-W98QV657BE'  // GA4 property created 2026-06-01 (project lead)
 };
 
 /**

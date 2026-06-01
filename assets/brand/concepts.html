@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomodachi — Scarf Logo Concepts (L1.15 v2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --scarf: #B91C1C;
+      --scarf-deep: #7F1D1D;
+      --scarf-light: #DC2626;
+      --ink: #18181B;
+      --ink-soft: #27272A;
+      --paper: #FAF8F2;
+      --paper-warm: #F0EBDF;
+      --tan: #C8A975;
+      --gray-100: #F4F4F5;
+      --gray-300: #D4D4D8;
+      --gray-500: #71717A;
+      --gray-800: #27272A;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FBFAFC;
+      color: var(--gray-800);
+      line-height: 1.5;
+    }
+
+    .page-header {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px 16px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--gray-500);
+      max-width: 760px;
+      margin: 0 0 8px;
+    }
+
+    .palette-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 1280px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--gray-500);
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    .swatch span:first-child {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-300);
+    }
+
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    @media (max-width: 1100px) {
+      .concepts-grid { grid-template-columns: 1fr; }
+    }
+
+    .concept {
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .concept-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--scarf);
+    }
+
+    .concept-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: -16px 0 0;
+      color: var(--ink);
+    }
+
+    .concept-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--gray-500);
+      margin: -12px 0 0;
+    }
+
+    .preview-section {
+      border-top: 1px solid var(--gray-100);
+      padding-top: 20px;
+    }
+
+    .preview-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin: 0 0 12px;
+    }
+
+    .stage {
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+
+    .stage-light { background: white; border: 1px solid var(--gray-300); }
+    .stage-warm { background: var(--paper); border: 1px solid var(--paper-warm); }
+    .stage-dark { background: var(--ink); }
+
+    .lockup-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+    }
+    .lockup-row.warm {
+      background: var(--paper);
+      border-color: var(--paper-warm);
+    }
+    .lockup-row.dark {
+      background: var(--ink);
+      border-color: var(--gray-800);
+    }
+
+    .wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .wordmark.dark { color: white; }
+
+    .wordmark .accent {
+      color: var(--scarf);
+    }
+
+    .favicon-strip {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--gray-100);
+      border-radius: 8px;
+    }
+
+    .favicon-label {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .pros-cons {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--gray-800);
+      padding: 16px;
+      background: var(--gray-100);
+      border-radius: 10px;
+    }
+
+    .pros-cons strong {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin: 0 0 4px;
+      font-weight: 700;
+    }
+
+    .pros-cons p { margin: 0 0 12px; }
+    .pros-cons p:last-child { margin: 0; }
+
+    .decision-bar {
+      max-width: 1280px;
+      margin: 16px auto 48px;
+      padding: 28px 32px;
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 14px;
+    }
+    .decision-bar h2 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .decision-bar p {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin: 0 0 8px;
+      line-height: 1.7;
+    }
+    .decision-bar p:last-child { margin: 0; }
+
+    .note-aoT {
+      max-width: 1280px;
+      margin: -8px auto 0;
+      padding: 16px 32px;
+      font-size: 13px;
+      color: var(--gray-500);
+      font-style: italic;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Tomodachi — three logo directions, with the scarf</h1>
+  <p>Each direction incorporates a stylized red scarf as a friendship motif. The scarf is a recognizable visual symbol (a fictional anime made it iconic; the form itself is in the cultural commons) — we use it without ever naming or referencing the show. To anyone who knows, it lands instantly. To anyone who doesn't, it still reads as a warm protective garment wrapping the character. Either reading works.</p>
+</header>
+
+<p class="note-aoT">
+  The new palette retires generic-startup indigo. Scarf crimson is now the primary brand color. Ink (near-black) replaces deep navy. Cream paper replaces cold off-white. The result: warmer, more grounded, with much more personality.
+</p>
+
+<div class="palette-row">
+  <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-500);">New palette:</span>
+  <div class="swatch"><span style="background: #B91C1C"></span><span>#B91C1C</span></div>
+  <div class="swatch"><span style="background: #7F1D1D"></span><span>#7F1D1D</span></div>
+  <div class="swatch"><span style="background: #18181B"></span><span>#18181B</span></div>
+  <div class="swatch"><span style="background: #FAF8F2; border: 1px solid #D4D4D8"></span><span>#FAF8F2</span></div>
+  <div class="swatch"><span style="background: #C8A975"></span><span>#C8A975</span></div>
+</div>
+
+<div class="concepts-grid">
+
+  <!-- ==============================================
+       DIRECTION A — THE WRAP
+       Scarf loops fully around 友, two tails trailing
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction A</div>
+      <h2 class="concept-name">The Wrap</h2>
+    </div>
+    <p class="concept-desc">A continuous scarf loops fully around the 友 character. Two trailing tails fall below, suggesting motion and weight. The scarf is the structure; 友 is what it protects. The most direct reading of the motif — scarf-as-embrace.</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 240" width="200" height="200">
+          <!-- Outer scarf ring -->
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#7F1D1D" stroke-width="28"/>
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#B91C1C" stroke-width="22"/>
+          <!-- Trailing tails -->
+          <path d="M 96 200
+                   C 88 215, 92 225, 84 232
+                   L 100 226
+                   L 108 232
+                   L 112 208
+                   Z" fill="#B91C1C"/>
+          <path d="M 132 208
+                   C 128 220, 134 226, 130 234
+                   L 144 224
+                   L 152 230
+                   L 152 206
+                   Z" fill="#7F1D1D"/>
+          <!-- 友 character inside -->
+          <text x="120" y="138" font-family="Noto Sans JP, serif" font-weight="900" font-size="98" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 240" width="44" height="44">
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#7F1D1D" stroke-width="28"/>
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#B91C1C" stroke-width="22"/>
+          <path d="M 96 200 C 88 215, 92 225, 84 232 L 100 226 L 108 232 L 112 208 Z" fill="#B91C1C"/>
+          <path d="M 132 208 C 128 220, 134 226, 130 234 L 144 224 L 152 230 L 152 206 Z" fill="#7F1D1D"/>
+          <text x="120" y="138" font-family="Noto Sans JP, serif" font-weight="900" font-size="98" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <div class="wordmark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 240" width="44" height="44">
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#7F1D1D" stroke-width="28"/>
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#DC2626" stroke-width="22"/>
+          <path d="M 96 200 C 88 215, 92 225, 84 232 L 100 226 L 108 232 L 112 208 Z" fill="#DC2626"/>
+          <path d="M 132 208 C 128 220, 134 226, 130 234 L 144 224 L 152 230 L 152 206 Z" fill="#7F1D1D"/>
+          <text x="120" y="138" font-family="Noto Sans JP, serif" font-weight="900" font-size="98" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 240" width="32" height="32">
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#7F1D1D" stroke-width="28"/>
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#B91C1C" stroke-width="22"/>
+          <path d="M 96 200 C 88 215, 92 225, 84 232 L 100 226 L 108 232 L 112 208 Z" fill="#B91C1C"/>
+          <path d="M 132 208 C 128 220, 134 226, 130 234 L 144 224 L 152 230 L 152 206 Z" fill="#7F1D1D"/>
+          <text x="120" y="138" font-family="Noto Sans JP, serif" font-weight="900" font-size="98" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">32×32</span>
+        <svg viewBox="0 0 240 240" width="16" height="16">
+          <circle cx="120" cy="115" r="92" fill="none" stroke="#B91C1C" stroke-width="44"/>
+          <text x="120" y="142" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">16×16 (simplified)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>Strongest reading of the scarf motif — there is no mistaking what's happening here. The ring shape doubles as a "circle of friends" reading for viewers unfamiliar with the reference. Survives well at all sizes because the ring + character composition is symmetrically anchored.</p>
+      <strong>Tradeoffs</strong>
+      <p>The most overt reference — if you ever want the brand to grow past the AoT-fan demographic into general audiences, the ring might still read fine, but the tails specifically signal "scarf." The compositional center of gravity is the ring, not 友, which is slightly less name-readable than B or C.</p>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       DIRECTION B — THE BANNER
+       Scarf flows horizontally behind 友 like a sash
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction B</div>
+      <h2 class="concept-name">The Banner</h2>
+    </div>
+    <p class="concept-desc">A scarf passes horizontally behind the 友 character like a banner caught mid-motion. The 友 sits forward, dominant. The scarf is the gesture in the background — there for context, not the focus. Cinematic, kinetic, like a movement still from the source itself.</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 240" width="200" height="200">
+          <!-- Scarf banner background -->
+          <path d="M 0 105
+                   C 40 90, 80 95, 120 105
+                   C 160 115, 200 110, 240 100
+                   L 240 145
+                   C 200 155, 160 150, 120 140
+                   C 80 130, 40 135, 0 150
+                   Z" fill="#B91C1C"/>
+          <!-- Scarf fold-line (subtle shadow) -->
+          <path d="M 0 122
+                   C 40 110, 80 115, 120 122
+                   C 160 130, 200 127, 240 118"
+                stroke="#7F1D1D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <!-- Left scarf tail -->
+          <path d="M 5 142 L 0 175 L 18 162 L 28 175 L 28 138 Z" fill="#7F1D1D"/>
+          <!-- Right scarf tail -->
+          <path d="M 235 102 L 240 70 L 222 82 L 212 70 L 212 110 Z" fill="#7F1D1D"/>
+          <!-- 友 character on top -->
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 240" width="48" height="48">
+          <path d="M 0 105 C 40 90, 80 95, 120 105 C 160 115, 200 110, 240 100 L 240 145 C 200 155, 160 150, 120 140 C 80 130, 40 135, 0 150 Z" fill="#B91C1C"/>
+          <path d="M 0 122 C 40 110, 80 115, 120 122 C 160 130, 200 127, 240 118" stroke="#7F1D1D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 5 142 L 0 175 L 18 162 L 28 175 L 28 138 Z" fill="#7F1D1D"/>
+          <path d="M 235 102 L 240 70 L 222 82 L 212 70 L 212 110 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <div class="wordmark">Tomo<span class="accent">dachi</span></div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 240" width="48" height="48">
+          <path d="M 0 105 C 40 90, 80 95, 120 105 C 160 115, 200 110, 240 100 L 240 145 C 200 155, 160 150, 120 140 C 80 130, 40 135, 0 150 Z" fill="#DC2626"/>
+          <path d="M 0 122 C 40 110, 80 115, 120 122 C 160 130, 200 127, 240 118" stroke="#7F1D1D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 5 142 L 0 175 L 18 162 L 28 175 L 28 138 Z" fill="#7F1D1D"/>
+          <path d="M 235 102 L 240 70 L 222 82 L 212 70 L 212 110 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomo<span class="accent" style="color: #DC2626">dachi</span></div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 240" width="32" height="32">
+          <path d="M 0 105 C 40 90, 80 95, 120 105 C 160 115, 200 110, 240 100 L 240 145 C 200 155, 160 150, 120 140 C 80 130, 40 135, 0 150 Z" fill="#B91C1C"/>
+          <path d="M 5 142 L 0 175 L 18 162 L 28 175 L 28 138 Z" fill="#7F1D1D"/>
+          <path d="M 235 102 L 240 70 L 222 82 L 212 70 L 212 110 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">32×32</span>
+        <svg viewBox="0 0 240 240" width="16" height="16">
+          <rect x="0" y="100" width="240" height="40" fill="#B91C1C"/>
+          <text x="120" y="138" font-family="Noto Sans JP, serif" font-weight="900" font-size="120" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">16×16 (simplified)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>Most cinematic. The horizontal scarf reads as motion — like the camera caught the moment the wind moved it. 友 stays the primary readable element, so the brand name remains the strongest signal at first glance. The compositional drift left-to-right also works beautifully for OG cards (1200×630 social-share previews need a wide composition; B is built for it).</p>
+      <strong>Tradeoffs</strong>
+      <p>Less symmetric, slightly more complex shape than A. The 16px favicon needs the most aggressive simplification of the three (the wavy banner flattens to a straight bar). The horizontal composition is harder to use as a square app icon — we'd need a separate stacked variant.</p>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       DIRECTION C — THE EMBRACE
+       Scarf cradles 友 from below in a soft U-curve
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction C</div>
+      <h2 class="concept-name">The Embrace</h2>
+    </div>
+    <p class="concept-desc">A scarf curves under and around the 友 character in a gentle U-shape — like hands cupping something they want to protect. The character sits in the cradle of the scarf. The most quiet of the three, but also the most emotionally weighted. Reads as a hug before it reads as a scarf.</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 240" width="200" height="200">
+          <!-- Scarf U-curve (cradle) -->
+          <path d="M 30 110
+                   C 30 180, 95 200, 120 200
+                   C 145 200, 210 180, 210 110
+                   L 210 138
+                   C 210 200, 145 220, 120 220
+                   C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+          <path d="M 30 110
+                   C 30 180, 95 200, 120 200
+                   C 145 200, 210 180, 210 110
+                   L 210 130
+                   C 210 195, 145 213, 120 213
+                   C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+          <!-- Trailing scarf ends -->
+          <path d="M 30 165
+                   C 18 178, 14 195, 8 218
+                   L 24 200
+                   L 32 218
+                   L 38 178 Z" fill="#B91C1C"/>
+          <path d="M 210 165
+                   C 222 178, 226 195, 232 218
+                   L 216 200
+                   L 208 218
+                   L 202 178 Z" fill="#7F1D1D"/>
+          <!-- 友 character above the cradle -->
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 240" width="44" height="44">
+          <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 138 C 210 200, 145 220, 120 220 C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+          <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 130 C 210 195, 145 213, 120 213 C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+          <path d="M 30 165 C 18 178, 14 195, 8 218 L 24 200 L 32 218 L 38 178 Z" fill="#B91C1C"/>
+          <path d="M 210 165 C 222 178, 226 195, 232 218 L 216 200 L 208 218 L 202 178 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <div class="wordmark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 240" width="44" height="44">
+          <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 138 C 210 200, 145 220, 120 220 C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+          <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 130 C 210 195, 145 213, 120 213 C 95 213, 30 195, 30 130 Z" fill="#DC2626"/>
+          <path d="M 30 165 C 18 178, 14 195, 8 218 L 24 200 L 32 218 L 38 178 Z" fill="#DC2626"/>
+          <path d="M 210 165 C 222 178, 226 195, 232 218 L 216 200 L 208 218 L 202 178 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 240" width="32" height="32">
+          <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 130 C 210 195, 145 213, 120 213 C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+          <path d="M 30 165 C 18 178, 14 195, 8 218 L 24 200 L 32 218 L 38 178 Z" fill="#B91C1C"/>
+          <path d="M 210 165 C 222 178, 226 195, 232 218 L 216 200 L 208 218 L 202 178 Z" fill="#7F1D1D"/>
+          <text x="120" y="135" font-family="Noto Sans JP, serif" font-weight="900" font-size="110" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">32×32</span>
+        <svg viewBox="0 0 240 240" width="16" height="16">
+          <path d="M 30 150 C 30 200, 90 215, 120 215 C 150 215, 210 200, 210 150 L 210 175 C 210 220, 150 235, 120 235 C 90 235, 30 220, 30 175 Z" fill="#B91C1C"/>
+          <text x="120" y="140" font-family="Noto Sans JP, serif" font-weight="900" font-size="120" text-anchor="middle" fill="#18181B">友</text>
+        </svg>
+        <span class="favicon-label">16×16 (simplified)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>The most emotionally resonant of the three. Reads as a hug before it reads as a scarf — meaning it survives the test of "does this work for someone who's never seen the show?" The asymmetric composition (mark sits above cradle) gives a natural vertical breathing rhythm. The two scarf tails dropping below add weight and motion without competing with 友 for attention.</p>
+      <strong>Tradeoffs</strong>
+      <p>The subtlest reference of the three — diehard AoT fans might miss it on a first glance. The taller composition (the cradle sits below 友) doesn't fit a square frame as cleanly as A; we'd need a stacked-vs-horizontal version split for icons. The cradle shape at very small sizes (16px) starts to read more like an empty bowl than a scarf.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="decision-bar">
+  <h2>How to pick</h2>
+  <p>Open this file in a browser. Open the live landing alongside (<code>https://al-mo3tasem.github.io/Tomodachi/</code>) — imagine each mark replacing the 🏯 emoji in the header. Squint. Walk away for 5 minutes. The right one is the one you don't want to keep editing in your head.</p>
+  <p><strong>My take, since you asked for premium:</strong> Direction B (The Banner). Reasons: (1) 友 stays the most readable element, which matters for brand recognition; (2) the horizontal composition is the only one of three that scales cleanly to OG cards / Twitter cards / video thumbnails without a separate stacked version; (3) the wind-motion reading hints at "moment in time" — fitting for a learning app whose whole pitch is forward progress; (4) the scarf reads as motion to fans AND as a sash/banner to non-fans, giving us dual readability. But A is more emotional and C is more quiet — both are strong. Tell me <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>, and I'll produce the final production asset set.</p>
+</div>
+
+</body>
+</html>

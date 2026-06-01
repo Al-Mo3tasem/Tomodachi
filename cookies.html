@@ -7,11 +7,11 @@
   <meta name="description" content="Tomodachi's cookie policy: which cookies we use, why, and how to control them.">
   <link rel="canonical" href="https://al-mo3tasem.github.io/Tomodachi/cookies.html">
   <meta name="robots" content="index, follow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260601d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528t">
+  <link rel="stylesheet" href="css/style.css?v=20260601c">
 </head>
 <body class="policy-page">
   <header class="policy-nav">
@@ -19,21 +19,57 @@
       <span class="landing-brand-icon">🏯</span>
       <span class="landing-brand-name">Tomodachi</span>
     </a>
-    <a href="./" class="policy-back">← Back home</a>
+    <div class="policy-nav-actions">
+      <div class="landing-locale-bar">
+        <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+        <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+      </div>
+      <a href="./" class="policy-back" data-i18n="policy.back_home">Back home</a>
+    </div>
   </header>
 
   <main class="policy">
     <article class="policy-content">
-      <h1>Cookie Policy</h1>
-      <p class="policy-meta">Last updated: <time datetime="2026-05-28">May 28, 2026</time></p>
+      <h1 data-i18n="policy.cookies.title">Cookie Policy</h1>
+      <p class="policy-meta">
+        <span data-i18n="policy.last_updated">Last updated:</span>
+        <time datetime="2026-05-31">May 31, 2026</time>
+      </p>
 
-      <!-- L1.13b TODO: paste customized Termly Cookie Policy content here. -->
-      <div class="policy-placeholder">
-        <h2>Content coming soon</h2>
-        <p>This cookie policy is being prepared. We're using Termly to generate baseline language, customizing for Tomodachi's specifics, and authoring the Arabic version natively. Check back soon.</p>
-        <p style="margin-top: 1rem; font-size: 0.875rem;">In short: essential cookies for sign-in always load. Analytics + error-context cookies are optional and gated by the consent banner on the homepage.</p>
-      </div>
+      <p class="policy-lede" data-i18n="policy.cookies.intro_p">Tomodachi uses a small number of cookies and similar browser storage to keep you signed in and to remember your preferences. Optional cookies for analytics and error monitoring are loaded only after you accept them.</p>
+
+      <h2 data-i18n="policy.cookies.what_h">What cookies are</h2>
+      <p data-i18n="policy.cookies.what_p">Cookies are small files stored by your browser. We also use localStorage, which is a related browser-side store. Where this policy says "cookies," it covers both unless we say otherwise.</p>
+
+      <h2 data-i18n="policy.cookies.essential_h">Essential cookies</h2>
+      <p data-i18n="policy.cookies.essential_intro_p">These always load, with no consent prompt, because the app cannot function without them. They store nothing about advertising or tracking.</p>
+      <ul>
+        <li data-i18n="policy.cookies.essential_li_auth">Firebase Auth session — keeps you signed in. Lives in localStorage and is cleared when you sign out or clear browser data.</li>
+        <li data-i18n="policy.cookies.essential_li_locale">tomodachi-lang — remembers your English or Arabic choice. localStorage, persistent.</li>
+        <li data-i18n="policy.cookies.essential_li_theme">tomodachi-theme — remembers your light or dark theme choice. localStorage, persistent.</li>
+        <li data-i18n="policy.cookies.essential_li_consent">tomodachi-consent — remembers your cookie-consent choices, so we do not re-ask on every visit. localStorage, persistent.</li>
+      </ul>
+
+      <h2 data-i18n="policy.cookies.analytics_h">Analytics cookies</h2>
+      <p data-i18n="policy.cookies.analytics_p">Loaded only when you accept the Analytics category in the consent banner. We use Google Analytics 4, which sets cookies named _ga and _ga_* (one per measurement ID). These count unique visitors and sessions, with IP anonymization where supported. The data lives in Google for 14 months, the GA4 default.</p>
+
+      <h2 data-i18n="policy.cookies.error_h">Error-monitoring cookies</h2>
+      <p data-i18n="policy.cookies.error_p">Loaded only when you accept the Error Monitoring category. We use Sentry, which sets a short-lived session identifier so related error reports can be grouped. Error reports are retained for 90 days.</p>
+
+      <h2 data-i18n="policy.cookies.control_h">How to control your choices</h2>
+      <p data-i18n="policy.cookies.control_p">The consent banner appears on your first visit. You can change your choice at any time using the Cookie Settings link in the footer of any page. Your browser also offers controls: you can clear cookies, block them by site, or enable Do Not Track. Tomodachi honors a "reject non-essential" decision regardless of how you express it.</p>
+
+      <h2 data-i18n="policy.cookies.third_h">Third parties</h2>
+      <p data-i18n="policy.cookies.third_p">Analytics cookies are set by Google. Error-monitoring cookies are set by Sentry. Tomodachi does not run advertising cookies and does not share cookie data with advertisers.</p>
+
+      <h2 data-i18n="policy.cookies.changes_h">Changes to this policy</h2>
+      <p data-i18n="policy.cookies.changes_p">When we add, remove, or change a cookie, we update this page and the date at the top. Material changes are highlighted on the homepage for 30 days.</p>
+
+      <h2 data-i18n="policy.cookies.contact_h">Contact</h2>
+      <p data-i18n="policy.cookies.contact_p">Questions about cookies — reach us at betterme@bytepluslife.com. For the broader picture of what data we collect, see the Privacy Policy linked from the homepage footer.</p>
     </article>
   </main>
+
+  <script type="module" src="js/policy-init.js?v=20260531b"></script>
 </body>
 </html>

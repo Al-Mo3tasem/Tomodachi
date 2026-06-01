@@ -7,11 +7,11 @@
   <meta name="description" content="Tomodachi's terms of service: account use, content rules, account termination.">
   <link rel="canonical" href="https://al-mo3tasem.github.io/Tomodachi/terms.html">
   <meta name="robots" content="index, follow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260601d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260528t">
+  <link rel="stylesheet" href="css/style.css?v=20260601c">
 </head>
 <body class="policy-page">
   <header class="policy-nav">
@@ -19,21 +19,74 @@
       <span class="landing-brand-icon">🏯</span>
       <span class="landing-brand-name">Tomodachi</span>
     </a>
-    <a href="./" class="policy-back">← Back home</a>
+    <div class="policy-nav-actions">
+      <div class="landing-locale-bar">
+        <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
+        <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
+      </div>
+      <a href="./" class="policy-back" data-i18n="policy.back_home">Back home</a>
+    </div>
   </header>
 
   <main class="policy">
     <article class="policy-content">
-      <h1>Terms of Service</h1>
-      <p class="policy-meta">Last updated: <time datetime="2026-05-28">May 28, 2026</time></p>
+      <h1 data-i18n="policy.terms.title">Terms of Service</h1>
+      <p class="policy-meta">
+        <span data-i18n="policy.last_updated">Last updated:</span>
+        <time datetime="2026-05-31">May 31, 2026</time>
+      </p>
 
-      <!-- L1.13b TODO: paste customized Termly Terms of Service content here. -->
-      <div class="policy-placeholder">
-        <h2>Content coming soon</h2>
-        <p>These terms are being prepared. We're using Termly to generate baseline language, customizing for Tomodachi's specifics, and authoring the Arabic version natively. Check back soon.</p>
-        <p style="margin-top: 1rem; font-size: 0.875rem;">In short: Tomodachi is a language-learning app. Use it lawfully and respect other learners. You can delete your account any time.</p>
-      </div>
+      <p class="policy-lede" data-i18n="policy.terms.intro_p">These terms cover what you can expect from Tomodachi and what we expect from you. They are written to be readable. If a clause is unclear, contact us and we will rephrase it.</p>
+
+      <h2 data-i18n="policy.terms.acceptance_h">Accepting these terms</h2>
+      <p data-i18n="policy.terms.acceptance_p">By creating an account or joining the waitlist, you agree to these terms and to our Privacy Policy, linked from the homepage footer. If you do not agree, please do not use the service.</p>
+
+      <h2 data-i18n="policy.terms.what_h">What Tomodachi is</h2>
+      <p data-i18n="policy.terms.what_p">Tomodachi is a web app for learning Japanese, bilingual in English and Arabic, currently in waitlist and closed-beta phase. The free tier will remain substantial after launch. A Pro tier will follow with paid features — pricing is not final, and you will see it before being asked to pay.</p>
+
+      <h2 data-i18n="policy.terms.eligibility_h">Eligibility</h2>
+      <p data-i18n="policy.terms.eligibility_p">You must be at least 13 years old to create an account. If you are under 18, you confirm that a parent or guardian has approved your use. Tomodachi is not designed for younger children.</p>
+
+      <h2 data-i18n="policy.terms.account_h">Your account</h2>
+      <p data-i18n="policy.terms.account_p">Keep your password private and use a strong one. You are responsible for everything that happens under your account. If you suspect someone else has signed in, change your password and email betterme@bytepluslife.com so we can help.</p>
+
+      <h2 data-i18n="policy.terms.acceptable_h">Acceptable use</h2>
+      <p data-i18n="policy.terms.acceptable_intro_p">A short list of what is not allowed:</p>
+      <ul>
+        <li data-i18n="policy.terms.acceptable_li_illegal">Using Tomodachi for anything illegal where you live or where the service is hosted.</li>
+        <li data-i18n="policy.terms.acceptable_li_harass">Harassing other learners through display names, chat features once they ship, or duel and co-op interactions.</li>
+        <li data-i18n="policy.terms.acceptable_li_break">Probing, scraping, or reverse-engineering the app, except to the extent the law expressly permits.</li>
+        <li data-i18n="policy.terms.acceptable_li_bots">Using bots, scripts, or automation to play games or inflate scores.</li>
+        <li data-i18n="policy.terms.acceptable_li_impersonate">Impersonating other people, brands, or Tomodachi staff.</li>
+        <li data-i18n="policy.terms.acceptable_li_multi">Creating multiple accounts to manipulate leaderboards or evade a ban.</li>
+      </ul>
+
+      <h2 data-i18n="policy.terms.content_h">Content and intellectual property</h2>
+      <p data-i18n="policy.terms.content_p">Tomodachi's lessons, vocabulary cards, mnemonics, grammar explanations, and audio are owned by us and licensed to you for personal learning. You may not copy or redistribute the content, train other models on it, or use it in a competing product.</p>
+
+      <h2 data-i18n="policy.terms.beta_h">Beta status</h2>
+      <p data-i18n="policy.terms.beta_p">Tomodachi is in pre-launch beta. Features and data shapes may change. We may pause accounts, reset test data, or migrate between Firebase projects during this period. When that affects you, we will email the address on file first.</p>
+
+      <h2 data-i18n="policy.terms.termination_h">Account termination</h2>
+      <p data-i18n="policy.terms.termination_p">You can delete your account from Settings at any time. We may suspend or close an account that violates these terms, after warning where reasonable, or immediately when the violation is severe — for example, illegal use.</p>
+
+      <h2 data-i18n="policy.terms.disclaimers_h">Disclaimers</h2>
+      <p data-i18n="policy.terms.disclaimers_p">Tomodachi is provided as-is during beta. We do not guarantee uninterrupted service, and the content may contain errors. If you spot a language error or bug, tell us — fast feedback is one of the points of running a beta.</p>
+
+      <h2 data-i18n="policy.terms.liability_h">Limitation of liability</h2>
+      <p data-i18n="policy.terms.liability_p">To the extent allowed by law, Tomodachi is not liable for indirect, incidental, or consequential damages arising from use of the service. Our direct liability is limited to the amount you have paid us in the previous twelve months. During free beta, that amount is zero.</p>
+
+      <h2 data-i18n="policy.terms.changes_h">Changes to these terms</h2>
+      <p data-i18n="policy.terms.changes_p">When we change these terms, we update the date at the top. Material changes are highlighted on the homepage for 30 days, and waitlist members receive a short email summary.</p>
+
+      <h2 data-i18n="policy.terms.governing_h">Governing law</h2>
+      <p data-i18n="policy.terms.governing_p">These terms are governed by the laws of the Arab Republic of Egypt. Disputes are resolved in Egyptian courts, except where mandatory consumer-protection law of your country of residence applies and is more protective of you.</p>
+
+      <h2 data-i18n="policy.terms.contact_h">Contact</h2>
+      <p data-i18n="policy.terms.contact_p">Questions about these terms — reach us at betterme@bytepluslife.com. We aim to reply within seven days.</p>
     </article>
   </main>
+
+  <script type="module" src="js/policy-init.js?v=20260531b"></script>
 </body>
 </html>

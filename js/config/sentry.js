@@ -23,7 +23,7 @@ import { getEnv } from './firebase.js?v=20260528c';
 const dsns = {
   dev:     '', // localhost — skip Sentry for dev unless explicitly enabled
   staging: '', // Cloudflare Pages — fill in if/when we want staging error reporting
-  prod:    ''  // GitHub Pages — fill in after creating the Sentry project
+  prod:    'https://83f5d174c3eca3ea2a2e49735d11fb3b@o4511486659919872.ingest.de.sentry.io/4511486683250768'  // Sentry project created 2026-06-01; .de region (EU data residency)
 };
 
 /**

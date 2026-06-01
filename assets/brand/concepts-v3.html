@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomodachi — Scarf Logo v3 (L1.15)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --scarf: #B91C1C;
+      --scarf-deep: #7F1D1D;
+      --scarf-light: #DC2626;
+      --scarf-shadow: #5C1212;
+      --ink: #18181B;
+      --paper: #FAF8F2;
+      --paper-warm: #F0EBDF;
+      --skin: #E8D8C0;
+      --gray-100: #F4F4F5;
+      --gray-300: #D4D4D8;
+      --gray-500: #71717A;
+      --gray-800: #27272A;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FBFAFC;
+      color: var(--gray-800);
+      line-height: 1.5;
+    }
+
+    .page-header {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px 16px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--gray-500);
+      max-width: 760px;
+      margin: 0;
+    }
+
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    @media (max-width: 1100px) {
+      .concepts-grid { grid-template-columns: 1fr; }
+    }
+
+    .concept {
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .concept-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--scarf);
+    }
+
+    .concept-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: -16px 0 0;
+      color: var(--ink);
+    }
+
+    .concept-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--gray-500);
+      margin: -12px 0 0;
+    }
+
+    .preview-section {
+      border-top: 1px solid var(--gray-100);
+      padding-top: 20px;
+    }
+
+    .preview-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin: 0 0 12px;
+    }
+
+    .stage {
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+    }
+
+    .stage-light { background: white; border: 1px solid var(--gray-300); }
+    .stage-warm { background: var(--paper); border: 1px solid var(--paper-warm); }
+    .stage-dark { background: var(--ink); }
+
+    .lockup-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+    }
+    .lockup-row.warm {
+      background: var(--paper);
+      border-color: var(--paper-warm);
+    }
+    .lockup-row.dark {
+      background: var(--ink);
+      border-color: var(--gray-800);
+    }
+
+    .wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .wordmark.dark { color: white; }
+
+    .favicon-strip {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--gray-100);
+      border-radius: 8px;
+    }
+
+    .favicon-label {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .pros-cons {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--gray-800);
+      padding: 16px;
+      background: var(--gray-100);
+      border-radius: 10px;
+    }
+
+    .pros-cons strong {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin: 0 0 4px;
+      font-weight: 700;
+    }
+
+    .pros-cons p { margin: 0 0 12px; }
+    .pros-cons p:last-child { margin: 0; }
+
+    .decision-bar {
+      max-width: 1280px;
+      margin: 16px auto 48px;
+      padding: 28px 32px;
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 14px;
+    }
+    .decision-bar h2 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .decision-bar p {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin: 0 0 8px;
+      line-height: 1.7;
+    }
+    .decision-bar p:last-child { margin: 0; }
+  </style>
+
+  <!-- ============================================
+       SHARED SVG DEFS — knit texture pattern
+       Used by Direction E (the textured one) to
+       demonstrate cable-knit fabric.
+       ============================================ -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <!-- Knit-stitch pattern: tiny diagonal V's like cable knit -->
+      <pattern id="knit" x="0" y="0" width="9" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+        <rect width="9" height="7" fill="#B91C1C"/>
+        <path d="M 0 7 L 4.5 0 L 9 7" fill="none" stroke="#7F1D1D" stroke-width="0.7" opacity="0.55"/>
+        <path d="M 0 0 L 4.5 7 L 9 0" fill="none" stroke="#5C1212" stroke-width="0.5" opacity="0.35"/>
+      </pattern>
+      <!-- Same pattern, brighter for dark backgrounds -->
+      <pattern id="knit-dark" x="0" y="0" width="9" height="7" patternUnits="userSpaceOnUse">
+        <rect width="9" height="7" fill="#DC2626"/>
+        <path d="M 0 7 L 4.5 0 L 9 7" fill="none" stroke="#7F1D1D" stroke-width="0.7" opacity="0.55"/>
+        <path d="M 0 0 L 4.5 7 L 9 0" fill="none" stroke="#5C1212" stroke-width="0.5" opacity="0.35"/>
+      </pattern>
+      <!-- Fabric noise filter — subtle organic break-up of flat fill -->
+      <filter id="fabric-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3"/>
+        <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.12 0"/>
+        <feComposite in2="SourceGraphic" operator="in"/>
+        <feMerge>
+          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode/>
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Three "scarf-on-a-neck" directions, evolving from C</h1>
+  <p>All three keep C's spirit (scarf as protective cradle, 友 held within), but add an implied wearer — a faceless silhouette of a head and shoulders so the scarf reads as worn, not floating. Direction E demonstrates knit texture so you can see how the fabric-material question lands in practice.</p>
+</header>
+
+<div class="concepts-grid">
+
+  <!-- ==============================================
+       DIRECTION D — THE WEAR
+       Soft implied head + scarf folded at the front
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction D</div>
+      <h2 class="concept-name">The Wear</h2>
+    </div>
+    <p class="concept-desc">A faceless silhouette — soft round head, sloped shoulders — wears a scarf with a single visible front-fold where the two ends cross. 友 sits centered on the chest, inside the fold, like a brooch. The composition is symmetric, dignified, quiet. Smooth fabric (no knit detail), letting the silhouette do the storytelling.</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 280" width="200" height="230">
+          <!-- Shoulders (warm neutral silhouette) -->
+          <path d="M 20 280
+                   L 20 200
+                   C 20 175, 50 165, 90 162
+                   L 150 162
+                   C 190 165, 220 175, 220 200
+                   L 220 280 Z" fill="#2A2730"/>
+          <!-- Neck -->
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <!-- Head -->
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <!-- Scarf back layer (behind neck, peeking out at top) -->
+          <path d="M 65 162
+                   C 65 152, 90 147, 120 147
+                   C 150 147, 175 152, 175 162
+                   L 175 168
+                   C 150 158, 90 158, 65 168 Z" fill="#7F1D1D"/>
+          <!-- Scarf front main body -->
+          <path d="M 50 162
+                   C 50 157, 80 155, 120 157
+                   C 160 159, 190 157, 190 162
+                   L 195 200
+                   C 195 215, 170 230, 120 230
+                   C 70 230, 45 215, 45 200 Z" fill="#B91C1C"/>
+          <!-- Scarf front-fold overlap (where ends cross) -->
+          <path d="M 90 190
+                   L 150 190
+                   L 152 215
+                   C 152 222, 140 228, 120 228
+                   C 100 228, 88 222, 88 215 Z" fill="#7F1D1D"/>
+          <!-- Subtle highlight on top of scarf -->
+          <path d="M 55 165
+                   C 80 160, 160 160, 185 165"
+                stroke="#DC2626" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+          <!-- 友 character on the front fold -->
+          <text x="120" y="220" font-family="Noto Sans JP, serif" font-weight="900" font-size="36" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 280" width="40" height="46">
+          <path d="M 20 280 L 20 200 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 200 L 220 280 Z" fill="#2A2730"/>
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <path d="M 65 162 C 65 152, 90 147, 120 147 C 150 147, 175 152, 175 162 L 175 168 C 150 158, 90 158, 65 168 Z" fill="#7F1D1D"/>
+          <path d="M 50 162 C 50 157, 80 155, 120 157 C 160 159, 190 157, 190 162 L 195 200 C 195 215, 170 230, 120 230 C 70 230, 45 215, 45 200 Z" fill="#B91C1C"/>
+          <path d="M 90 190 L 150 190 L 152 215 C 152 222, 140 228, 120 228 C 100 228, 88 222, 88 215 Z" fill="#7F1D1D"/>
+          <text x="120" y="220" font-family="Noto Sans JP, serif" font-weight="900" font-size="36" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 280" width="40" height="46">
+          <path d="M 20 280 L 20 200 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 200 L 220 280 Z" fill="#3F3B45"/>
+          <rect x="100" y="135" width="40" height="40" fill="#3F3B45"/>
+          <circle cx="120" cy="105" r="42" fill="#3F3B45"/>
+          <path d="M 65 162 C 65 152, 90 147, 120 147 C 150 147, 175 152, 175 162 L 175 168 C 150 158, 90 158, 65 168 Z" fill="#7F1D1D"/>
+          <path d="M 50 162 C 50 157, 80 155, 120 157 C 160 159, 190 157, 190 162 L 195 200 C 195 215, 170 230, 120 230 C 70 230, 45 215, 45 200 Z" fill="#DC2626"/>
+          <path d="M 90 190 L 150 190 L 152 215 C 152 222, 140 228, 120 228 C 100 228, 88 222, 88 215 Z" fill="#7F1D1D"/>
+          <text x="120" y="220" font-family="Noto Sans JP, serif" font-weight="900" font-size="36" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 280" width="32" height="38">
+          <path d="M 20 280 L 20 200 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 200 L 220 280 Z" fill="#2A2730"/>
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <path d="M 50 162 C 50 157, 80 155, 120 157 C 160 159, 190 157, 190 162 L 195 200 C 195 215, 170 230, 120 230 C 70 230, 45 215, 45 200 Z" fill="#B91C1C"/>
+          <text x="120" y="220" font-family="Noto Sans JP, serif" font-weight="900" font-size="36" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <span class="favicon-label">32×32</span>
+        <svg viewBox="0 0 240 280" width="16" height="19">
+          <circle cx="120" cy="105" r="55" fill="#2A2730"/>
+          <path d="M 40 175 C 40 165, 75 155, 120 155 C 165 155, 200 165, 200 175 L 205 220 C 205 240, 170 255, 120 255 C 70 255, 35 240, 35 220 Z" fill="#B91C1C"/>
+        </svg>
+        <span class="favicon-label">16×16 (simplified)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>Most "worn" reading — the implied person makes the scarf instantly read as fabric on a body, not a floating shape. Symmetric front-fold composition is iconic and dignified. 友-on-fold doubles as a brooch / family crest reading, which carries cultural weight in MENA and Japan both.</p>
+      <strong>Tradeoffs</strong>
+      <p>友 sits inside the dark scarf-fold, smaller than in C, so character readability drops slightly. The dark silhouette behind the scarf adds compositional weight that some viewers will read as "moody" rather than "warm" — depends on whether you want quiet dignity or open warmth.</p>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       DIRECTION E — THE DRAPE (with knit texture)
+       Asymmetric long-tail scarf, Mikasa's iconic pose
+       Demonstrates knit-pattern fabric texture
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction E — Textured</div>
+      <h2 class="concept-name">The Drape</h2>
+    </div>
+    <p class="concept-desc">The iconic asymmetric drape — scarf wrapped around the neck once, with one short tail tucked at the front and one long tail trailing far down. Uses a tiled knit-stitch pattern to read as chunky wool, with subtle two-tone shading on folds. 友 sits over the heart, on the wrapped portion. This is the design that suggests the source most directly.</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark (with knit texture)</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 320" width="200" height="266">
+          <!-- Body silhouette -->
+          <path d="M 20 320
+                   L 20 195
+                   C 20 175, 50 165, 90 162
+                   L 150 162
+                   C 190 165, 220 175, 220 195
+                   L 220 320 Z" fill="#2A2730"/>
+          <!-- Neck -->
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <!-- Head -->
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <!-- Scarf BACK wrap (behind neck) -->
+          <path d="M 70 158
+                   C 70 148, 90 144, 120 144
+                   C 150 144, 175 148, 175 158
+                   L 178 168
+                   C 150 156, 90 156, 67 168 Z" fill="url(#knit)" filter="url(#fabric-noise)"/>
+          <!-- Scarf FRONT main wrap (across chest) -->
+          <path d="M 45 162
+                   C 45 156, 80 155, 120 157
+                   C 160 159, 195 156, 195 162
+                   L 200 205
+                   C 200 218, 180 225, 155 226
+                   L 105 226
+                   C 80 225, 40 218, 40 205 Z" fill="url(#knit)" filter="url(#fabric-noise)"/>
+          <!-- Fold shadow (where back wrap meets front) -->
+          <path d="M 70 158 Q 120 168 175 158 L 170 168 Q 120 172 75 168 Z" fill="#5C1212" opacity="0.5"/>
+          <!-- Short right tail tucked at front (smaller, curled) -->
+          <path d="M 145 218
+                   C 158 230, 160 245, 155 258
+                   L 145 250
+                   L 142 262
+                   L 132 248
+                   Z" fill="url(#knit)" filter="url(#fabric-noise)"/>
+          <!-- LONG left tail (Mikasa's signature) -->
+          <path d="M 60 215
+                   C 50 240, 47 270, 50 305
+                   L 65 295
+                   L 72 312
+                   L 80 270
+                   L 78 240 Z" fill="url(#knit)" filter="url(#fabric-noise)"/>
+          <!-- Long-tail edge highlight (for depth) -->
+          <path d="M 60 220 C 51 245, 49 275, 53 305"
+                stroke="#7F1D1D" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <!-- 友 over the heart -->
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="42" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 320" width="36" height="48">
+          <path d="M 20 320 L 20 195 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 195 L 220 320 Z" fill="#2A2730"/>
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <path d="M 70 158 C 70 148, 90 144, 120 144 C 150 144, 175 148, 175 158 L 178 168 C 150 156, 90 156, 67 168 Z" fill="url(#knit)"/>
+          <path d="M 45 162 C 45 156, 80 155, 120 157 C 160 159, 195 156, 195 162 L 200 205 C 200 218, 180 225, 155 226 L 105 226 C 80 225, 40 218, 40 205 Z" fill="url(#knit)"/>
+          <path d="M 70 158 Q 120 168 175 158 L 170 168 Q 120 172 75 168 Z" fill="#5C1212" opacity="0.5"/>
+          <path d="M 145 218 C 158 230, 160 245, 155 258 L 145 250 L 142 262 L 132 248 Z" fill="url(#knit)"/>
+          <path d="M 60 215 C 50 240, 47 270, 50 305 L 65 295 L 72 312 L 80 270 L 78 240 Z" fill="url(#knit)"/>
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="42" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 320" width="36" height="48">
+          <path d="M 20 320 L 20 195 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 195 L 220 320 Z" fill="#3F3B45"/>
+          <rect x="100" y="135" width="40" height="40" fill="#3F3B45"/>
+          <circle cx="120" cy="105" r="42" fill="#3F3B45"/>
+          <path d="M 70 158 C 70 148, 90 144, 120 144 C 150 144, 175 148, 175 158 L 178 168 C 150 156, 90 156, 67 168 Z" fill="url(#knit-dark)"/>
+          <path d="M 45 162 C 45 156, 80 155, 120 157 C 160 159, 195 156, 195 162 L 200 205 C 200 218, 180 225, 155 226 L 105 226 C 80 225, 40 218, 40 205 Z" fill="url(#knit-dark)"/>
+          <path d="M 70 158 Q 120 168 175 158 L 170 168 Q 120 172 75 168 Z" fill="#5C1212" opacity="0.5"/>
+          <path d="M 145 218 C 158 230, 160 245, 155 258 L 145 250 L 142 262 L 132 248 Z" fill="url(#knit-dark)"/>
+          <path d="M 60 215 C 50 240, 47 270, 50 305 L 65 295 L 72 312 L 80 270 L 78 240 Z" fill="url(#knit-dark)"/>
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="42" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 320" width="26" height="35">
+          <path d="M 20 320 L 20 195 C 20 175, 50 165, 90 162 L 150 162 C 190 165, 220 175, 220 195 L 220 320 Z" fill="#2A2730"/>
+          <circle cx="120" cy="105" r="42" fill="#2A2730"/>
+          <rect x="100" y="135" width="40" height="40" fill="#2A2730"/>
+          <path d="M 45 162 C 45 156, 80 155, 120 157 C 160 159, 195 156, 195 162 L 200 205 C 200 218, 180 225, 155 226 L 105 226 C 80 225, 40 218, 40 205 Z" fill="#B91C1C"/>
+          <path d="M 60 215 C 50 240, 47 270, 50 305 L 65 295 L 72 312 L 80 270 L 78 240 Z" fill="#B91C1C"/>
+        </svg>
+        <span class="favicon-label">32×32 (smooth — texture dropped)</span>
+        <svg viewBox="0 0 240 320" width="13" height="17">
+          <circle cx="120" cy="105" r="55" fill="#2A2730"/>
+          <path d="M 40 180 C 40 168, 75 158, 120 158 C 165 158, 200 168, 200 180 L 205 240 C 205 260, 170 270, 120 270 C 70 270, 35 260, 35 240 Z" fill="#B91C1C"/>
+          <path d="M 60 240 L 50 320 L 80 295 L 88 305 Z" fill="#B91C1C"/>
+        </svg>
+        <span class="favicon-label">16×16 (simplified silhouette)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>Most direct reference to the source — the asymmetric long-tail drape is THE iconic scarf pose, instantly recognized by anyone who knows AoT. The knit texture adds genuine fabric weight and lifts the design from "logo" to "object you could touch." Best storytelling payload of all three.</p>
+      <strong>Tradeoffs</strong>
+      <p>Most overt reference of the three — risks pulling more attention to the AoT signal than to the Tomodachi brand itself, especially for AoT-aware viewers. The texture detail vanishes at favicon sizes, meaning the small mark and the large mark feel meaningfully different. The asymmetric composition is harder to balance in a square app icon (we'd center-shift the figure).</p>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       DIRECTION F — THE WRAP-AROUND
+       Multi-loop volumetric scarf, no implied face yet weighty
+       ============================================== -->
+  <section class="concept">
+    <div>
+      <div class="concept-tag">Direction F</div>
+      <h2 class="concept-name">The Wrap-Around</h2>
+    </div>
+    <p class="concept-desc">An implied head sits above a scarf that's been wrapped multiple times around the neck — three distinct loops stacked vertically, each slightly offset for depth. Suggests cold-weather weight without literally drawing a winter scene. 友 in the center loop, framed by the wraps above and below. Smooth fabric (no knit texture in this one — the layered loops do the work).</p>
+
+    <div class="preview-section">
+      <p class="preview-label">Primary mark</p>
+      <div class="stage stage-warm">
+        <svg viewBox="0 0 240 320" width="200" height="266">
+          <!-- Body silhouette -->
+          <path d="M 20 320
+                   L 20 215
+                   C 20 195, 50 185, 90 182
+                   L 150 182
+                   C 190 185, 220 195, 220 215
+                   L 220 320 Z" fill="#2A2730"/>
+          <!-- Neck (peeking above scarf wraps) -->
+          <rect x="100" y="115" width="40" height="35" fill="#2A2730"/>
+          <!-- Head -->
+          <circle cx="120" cy="85" r="42" fill="#2A2730"/>
+
+          <!-- Top wrap (loop 1 — closest to neck) -->
+          <path d="M 60 145
+                   C 60 138, 85 134, 120 134
+                   C 155 134, 180 138, 180 145
+                   L 180 170
+                   C 180 178, 155 182, 120 182
+                   C 85 182, 60 178, 60 170 Z" fill="#7F1D1D"/>
+          <!-- Top wrap highlight -->
+          <path d="M 65 142 C 90 138, 150 138, 175 142" stroke="#B91C1C" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+          <!-- Middle wrap (loop 2 — main body, holds 友) -->
+          <path d="M 50 170
+                   C 50 165, 80 162, 120 162
+                   C 160 162, 190 165, 190 170
+                   L 192 210
+                   C 192 220, 160 225, 120 225
+                   C 80 225, 48 220, 48 210 Z" fill="#B91C1C"/>
+          <!-- Middle wrap highlight -->
+          <path d="M 55 168 C 85 164, 155 164, 185 168" stroke="#DC2626" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+          <!-- Bottom wrap (loop 3 — widest, partially visible) -->
+          <path d="M 45 220
+                   C 45 214, 78 211, 120 211
+                   C 162 211, 195 214, 195 220
+                   L 198 245
+                   C 198 255, 162 258, 120 258
+                   C 78 258, 42 255, 42 245 Z" fill="#7F1D1D"/>
+          <!-- Bottom-wrap fold shadow -->
+          <path d="M 50 222 C 80 218, 160 218, 190 222" stroke="#5C1212" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+          <!-- Short tucked tail (bottom right) -->
+          <path d="M 165 252
+                   C 175 264, 178 278, 175 290
+                   L 165 280
+                   L 162 295
+                   L 152 275 Z" fill="#7F1D1D"/>
+          <!-- Subtle longer tail (bottom left, modest) -->
+          <path d="M 65 252
+                   C 56 268, 53 285, 58 300
+                   L 70 290
+                   L 78 300
+                   L 80 270 Z" fill="#7F1D1D"/>
+
+          <!-- 友 character on the main (middle) wrap -->
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="48" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — light</p>
+      <div class="lockup-row warm">
+        <svg viewBox="0 0 240 320" width="40" height="53">
+          <path d="M 20 320 L 20 215 C 20 195, 50 185, 90 182 L 150 182 C 190 185, 220 195, 220 215 L 220 320 Z" fill="#2A2730"/>
+          <rect x="100" y="115" width="40" height="35" fill="#2A2730"/>
+          <circle cx="120" cy="85" r="42" fill="#2A2730"/>
+          <path d="M 60 145 C 60 138, 85 134, 120 134 C 155 134, 180 138, 180 145 L 180 170 C 180 178, 155 182, 120 182 C 85 182, 60 178, 60 170 Z" fill="#7F1D1D"/>
+          <path d="M 50 170 C 50 165, 80 162, 120 162 C 160 162, 190 165, 190 170 L 192 210 C 192 220, 160 225, 120 225 C 80 225, 48 220, 48 210 Z" fill="#B91C1C"/>
+          <path d="M 45 220 C 45 214, 78 211, 120 211 C 162 211, 195 214, 195 220 L 198 245 C 198 255, 162 258, 120 258 C 78 258, 42 255, 42 245 Z" fill="#7F1D1D"/>
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="48" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Header lockup — dark</p>
+      <div class="lockup-row dark">
+        <svg viewBox="0 0 240 320" width="40" height="53">
+          <path d="M 20 320 L 20 215 C 20 195, 50 185, 90 182 L 150 182 C 190 185, 220 195, 220 215 L 220 320 Z" fill="#3F3B45"/>
+          <rect x="100" y="115" width="40" height="35" fill="#3F3B45"/>
+          <circle cx="120" cy="85" r="42" fill="#3F3B45"/>
+          <path d="M 60 145 C 60 138, 85 134, 120 134 C 155 134, 180 138, 180 145 L 180 170 C 180 178, 155 182, 120 182 C 85 182, 60 178, 60 170 Z" fill="#7F1D1D"/>
+          <path d="M 50 170 C 50 165, 80 162, 120 162 C 160 162, 190 165, 190 170 L 192 210 C 192 220, 160 225, 120 225 C 80 225, 48 220, 48 210 Z" fill="#DC2626"/>
+          <path d="M 45 220 C 45 214, 78 211, 120 211 C 162 211, 195 214, 195 220 L 198 245 C 198 255, 162 258, 120 258 C 78 258, 42 255, 42 245 Z" fill="#7F1D1D"/>
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="48" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <div class="wordmark dark">Tomodachi</div>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <p class="preview-label">Favicon sizes</p>
+      <div class="favicon-strip">
+        <svg viewBox="0 0 240 320" width="28" height="37">
+          <path d="M 20 320 L 20 215 C 20 195, 50 185, 90 182 L 150 182 C 190 185, 220 195, 220 215 L 220 320 Z" fill="#2A2730"/>
+          <rect x="100" y="115" width="40" height="35" fill="#2A2730"/>
+          <circle cx="120" cy="85" r="42" fill="#2A2730"/>
+          <path d="M 50 170 C 50 165, 80 162, 120 162 C 160 162, 190 165, 190 170 L 192 210 C 192 220, 160 225, 120 225 C 80 225, 48 220, 48 210 Z" fill="#B91C1C"/>
+          <text x="120" y="208" font-family="Noto Sans JP, serif" font-weight="900" font-size="48" text-anchor="middle" fill="#FAF8F2">友</text>
+        </svg>
+        <span class="favicon-label">32×32</span>
+        <svg viewBox="0 0 240 320" width="14" height="19">
+          <circle cx="120" cy="85" r="55" fill="#2A2730"/>
+          <path d="M 40 190 C 40 178, 75 168, 120 168 C 165 168, 200 178, 200 190 L 205 250 C 205 268, 170 278, 120 278 C 70 278, 35 268, 35 250 Z" fill="#B91C1C"/>
+        </svg>
+        <span class="favicon-label">16×16 (simplified)</span>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <strong>Strengths</strong>
+      <p>Most volumetric reading — the three-loop stack reads as a real chunky knit wrapped multiple times, exactly how someone wears a scarf they care about. The 友 sitting in the center wrap is the largest of the three new directions (best name readability after D). Most balanced compositionally — works as a square (icon) without modification.</p>
+      <strong>Tradeoffs</strong>
+      <p>Less direct AoT signal than E — the multi-wrap reads as "warm winter scarf" generally rather than "that specific scarf" — could be a strength if you want the reference subtler. The three stacked loops are more complex to render at small sizes; favicon needs aggressive simplification (we drop the back and front wraps, keep only the middle one with 友).</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="decision-bar">
+  <h2>How to pick + the texture question answered</h2>
+  <p>Compare D, E, F at primary-mark size first. The implied wearer in all three makes the scarf read as worn, not floating — which was the brief. Then check the favicon row: the simplified 16px versions show how each survives at small sizes.</p>
+  <p><strong>On the texture:</strong> only Direction E (The Drape) demonstrates knit pattern + fabric noise — you can see it directly in the primary mark. Drag your eye close and you'll see the cable-knit stitch ribbing and the subtle organic break-up of the flat red. We can apply the same texture to D or F's scarves if you want — it's a per-direction choice. My recommendation: keep texture for E and F's scarves (medium and high stakes for the "scarf-as-real-object" reading), drop it for D where the strength is symmetry and silhouette, not fabric realism.</p>
+  <p><strong>My take:</strong> Between D, E, F — I'd pick <strong>F (The Wrap-Around)</strong>. Reasons: (1) the three-loop stack reads as a real lived-in scarf for everyone, regardless of whether they know the source; (2) the implied head + balanced composition fits a square icon natively, no special variants needed; (3) 友 stays the largest of the three new options, preserving brand-name readability; (4) we can add knit texture to it without overpowering. But if you want the strongest AoT signal, E (The Drape) is the answer. If you want quiet symmetry and dignity, D. Tell me <strong>D</strong>, <strong>E</strong>, or <strong>F</strong> — or "blend X with Y's Z" and I'll iterate.</p>
+</div>
+
+</body>
+</html>

@@ -5,6 +5,7 @@
 // ============================================
 
 import { APP_CONFIG } from './config/firebase.js?v=20260528c';
+import { getFunctionUrl } from './config/functions.js?v=20260531a';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
 } from './core/core.js?v=20260528c';
@@ -32,9 +33,9 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260528u';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260528q';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260528r';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260531b';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260601a';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260601a';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -372,10 +373,45 @@ function switchAuthTab(tab) {
 // Hero counter — parametric translation (Pattern D from L1.02). Re-rendered
 // on init AND on every locale change. L1.04 ships the baseline-only display;
 // L1.09 will wire the real Brevo count on top of the baseline.
+// L1.09 cap — Commercialization_Plan §3. The visible counter never
+// exceeds 1000, even if real_count + baseline would push past it.
+const WAITLIST_DISPLAY_CAP = 1000;
+
+// Cached the first time the page successfully fetches getWaitlistCount.
+// Lets renderHeroCounter() (called by both init() and onLocaleChange())
+// stay in sync with the real number without re-hitting Brevo on every
+// locale toggle.
+let cachedWaitlistRealCount = null;
+
+function computeDisplayCount() {
+  const real = cachedWaitlistRealCount == null ? 0 : cachedWaitlistRealCount;
+  return Math.min(WAITLIST_DISPLAY_CAP, real + WAITLIST_BASELINE);
+}
+
 function renderHeroCounter() {
   const el = $('hero-counter');
   if (!el) return;
-  el.textContent = t('hero.counter_line', { count: WAITLIST_BASELINE });
+  el.textContent = t('hero.counter_line', { count: computeDisplayCount() });
+}
+
+// L1.09 — fetch the real Brevo count once at landing-page boot. We
+// render the baseline-only number first (so the page never shows a
+// blank or "loading" counter), then quietly upgrade to baseline + real
+// once the function returns. On any error, we keep the baseline-only
+// display — a counter is social proof, not load-bearing UI, and a
+// "Couldn't reach the server" error on a marketing number would be
+// uglier than a slightly-stale-but-confident "350+".
+async function fetchAndApplyWaitlistCount() {
+  try {
+    const res = await fetch(getFunctionUrl('getWaitlistCount'), { method: 'GET' });
+    if (!res.ok) return;
+    const payload = await res.json();
+    if (!payload.ok || typeof payload.count !== 'number') return;
+    cachedWaitlistRealCount = payload.count;
+    renderHeroCounter();
+  } catch (_err) {
+    // Silent — counter is decorative, no toast / error UI for this.
+  }
 }
 
 // L1.16: PWA install prompt handling. Chrome / Edge / Samsung Internet
@@ -568,36 +604,92 @@ function onConsentModalKeydown(e) {
   }
 }
 
+// Maps server-side error codes (from functions/index.js) onto user-
+// facing i18n keys. The function returns one of these on failure;
+// anything not in this map falls back to `error.waitlist.unknown`.
+const WAITLIST_ERROR_KEYS = {
+  invalid_email: 'error.waitlist.invalid_email',
+  disposable_email: 'error.waitlist.disposable_email',
+  brevo_not_configured: 'error.waitlist.not_ready',
+  brevo_misconfigured: 'error.waitlist.not_ready',
+  brevo_auth: 'error.waitlist.not_ready',
+  brevo_unreachable: 'error.waitlist.network',
+  brevo_error: 'error.waitlist.network',
+  method_not_allowed: 'error.waitlist.unknown'
+};
+
 async function handleWaitlistSubmit(e) {
   e.preventDefault();
+  const formEl = $('form-waitlist');
   const emailEl = $('waitlist-email');
   const errorEl = $('waitlist-error');
+  const submitEl = formEl?.querySelector('button[type="submit"]');
   const email = emailEl ? emailEl.value.trim() : '';
   if (errorEl) errorEl.textContent = '';
 
-  // Basic format check; the disposable-domain blocklist + Brevo
-  // integration lands in L1.08 (Commercialization_Plan §5). The CTA
-  // is also gated by updateWaitlistSubmitState() on input events, so
-  // this is the second line of defense (paste of an invalid email or
-  // programmatic submit).
+  // Client-side gate — the CTA is already disabled-until-valid via
+  // updateWaitlistSubmitState() on input events, so this catches paste
+  // tricks or programmatic submits. The server re-validates anyway.
   if (!email || !WAITLIST_EMAIL_RE.test(email)) {
     if (errorEl) errorEl.textContent = t('error.auth.invalid_email');
     return;
   }
 
-  // L1.04 stub — the real Brevo /v3/contacts POST is L1.08. Premium-
-  // modern feedback: hide the form + counter, fade in an inline success
-  // card in the same vertical position. Beats the top-corner toast for
-  // a celebration moment (saved as feedback-premium-modern-ux memory).
-  $('form-waitlist')?.setAttribute('hidden', '');
-  $('hero-counter')?.setAttribute('hidden', '');
-  $('waitlist-success')?.removeAttribute('hidden');
+  // Premium-modern loading state: disable the submit button + swap its
+  // label to the localized "Submitting…" so the user has feedback while
+  // the round-trip to Cloud Functions completes (~200-800ms typical).
+  // Original label restored in finally{} so the form stays usable on error.
+  const originalLabel = submitEl ? submitEl.textContent : '';
+  if (submitEl) {
+    submitEl.disabled = true;
+    submitEl.textContent = t('hero.submitting');
+  }
 
-  // L1.11: GA4 event. Honors Consent Mode v2 — when analytics_storage
-  // is 'denied', gtag sends only the anonymized consent-mode ping
-  // (no user data). Source param lets us tell apart hero submits from
-  // future per-section CTAs if we add them.
-  ga4TrackEvent('waitlist_signup', { source: 'landing_hero' });
+  try {
+    const res = await fetch(getFunctionUrl('submitWaitlist'), {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        locale: getLocale(),
+        source: 'landing_hero'
+      })
+    });
+
+    let payload = {};
+    try { payload = await res.json(); } catch (_e) { /* keep empty */ }
+
+    if (!res.ok || !payload.ok) {
+      const code = payload.error || 'unknown';
+      const key = WAITLIST_ERROR_KEYS[code] || 'error.waitlist.unknown';
+      if (errorEl) errorEl.textContent = t(key);
+      return;
+    }
+
+    // Success path — same premium-modern transformation as before:
+    // hide form + counter, reveal the inline success card in-place.
+    // Beats a top-corner toast for the celebration moment, per the
+    // [[feedback-premium-modern-ux]] memory.
+    formEl?.setAttribute('hidden', '');
+    $('hero-counter')?.setAttribute('hidden', '');
+    $('waitlist-success')?.removeAttribute('hidden');
+
+    // GA4 event — Consent Mode v2 already gates analytics_storage; if
+    // the user denied analytics, this becomes an anonymized signal.
+    ga4TrackEvent('waitlist_signup', {
+      source: 'landing_hero',
+      already_subscribed: Boolean(payload.alreadySubscribed)
+    });
+  } catch (err) {
+    // Network-level failure (offline, DNS, CORS misconfig). Surface a
+    // friendly retry message; the form stays usable.
+    if (errorEl) errorEl.textContent = t('error.waitlist.network');
+  } finally {
+    if (submitEl) {
+      submitEl.disabled = false;
+      submitEl.textContent = originalLabel;
+    }
+  }
 }
 
 // ============================================
@@ -1607,6 +1699,11 @@ async function init() {
   // own (i.e., values that interpolate vars from JS state).
   renderHeroCounter();
   renderFooterCopyright(); // L1.13a — current-year interpolation in footer
+  // L1.09: fetch the live Brevo count and quietly upgrade the counter
+  // from baseline-only ("350+") to baseline + real ("357+"). Fires async
+  // so it never blocks the page render. Silent failure on error — the
+  // baseline-only number is fine social proof on its own.
+  fetchAndApplyWaitlistCount();
   // L1.12: locale-aware document.title + meta description (the static
   // ones in index.html stay as EN for crawlers).
   updateLocaleAwareSeo();
