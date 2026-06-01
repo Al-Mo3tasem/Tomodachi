@@ -217,16 +217,18 @@ body {
 /* L1.15 — the brand mark is now an <img> svg. Sizing matches the
  * inherited font-size so the visual footprint stays identical to the
  * 🏯 emoji it replaced. height is the load-bearing dimension; width
- * follows the SVG's natural 240:280 ratio. */
+ * follows the SVG's natural 240:280 ratio.
+ * L1 polish-3 (2026-06-01): bumped 30% — was 4.4rem/1.8rem; the mark
+ * was reading smaller than expected next to the "Tomodachi" wordmark. */
 .brand-icon img {
-  height: 4.4rem;
+  height: 5.6rem;
   width: auto;
   display: block;
   margin: 0 auto;
 }
 .landing-brand-icon img,
 .nav-icon img {
-  height: 1.8rem;
+  height: 2.4rem;
   width: auto;
   display: inline-block;
   vertical-align: middle;
@@ -2518,19 +2520,15 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* L1 polish-2 (2026-05-28): SVG noise texture (feTurbulence) added as
-   * the top background layer over the existing 4-gradient mesh. Subtle
-   * film-grain that breaks the "solid" feeling per project lead's
-   * feedback. Encoded as a 200×200 inline SVG; tiled by background-size.
-   * Reference: Stripe / Linear / Vercel marketing surfaces. */
+  /* L1 polish-3 (2026-06-01): simplified to warm cream paper with ONE
+   * very-subtle crimson tint at the top-left for brand warmth. The
+   * previous 4-gradient mesh + noise was making text and icons hard to
+   * read against the busy backdrop. Premium clean look (Linear / Notion
+   * / Stripe pattern) — the brand color comes from CTAs, headings, and
+   * the logo, not from background washes. */
   background:
-    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse 60% 40% at 8% -5%,  rgba(185, 28, 28, 0.10), transparent 70%),
-    radial-gradient(ellipse 50% 35% at 92% 105%, rgba(200, 169, 117, 0.12), transparent 70%),
-    radial-gradient(ellipse 40% 30% at 95% 35%, rgba(245, 158, 11, 0.05), transparent 70%),
-    radial-gradient(ellipse 80% 60% at 50% 60%, rgba(185, 28, 28, 0.03), transparent 80%),
-    var(--bg-base);
-  background-size: 200px 200px, auto, auto, auto, auto, auto;
+    radial-gradient(ellipse 70% 40% at 10% -10%, rgba(185, 28, 28, 0.04), transparent 70%),
+    var(--brand-paper, #FAF8F2);
 }
 
 .landing-nav {
@@ -3111,20 +3109,40 @@ body {
   line-height: 1;
 }
 
-/* Three distinct soft gradients per screen, tinted with brand colors so
- * the screenshot section reads as part of the same visual identity as
- * the feature-card icon tints (indigo / sakura-rose / amber).
- * (Brand-token tinted per L1 polish 2026-05-28.) */
+/* L1 polish-3 (2026-06-01): per-phone distinct premium light colors,
+ * each a different warm-neutral tone harmonizing with the scarf-crimson
+ * brand palette. Solid fills (no gradients) — quieter, more premium,
+ * easier on the eye than the previous brand-tinted gradients. */
 .placeholder-dashboard {
-  background: linear-gradient(180deg, #ffffff 0%, var(--brand-primary-soft) 100%);
+  background: #F2EFE7;   /* warm cream */
 }
 
 .placeholder-duel {
-  background: linear-gradient(180deg, #ffffff 0%, var(--brand-accent-soft) 100%);
+  background: #F1E6E2;   /* soft blush */
 }
 
 .placeholder-leaderboard {
-  background: linear-gradient(180deg, #ffffff 0%, var(--brand-amber-soft) 100%);
+  background: #EDE6D8;   /* warm sand */
+}
+
+/* "Coming soon / قريبًا" pill — centered inside each phone frame.
+ * Soft glass-effect pill with backdrop blur so it floats over whatever
+ * placeholder color is behind it. Replaced with real screenshots when
+ * L2 content reseed makes the screens visually meaningful. */
+.placeholder-badge {
+  position: relative;
+  z-index: 1;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .screenshot-card figcaption {
@@ -3354,10 +3372,13 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* L1 polish-3 (2026-06-01): same clean warm-paper treatment as the
+   * landing — single subtle accent rather than competing gradient mesh.
+   * Long-form legal text needs maximum readability; the policy pages
+   * benefit even more from a calm background than the landing does. */
   background:
-    radial-gradient(ellipse 60% 40% at 8% -5%,  rgba(185, 28, 28, 0.06), transparent 70%),
-    radial-gradient(ellipse 50% 35% at 92% 105%, rgba(200, 169, 117, 0.07), transparent 70%),
-    var(--bg-base);
+    radial-gradient(ellipse 70% 40% at 10% -10%, rgba(185, 28, 28, 0.03), transparent 70%),
+    var(--brand-paper, #FAF8F2);
 }
 
 .policy-nav {

@@ -33,7 +33,7 @@ import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
 } from './games/coop.js?v=20260528c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260531b';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260601f';
 import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260601a';
 import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260601a';
 
