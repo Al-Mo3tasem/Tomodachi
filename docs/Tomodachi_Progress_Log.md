@@ -16,6 +16,67 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-01 — Phase L1 — CLOSED (L1.21)
+**Status:** ✅ PHASE COMPLETE
+**Scope:** Phase closure
+**Summary:** Phase L1 (Commercialization — Landing + Waitlist + Bilingual SEO + Brand Identity) is officially closed. Started 2026-05-28 immediately after Phase R2 (Firebase 3-environment topology). All in-scope tasks shipped to code, ten of them already verified live; the remaining three (L1.09 deploy, L1.17 git push, L1.18 outreach) are mechanical wraps awaiting the project lead's hands. Phase L2 (Content authoring — kana, vocab, kanji) begins next.
+
+**Task completion (L1.01-L1.21):**
+
+| ID    | Task                                                        | Status |
+|-------|-------------------------------------------------------------|--------|
+| L1.01 | i18next setup + en/ar JSON skeleton + locale toggle         | ✅ DONE |
+| L1.02 | RTL infrastructure + Cairo AR font                          | ✅ DONE |
+| L1.03 | AR translations for every key (Codex Spec C + Claude review)| ✅ DONE |
+| L1.04 | Landing-page hero (bilingual) + waitlist UI shell           | ✅ DONE |
+| L1.05 | Three feature cards (Codex Spec D copy + animated borders)  | ✅ DONE |
+| L1.06 | Screenshots section frame + premium phone-frame placeholders| 🔵 FRAME DONE (real captures pending L2 content reseed) |
+| L1.07 | FAQ section with native one-at-a-time accordion             | ✅ DONE |
+| L1.08 | Brevo waitlist integration (Cloud Function + client)        | ✅ DONE + LIVE |
+| L1.09 | Visible counter (real Brevo count + 350 baseline, 1000 cap) | ✅ CODE DONE / ⏳ functions deploy pending |
+| L1.10 | Cookie consent banner + customize modal (Consent Mode v2)   | ✅ DONE |
+| L1.11 | GA4 + Consent Mode v2 (Measurement ID `G-W98QV657BE`)       | ✅ DONE (post-deploy real-time dashboard verification awaited) |
+| L1.12 | SEO baseline (meta + JSON-LD + sitemap + hreflang)          | ✅ DONE |
+| L1.13 | ToS + Privacy + Cookies (in-house EN draft + Codex Spec G AR)| ✅ DONE |
+| L1.14 | Sentry integration (DSN in `.de` region, EU data residency) | ✅ DONE (post-deploy verification awaited) |
+| L1.15 | Logo + brand identity (scarf-motif Direction C + palette)   | ✅ DONE |
+| L1.16 | PWA install manifest + deferred-prompt UX                   | ✅ DONE |
+| L1.17 | Staging → prod deploy                                       | ⏳ Awaiting `git push` + `firebase deploy --only functions` |
+| L1.18 | Seed first 50 waitlist signups                              | ⏳ Project lead — 5 personal contacts first wave |
+| L1.19 | `saveProfileSettings` atomic refactor                       | ✅ DONE (closed in R2 carry-over) |
+| L1.20 | `ensureUserProfile` honor `usernames/` invariant            | ✅ DONE (closed in R2 escalation) |
+| L1.21 | Phase L1 closure (this entry)                               | ✅ THIS ENTRY |
+
+**Key phase outcomes:**
+
+- **Bilingual EN+AR landing page** with full RTL, locale toggle persistent across visits via localStorage, Cairo font for AR, JSON-LD structured data in both languages. ~410 i18n leaf keys, parity-balanced.
+- **Live waitlist** capturing real email signups into Brevo list ID 2 with `LANG` / `SOURCE` / `SIGNUP_DATE` custom attributes — domain blocklist (30 disposable providers) + structured-error responses + premium-modern loading + inline success state.
+- **GA4 + Sentry** with Consent Mode v2 gating, both lazy-loaded, both consent-aware. GA4 fires `page_view` + `waitlist_signup` events; Sentry attaches user context only when consent + sign-in both true.
+- **Three policy pages** (Privacy / Terms / Cookies) drafted in Tomodachi voice, naming the actual stack (Firebase / Brevo / GA4 / Sentry) instead of generic boilerplate. Bilingual via Codex Spec G + Claude review.
+- **Premium brand identity** locked: scarf-motif logo (Direction C — the embrace), warm scarf-crimson palette retiring generic-startup indigo, full SVG asset set (logo, favicon, OG card PNG-converted for OG-scraper reliability), wired through manifest + meta tags + Twitter `summary_large_image` upgrade.
+- **Three-environment Firebase + GCP topology** in production: `tomodachi-prod` on Blaze with $1/mo budget cap, Secret Manager holds Brevo API key, environment-specific Cloud Functions URL switching via `js/config/functions.js`.
+
+**Lessons worth carrying forward:**
+1. **External-tool walkthroughs go in chat with numbered steps + verify pricing claims before recommending.** The PrivacyPolicies.com pricing flap cost us ~30 min of rework. Going forward: any "free tier" claim gets verified by checking the actual signup flow before recommending.
+2. **Cloud Functions + IP-based vendor allow-lists don't mix.** Brevo's "Authorized IPs" feature blocked the first live call (Google Cloud egress IPs rotate). Solution: disable per-API-key IP restrictions for any vendor we hit from serverless platforms. Document this in `PROJECT_RULES.md` §6 as a precondition for any future vendor integration.
+3. **SVG OG images break on social-media scrapers without Japanese fonts.** Facebook rendered the 友 character as its Unicode codepoint "53CB". Solution: convert OG images to PNG via online tool (cloudconvert.com worked, 5-min effort). For favicon stays SVG — browsers load system Japanese fonts. **PNG for OG, SVG for everything else** is the rule going forward.
+4. **Locked the Codex-direct-file-output pattern.** Codex writes outputs directly to file paths instead of returning copy-paste in chat. Saves project lead the manual integration step. Specs A/B/C/D/G all used this pattern successfully.
+5. **The 5-friend pre-launch test BEFORE the LinkedIn post is the right move.** 2500 LinkedIn connections is one-shot social capital — burning it before L2 content ships would dent the brand. The 5-friend wave is the QA pass; LinkedIn waits for Phase L3 or beyond.
+
+**What remains open (carried to future phases):**
+
+- **L1.06 — Real screen captures** for the screenshots section. Awaits L2 content reseed so the captured screens have meaningful Japanese content visible. Re-capture in EN + AR locales, optimize to WebP ~150KB each, swap into the existing placeholder slots. Small content-only commit.
+- **L1.09 — Live verification post-deploy.** The function code is in place; the deploy is one `firebase deploy --only functions` away from going live.
+- **L1.11/L1.14 — Real-data verification.** GA4 Real-Time dashboard + Sentry Issues page should both show traffic / events after first 24 hours of live usage. If anything misfires (CSP issues, consent-banner regression, etc.), surfaces here.
+- **OG card PNG re-render** at higher quality if any platform shows artifacts. Current PNG was a one-shot cloudconvert.com export at 1200×630. If we want font-tighter rendering or want to add platform-specific variants (Twitter @ 1200×600, LinkedIn @ 1200×627), defer to a future "brand polish" round.
+- **Phase R3 housekeeping** items deferred from R2 still pending — the dated `hiraquest0` carve-out cleanup in `docs/Firestore_Rules.md` is scheduled for on/after 2026-06-27 (Firebase 30-day grace expires).
+- **`firebase-functions` + Node runtime upgrade** — current `functions/package.json` pins `firebase-functions@^6.0.0` + `"node": "20"`. Node 20 is deprecated 2026-04-30, decommissioned 2026-10-30. Schedule the upgrade pass for July-August 2026 — bump to Node 22 + `firebase-functions@latest`.
+- **ESLint 9 flat-config migration** for `functions/` — currently the predeploy lint hook is disabled because `.eslintrc.json` is incompatible with ESLint 9. ~10-min cleanup: add `eslint.config.js` + `@eslint/js` devDep + re-enable predeploy. Defer to next maintenance window.
+
+**Phase L2 begins next:** content authoring per `CONTENT_GUIDELINES.md` — kana cards, JLPT N5 vocab, kanji with two-mnemonic structure (meaning story + reading story, AR-parallel-authored). See `docs/Phases_and_Tasks.md` Phase L2 for the task spine.
+
+---
+
 ## 2026-06-01 — Phase L1.15: scarf-motif logo locked in + full brand-palette migration
 **Status:** ✅ DONE (code, assets, palette migration)
 **Scope:** Brand | Assets | HTML | CSS | Manifest | OG/Twitter
