@@ -2804,7 +2804,9 @@ body {
  * the SVG "marching glow" border. Tracing the outer perimeter of the
  * group (not each card individually) makes the cards feel like one
  * bordered unit. On individual card hover, this group border fades
- * via `:has()` and the per-card conic-gradient border takes over.
+ * via `:has()` and the focus shifts to the hovered card's lift + solid
+ * scarf-crimson border (L1 polish-3 replaced the rotating rainbow with
+ * a calmer treatment).
  * Reference: Anthropic Console, Vercel marketing, Linear pricing. */
 .features-wrap {
   position: relative;
@@ -2867,55 +2869,19 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* Premium animated conic-gradient border (L1 polish 2026-05-28).
- * Sits 1.5px outside the card; the card's own background covers the
- * middle, leaving a thin rainbow ring of brand colors. Hidden by default,
- * fades in + rotates on hover. Reference: Vercel, Linear, Anthropic cards.
- * @property is needed because gradient angle isn't transitionable by
- * default — the property declaration makes it animatable. */
-.feature-card::before {
-  content: '';
-  position: absolute;
-  inset: -1.5px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--angle, 0deg),
-    var(--brand-primary),
-    var(--brand-accent),
-    var(--brand-amber),
-    var(--brand-accent),
-    var(--brand-primary)
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
+/* L1 polish-3 (2026-06-01): the rotating rainbow conic-gradient border
+ * on hover was visually busy — the spinning brand colors competed with
+ * the card's icon + title + body text for attention, making the content
+ * harder to read mid-hover. Replaced with a quiet premium pattern:
+ * the card's border itself softly shifts from neutral to scarf-crimson,
+ * combined with the existing lift + shadow. No animation, no rainbow,
+ * no rotation. Reference: Linear pricing cards, Stripe product cards. */
 .feature-card:hover {
   transform: translateY(-4px);
+  border-color: var(--brand-primary);
   box-shadow:
     0 12px 32px rgba(185, 28, 28, 0.10),
     0 4px 12px rgba(127, 29, 29, 0.08);
-  border-color: transparent; /* lets the conic gradient peek through */
-}
-
-.feature-card:hover::before {
-  opacity: 1;
-  animation: rotate-conic-border 4s linear infinite;
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes rotate-conic-border {
-  to { --angle: 360deg; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .feature-card:hover::before { animation: none; }
 }
 
 /* Premium SVG icon container — 44×44 rounded tile with brand-tinted
@@ -3125,24 +3091,27 @@ body {
   background: #EDE6D8;   /* warm sand */
 }
 
-/* "Coming soon / قريبًا" pill — centered inside each phone frame.
- * Soft glass-effect pill with backdrop blur so it floats over whatever
- * placeholder color is behind it. Replaced with real screenshots when
- * L2 content reseed makes the screens visually meaningful. */
+/* "Coming soon / قريبًا" — quiet editorial-style text centered inside
+ * the phone frame. No pill, no badge, no glass — just typography. Same
+ * voice as the rest of the section: matches .screenshot-card figcaption
+ * weight + color, with subtle italic in EN for the "label" feel. Arabic
+ * stays upright since italic doesn't apply to Arabic script. */
 .placeholder-badge {
   position: relative;
   z-index: 1;
-  padding: 8px 18px;
-  background: rgba(255, 255, 255, 0.78);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 999px;
-  font-size: 0.8125rem;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.005em;
+  color: var(--text-secondary);
+  opacity: 0.85;
+}
+
+:lang(ar) .placeholder-badge {
+  font-style: normal;
+  letter-spacing: 0;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-primary);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .screenshot-card figcaption {
