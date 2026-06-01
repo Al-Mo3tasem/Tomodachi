@@ -638,13 +638,16 @@ async function handleWaitlistSubmit(e) {
   // Premium-modern loading state: disable the submit button + swap its
   // label to the localized "Submitting…" so the user has feedback while
   // the round-trip to Cloud Functions completes (~200-800ms typical).
-  // Original label restored in finally{} so the form stays usable on error.
+  // Original label restored in finally{} on error paths only — on success,
+  // we want the button to stay disabled so a stray click (or a missed
+  // [hidden] CSS rule) can't re-trigger the submission.
   const originalLabel = submitEl ? submitEl.textContent : '';
   if (submitEl) {
     submitEl.disabled = true;
     submitEl.textContent = t('hero.submitting');
   }
 
+  let succeeded = false;
   try {
     const res = await fetch(getFunctionUrl('submitWaitlist'), {
       method: 'POST',
@@ -673,6 +676,7 @@ async function handleWaitlistSubmit(e) {
     formEl?.setAttribute('hidden', '');
     $('hero-counter')?.setAttribute('hidden', '');
     $('waitlist-success')?.removeAttribute('hidden');
+    succeeded = true;
 
     // GA4 event — Consent Mode v2 already gates analytics_storage; if
     // the user denied analytics, this becomes an anonymized signal.
@@ -685,7 +689,10 @@ async function handleWaitlistSubmit(e) {
     // friendly retry message; the form stays usable.
     if (errorEl) errorEl.textContent = t('error.waitlist.network');
   } finally {
-    if (submitEl) {
+    // Restore button state ONLY on error paths. On success, keep it
+    // disabled — the form is hidden anyway, but this is the safety net
+    // if any [hidden] CSS rule fails to suppress the form visually.
+    if (submitEl && !succeeded) {
       submitEl.disabled = false;
       submitEl.textContent = originalLabel;
     }

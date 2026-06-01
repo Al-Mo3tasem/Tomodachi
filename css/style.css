@@ -2652,6 +2652,14 @@ body {
   flex-wrap: wrap;
 }
 
+/* `display: flex` on .hero-form overrides the browser's UA rule
+ * `[hidden] { display: none }`, so JS adding the hidden attribute
+ * didn't actually hide the form post-submit. Explicit override below
+ * makes the hidden-attribute behavior work as expected. Same pattern
+ * already applied to .waitlist-success a few rules down. */
+.hero-form[hidden] { display: none; }
+.hero-counter[hidden] { display: none; }
+
 .hero-email {
   flex: 1 1 240px;
   min-width: 0;
@@ -2760,10 +2768,20 @@ body {
 /* Mobile/narrow form: stack input + CTA vertically so both render full-
  * width and the CTA is centered relative to the input (no awkward
  * left-aligned half-width button under a full-width input). Premium-
- * modern: big tap targets, matching widths. */
+ * modern: big tap targets, matching widths.
+ *
+ * Why `flex: none` on .hero-email: in flex-direction column, the main
+ * axis becomes vertical, so the input's `flex: 1 1 240px` applies the
+ * 240px as HEIGHT (not width). Result was a near-square input on
+ * mobile. Resetting flex to `none` makes the input height intrinsic
+ * (font-size + padding), so it stays the normal slim rectangle. */
 @media (max-width: 600px) {
   .hero-form {
     flex-direction: column;
+  }
+  .hero-email {
+    flex: none;
+    width: 100%;
   }
   .hero-cta {
     width: 100%;
