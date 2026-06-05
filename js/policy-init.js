@@ -12,7 +12,7 @@
 // identical to the landing-page toggle.
 // ============================================
 
-import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260601f';
+import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260601h';
 
 function bindLocaleToggles() {
   const update = () => {

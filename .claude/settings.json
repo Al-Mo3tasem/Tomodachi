@@ -31,7 +31,8 @@
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('firebase.json', 'utf8'\\)\\)\")",
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('.firebaserc', 'utf8'\\)\\)\")",
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('functions/package.json', 'utf8'\\)\\)\")",
-      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('manifest.json', 'utf8'\\)\\)\")"
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('manifest.json', 'utf8'\\)\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const ar=JSON.parse\\(fs.readFileSync\\('js/i18n/locales/ar.json','utf8'\\)\\);const en=JSON.parse\\(fs.readFileSync\\('js/i18n/locales/en.json','utf8'\\)\\);function walkKeys\\(o,p=''\\){const r=[];for\\(const k in o\\){const np=p?p+'.'+k:k;if\\(o[k]&&typeof o[k]==='object'\\){r.push\\(...walkKeys\\(o[k],np\\)\\);}else{r.push\\(np\\);}}return r;}const enK=new Set\\(walkKeys\\(en\\)\\);const arK=new Set\\(walkKeys\\(ar\\)\\);const missing=[...enK].filter\\(k=>!arK.has\\(k\\)\\);const extra=[...arK].filter\\(k=>!enK.has\\(k\\)\\);console.log\\('AR JSON: valid'\\);console.log\\('EN keys:',enK.size\\);console.log\\('AR keys:',arK.size\\);console.log\\('Missing in AR \\(EN has, AR does not\\):',missing.length?missing:'none'\\);console.log\\('Extra in AR \\(AR has, EN does not\\):',extra.length?extra:'none'\\);\")"
     ]
   }
 }
