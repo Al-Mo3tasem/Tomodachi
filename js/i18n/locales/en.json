@@ -219,10 +219,6 @@
     "pro_cost": {
       "question": "What will Pro cost?",
       "answer": "Final pricing is not set. We are planning regional pricing around $2/month equivalent for Egypt, roughly 70 EGP, and around $4/month equivalent for Gulf countries, with affordability as the main goal."
-    },
-    "dialect": {
-      "question": "I don't speak Egyptian Arabic — will it work for me?",
-      "answer": "Yes. All content ships in Modern Standard Arabic, so Arabic readers can use it regardless of dialect, with no Egyptian colloquialisms or region-specific wording that excludes Gulf, Levantine, or Maghrebi users."
     }
   },
   "auth": {

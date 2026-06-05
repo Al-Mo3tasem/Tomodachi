@@ -74,7 +74,6 @@
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260601d">
   <link rel="apple-touch-icon" href="favicon.svg?v=20260601d">
-  <meta name="theme-color" content="#F5F5F7">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -84,7 +83,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260601g">
+  <link rel="stylesheet" href="css/style.css?v=20260601h">
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -140,22 +139,6 @@
 
     <section class="features">
       <div class="features-wrap">
-        <!-- SVG marching-glow border traces the outer perimeter of the
-             3-card group. pathLength=100 normalizes the rect's path so
-             stroke-dasharray/offset work in % units regardless of the
-             grid's actual rendered width. Fades on individual card
-             hover so the per-card animation takes over. -->
-        <svg class="features-border-svg" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id="features-border-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"  stop-color="#4F46E5"/>
-              <stop offset="50%" stop-color="#EC4899"/>
-              <stop offset="100%" stop-color="#F59E0B"/>
-            </linearGradient>
-          </defs>
-          <rect x="0.75" y="0.75" width="calc(100% - 1.5px)" height="calc(100% - 1.5px)" rx="12" ry="12" pathLength="100"/>
-        </svg>
-
         <div class="features-grid">
           <article class="feature-card">
           <div class="feature-icon" aria-hidden="true">
@@ -232,6 +215,11 @@
           <figcaption data-i18n="leaderboard.title">Leaderboard</figcaption>
         </figure>
       </div>
+      <div class="screenshots-dots" id="screenshots-dots" role="tablist" aria-label="Phone preview carousel">
+        <button type="button" class="screenshots-dot is-active" data-index="0" aria-label="Show dashboard preview"></button>
+        <button type="button" class="screenshots-dot" data-index="1" aria-label="Show duel preview"></button>
+        <button type="button" class="screenshots-dot" data-index="2" aria-label="Show leaderboard preview"></button>
+      </div>
     </section>
 
     <section class="faq">
@@ -266,10 +254,6 @@
         <details class="faq-item" name="faq-group">
           <summary class="faq-question" data-i18n="faq.pro_cost.question">What will Pro cost?</summary>
           <div class="faq-answer" data-i18n="faq.pro_cost.answer">Final pricing is not set. We are planning regional pricing around $2/month equivalent for Egypt, roughly 70 EGP, and around $4/month equivalent for Gulf countries, with affordability as the main goal.</div>
-        </details>
-        <details class="faq-item" name="faq-group">
-          <summary class="faq-question" data-i18n="faq.dialect.question">I don't speak Egyptian Arabic — will it work for me?</summary>
-          <div class="faq-answer" data-i18n="faq.dialect.answer">Yes. All content ships in Modern Standard Arabic, so Arabic readers can use it regardless of dialect, with no Egyptian colloquialisms or region-specific wording that excludes Gulf, Levantine, or Maghrebi users.</div>
         </details>
       </div>
     </section>
@@ -1004,5 +988,38 @@
 
   <!-- App Module -->
   <script type="module" src="js/app.js?v=20260601f"></script>
+
+  <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
+       which card is centered in the scroll-snap container and toggles
+       the matching dot. Dots are display:none on desktop via CSS, so
+       the observer's side effects are invisible there. -->
+  <script>
+    (function () {
+      var grid = document.querySelector('.screenshots-grid');
+      var dots = Array.prototype.slice.call(document.querySelectorAll('.screenshots-dot'));
+      if (!grid || dots.length === 0 || typeof IntersectionObserver === 'undefined') return;
+      var cards = Array.prototype.slice.call(grid.querySelectorAll('.screenshot-card'));
+      if (cards.length !== dots.length) return;
+      function setActive(i) {
+        for (var j = 0; j < dots.length; j++) {
+          dots[j].classList.toggle('is-active', j === i);
+        }
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            var idx = cards.indexOf(entry.target);
+            if (idx !== -1) setActive(idx);
+          }
+        });
+      }, { root: grid, threshold: 0.6 });
+      cards.forEach(function (c) { io.observe(c); });
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+          cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
