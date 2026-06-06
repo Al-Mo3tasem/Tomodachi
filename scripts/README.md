@@ -119,23 +119,58 @@ node scripts/author_content.js --env=dev --type=vocab --key=n5_v_042_river
 
 No manifest needed; the CLI walks the form for one item then exits.
 
-### 2.3 Codex-assisted drafting (`--use-codex`)
+### 2.3 Codex-assisted drafting
+
+There are **two ways** to use Codex. The recommended L2.05+ flow is batch
+prefill — Codex authors all items in one run, you review the JSON file,
+then the CLI walks the file. The legacy per-item paste flow exists too.
+
+#### 2.3a Batch prefill via `--prefill=<path>` (recommended)
+
+```bash
+node scripts/author_content.js --env=dev \
+  --manifest=scripts/manifests/n5_hiragana.json \
+  --prefill=scripts/output/codex-l2-05-hiragana.json
+```
+
+How it works:
+
+1. Claude writes a Codex spec at `docs/codex-spec-l2-05-<topic>-<date>.md`
+   that frames the brand-moat stakes, invites web research, and tells
+   Codex to write the result to `scripts/output/codex-l2-05-<topic>.json`.
+2. You run Codex against the spec. Codex produces the file.
+3. Claude reviews the output for quality (translationese, dialect,
+   cultural fit) before you start authoring.
+4. You run the CLI with `--prefill=<path>` — each manifest item gets its
+   Codex draft pre-loaded, skipping the per-item paste prompt.
+5. Per item you see the draft, validate it, tweak any field, accept and
+   write to Firestore.
+
+Expected prefill file shape:
+
+```json
+{
+  "type": "hiragana",
+  "source": "codex-l2-05-hiragana-2026-06-06",
+  "items": {
+    "a": { "mnemonic_en": "...", "mnemonic_ar": "..." },
+    "i": { "mnemonic_en": "...", "mnemonic_ar": "..." }
+  }
+}
+```
+
+The CLI also accepts a flat top-level object (no `items` wrapper) and an
+array of items each with a `key` field.
+
+#### 2.3b Per-item paste-in via `--use-codex` (legacy)
 
 ```bash
 node scripts/author_content.js --env=dev --manifest=… --use-codex
 ```
 
-For each item the CLI prints a per-content-type Codex prompt with all the
-style rules from `CONTENT_GUIDELINES.md` baked in. Workflow:
-
-1. Copy the prompt block (between the `━━━` rules).
-2. Paste into your Codex session.
-3. Codex returns JSON.
-4. Paste the JSON back into the CLI; enter a line containing only `END`.
-5. CLI parses + opens for review (same flow as manual).
-
-If Codex returns malformed JSON, the CLI falls back to manual entry — no
-data loss.
+For each item the CLI prints a per-content-type Codex prompt. You paste
+into Codex, paste the JSON response back, enter `END`. Useful for ad-hoc
+single-item drafting; impractical for 100-item batches.
 
 ### 2.4 Dry-run
 

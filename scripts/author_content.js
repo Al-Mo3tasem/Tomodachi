@@ -77,12 +77,48 @@ function parseArgs(argv) {
     else if (a.startsWith('--manifest=')) args.manifest = a.slice(11);
     else if (a.startsWith('--type=')) args.type = a.slice(7);
     else if (a.startsWith('--key=')) args.key = a.slice(6);
+    else if (a.startsWith('--prefill=')) args.prefill = a.slice(10);
     else {
       console.error(color.red(`Unknown arg: ${a}`));
       args.help = true;
     }
   }
   return args;
+}
+
+// Load a Codex-output prefill file and return a Map<key, fields>.
+// Accepted shapes:
+//   { "type": "...", "items": { "a": {...}, "i": {...} } }     (recommended)
+//   { "type": "...", "items": [ { "key": "a", ... } ] }
+//   { "a": {...}, "i": {...} }                                  (flat fallback)
+function loadPrefill(path) {
+  if (!existsSync(path)) {
+    throw new Error(`prefill file not found: ${path}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(path, 'utf8'));
+  } catch (e) {
+    throw new Error(`prefill ${path} is not valid JSON: ${e.message}`);
+  }
+  const map = new Map();
+  if (parsed && typeof parsed === 'object' && parsed.items) {
+    if (Array.isArray(parsed.items)) {
+      for (const it of parsed.items) {
+        if (it && typeof it === 'object' && it.key) map.set(it.key, it);
+      }
+    } else if (typeof parsed.items === 'object') {
+      for (const [k, v] of Object.entries(parsed.items)) {
+        if (v && typeof v === 'object') map.set(k, v);
+      }
+    }
+  } else if (parsed && typeof parsed === 'object') {
+    // Flat fallback: top-level keys map directly to draft objects
+    for (const [k, v] of Object.entries(parsed)) {
+      if (v && typeof v === 'object') map.set(k, v);
+    }
+  }
+  return map;
 }
 
 function printHelp() {
@@ -98,6 +134,8 @@ ${color.cyan('FLAGS')}
   --type=<contentType>       force content type (hiragana|katakana|vocab|kanji|grammar|listening|radicals)
   --key=<itemKey>            single-item mode (with --type)
   --use-codex                print Codex paste-in prompt per item
+  --prefill=<path>           load a Codex-output JSON file and pre-fill items
+                             (silent batch mode — no per-item paste; review menu only)
   --dry-run                  validate + display only; no Firestore writes
   --help                     this help
 
@@ -107,6 +145,10 @@ ${color.cyan('EXAMPLES')}
 
   ${color.dim('# Author a single new kanji using Codex paste-in, against dev')}
   node scripts/author_content.js --type=kanji --key=k_n5_002_tree --use-codex
+
+  ${color.dim('# Batch authoring from a Codex-output file (recommended L2.05+ flow)')}
+  node scripts/author_content.js --manifest=scripts/manifests/n5_hiragana.json \\
+    --prefill=scripts/output/codex-l2-05-hiragana.json
 
   ${color.dim('# Production write (will require explicit confirmation per item)')}
   node scripts/author_content.js --env=prod --manifest=scripts/manifests/n5_vocab.json
@@ -127,7 +169,7 @@ const EXIT = Symbol('exit');
 const SKIP = Symbol('skip');
 
 async function authorOneItem(ctx, hint) {
-  const { contentType, useCodex } = ctx;
+  const { contentType, useCodex, prefills } = ctx;
   console.log('');
   console.log(color.bold(`━━━ ${contentType} :: ${hint.key} ━━━`));
   if (hint.ordinal) console.log(color.gray(`  ordinal: ${hint.ordinal}`));
@@ -142,8 +184,15 @@ async function authorOneItem(ctx, hint) {
   let item = { key: hint.key, ...seed };
   if (contentType === 'lesson') item = { lessonKey: hint.key, ...seed };
 
-  // 1) Optional Codex paste-in pre-fill
-  if (useCodex) {
+  // 0) Prefill from a Codex-output file (--prefill). Wins over seed.
+  const prefill = prefills && prefills.get(hint.key);
+  if (prefill) {
+    item = { ...item, ...prefill, key: item.key };
+    console.log(color.green(`  ✓ loaded prefill from file (${Object.keys(prefill).length} fields)`));
+  }
+
+  // 1) Optional Codex paste-in pre-fill (skipped if a file prefill was applied)
+  if (useCodex && !prefill) {
     console.log('');
     console.log(color.bold('━━━ Codex prompt (copy → paste into Codex) ━━━'));
     console.log(codexPromptFor(contentType, hint));
@@ -164,8 +213,8 @@ async function authorOneItem(ctx, hint) {
       console.log(color.red(`  ✕ ${e.message}`));
       console.log(color.yellow('  Falling back to manual entry.'));
     }
-  } else {
-    // 2) Manual walk
+  } else if (!prefill) {
+    // 2) Manual walk (skipped if a file prefill was applied)
     const walkResult = await walkForm(contentType, item);
     if (walkResult === null) return EXIT;  // EOF during form walk
   }
@@ -348,8 +397,20 @@ async function main() {
     console.log(color.cyan('[dry-run] no Firestore connection; writes will be printed only.'));
   }
 
+  // Load prefill file if provided
+  let prefills = null;
+  if (args.prefill) {
+    try {
+      prefills = loadPrefill(args.prefill);
+      console.log(color.gray(`Prefill: ${args.prefill} (${prefills.size} item draft(s))`));
+    } catch (e) {
+      console.error(color.red(`✕ ${e.message}`));
+      process.exit(1);
+    }
+  }
+
   // Graceful Ctrl-C — save progress before exiting
-  const ctx = { env: args.env, contentType, useCodex: args.useCodex, dryRun: args.dryRun, db };
+  const ctx = { env: args.env, contentType, useCodex: args.useCodex, dryRun: args.dryRun, db, prefills };
   const progress = loadProgress(args.env);
   let interrupted = false;
   process.on('SIGINT', () => {
