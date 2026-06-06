@@ -516,11 +516,12 @@ The user feedback in iteration 1 was clear: gamification depth needs more though
 - **Power-ups / consumables** — decision: do we have any (e.g., "double XP weekend", "freeze potion") or skip entirely? Default: skip for MVP; revisit at Phase L5
 **Acceptance:** `GAMIFICATION_DESIGN.md` v1.0 committed (tracked); project lead reviewed and approved.
 
-#### L2.03 — Content schema finalization
+#### L2.03 — Content schema finalization ✅ DONE 2026-06-05
 **Deps:** L2.01, L2.02
 **Owner:** Claude
 **Description:** With both design docs locked, finalize the Firestore `content_sets/*` schemas in `Tomodachi_Master_Plan.md`. Per content type: vocab, kanji, grammar, examples, radicals, listening drills. Write validators in `js/validators/content.js` matching the schema.
 **Acceptance:** Schemas documented; validators written; `node --check` passes.
+**Outcome:** Master Plan §4 rewritten as v2.0 (L2.03 schema set) — 13 collections specified including the new `content_sets/lessons/*` (lesson container with `lessonKey` + `globalOrder`), `users/{uid}/in_progress/{sessionKey}` (v1.6 shape with `userAnswer` + `questionType` + `exitReason`), `users/{uid}/committed_events/{eventId}` (XP idempotency ledger), `users/{uid}/quests/{date}` (status: pending|completed|expired), `users/{uid}/content_feedback/*` (4 feedback patterns), v1.4 server-only `game_sessions/*` (read-denied + write-denied), v1.3 unified `leaderboards/*` (weekly/monthly/all-time XP-based + archive collections), plus the existing `users`, `presence`, `usernames` collections updated for L2 fields (xp, streak per v1.3 expanded shape with `lastResetFrom`/`lastResetAt`/`streakSettledThrough`, freezes, tier, flags, settings). Cloud Functions contract table added (§4.15) listing 12 RPC + scheduled functions. Security rules summary added (§4.16) as canonical access matrix. Validators in `js/validators/content.js` cover all 7 content types (kana, vocab, kanji, grammar, listening, radicals, lessons) with field-type checks, key-format regexes, JLPT/category enums, bilingual field structure, kanji two-mnemonic shape, plus AR dialect detection per CONTENT_GUIDELINES §5 forbidden-markers list. Smoke-tested with valid + invalid items; `node --check` passes; dispatch function `validateContentItem(type, item)` exported for L2.04 CLI use.
 
 ---
 
@@ -528,7 +529,7 @@ The user feedback in iteration 1 was clear: gamification depth needs more though
 
 Per `CONTENT_GUIDELINES.md` §2.3: every content item is authored individually, **not** batch-generated. Codex may draft, but each item is reviewed with eyes on before commit. The AR quality moat lives or dies here.
 
-#### L2.04 — Build interactive content authoring tool
+#### L2.04 — Build interactive content authoring tool — ✅ DONE 2026-06-06
 **Deps:** L2.03
 **Owner:** Claude
 **Description:** A small Node CLI tool (`scripts/author_content.js`) that walks one content item at a time. For each item:
@@ -541,6 +542,8 @@ Per `CONTENT_GUIDELINES.md` §2.3: every content item is authored individually, 
 
 Tool is **interactive**, not batch — each item gets the lead's attention. Output files are T4 (gitignored per `PROJECT_RULES.md` §18.2 — never committed).
 **Acceptance:** Tool walks a sample 5-item vocab session end-to-end; each item lands in Firestore; gitignore prevents output files from being committed.
+
+**Outcome:** Shipped `scripts/author_content.js` + `scripts/lib/{admin,codex,manifest,prompts}.js` (~1050 lines total). Decision points settled per the upfront plan: Codex paste-in mode (no API call from the CLI) (#1B), hybrid input — short fields inline + long fields shell out to `$EDITOR` (#2C), manifest-file pattern for the work queue (#5B). Per-type form definitions cover all seven content types (hiragana, katakana, vocab, kanji, grammar, listening, radicals); validators from `js/validators/content.js` (L2.03) gate every write. AR dialect markers were demoted from blocking to warning-only in the CLI, consistent with the [common-conversational-MSA voice rule]([[feedback-ar-voice-common-tech-not-strict-msa]]) — the lead retains per-item judgment. Resume after Ctrl-C works via the gitignored `scripts/progress/author_progress.<env>.json` ledger. Production writes require an explicit `y` confirmation per item in addition to the `[a]ccept` keystroke. End-to-end dry-run verified: 5-item sample manifest, paste-in Codex flow, valid item accepted (writes to `dev:content_sets/vocab/items/n5_v_001_eat`), invalid item blocked, dialect-only item accepted as warning. Setup steps (service account, `$EDITOR`) documented in [scripts/README.md](../scripts/README.md) with numbered instructions per the [external-tool-detail rule]([[feedback-detailed-external-instructions]]).
 
 #### L2.05 — Author Hiragana mnemonics & polish
 **Deps:** L2.04

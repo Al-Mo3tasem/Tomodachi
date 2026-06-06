@@ -16,6 +16,38 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-06 — L2.04 — Interactive content authoring CLI shipped
+**Status:** ✅ DONE
+**Scope:** Code | Docs
+**Summary:** Built `scripts/author_content.js` — the L2.04 interactive content-authoring CLI that walks one item at a time and gates every Firestore write on the L2.03 validators. Architecture per the upfront plan: Codex paste-in mode (the CLI prints a per-content-type prompt with all CONTENT_GUIDELINES style rules baked in; the lead runs Codex elsewhere and pastes JSON back — no API integration in the CLI), hybrid input (short fields inline via readline, long fields shell out to `$EDITOR`), manifest-driven work queue (`scripts/manifests/<jlpt>_<type>.json`), per-env progress JSON for resume after Ctrl-C (`scripts/progress/author_progress.<env>.json`, gitignored). Per-type form definitions cover all seven content types (hiragana, katakana, vocab, kanji, grammar, listening, radicals). Production writes require explicit `y` confirmation per item in addition to `[a]ccept`. Dialect markers from `detectArabicDialectMarkers` were demoted from blocking to warning-only in the CLI consistent with the user's voice rule (common conversational AR, not strict فصحى) — the lead decides per item.
+
+Two notable implementation calls during the build:
+1. Switched the readline wrapper from `readline/promises` to the plain `readline` + `Symbol.asyncIterator` pattern after the promises API was found to hang on the second sequential read with piped stdin. The AsyncIterator pattern handles both TTY and piped input cleanly.
+2. Partitioned validator errors in the CLI: errors with messages starting "dialect markers detected" are routed to the warning channel; everything else is blocking. This is a CLI-layer choice that doesn't change the L2.03 validator API.
+
+**Files / Areas:** `scripts/author_content.js` (new), `scripts/lib/admin.js` (new — Admin SDK + env routing), `scripts/lib/codex.js` (new — paste-in prompt templates per content type), `scripts/lib/manifest.js` (new — manifest loader + progress tracking), `scripts/lib/prompts.js` (new — readline + `$EDITOR` + per-type form definitions), `scripts/manifests/README.md` + `scripts/manifests/_sample_vocab.json` (tracked), `scripts/README.md` (numbered setup instructions for service accounts + `$EDITOR`), `scripts/package.json` + `scripts/package-lock.json` (firebase-admin@^13), `.gitignore` (adds `scripts/{node_modules,progress,secrets,tmp}/`), `docs/Phases_and_Tasks.md` (L2.04 marked DONE).
+**Verification:** End-to-end dry-run smoke tests on the 5-item sample manifest, with three scenarios — (a) clean valid vocab item: Codex paste accepted → validators pass → dry-run write to `dev:content_sets/vocab/items/n5_v_001_eat` → progress entry written; (b) item with only dialect markers (e.g., يلّا): validators pass, dialect warning shown but non-blocking, accept succeeds; (c) structurally invalid item (12 missing fields): validator surfaces all 12 errors, `[a]ccept` rejected with "cannot accept — fix validation errors first", item skipped. Resume verified: second run with same manifest correctly shows `1 authored, 0 skipped, 4 pending` and starts at item 2.
+**Open Follow-up:**
+- L2.05 — hiragana mnemonic polish: walk the existing kana set using `--type=hiragana` and refresh weak EN+AR mnemonics. Live-write test against `tomodachi-dev` happens here (first real write — the service account JSON needs to be in place per scripts/README.md §1.2).
+- L2.07+ vocab/kanji/grammar manifests need to be authored — manifest pattern + format docs are at `scripts/manifests/README.md`.
+- The CLI's `--use-codex` paste flow prints the prompt to stdout (good for clipboard copy), but a `--prompt-out=<file>` flag could write to a file instead for very long prompts. Defer until real usage shows it matters.
+
+---
+
+## 2026-06-05 — L2.01 + L2.02 + L2.03 — Phase L2.A design gate locked
+**Status:** ✅ DONE
+**Scope:** Docs | Code
+**Summary:** Phase L2.A design-docs gate satisfied. Wrote `docs/LEARNING_EXPERIENCE.md` v1.6 (learner journey — onboarding, linear path, mastery, SM-2 algorithm with `reps ≥ 5` mastery threshold, retry budget, in_progress doc with `userAnswer` + `questionType` per item, exitReason-gated session-exit commit) + `docs/GAMIFICATION_DESIGN.md` v1.6 (flat XP per action, flatter `120 * N^1.8` 100-level curve, 22 badges as hybrid 16-visible + 6-surprise, soft streak with 1/3-per-month freezes + 48h grace + shared settleStreakIfNeeded transaction, unified XP-based weekly/monthly/all-time leaderboards, server-authoritative game sessions with honest threat model, optimistic UI vs server-re-grade commit rule). Both docs hardened through 5 external-agent code-review passes; ~40 findings across both addressing real architectural issues (xpEventLog forgery, game_sessions answer leak, streak settlement race, unconditional completion writes, missing userAnswer field, etc.). L2.03 then locked Firestore schemas: `docs/Tomodachi_Master_Plan.md` §4 rewritten as v2.0 covering 13 collections including new `content_sets/lessons/{lessonKey}`, `users/{uid}/in_progress/{sessionKey}`, `users/{uid}/committed_events/{eventId}`, `users/{uid}/quests/{date}`, `users/{uid}/content_feedback/*`, plus the rewritten server-only `game_sessions/{sessionId}` (read-denied + write-denied) and unified `leaderboards/{period}/{periodKey}/*`. Validators in `js/validators/content.js` (new, tracked) cover all 7 content types with key-format regexes, field-shape checks, JLPT/enum validation, kanji two-mnemonic structure, and AR dialect detection per CONTENT_GUIDELINES §5.
+**Files / Areas:** `docs/LEARNING_EXPERIENCE.md` (new, v1.6), `docs/GAMIFICATION_DESIGN.md` (new, v1.6), `docs/Tomodachi_Master_Plan.md` §4 (v1.0 → v2.0), `docs/Phases_and_Tasks.md` (L2.03 marked DONE), `js/validators/content.js` (new), `js/validators/` (new directory).
+**Verification:** `node --check js/validators/content.js` passes; smoke tests confirm valid items pass, invalid items surface all field errors, AR dialect detection catches forbidden markers, kanji two-mnemonic structure enforces `mnemonic.{en,ar}.{meaning_story,reading_story}` shape, lesson validator enforces `lessonKey` + `globalOrder` + ≤12 items.
+**Open Follow-up:**
+- L2.04 — interactive content authoring CLI (`scripts/author_content.js`) — next task. Will consume `validateContentItem(type, item)` from the new validators module.
+- L2.05+ content authoring marathon (kana mnemonics, N5 vocab, N5 kanji, N5 grammar, listening drills) gated on L2.04.
+- L2.13 lesson screen + the migration script (`scripts/migrate_v1_to_v2.js`) for v1.0→v2.0 Firestore migration both blocked on L2.04 + L2.05+ producing real content.
+- `firestore.rules` full ruleset implementation deferred to L2.13 (per Master Plan §4.16 — the access matrix is canonical, the rule file gets written when implementation begins).
+
+---
+
 ## 2026-06-01 — Phase L1 — CLOSED (L1.21)
 **Status:** ✅ PHASE COMPLETE
 **Scope:** Phase closure

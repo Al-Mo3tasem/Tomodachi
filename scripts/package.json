@@ -1,0 +1,17 @@
+{
+  "name": "tomodachi-scripts",
+  "private": true,
+  "description": "Tomodachi authoring + maintenance scripts (L2.04 content CLI, L2.11 audio gen, etc.). Separate from /functions; runs locally only.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  },
+  "scripts": {
+    "author": "node author_content.js",
+    "author:dev": "node author_content.js --env=dev",
+    "author:dry": "node author_content.js --dry-run"
+  }
+}

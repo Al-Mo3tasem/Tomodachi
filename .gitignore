@@ -17,3 +17,9 @@ audio/
 *.mp3
 *.wav
 *.ogg
+
+# L2.04 authoring CLI — local-only state + secrets (never commit)
+/scripts/node_modules/
+/scripts/progress/
+/scripts/secrets/
+/scripts/tmp/

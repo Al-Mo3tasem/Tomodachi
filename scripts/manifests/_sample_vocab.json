@@ -1,0 +1,12 @@
+{
+  "type": "vocab",
+  "jlpt": "n5",
+  "description": "Sample 5-item vocab manifest for L2.04 smoke testing. The leading underscore marks this as a sample, not real curriculum. Real N5 manifests come with L2.07.",
+  "items": [
+    { "key": "n5_v_001_eat",   "ordinal": 1, "japanese_hint": "食べる", "expected_meaning_en": "to eat",   "category": "verbs", "jlpt": "n5" },
+    { "key": "n5_v_002_drink", "ordinal": 2, "japanese_hint": "飲む",   "expected_meaning_en": "to drink", "category": "verbs", "jlpt": "n5" },
+    { "key": "n5_v_003_see",   "ordinal": 3, "japanese_hint": "見る",   "expected_meaning_en": "to see",   "category": "verbs", "jlpt": "n5" },
+    { "key": "n5_v_004_hear",  "ordinal": 4, "japanese_hint": "聞く",   "expected_meaning_en": "to hear",  "category": "verbs", "jlpt": "n5" },
+    { "key": "n5_v_005_speak", "ordinal": 5, "japanese_hint": "話す",   "expected_meaning_en": "to speak", "category": "verbs", "jlpt": "n5" }
+  ]
+}
