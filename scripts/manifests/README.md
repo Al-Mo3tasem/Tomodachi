@@ -39,8 +39,14 @@ live at [`scripts/progress/`](../progress/) per environment.
 | `items[].ordinal` | recommended | Manifest ordering (also written to the doc when relevant) |
 | `items[].japanese_hint` | optional | Hint passed into the Codex prompt template |
 | `items[].expected_meaning_en` | optional | Hint passed into the Codex prompt template |
-| `items[].category` | optional (vocab) | Defaults the `category` field |
+| `items[].category` | optional (vocab) | Hint shown in the CLI header (does not auto-fill — use `seed` for that) |
+| `items[].seed` | optional | Object of pre-filled item fields (e.g., `{glyph, romaji, row}` for kana). Appears as the default in the form walk; Enter accepts. |
 | Any extra hint fields | optional | Surfaced in the CLI header for the author |
+
+### Hints vs seed — which to use?
+
+- **Hint fields** (`japanese_hint`, `expected_meaning_en`, `topic_hint`): purely informational. The CLI shows them in the per-item header and the Codex prompt template uses them for context. **Never written to Firestore.**
+- **`seed`**: real item-field values. Merged into the item draft before the form walks. The user can override per field by typing a new value. **Written to Firestore as-is** (after the user accepts).
 
 ## Naming convention
 

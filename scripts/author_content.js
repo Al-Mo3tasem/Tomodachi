@@ -134,8 +134,13 @@ async function authorOneItem(ctx, hint) {
   if (hint.japanese_hint) console.log(color.gray(`  hint: ${hint.japanese_hint}`));
   if (hint.expected_meaning_en) console.log(color.gray(`  expected EN: ${hint.expected_meaning_en}`));
 
-  let item = { key: hint.key };
-  if (contentType === 'lesson') item = { lessonKey: hint.key };
+  // Manifest items may pre-populate item fields via a `seed` object —
+  // useful for kana where the glyph/romaji/row are deterministic and
+  // typing them 104 times would be wasteful. seed values appear as
+  // "current" defaults in the form walk; user can press Enter to accept.
+  const seed = hint.seed && typeof hint.seed === 'object' ? hint.seed : {};
+  let item = { key: hint.key, ...seed };
+  if (contentType === 'lesson') item = { lessonKey: hint.key, ...seed };
 
   // 1) Optional Codex paste-in pre-fill
   if (useCodex) {
@@ -148,6 +153,7 @@ async function authorOneItem(ctx, hint) {
     const lines = [];
     while (true) {
       const line = await ask('');
+      if (line === null) return EXIT;  // stdin closed — exit queue cleanly
       if (line === 'END') break;
       lines.push(line);
     }
@@ -160,7 +166,8 @@ async function authorOneItem(ctx, hint) {
     }
   } else {
     // 2) Manual walk
-    await walkForm(contentType, item);
+    const walkResult = await walkForm(contentType, item);
+    if (walkResult === null) return EXIT;  // EOF during form walk
   }
 
   // 3) Review + edit loop
@@ -191,7 +198,9 @@ async function authorOneItem(ctx, hint) {
     console.log(color.bold('Options:'));
     console.log(`  ${color.cyan('[a]')}ccept and write   ${color.cyan('[e]')}dit whole as JSON   ${color.cyan('[f]')}ield <n> to re-edit`);
     console.log(`  ${color.cyan('[r]')}e-validate        ${color.cyan('[s]')}kip                  ${color.cyan('[q]')}uit session`);
-    const choice = (await ask('  > ')).trim().toLowerCase();
+    const rawChoice = await ask('  > ');
+    if (rawChoice === null) return EXIT;
+    const choice = rawChoice.toLowerCase();
 
     if (choice === 'a') {
       if (!blockingResult.valid) {
@@ -216,27 +225,23 @@ async function authorOneItem(ctx, hint) {
       const numStr = choice.slice(1).trim();
       const n = parseInt(numStr, 10);
       const form = FORMS[contentType];
+      const { setPath } = await import('./lib/prompts.js');
       if (Number.isFinite(n) && n >= 1 && n <= form.length) {
         const field = form[n - 1];
         const newVal = await promptField(field, item);
-        if (newVal !== undefined) {
-          const { setPath } = await import('./lib/prompts.js');
-          setPath(item, field.path, newVal);
-        }
+        if (newVal !== undefined) setPath(item, field.path, newVal);
       } else {
         console.log(color.bold('Pick a field number:'));
         form.forEach((f, i) => {
           console.log(`  ${color.cyan(String(i + 1).padStart(2))}) ${f.label} ${color.gray('(' + f.path + ')')}`);
         });
         const pickStr = await ask('  field # > ');
+        if (pickStr === null) return EXIT;
         const pick = parseInt(pickStr, 10);
         if (Number.isFinite(pick) && pick >= 1 && pick <= form.length) {
           const field = form[pick - 1];
           const newVal = await promptField(field, item);
-          if (newVal !== undefined) {
-            const { setPath } = await import('./lib/prompts.js');
-            setPath(item, field.path, newVal);
-          }
+          if (newVal !== undefined) setPath(item, field.path, newVal);
         }
       }
       continue;
@@ -266,12 +271,12 @@ async function commitItem(ctx, item) {
   const existing = await fetchExisting(db, contentType, item);
   if (existing) {
     console.log(color.yellow(`  ⚠ ${path} already exists in ${env}.`));
-    const ans = (await ask(`  Overwrite existing doc? [y/N] `)).toLowerCase();
+    const ans = (await ask(`  Overwrite existing doc? [y/N] `) || '').toLowerCase();
     if (ans !== 'y') return SKIP;
   }
 
   if (env === 'prod') {
-    const ans = (await ask(color.red(`  [PROD] confirm write to ${path}? type 'y' to proceed: `))).trim();
+    const ans = await ask(color.red(`  [PROD] confirm write to ${path}? type 'y' to proceed: `));
     if (ans !== 'y') return SKIP;
   }
 

@@ -82,22 +82,24 @@ export function closeRL() {
   }
 }
 
+// Returns `null` on stdin EOF (callers must handle to avoid tight loops
+// when piped input is exhausted). Returns trimmed string otherwise.
 export async function ask(prompt) {
   getRL();
   if (prompt) stdout.write(prompt);
   const { value, done } = await _iter.next();
-  if (done) return '';
+  if (done) return null;
   return String(value).trim();
 }
 
-// Read multi-line until a blank line is entered. Returns an array of strings.
+// Read multi-line until a blank line OR EOF. Returns an array of strings.
 export async function askLines(prompt) {
   console.log(prompt);
   console.log(color.dim('  (one per line; blank line to finish)'));
   const lines = [];
   while (true) {
     const line = await ask(`  ${lines.length + 1}> `);
-    if (line === '') break;
+    if (line === null || line === '') break;
     lines.push(line);
   }
   return lines;
@@ -319,6 +321,7 @@ export async function promptField(field, item) {
         ? `  > [${color.cyan(String(def))}] `
         : `  > `;
       const answer = await ask(promptText);
+      if (answer === null) return null;  // EOF — caller should exit
       if (answer === '') return def === undefined ? '' : def;
       return answer;
     }
@@ -327,6 +330,7 @@ export async function promptField(field, item) {
       const def = hasCurrent ? current : resolveDefault(field, item);
       const promptText = def !== undefined ? `  > [${color.cyan(String(def))}] ` : `  > `;
       const answer = await ask(promptText);
+      if (answer === null) return null;
       if (answer === '') return def === undefined ? undefined : def;
       const n = parseInt(answer, 10);
       if (!Number.isFinite(n)) {
@@ -341,6 +345,7 @@ export async function promptField(field, item) {
       console.log(color.dim(`  options: ${field.enum.join(', ')}`));
       const promptText = def !== undefined ? `  > [${color.cyan(String(def))}] ` : `  > `;
       const answer = await ask(promptText);
+      if (answer === null) return null;
       if (answer === '') return def;
       if (!field.enum.includes(answer)) {
         console.log(color.yellow(`  ⚠ "${answer}" is not in the allowed set — keeping current/default.`));
@@ -351,7 +356,8 @@ export async function promptField(field, item) {
 
     case 'long': {
       console.log(color.dim('  Press Enter to open editor. Save and close to submit.'));
-      await ask(color.dim('  (Enter) '));
+      const trigger = await ask(color.dim('  (Enter) '));
+      if (trigger === null) return null;  // EOF
       const initial = typeof current === 'string' ? current
                     : current === undefined || current === null ? ''
                     : JSON.stringify(current, null, 2);
@@ -374,6 +380,7 @@ export async function promptField(field, item) {
       if (hasCurrent) {
         console.log(color.dim(`  current: [${current.join(', ')}]`));
         const replace = await ask(`  Replace? [y/N] `);
+        if (replace === null) return null;
         if (replace.toLowerCase() !== 'y') return current;
       }
       return askLines('  >');
@@ -393,6 +400,7 @@ export async function walkForm(contentType, item) {
   if (!form) throw new Error(`no form defined for content type "${contentType}"`);
   for (const field of form) {
     const value = await promptField(field, item);
+    if (value === null) return null;  // EOF — caller exits cleanly
     if (value !== undefined) setPath(item, field.path, value);
   }
   return item;
