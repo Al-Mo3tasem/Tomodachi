@@ -1,0 +1,1359 @@
+{
+  "type": "katakana",
+  "jlpt": "pre-n5",
+  "description": "Complete N5 katakana manifest. 104 entries: 46 base + 20 dakuten + 5 handakuten + 33 yoon. Each item seeded with glyph + romaji + row + jlpt + difficulty + audio_key. Per CONTENT_GUIDELINES Section 8 (same shape as hiragana).",
+  "items": [
+    {
+      "key": "a",
+      "ordinal": 1,
+      "japanese_hint": "ア",
+      "seed": {
+        "glyph": "ア",
+        "romaji": "a",
+        "row": "a",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/a"
+      }
+    },
+    {
+      "key": "i",
+      "ordinal": 2,
+      "japanese_hint": "イ",
+      "seed": {
+        "glyph": "イ",
+        "romaji": "i",
+        "row": "a",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/i"
+      }
+    },
+    {
+      "key": "u",
+      "ordinal": 3,
+      "japanese_hint": "ウ",
+      "seed": {
+        "glyph": "ウ",
+        "romaji": "u",
+        "row": "a",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/u"
+      }
+    },
+    {
+      "key": "e",
+      "ordinal": 4,
+      "japanese_hint": "エ",
+      "seed": {
+        "glyph": "エ",
+        "romaji": "e",
+        "row": "a",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/e"
+      }
+    },
+    {
+      "key": "o",
+      "ordinal": 5,
+      "japanese_hint": "オ",
+      "seed": {
+        "glyph": "オ",
+        "romaji": "o",
+        "row": "a",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/o"
+      }
+    },
+    {
+      "key": "ka",
+      "ordinal": 6,
+      "japanese_hint": "カ",
+      "seed": {
+        "glyph": "カ",
+        "romaji": "ka",
+        "row": "ka",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ka"
+      }
+    },
+    {
+      "key": "ki",
+      "ordinal": 7,
+      "japanese_hint": "キ",
+      "seed": {
+        "glyph": "キ",
+        "romaji": "ki",
+        "row": "ka",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ki"
+      }
+    },
+    {
+      "key": "ku",
+      "ordinal": 8,
+      "japanese_hint": "ク",
+      "seed": {
+        "glyph": "ク",
+        "romaji": "ku",
+        "row": "ka",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ku"
+      }
+    },
+    {
+      "key": "ke",
+      "ordinal": 9,
+      "japanese_hint": "ケ",
+      "seed": {
+        "glyph": "ケ",
+        "romaji": "ke",
+        "row": "ka",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ke"
+      }
+    },
+    {
+      "key": "ko",
+      "ordinal": 10,
+      "japanese_hint": "コ",
+      "seed": {
+        "glyph": "コ",
+        "romaji": "ko",
+        "row": "ka",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ko"
+      }
+    },
+    {
+      "key": "sa",
+      "ordinal": 11,
+      "japanese_hint": "サ",
+      "seed": {
+        "glyph": "サ",
+        "romaji": "sa",
+        "row": "sa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/sa"
+      }
+    },
+    {
+      "key": "shi",
+      "ordinal": 12,
+      "japanese_hint": "シ",
+      "seed": {
+        "glyph": "シ",
+        "romaji": "shi",
+        "row": "sa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/shi"
+      }
+    },
+    {
+      "key": "su",
+      "ordinal": 13,
+      "japanese_hint": "ス",
+      "seed": {
+        "glyph": "ス",
+        "romaji": "su",
+        "row": "sa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/su"
+      }
+    },
+    {
+      "key": "se",
+      "ordinal": 14,
+      "japanese_hint": "セ",
+      "seed": {
+        "glyph": "セ",
+        "romaji": "se",
+        "row": "sa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/se"
+      }
+    },
+    {
+      "key": "so",
+      "ordinal": 15,
+      "japanese_hint": "ソ",
+      "seed": {
+        "glyph": "ソ",
+        "romaji": "so",
+        "row": "sa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/so"
+      }
+    },
+    {
+      "key": "ta",
+      "ordinal": 16,
+      "japanese_hint": "タ",
+      "seed": {
+        "glyph": "タ",
+        "romaji": "ta",
+        "row": "ta",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ta"
+      }
+    },
+    {
+      "key": "chi",
+      "ordinal": 17,
+      "japanese_hint": "チ",
+      "seed": {
+        "glyph": "チ",
+        "romaji": "chi",
+        "row": "ta",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/chi"
+      }
+    },
+    {
+      "key": "tsu",
+      "ordinal": 18,
+      "japanese_hint": "ツ",
+      "seed": {
+        "glyph": "ツ",
+        "romaji": "tsu",
+        "row": "ta",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/tsu"
+      }
+    },
+    {
+      "key": "te",
+      "ordinal": 19,
+      "japanese_hint": "テ",
+      "seed": {
+        "glyph": "テ",
+        "romaji": "te",
+        "row": "ta",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/te"
+      }
+    },
+    {
+      "key": "to",
+      "ordinal": 20,
+      "japanese_hint": "ト",
+      "seed": {
+        "glyph": "ト",
+        "romaji": "to",
+        "row": "ta",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/to"
+      }
+    },
+    {
+      "key": "na",
+      "ordinal": 21,
+      "japanese_hint": "ナ",
+      "seed": {
+        "glyph": "ナ",
+        "romaji": "na",
+        "row": "na",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/na"
+      }
+    },
+    {
+      "key": "ni",
+      "ordinal": 22,
+      "japanese_hint": "ニ",
+      "seed": {
+        "glyph": "ニ",
+        "romaji": "ni",
+        "row": "na",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ni"
+      }
+    },
+    {
+      "key": "nu",
+      "ordinal": 23,
+      "japanese_hint": "ヌ",
+      "seed": {
+        "glyph": "ヌ",
+        "romaji": "nu",
+        "row": "na",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/nu"
+      }
+    },
+    {
+      "key": "ne",
+      "ordinal": 24,
+      "japanese_hint": "ネ",
+      "seed": {
+        "glyph": "ネ",
+        "romaji": "ne",
+        "row": "na",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ne"
+      }
+    },
+    {
+      "key": "no",
+      "ordinal": 25,
+      "japanese_hint": "ノ",
+      "seed": {
+        "glyph": "ノ",
+        "romaji": "no",
+        "row": "na",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/no"
+      }
+    },
+    {
+      "key": "ha",
+      "ordinal": 26,
+      "japanese_hint": "ハ",
+      "seed": {
+        "glyph": "ハ",
+        "romaji": "ha",
+        "row": "ha",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ha"
+      }
+    },
+    {
+      "key": "hi",
+      "ordinal": 27,
+      "japanese_hint": "ヒ",
+      "seed": {
+        "glyph": "ヒ",
+        "romaji": "hi",
+        "row": "ha",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/hi"
+      }
+    },
+    {
+      "key": "fu",
+      "ordinal": 28,
+      "japanese_hint": "フ",
+      "seed": {
+        "glyph": "フ",
+        "romaji": "fu",
+        "row": "ha",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/fu"
+      }
+    },
+    {
+      "key": "he",
+      "ordinal": 29,
+      "japanese_hint": "ヘ",
+      "seed": {
+        "glyph": "ヘ",
+        "romaji": "he",
+        "row": "ha",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/he"
+      }
+    },
+    {
+      "key": "ho",
+      "ordinal": 30,
+      "japanese_hint": "ホ",
+      "seed": {
+        "glyph": "ホ",
+        "romaji": "ho",
+        "row": "ha",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ho"
+      }
+    },
+    {
+      "key": "ma",
+      "ordinal": 31,
+      "japanese_hint": "マ",
+      "seed": {
+        "glyph": "マ",
+        "romaji": "ma",
+        "row": "ma",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ma"
+      }
+    },
+    {
+      "key": "mi",
+      "ordinal": 32,
+      "japanese_hint": "ミ",
+      "seed": {
+        "glyph": "ミ",
+        "romaji": "mi",
+        "row": "ma",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/mi"
+      }
+    },
+    {
+      "key": "mu",
+      "ordinal": 33,
+      "japanese_hint": "ム",
+      "seed": {
+        "glyph": "ム",
+        "romaji": "mu",
+        "row": "ma",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/mu"
+      }
+    },
+    {
+      "key": "me",
+      "ordinal": 34,
+      "japanese_hint": "メ",
+      "seed": {
+        "glyph": "メ",
+        "romaji": "me",
+        "row": "ma",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/me"
+      }
+    },
+    {
+      "key": "mo",
+      "ordinal": 35,
+      "japanese_hint": "モ",
+      "seed": {
+        "glyph": "モ",
+        "romaji": "mo",
+        "row": "ma",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/mo"
+      }
+    },
+    {
+      "key": "ya",
+      "ordinal": 36,
+      "japanese_hint": "ヤ",
+      "seed": {
+        "glyph": "ヤ",
+        "romaji": "ya",
+        "row": "ya",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ya"
+      }
+    },
+    {
+      "key": "yu",
+      "ordinal": 37,
+      "japanese_hint": "ユ",
+      "seed": {
+        "glyph": "ユ",
+        "romaji": "yu",
+        "row": "ya",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/yu"
+      }
+    },
+    {
+      "key": "yo",
+      "ordinal": 38,
+      "japanese_hint": "ヨ",
+      "seed": {
+        "glyph": "ヨ",
+        "romaji": "yo",
+        "row": "ya",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/yo"
+      }
+    },
+    {
+      "key": "ra",
+      "ordinal": 39,
+      "japanese_hint": "ラ",
+      "seed": {
+        "glyph": "ラ",
+        "romaji": "ra",
+        "row": "ra",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ra"
+      }
+    },
+    {
+      "key": "ri",
+      "ordinal": 40,
+      "japanese_hint": "リ",
+      "seed": {
+        "glyph": "リ",
+        "romaji": "ri",
+        "row": "ra",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ri"
+      }
+    },
+    {
+      "key": "ru",
+      "ordinal": 41,
+      "japanese_hint": "ル",
+      "seed": {
+        "glyph": "ル",
+        "romaji": "ru",
+        "row": "ra",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ru"
+      }
+    },
+    {
+      "key": "re",
+      "ordinal": 42,
+      "japanese_hint": "レ",
+      "seed": {
+        "glyph": "レ",
+        "romaji": "re",
+        "row": "ra",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/re"
+      }
+    },
+    {
+      "key": "ro",
+      "ordinal": 43,
+      "japanese_hint": "ロ",
+      "seed": {
+        "glyph": "ロ",
+        "romaji": "ro",
+        "row": "ra",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/ro"
+      }
+    },
+    {
+      "key": "wa",
+      "ordinal": 44,
+      "japanese_hint": "ワ",
+      "seed": {
+        "glyph": "ワ",
+        "romaji": "wa",
+        "row": "wa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/wa"
+      }
+    },
+    {
+      "key": "wo",
+      "ordinal": 45,
+      "japanese_hint": "ヲ",
+      "seed": {
+        "glyph": "ヲ",
+        "romaji": "wo",
+        "row": "wa",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/wo"
+      }
+    },
+    {
+      "key": "n",
+      "ordinal": 46,
+      "japanese_hint": "ン",
+      "seed": {
+        "glyph": "ン",
+        "romaji": "n",
+        "row": "n",
+        "jlpt": "pre-n5",
+        "difficulty": 1,
+        "audio_key": "katakana/n"
+      }
+    },
+    {
+      "key": "ga",
+      "ordinal": 47,
+      "japanese_hint": "ガ",
+      "seed": {
+        "glyph": "ガ",
+        "romaji": "ga",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/ga"
+      }
+    },
+    {
+      "key": "gi",
+      "ordinal": 48,
+      "japanese_hint": "ギ",
+      "seed": {
+        "glyph": "ギ",
+        "romaji": "gi",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/gi"
+      }
+    },
+    {
+      "key": "gu",
+      "ordinal": 49,
+      "japanese_hint": "グ",
+      "seed": {
+        "glyph": "グ",
+        "romaji": "gu",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/gu"
+      }
+    },
+    {
+      "key": "ge",
+      "ordinal": 50,
+      "japanese_hint": "ゲ",
+      "seed": {
+        "glyph": "ゲ",
+        "romaji": "ge",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/ge"
+      }
+    },
+    {
+      "key": "go",
+      "ordinal": 51,
+      "japanese_hint": "ゴ",
+      "seed": {
+        "glyph": "ゴ",
+        "romaji": "go",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/go"
+      }
+    },
+    {
+      "key": "za",
+      "ordinal": 52,
+      "japanese_hint": "ザ",
+      "seed": {
+        "glyph": "ザ",
+        "romaji": "za",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/za"
+      }
+    },
+    {
+      "key": "ji",
+      "ordinal": 53,
+      "japanese_hint": "ジ",
+      "seed": {
+        "glyph": "ジ",
+        "romaji": "ji",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/ji"
+      }
+    },
+    {
+      "key": "zu",
+      "ordinal": 54,
+      "japanese_hint": "ズ",
+      "seed": {
+        "glyph": "ズ",
+        "romaji": "zu",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/zu"
+      }
+    },
+    {
+      "key": "ze",
+      "ordinal": 55,
+      "japanese_hint": "ゼ",
+      "seed": {
+        "glyph": "ゼ",
+        "romaji": "ze",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/ze"
+      }
+    },
+    {
+      "key": "zo",
+      "ordinal": 56,
+      "japanese_hint": "ゾ",
+      "seed": {
+        "glyph": "ゾ",
+        "romaji": "zo",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/zo"
+      }
+    },
+    {
+      "key": "da",
+      "ordinal": 57,
+      "japanese_hint": "ダ",
+      "seed": {
+        "glyph": "ダ",
+        "romaji": "da",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/da"
+      }
+    },
+    {
+      "key": "di",
+      "ordinal": 58,
+      "japanese_hint": "ヂ",
+      "seed": {
+        "glyph": "ヂ",
+        "romaji": "di",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/di"
+      }
+    },
+    {
+      "key": "du",
+      "ordinal": 59,
+      "japanese_hint": "ヅ",
+      "seed": {
+        "glyph": "ヅ",
+        "romaji": "du",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/du"
+      }
+    },
+    {
+      "key": "de",
+      "ordinal": 60,
+      "japanese_hint": "デ",
+      "seed": {
+        "glyph": "デ",
+        "romaji": "de",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/de"
+      }
+    },
+    {
+      "key": "do",
+      "ordinal": 61,
+      "japanese_hint": "ド",
+      "seed": {
+        "glyph": "ド",
+        "romaji": "do",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/do"
+      }
+    },
+    {
+      "key": "ba",
+      "ordinal": 62,
+      "japanese_hint": "バ",
+      "seed": {
+        "glyph": "バ",
+        "romaji": "ba",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/ba"
+      }
+    },
+    {
+      "key": "bi",
+      "ordinal": 63,
+      "japanese_hint": "ビ",
+      "seed": {
+        "glyph": "ビ",
+        "romaji": "bi",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/bi"
+      }
+    },
+    {
+      "key": "bu",
+      "ordinal": 64,
+      "japanese_hint": "ブ",
+      "seed": {
+        "glyph": "ブ",
+        "romaji": "bu",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/bu"
+      }
+    },
+    {
+      "key": "be",
+      "ordinal": 65,
+      "japanese_hint": "ベ",
+      "seed": {
+        "glyph": "ベ",
+        "romaji": "be",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/be"
+      }
+    },
+    {
+      "key": "bo",
+      "ordinal": 66,
+      "japanese_hint": "ボ",
+      "seed": {
+        "glyph": "ボ",
+        "romaji": "bo",
+        "row": "dakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/bo"
+      }
+    },
+    {
+      "key": "pa",
+      "ordinal": 67,
+      "japanese_hint": "パ",
+      "seed": {
+        "glyph": "パ",
+        "romaji": "pa",
+        "row": "handakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/pa"
+      }
+    },
+    {
+      "key": "pi",
+      "ordinal": 68,
+      "japanese_hint": "ピ",
+      "seed": {
+        "glyph": "ピ",
+        "romaji": "pi",
+        "row": "handakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/pi"
+      }
+    },
+    {
+      "key": "pu",
+      "ordinal": 69,
+      "japanese_hint": "プ",
+      "seed": {
+        "glyph": "プ",
+        "romaji": "pu",
+        "row": "handakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/pu"
+      }
+    },
+    {
+      "key": "pe",
+      "ordinal": 70,
+      "japanese_hint": "ペ",
+      "seed": {
+        "glyph": "ペ",
+        "romaji": "pe",
+        "row": "handakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/pe"
+      }
+    },
+    {
+      "key": "po",
+      "ordinal": 71,
+      "japanese_hint": "ポ",
+      "seed": {
+        "glyph": "ポ",
+        "romaji": "po",
+        "row": "handakuten",
+        "jlpt": "pre-n5",
+        "difficulty": 2,
+        "audio_key": "katakana/po"
+      }
+    },
+    {
+      "key": "kya",
+      "ordinal": 72,
+      "japanese_hint": "キャ",
+      "seed": {
+        "glyph": "キャ",
+        "romaji": "kya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/kya"
+      }
+    },
+    {
+      "key": "kyu",
+      "ordinal": 73,
+      "japanese_hint": "キュ",
+      "seed": {
+        "glyph": "キュ",
+        "romaji": "kyu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/kyu"
+      }
+    },
+    {
+      "key": "kyo",
+      "ordinal": 74,
+      "japanese_hint": "キョ",
+      "seed": {
+        "glyph": "キョ",
+        "romaji": "kyo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/kyo"
+      }
+    },
+    {
+      "key": "sha",
+      "ordinal": 75,
+      "japanese_hint": "シャ",
+      "seed": {
+        "glyph": "シャ",
+        "romaji": "sha",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/sha"
+      }
+    },
+    {
+      "key": "shu",
+      "ordinal": 76,
+      "japanese_hint": "シュ",
+      "seed": {
+        "glyph": "シュ",
+        "romaji": "shu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/shu"
+      }
+    },
+    {
+      "key": "sho",
+      "ordinal": 77,
+      "japanese_hint": "ショ",
+      "seed": {
+        "glyph": "ショ",
+        "romaji": "sho",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/sho"
+      }
+    },
+    {
+      "key": "cha",
+      "ordinal": 78,
+      "japanese_hint": "チャ",
+      "seed": {
+        "glyph": "チャ",
+        "romaji": "cha",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/cha"
+      }
+    },
+    {
+      "key": "chu",
+      "ordinal": 79,
+      "japanese_hint": "チュ",
+      "seed": {
+        "glyph": "チュ",
+        "romaji": "chu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/chu"
+      }
+    },
+    {
+      "key": "cho",
+      "ordinal": 80,
+      "japanese_hint": "チョ",
+      "seed": {
+        "glyph": "チョ",
+        "romaji": "cho",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/cho"
+      }
+    },
+    {
+      "key": "nya",
+      "ordinal": 81,
+      "japanese_hint": "ニャ",
+      "seed": {
+        "glyph": "ニャ",
+        "romaji": "nya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/nya"
+      }
+    },
+    {
+      "key": "nyu",
+      "ordinal": 82,
+      "japanese_hint": "ニュ",
+      "seed": {
+        "glyph": "ニュ",
+        "romaji": "nyu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/nyu"
+      }
+    },
+    {
+      "key": "nyo",
+      "ordinal": 83,
+      "japanese_hint": "ニョ",
+      "seed": {
+        "glyph": "ニョ",
+        "romaji": "nyo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/nyo"
+      }
+    },
+    {
+      "key": "hya",
+      "ordinal": 84,
+      "japanese_hint": "ヒャ",
+      "seed": {
+        "glyph": "ヒャ",
+        "romaji": "hya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/hya"
+      }
+    },
+    {
+      "key": "hyu",
+      "ordinal": 85,
+      "japanese_hint": "ヒュ",
+      "seed": {
+        "glyph": "ヒュ",
+        "romaji": "hyu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/hyu"
+      }
+    },
+    {
+      "key": "hyo",
+      "ordinal": 86,
+      "japanese_hint": "ヒョ",
+      "seed": {
+        "glyph": "ヒョ",
+        "romaji": "hyo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/hyo"
+      }
+    },
+    {
+      "key": "mya",
+      "ordinal": 87,
+      "japanese_hint": "ミャ",
+      "seed": {
+        "glyph": "ミャ",
+        "romaji": "mya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/mya"
+      }
+    },
+    {
+      "key": "myu",
+      "ordinal": 88,
+      "japanese_hint": "ミュ",
+      "seed": {
+        "glyph": "ミュ",
+        "romaji": "myu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/myu"
+      }
+    },
+    {
+      "key": "myo",
+      "ordinal": 89,
+      "japanese_hint": "ミョ",
+      "seed": {
+        "glyph": "ミョ",
+        "romaji": "myo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/myo"
+      }
+    },
+    {
+      "key": "rya",
+      "ordinal": 90,
+      "japanese_hint": "リャ",
+      "seed": {
+        "glyph": "リャ",
+        "romaji": "rya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/rya"
+      }
+    },
+    {
+      "key": "ryu",
+      "ordinal": 91,
+      "japanese_hint": "リュ",
+      "seed": {
+        "glyph": "リュ",
+        "romaji": "ryu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/ryu"
+      }
+    },
+    {
+      "key": "ryo",
+      "ordinal": 92,
+      "japanese_hint": "リョ",
+      "seed": {
+        "glyph": "リョ",
+        "romaji": "ryo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/ryo"
+      }
+    },
+    {
+      "key": "gya",
+      "ordinal": 93,
+      "japanese_hint": "ギャ",
+      "seed": {
+        "glyph": "ギャ",
+        "romaji": "gya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/gya"
+      }
+    },
+    {
+      "key": "gyu",
+      "ordinal": 94,
+      "japanese_hint": "ギュ",
+      "seed": {
+        "glyph": "ギュ",
+        "romaji": "gyu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/gyu"
+      }
+    },
+    {
+      "key": "gyo",
+      "ordinal": 95,
+      "japanese_hint": "ギョ",
+      "seed": {
+        "glyph": "ギョ",
+        "romaji": "gyo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/gyo"
+      }
+    },
+    {
+      "key": "ja",
+      "ordinal": 96,
+      "japanese_hint": "ジャ",
+      "seed": {
+        "glyph": "ジャ",
+        "romaji": "ja",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/ja"
+      }
+    },
+    {
+      "key": "ju",
+      "ordinal": 97,
+      "japanese_hint": "ジュ",
+      "seed": {
+        "glyph": "ジュ",
+        "romaji": "ju",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/ju"
+      }
+    },
+    {
+      "key": "jo",
+      "ordinal": 98,
+      "japanese_hint": "ジョ",
+      "seed": {
+        "glyph": "ジョ",
+        "romaji": "jo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/jo"
+      }
+    },
+    {
+      "key": "bya",
+      "ordinal": 99,
+      "japanese_hint": "ビャ",
+      "seed": {
+        "glyph": "ビャ",
+        "romaji": "bya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/bya"
+      }
+    },
+    {
+      "key": "byu",
+      "ordinal": 100,
+      "japanese_hint": "ビュ",
+      "seed": {
+        "glyph": "ビュ",
+        "romaji": "byu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/byu"
+      }
+    },
+    {
+      "key": "byo",
+      "ordinal": 101,
+      "japanese_hint": "ビョ",
+      "seed": {
+        "glyph": "ビョ",
+        "romaji": "byo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/byo"
+      }
+    },
+    {
+      "key": "pya",
+      "ordinal": 102,
+      "japanese_hint": "ピャ",
+      "seed": {
+        "glyph": "ピャ",
+        "romaji": "pya",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/pya"
+      }
+    },
+    {
+      "key": "pyu",
+      "ordinal": 103,
+      "japanese_hint": "ピュ",
+      "seed": {
+        "glyph": "ピュ",
+        "romaji": "pyu",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/pyu"
+      }
+    },
+    {
+      "key": "pyo",
+      "ordinal": 104,
+      "japanese_hint": "ピョ",
+      "seed": {
+        "glyph": "ピョ",
+        "romaji": "pyo",
+        "row": "yoon",
+        "jlpt": "pre-n5",
+        "difficulty": 3,
+        "audio_key": "katakana/pyo"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1140 @@
+{
+  "type": "kanji",
+  "jlpt": "n5",
+  "description": "JLPT N5 kanji manifest (103 entries). Each item seeded with kanji glyph + jlpt + ordinal. Codex authors readings, en/ar meanings, two-mnemonic structure (meaning_story + reading_story per locale), stroke count, radicals[], example_vocab_keys[]. Per CONTENT_GUIDELINES Section 10.",
+  "items": [
+    {
+      "key": "k_n5_001_one",
+      "ordinal": 1,
+      "japanese_hint": "一",
+      "expected_meaning_en": "one",
+      "seed": {
+        "kanji": "一",
+        "jlpt": "n5",
+        "ordinal": 1
+      }
+    },
+    {
+      "key": "k_n5_002_two",
+      "ordinal": 2,
+      "japanese_hint": "二",
+      "expected_meaning_en": "two",
+      "seed": {
+        "kanji": "二",
+        "jlpt": "n5",
+        "ordinal": 2
+      }
+    },
+    {
+      "key": "k_n5_003_three",
+      "ordinal": 3,
+      "japanese_hint": "三",
+      "expected_meaning_en": "three",
+      "seed": {
+        "kanji": "三",
+        "jlpt": "n5",
+        "ordinal": 3
+      }
+    },
+    {
+      "key": "k_n5_004_four",
+      "ordinal": 4,
+      "japanese_hint": "四",
+      "expected_meaning_en": "four",
+      "seed": {
+        "kanji": "四",
+        "jlpt": "n5",
+        "ordinal": 4
+      }
+    },
+    {
+      "key": "k_n5_005_five",
+      "ordinal": 5,
+      "japanese_hint": "五",
+      "expected_meaning_en": "five",
+      "seed": {
+        "kanji": "五",
+        "jlpt": "n5",
+        "ordinal": 5
+      }
+    },
+    {
+      "key": "k_n5_006_six",
+      "ordinal": 6,
+      "japanese_hint": "六",
+      "expected_meaning_en": "six",
+      "seed": {
+        "kanji": "六",
+        "jlpt": "n5",
+        "ordinal": 6
+      }
+    },
+    {
+      "key": "k_n5_007_seven",
+      "ordinal": 7,
+      "japanese_hint": "七",
+      "expected_meaning_en": "seven",
+      "seed": {
+        "kanji": "七",
+        "jlpt": "n5",
+        "ordinal": 7
+      }
+    },
+    {
+      "key": "k_n5_008_eight",
+      "ordinal": 8,
+      "japanese_hint": "八",
+      "expected_meaning_en": "eight",
+      "seed": {
+        "kanji": "八",
+        "jlpt": "n5",
+        "ordinal": 8
+      }
+    },
+    {
+      "key": "k_n5_009_nine",
+      "ordinal": 9,
+      "japanese_hint": "九",
+      "expected_meaning_en": "nine",
+      "seed": {
+        "kanji": "九",
+        "jlpt": "n5",
+        "ordinal": 9
+      }
+    },
+    {
+      "key": "k_n5_010_ten",
+      "ordinal": 10,
+      "japanese_hint": "十",
+      "expected_meaning_en": "ten",
+      "seed": {
+        "kanji": "十",
+        "jlpt": "n5",
+        "ordinal": 10
+      }
+    },
+    {
+      "key": "k_n5_011_hundred",
+      "ordinal": 11,
+      "japanese_hint": "百",
+      "expected_meaning_en": "hundred",
+      "seed": {
+        "kanji": "百",
+        "jlpt": "n5",
+        "ordinal": 11
+      }
+    },
+    {
+      "key": "k_n5_012_thousand",
+      "ordinal": 12,
+      "japanese_hint": "千",
+      "expected_meaning_en": "thousand",
+      "seed": {
+        "kanji": "千",
+        "jlpt": "n5",
+        "ordinal": 12
+      }
+    },
+    {
+      "key": "k_n5_013_ten_thousand",
+      "ordinal": 13,
+      "japanese_hint": "万",
+      "expected_meaning_en": "ten thousand",
+      "seed": {
+        "kanji": "万",
+        "jlpt": "n5",
+        "ordinal": 13
+      }
+    },
+    {
+      "key": "k_n5_014_yen",
+      "ordinal": 14,
+      "japanese_hint": "円",
+      "expected_meaning_en": "yen",
+      "seed": {
+        "kanji": "円",
+        "jlpt": "n5",
+        "ordinal": 14
+      }
+    },
+    {
+      "key": "k_n5_015_time",
+      "ordinal": 15,
+      "japanese_hint": "時",
+      "expected_meaning_en": "time",
+      "seed": {
+        "kanji": "時",
+        "jlpt": "n5",
+        "ordinal": 15
+      }
+    },
+    {
+      "key": "k_n5_016_day",
+      "ordinal": 16,
+      "japanese_hint": "日",
+      "expected_meaning_en": "day",
+      "seed": {
+        "kanji": "日",
+        "jlpt": "n5",
+        "ordinal": 16
+      }
+    },
+    {
+      "key": "k_n5_017_month",
+      "ordinal": 17,
+      "japanese_hint": "月",
+      "expected_meaning_en": "month",
+      "seed": {
+        "kanji": "月",
+        "jlpt": "n5",
+        "ordinal": 17
+      }
+    },
+    {
+      "key": "k_n5_018_year",
+      "ordinal": 18,
+      "japanese_hint": "年",
+      "expected_meaning_en": "year",
+      "seed": {
+        "kanji": "年",
+        "jlpt": "n5",
+        "ordinal": 18
+      }
+    },
+    {
+      "key": "k_n5_019_what",
+      "ordinal": 19,
+      "japanese_hint": "何",
+      "expected_meaning_en": "what",
+      "seed": {
+        "kanji": "何",
+        "jlpt": "n5",
+        "ordinal": 19
+      }
+    },
+    {
+      "key": "k_n5_020_above",
+      "ordinal": 20,
+      "japanese_hint": "上",
+      "expected_meaning_en": "above",
+      "seed": {
+        "kanji": "上",
+        "jlpt": "n5",
+        "ordinal": 20
+      }
+    },
+    {
+      "key": "k_n5_021_below",
+      "ordinal": 21,
+      "japanese_hint": "下",
+      "expected_meaning_en": "below",
+      "seed": {
+        "kanji": "下",
+        "jlpt": "n5",
+        "ordinal": 21
+      }
+    },
+    {
+      "key": "k_n5_022_middle",
+      "ordinal": 22,
+      "japanese_hint": "中",
+      "expected_meaning_en": "middle",
+      "seed": {
+        "kanji": "中",
+        "jlpt": "n5",
+        "ordinal": 22
+      }
+    },
+    {
+      "key": "k_n5_023_half",
+      "ordinal": 23,
+      "japanese_hint": "半",
+      "expected_meaning_en": "half",
+      "seed": {
+        "kanji": "半",
+        "jlpt": "n5",
+        "ordinal": 23
+      }
+    },
+    {
+      "key": "k_n5_024_mountain",
+      "ordinal": 24,
+      "japanese_hint": "山",
+      "expected_meaning_en": "mountain",
+      "seed": {
+        "kanji": "山",
+        "jlpt": "n5",
+        "ordinal": 24
+      }
+    },
+    {
+      "key": "k_n5_025_river",
+      "ordinal": 25,
+      "japanese_hint": "川",
+      "expected_meaning_en": "river",
+      "seed": {
+        "kanji": "川",
+        "jlpt": "n5",
+        "ordinal": 25
+      }
+    },
+    {
+      "key": "k_n5_026_origin",
+      "ordinal": 26,
+      "japanese_hint": "元",
+      "expected_meaning_en": "origin",
+      "seed": {
+        "kanji": "元",
+        "jlpt": "n5",
+        "ordinal": 26
+      }
+    },
+    {
+      "key": "k_n5_027_spirit",
+      "ordinal": 27,
+      "japanese_hint": "気",
+      "expected_meaning_en": "spirit",
+      "seed": {
+        "kanji": "気",
+        "jlpt": "n5",
+        "ordinal": 27
+      }
+    },
+    {
+      "key": "k_n5_028_heaven",
+      "ordinal": 28,
+      "japanese_hint": "天",
+      "expected_meaning_en": "heaven",
+      "seed": {
+        "kanji": "天",
+        "jlpt": "n5",
+        "ordinal": 28
+      }
+    },
+    {
+      "key": "k_n5_029_private",
+      "ordinal": 29,
+      "japanese_hint": "私",
+      "expected_meaning_en": "private",
+      "seed": {
+        "kanji": "私",
+        "jlpt": "n5",
+        "ordinal": 29
+      }
+    },
+    {
+      "key": "k_n5_030_now",
+      "ordinal": 30,
+      "japanese_hint": "今",
+      "expected_meaning_en": "now",
+      "seed": {
+        "kanji": "今",
+        "jlpt": "n5",
+        "ordinal": 30
+      }
+    },
+    {
+      "key": "k_n5_031_father",
+      "ordinal": 31,
+      "japanese_hint": "父",
+      "expected_meaning_en": "father",
+      "seed": {
+        "kanji": "父",
+        "jlpt": "n5",
+        "ordinal": 31
+      }
+    },
+    {
+      "key": "k_n5_032_mother",
+      "ordinal": 32,
+      "japanese_hint": "母",
+      "expected_meaning_en": "mother",
+      "seed": {
+        "kanji": "母",
+        "jlpt": "n5",
+        "ordinal": 32
+      }
+    },
+    {
+      "key": "k_n5_033_friend",
+      "ordinal": 33,
+      "japanese_hint": "友",
+      "expected_meaning_en": "friend",
+      "seed": {
+        "kanji": "友",
+        "jlpt": "n5",
+        "ordinal": 33
+      }
+    },
+    {
+      "key": "k_n5_034_person",
+      "ordinal": 34,
+      "japanese_hint": "人",
+      "expected_meaning_en": "person",
+      "seed": {
+        "kanji": "人",
+        "jlpt": "n5",
+        "ordinal": 34
+      }
+    },
+    {
+      "key": "k_n5_035_name",
+      "ordinal": 35,
+      "japanese_hint": "名",
+      "expected_meaning_en": "name",
+      "seed": {
+        "kanji": "名",
+        "jlpt": "n5",
+        "ordinal": 35
+      }
+    },
+    {
+      "key": "k_n5_036_previous",
+      "ordinal": 36,
+      "japanese_hint": "先",
+      "expected_meaning_en": "previous",
+      "seed": {
+        "kanji": "先",
+        "jlpt": "n5",
+        "ordinal": 36
+      }
+    },
+    {
+      "key": "k_n5_037_life",
+      "ordinal": 37,
+      "japanese_hint": "生",
+      "expected_meaning_en": "life",
+      "seed": {
+        "kanji": "生",
+        "jlpt": "n5",
+        "ordinal": 37
+      }
+    },
+    {
+      "key": "k_n5_038_study",
+      "ordinal": 38,
+      "japanese_hint": "学",
+      "expected_meaning_en": "study",
+      "seed": {
+        "kanji": "学",
+        "jlpt": "n5",
+        "ordinal": 38
+      }
+    },
+    {
+      "key": "k_n5_039_school",
+      "ordinal": 39,
+      "japanese_hint": "校",
+      "expected_meaning_en": "school",
+      "seed": {
+        "kanji": "校",
+        "jlpt": "n5",
+        "ordinal": 39
+      }
+    },
+    {
+      "key": "k_n5_040_man",
+      "ordinal": 40,
+      "japanese_hint": "男",
+      "expected_meaning_en": "man",
+      "seed": {
+        "kanji": "男",
+        "jlpt": "n5",
+        "ordinal": 40
+      }
+    },
+    {
+      "key": "k_n5_041_woman",
+      "ordinal": 41,
+      "japanese_hint": "女",
+      "expected_meaning_en": "woman",
+      "seed": {
+        "kanji": "女",
+        "jlpt": "n5",
+        "ordinal": 41
+      }
+    },
+    {
+      "key": "k_n5_042_child",
+      "ordinal": 42,
+      "japanese_hint": "子",
+      "expected_meaning_en": "child",
+      "seed": {
+        "kanji": "子",
+        "jlpt": "n5",
+        "ordinal": 42
+      }
+    },
+    {
+      "key": "k_n5_043_eye",
+      "ordinal": 43,
+      "japanese_hint": "目",
+      "expected_meaning_en": "eye",
+      "seed": {
+        "kanji": "目",
+        "jlpt": "n5",
+        "ordinal": 43
+      }
+    },
+    {
+      "key": "k_n5_044_ear",
+      "ordinal": 44,
+      "japanese_hint": "耳",
+      "expected_meaning_en": "ear",
+      "seed": {
+        "kanji": "耳",
+        "jlpt": "n5",
+        "ordinal": 44
+      }
+    },
+    {
+      "key": "k_n5_045_mouth",
+      "ordinal": 45,
+      "japanese_hint": "口",
+      "expected_meaning_en": "mouth",
+      "seed": {
+        "kanji": "口",
+        "jlpt": "n5",
+        "ordinal": 45
+      }
+    },
+    {
+      "key": "k_n5_046_hand",
+      "ordinal": 46,
+      "japanese_hint": "手",
+      "expected_meaning_en": "hand",
+      "seed": {
+        "kanji": "手",
+        "jlpt": "n5",
+        "ordinal": 46
+      }
+    },
+    {
+      "key": "k_n5_047_foot",
+      "ordinal": 47,
+      "japanese_hint": "足",
+      "expected_meaning_en": "foot",
+      "seed": {
+        "kanji": "足",
+        "jlpt": "n5",
+        "ordinal": 47
+      }
+    },
+    {
+      "key": "k_n5_048_big",
+      "ordinal": 48,
+      "japanese_hint": "大",
+      "expected_meaning_en": "big",
+      "seed": {
+        "kanji": "大",
+        "jlpt": "n5",
+        "ordinal": 48
+      }
+    },
+    {
+      "key": "k_n5_049_small",
+      "ordinal": 49,
+      "japanese_hint": "小",
+      "expected_meaning_en": "small",
+      "seed": {
+        "kanji": "小",
+        "jlpt": "n5",
+        "ordinal": 49
+      }
+    },
+    {
+      "key": "k_n5_050_many",
+      "ordinal": 50,
+      "japanese_hint": "多",
+      "expected_meaning_en": "many",
+      "seed": {
+        "kanji": "多",
+        "jlpt": "n5",
+        "ordinal": 50
+      }
+    },
+    {
+      "key": "k_n5_051_few",
+      "ordinal": 51,
+      "japanese_hint": "少",
+      "expected_meaning_en": "few",
+      "seed": {
+        "kanji": "少",
+        "jlpt": "n5",
+        "ordinal": 51
+      }
+    },
+    {
+      "key": "k_n5_052_old",
+      "ordinal": 52,
+      "japanese_hint": "古",
+      "expected_meaning_en": "old",
+      "seed": {
+        "kanji": "古",
+        "jlpt": "n5",
+        "ordinal": 52
+      }
+    },
+    {
+      "key": "k_n5_053_new",
+      "ordinal": 53,
+      "japanese_hint": "新",
+      "expected_meaning_en": "new",
+      "seed": {
+        "kanji": "新",
+        "jlpt": "n5",
+        "ordinal": 53
+      }
+    },
+    {
+      "key": "k_n5_054_come",
+      "ordinal": 54,
+      "japanese_hint": "来",
+      "expected_meaning_en": "come",
+      "seed": {
+        "kanji": "来",
+        "jlpt": "n5",
+        "ordinal": 54
+      }
+    },
+    {
+      "key": "k_n5_055_go",
+      "ordinal": 55,
+      "japanese_hint": "行",
+      "expected_meaning_en": "go",
+      "seed": {
+        "kanji": "行",
+        "jlpt": "n5",
+        "ordinal": 55
+      }
+    },
+    {
+      "key": "k_n5_056_return",
+      "ordinal": 56,
+      "japanese_hint": "帰",
+      "expected_meaning_en": "return",
+      "seed": {
+        "kanji": "帰",
+        "jlpt": "n5",
+        "ordinal": 56
+      }
+    },
+    {
+      "key": "k_n5_057_see",
+      "ordinal": 57,
+      "japanese_hint": "見",
+      "expected_meaning_en": "see",
+      "seed": {
+        "kanji": "見",
+        "jlpt": "n5",
+        "ordinal": 57
+      }
+    },
+    {
+      "key": "k_n5_058_hear",
+      "ordinal": 58,
+      "japanese_hint": "聞",
+      "expected_meaning_en": "hear",
+      "seed": {
+        "kanji": "聞",
+        "jlpt": "n5",
+        "ordinal": 58
+      }
+    },
+    {
+      "key": "k_n5_059_say",
+      "ordinal": 59,
+      "japanese_hint": "言",
+      "expected_meaning_en": "say",
+      "seed": {
+        "kanji": "言",
+        "jlpt": "n5",
+        "ordinal": 59
+      }
+    },
+    {
+      "key": "k_n5_060_eat",
+      "ordinal": 60,
+      "japanese_hint": "食",
+      "expected_meaning_en": "eat",
+      "seed": {
+        "kanji": "食",
+        "jlpt": "n5",
+        "ordinal": 60
+      }
+    },
+    {
+      "key": "k_n5_061_drink",
+      "ordinal": 61,
+      "japanese_hint": "飲",
+      "expected_meaning_en": "drink",
+      "seed": {
+        "kanji": "飲",
+        "jlpt": "n5",
+        "ordinal": 61
+      }
+    },
+    {
+      "key": "k_n5_062_buy",
+      "ordinal": 62,
+      "japanese_hint": "買",
+      "expected_meaning_en": "buy",
+      "seed": {
+        "kanji": "買",
+        "jlpt": "n5",
+        "ordinal": 62
+      }
+    },
+    {
+      "key": "k_n5_063_write",
+      "ordinal": 63,
+      "japanese_hint": "書",
+      "expected_meaning_en": "write",
+      "seed": {
+        "kanji": "書",
+        "jlpt": "n5",
+        "ordinal": 63
+      }
+    },
+    {
+      "key": "k_n5_064_read",
+      "ordinal": 64,
+      "japanese_hint": "読",
+      "expected_meaning_en": "read",
+      "seed": {
+        "kanji": "読",
+        "jlpt": "n5",
+        "ordinal": 64
+      }
+    },
+    {
+      "key": "k_n5_065_talk",
+      "ordinal": 65,
+      "japanese_hint": "話",
+      "expected_meaning_en": "talk",
+      "seed": {
+        "kanji": "話",
+        "jlpt": "n5",
+        "ordinal": 65
+      }
+    },
+    {
+      "key": "k_n5_066_enter",
+      "ordinal": 66,
+      "japanese_hint": "入",
+      "expected_meaning_en": "enter",
+      "seed": {
+        "kanji": "入",
+        "jlpt": "n5",
+        "ordinal": 66
+      }
+    },
+    {
+      "key": "k_n5_067_exit",
+      "ordinal": 67,
+      "japanese_hint": "出",
+      "expected_meaning_en": "exit",
+      "seed": {
+        "kanji": "出",
+        "jlpt": "n5",
+        "ordinal": 67
+      }
+    },
+    {
+      "key": "k_n5_068_stand",
+      "ordinal": 68,
+      "japanese_hint": "立",
+      "expected_meaning_en": "stand",
+      "seed": {
+        "kanji": "立",
+        "jlpt": "n5",
+        "ordinal": 68
+      }
+    },
+    {
+      "key": "k_n5_069_rest",
+      "ordinal": 69,
+      "japanese_hint": "休",
+      "expected_meaning_en": "rest",
+      "seed": {
+        "kanji": "休",
+        "jlpt": "n5",
+        "ordinal": 69
+      }
+    },
+    {
+      "key": "k_n5_070_tall",
+      "ordinal": 70,
+      "japanese_hint": "高",
+      "expected_meaning_en": "tall",
+      "seed": {
+        "kanji": "高",
+        "jlpt": "n5",
+        "ordinal": 70
+      }
+    },
+    {
+      "key": "k_n5_071_cheap",
+      "ordinal": 71,
+      "japanese_hint": "安",
+      "expected_meaning_en": "cheap",
+      "seed": {
+        "kanji": "安",
+        "jlpt": "n5",
+        "ordinal": 71
+      }
+    },
+    {
+      "key": "k_n5_072_long",
+      "ordinal": 72,
+      "japanese_hint": "長",
+      "expected_meaning_en": "long",
+      "seed": {
+        "kanji": "長",
+        "jlpt": "n5",
+        "ordinal": 72
+      }
+    },
+    {
+      "key": "k_n5_073_white",
+      "ordinal": 73,
+      "japanese_hint": "白",
+      "expected_meaning_en": "white",
+      "seed": {
+        "kanji": "白",
+        "jlpt": "n5",
+        "ordinal": 73
+      }
+    },
+    {
+      "key": "k_n5_074_country",
+      "ordinal": 74,
+      "japanese_hint": "国",
+      "expected_meaning_en": "country",
+      "seed": {
+        "kanji": "国",
+        "jlpt": "n5",
+        "ordinal": 74
+      }
+    },
+    {
+      "key": "k_n5_075_east",
+      "ordinal": 75,
+      "japanese_hint": "東",
+      "expected_meaning_en": "east",
+      "seed": {
+        "kanji": "東",
+        "jlpt": "n5",
+        "ordinal": 75
+      }
+    },
+    {
+      "key": "k_n5_076_west",
+      "ordinal": 76,
+      "japanese_hint": "西",
+      "expected_meaning_en": "west",
+      "seed": {
+        "kanji": "西",
+        "jlpt": "n5",
+        "ordinal": 76
+      }
+    },
+    {
+      "key": "k_n5_077_south",
+      "ordinal": 77,
+      "japanese_hint": "南",
+      "expected_meaning_en": "south",
+      "seed": {
+        "kanji": "南",
+        "jlpt": "n5",
+        "ordinal": 77
+      }
+    },
+    {
+      "key": "k_n5_078_north",
+      "ordinal": 78,
+      "japanese_hint": "北",
+      "expected_meaning_en": "north",
+      "seed": {
+        "kanji": "北",
+        "jlpt": "n5",
+        "ordinal": 78
+      }
+    },
+    {
+      "key": "k_n5_079_outside",
+      "ordinal": 79,
+      "japanese_hint": "外",
+      "expected_meaning_en": "outside",
+      "seed": {
+        "kanji": "外",
+        "jlpt": "n5",
+        "ordinal": 79
+      }
+    },
+    {
+      "key": "k_n5_080_road",
+      "ordinal": 80,
+      "japanese_hint": "道",
+      "expected_meaning_en": "road",
+      "seed": {
+        "kanji": "道",
+        "jlpt": "n5",
+        "ordinal": 80
+      }
+    },
+    {
+      "key": "k_n5_081_station",
+      "ordinal": 81,
+      "japanese_hint": "駅",
+      "expected_meaning_en": "station",
+      "seed": {
+        "kanji": "駅",
+        "jlpt": "n5",
+        "ordinal": 81
+      }
+    },
+    {
+      "key": "k_n5_082_shop",
+      "ordinal": 82,
+      "japanese_hint": "店",
+      "expected_meaning_en": "shop",
+      "seed": {
+        "kanji": "店",
+        "jlpt": "n5",
+        "ordinal": 82
+      }
+    },
+    {
+      "key": "k_n5_083_house",
+      "ordinal": 83,
+      "japanese_hint": "家",
+      "expected_meaning_en": "house",
+      "seed": {
+        "kanji": "家",
+        "jlpt": "n5",
+        "ordinal": 83
+      }
+    },
+    {
+      "key": "k_n5_084_meeting",
+      "ordinal": 84,
+      "japanese_hint": "会",
+      "expected_meaning_en": "meeting",
+      "seed": {
+        "kanji": "会",
+        "jlpt": "n5",
+        "ordinal": 84
+      }
+    },
+    {
+      "key": "k_n5_085_company",
+      "ordinal": 85,
+      "japanese_hint": "社",
+      "expected_meaning_en": "company",
+      "seed": {
+        "kanji": "社",
+        "jlpt": "n5",
+        "ordinal": 85
+      }
+    },
+    {
+      "key": "k_n5_086_fire",
+      "ordinal": 86,
+      "japanese_hint": "火",
+      "expected_meaning_en": "fire",
+      "seed": {
+        "kanji": "火",
+        "jlpt": "n5",
+        "ordinal": 86
+      }
+    },
+    {
+      "key": "k_n5_087_water",
+      "ordinal": 87,
+      "japanese_hint": "水",
+      "expected_meaning_en": "water",
+      "seed": {
+        "kanji": "水",
+        "jlpt": "n5",
+        "ordinal": 87
+      }
+    },
+    {
+      "key": "k_n5_088_tree",
+      "ordinal": 88,
+      "japanese_hint": "木",
+      "expected_meaning_en": "tree",
+      "seed": {
+        "kanji": "木",
+        "jlpt": "n5",
+        "ordinal": 88
+      }
+    },
+    {
+      "key": "k_n5_089_gold",
+      "ordinal": 89,
+      "japanese_hint": "金",
+      "expected_meaning_en": "gold",
+      "seed": {
+        "kanji": "金",
+        "jlpt": "n5",
+        "ordinal": 89
+      }
+    },
+    {
+      "key": "k_n5_090_earth",
+      "ordinal": 90,
+      "japanese_hint": "土",
+      "expected_meaning_en": "earth",
+      "seed": {
+        "kanji": "土",
+        "jlpt": "n5",
+        "ordinal": 90
+      }
+    },
+    {
+      "key": "k_n5_091_rain",
+      "ordinal": 91,
+      "japanese_hint": "雨",
+      "expected_meaning_en": "rain",
+      "seed": {
+        "kanji": "雨",
+        "jlpt": "n5",
+        "ordinal": 91
+      }
+    },
+    {
+      "key": "k_n5_092_electric",
+      "ordinal": 92,
+      "japanese_hint": "電",
+      "expected_meaning_en": "electric",
+      "seed": {
+        "kanji": "電",
+        "jlpt": "n5",
+        "ordinal": 92
+      }
+    },
+    {
+      "key": "k_n5_093_car",
+      "ordinal": 93,
+      "japanese_hint": "車",
+      "expected_meaning_en": "car",
+      "seed": {
+        "kanji": "車",
+        "jlpt": "n5",
+        "ordinal": 93
+      }
+    },
+    {
+      "key": "k_n5_094_cow",
+      "ordinal": 94,
+      "japanese_hint": "牛",
+      "expected_meaning_en": "cow",
+      "seed": {
+        "kanji": "牛",
+        "jlpt": "n5",
+        "ordinal": 94
+      }
+    },
+    {
+      "key": "k_n5_095_horse",
+      "ordinal": 95,
+      "japanese_hint": "馬",
+      "expected_meaning_en": "horse",
+      "seed": {
+        "kanji": "馬",
+        "jlpt": "n5",
+        "ordinal": 95
+      }
+    },
+    {
+      "key": "k_n5_096_fish",
+      "ordinal": 96,
+      "japanese_hint": "魚",
+      "expected_meaning_en": "fish",
+      "seed": {
+        "kanji": "魚",
+        "jlpt": "n5",
+        "ordinal": 96
+      }
+    },
+    {
+      "key": "k_n5_097_bird",
+      "ordinal": 97,
+      "japanese_hint": "鳥",
+      "expected_meaning_en": "bird",
+      "seed": {
+        "kanji": "鳥",
+        "jlpt": "n5",
+        "ordinal": 97
+      }
+    },
+    {
+      "key": "k_n5_098_flower",
+      "ordinal": 98,
+      "japanese_hint": "花",
+      "expected_meaning_en": "flower",
+      "seed": {
+        "kanji": "花",
+        "jlpt": "n5",
+        "ordinal": 98
+      }
+    },
+    {
+      "key": "k_n5_099_tea",
+      "ordinal": 99,
+      "japanese_hint": "茶",
+      "expected_meaning_en": "tea",
+      "seed": {
+        "kanji": "茶",
+        "jlpt": "n5",
+        "ordinal": 99
+      }
+    },
+    {
+      "key": "k_n5_100_rice",
+      "ordinal": 100,
+      "japanese_hint": "米",
+      "expected_meaning_en": "rice",
+      "seed": {
+        "kanji": "米",
+        "jlpt": "n5",
+        "ordinal": 100
+      }
+    },
+    {
+      "key": "k_n5_101_language",
+      "ordinal": 101,
+      "japanese_hint": "語",
+      "expected_meaning_en": "language",
+      "seed": {
+        "kanji": "語",
+        "jlpt": "n5",
+        "ordinal": 101
+      }
+    },
+    {
+      "key": "k_n5_102_book",
+      "ordinal": 102,
+      "japanese_hint": "本",
+      "expected_meaning_en": "book",
+      "seed": {
+        "kanji": "本",
+        "jlpt": "n5",
+        "ordinal": 102
+      }
+    },
+    {
+      "key": "k_n5_103_week",
+      "ordinal": 103,
+      "japanese_hint": "週",
+      "expected_meaning_en": "week",
+      "seed": {
+        "kanji": "週",
+        "jlpt": "n5",
+        "ordinal": 103
+      }
+    }
+  ]
+}
