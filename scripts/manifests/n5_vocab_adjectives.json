@@ -1,0 +1,1129 @@
+{
+  "type": "vocab",
+  "jlpt": "n5",
+  "category": "adjectives",
+  "description": "JLPT N5 core adjectives manifest (59 entries). Mix of i-adjectives and na-adjectives. Each item seeded with japanese + reading + romaji + category + jlpt + audio_keys. adj_type_hint signals i vs na for Codex context (conjugation differs). Per CONTENT_GUIDELINES Section 9.",
+  "items": [
+    {
+      "key": "n5_v_001_big",
+      "ordinal": 1,
+      "japanese_hint": "大きい",
+      "reading_hint": "おおきい",
+      "romaji_hint": "ookii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "big / large",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "大きい",
+        "reading": "おおきい",
+        "romaji": "ookii",
+        "audio_key": "vocab/n5_v_001_big",
+        "example_audio_key": "examples/n5_v_001_big",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_002_small",
+      "ordinal": 2,
+      "japanese_hint": "小さい",
+      "reading_hint": "ちいさい",
+      "romaji_hint": "chiisai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "small",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "小さい",
+        "reading": "ちいさい",
+        "romaji": "chiisai",
+        "audio_key": "vocab/n5_v_002_small",
+        "example_audio_key": "examples/n5_v_002_small",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_003_tall",
+      "ordinal": 3,
+      "japanese_hint": "高い",
+      "reading_hint": "たかい",
+      "romaji_hint": "takai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "tall / expensive",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "高い",
+        "reading": "たかい",
+        "romaji": "takai",
+        "audio_key": "vocab/n5_v_003_tall",
+        "example_audio_key": "examples/n5_v_003_tall",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_004_cheap",
+      "ordinal": 4,
+      "japanese_hint": "安い",
+      "reading_hint": "やすい",
+      "romaji_hint": "yasui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "cheap / inexpensive",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "安い",
+        "reading": "やすい",
+        "romaji": "yasui",
+        "audio_key": "vocab/n5_v_004_cheap",
+        "example_audio_key": "examples/n5_v_004_cheap",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_005_new",
+      "ordinal": 5,
+      "japanese_hint": "新しい",
+      "reading_hint": "あたらしい",
+      "romaji_hint": "atarashii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "new",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "新しい",
+        "reading": "あたらしい",
+        "romaji": "atarashii",
+        "audio_key": "vocab/n5_v_005_new",
+        "example_audio_key": "examples/n5_v_005_new",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_006_old",
+      "ordinal": 6,
+      "japanese_hint": "古い",
+      "reading_hint": "ふるい",
+      "romaji_hint": "furui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "old (for things, not people)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "古い",
+        "reading": "ふるい",
+        "romaji": "furui",
+        "audio_key": "vocab/n5_v_006_old",
+        "example_audio_key": "examples/n5_v_006_old",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_007_long",
+      "ordinal": 7,
+      "japanese_hint": "長い",
+      "reading_hint": "ながい",
+      "romaji_hint": "nagai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "long",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "長い",
+        "reading": "ながい",
+        "romaji": "nagai",
+        "audio_key": "vocab/n5_v_007_long",
+        "example_audio_key": "examples/n5_v_007_long",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_008_short",
+      "ordinal": 8,
+      "japanese_hint": "短い",
+      "reading_hint": "みじかい",
+      "romaji_hint": "mijikai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "short",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "短い",
+        "reading": "みじかい",
+        "romaji": "mijikai",
+        "audio_key": "vocab/n5_v_008_short",
+        "example_audio_key": "examples/n5_v_008_short",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_009_early",
+      "ordinal": 9,
+      "japanese_hint": "早い",
+      "reading_hint": "はやい",
+      "romaji_hint": "hayai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "early / fast (also written 速い for fast)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "早い",
+        "reading": "はやい",
+        "romaji": "hayai",
+        "audio_key": "vocab/n5_v_009_early",
+        "example_audio_key": "examples/n5_v_009_early",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_010_late",
+      "ordinal": 10,
+      "japanese_hint": "遅い",
+      "reading_hint": "おそい",
+      "romaji_hint": "osoi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "late / slow",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "遅い",
+        "reading": "おそい",
+        "romaji": "osoi",
+        "audio_key": "vocab/n5_v_010_late",
+        "example_audio_key": "examples/n5_v_010_late",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_011_hot_temp",
+      "ordinal": 11,
+      "japanese_hint": "暑い",
+      "reading_hint": "あつい",
+      "romaji_hint": "atsui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "hot (weather/temperature)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "暑い",
+        "reading": "あつい",
+        "romaji": "atsui",
+        "audio_key": "vocab/n5_v_011_hot_temp",
+        "example_audio_key": "examples/n5_v_011_hot_temp",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_012_cold_weather",
+      "ordinal": 12,
+      "japanese_hint": "寒い",
+      "reading_hint": "さむい",
+      "romaji_hint": "samui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "cold (weather)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "寒い",
+        "reading": "さむい",
+        "romaji": "samui",
+        "audio_key": "vocab/n5_v_012_cold_weather",
+        "example_audio_key": "examples/n5_v_012_cold_weather",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_013_cold_touch",
+      "ordinal": 13,
+      "japanese_hint": "冷たい",
+      "reading_hint": "つめたい",
+      "romaji_hint": "tsumetai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "cold (to the touch)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "冷たい",
+        "reading": "つめたい",
+        "romaji": "tsumetai",
+        "audio_key": "vocab/n5_v_013_cold_touch",
+        "example_audio_key": "examples/n5_v_013_cold_touch",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_014_warm",
+      "ordinal": 14,
+      "japanese_hint": "暖かい",
+      "reading_hint": "あたたかい",
+      "romaji_hint": "atatakai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "warm",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "暖かい",
+        "reading": "あたたかい",
+        "romaji": "atatakai",
+        "audio_key": "vocab/n5_v_014_warm",
+        "example_audio_key": "examples/n5_v_014_warm",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_015_cool",
+      "ordinal": 15,
+      "japanese_hint": "涼しい",
+      "reading_hint": "すずしい",
+      "romaji_hint": "suzushii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "cool (pleasantly)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "涼しい",
+        "reading": "すずしい",
+        "romaji": "suzushii",
+        "audio_key": "vocab/n5_v_015_cool",
+        "example_audio_key": "examples/n5_v_015_cool",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_016_good",
+      "ordinal": 16,
+      "japanese_hint": "良い",
+      "reading_hint": "いい",
+      "romaji_hint": "ii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "good (irregular conjugation: いい → よかった)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "良い",
+        "reading": "いい",
+        "romaji": "ii",
+        "audio_key": "vocab/n5_v_016_good",
+        "example_audio_key": "examples/n5_v_016_good",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_017_bad",
+      "ordinal": 17,
+      "japanese_hint": "悪い",
+      "reading_hint": "わるい",
+      "romaji_hint": "warui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "bad",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "悪い",
+        "reading": "わるい",
+        "romaji": "warui",
+        "audio_key": "vocab/n5_v_017_bad",
+        "example_audio_key": "examples/n5_v_017_bad",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_018_fun",
+      "ordinal": 18,
+      "japanese_hint": "楽しい",
+      "reading_hint": "たのしい",
+      "romaji_hint": "tanoshii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "fun / enjoyable",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "楽しい",
+        "reading": "たのしい",
+        "romaji": "tanoshii",
+        "audio_key": "vocab/n5_v_018_fun",
+        "example_audio_key": "examples/n5_v_018_fun",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_019_interesting",
+      "ordinal": 19,
+      "japanese_hint": "面白い",
+      "reading_hint": "おもしろい",
+      "romaji_hint": "omoshiroi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "interesting / funny",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "面白い",
+        "reading": "おもしろい",
+        "romaji": "omoshiroi",
+        "audio_key": "vocab/n5_v_019_interesting",
+        "example_audio_key": "examples/n5_v_019_interesting",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_020_boring",
+      "ordinal": 20,
+      "japanese_hint": "つまらない",
+      "reading_hint": "つまらない",
+      "romaji_hint": "tsumaranai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "boring / dull",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "つまらない",
+        "reading": "つまらない",
+        "romaji": "tsumaranai",
+        "audio_key": "vocab/n5_v_020_boring",
+        "example_audio_key": "examples/n5_v_020_boring",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_021_difficult",
+      "ordinal": 21,
+      "japanese_hint": "難しい",
+      "reading_hint": "むずかしい",
+      "romaji_hint": "muzukashii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "difficult",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "難しい",
+        "reading": "むずかしい",
+        "romaji": "muzukashii",
+        "audio_key": "vocab/n5_v_021_difficult",
+        "example_audio_key": "examples/n5_v_021_difficult",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_022_kind_or_easy",
+      "ordinal": 22,
+      "japanese_hint": "易しい",
+      "reading_hint": "やさしい",
+      "romaji_hint": "yasashii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "easy / kind (homophone with 優しい — kind to people)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "易しい",
+        "reading": "やさしい",
+        "romaji": "yasashii",
+        "audio_key": "vocab/n5_v_022_kind_or_easy",
+        "example_audio_key": "examples/n5_v_022_kind_or_easy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_023_beautiful_i",
+      "ordinal": 23,
+      "japanese_hint": "美しい",
+      "reading_hint": "うつくしい",
+      "romaji_hint": "utsukushii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "beautiful",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "美しい",
+        "reading": "うつくしい",
+        "romaji": "utsukushii",
+        "audio_key": "vocab/n5_v_023_beautiful_i",
+        "example_audio_key": "examples/n5_v_023_beautiful_i",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_024_cute",
+      "ordinal": 24,
+      "japanese_hint": "可愛い",
+      "reading_hint": "かわいい",
+      "romaji_hint": "kawaii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "cute",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "可愛い",
+        "reading": "かわいい",
+        "romaji": "kawaii",
+        "audio_key": "vocab/n5_v_024_cute",
+        "example_audio_key": "examples/n5_v_024_cute",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_025_many",
+      "ordinal": 25,
+      "japanese_hint": "多い",
+      "reading_hint": "おおい",
+      "romaji_hint": "ooi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "many / a lot",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "多い",
+        "reading": "おおい",
+        "romaji": "ooi",
+        "audio_key": "vocab/n5_v_025_many",
+        "example_audio_key": "examples/n5_v_025_many",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_026_few",
+      "ordinal": 26,
+      "japanese_hint": "少ない",
+      "reading_hint": "すくない",
+      "romaji_hint": "sukunai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "few / not many",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "少ない",
+        "reading": "すくない",
+        "romaji": "sukunai",
+        "audio_key": "vocab/n5_v_026_few",
+        "example_audio_key": "examples/n5_v_026_few",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_027_strong",
+      "ordinal": 27,
+      "japanese_hint": "強い",
+      "reading_hint": "つよい",
+      "romaji_hint": "tsuyoi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "strong",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "強い",
+        "reading": "つよい",
+        "romaji": "tsuyoi",
+        "audio_key": "vocab/n5_v_027_strong",
+        "example_audio_key": "examples/n5_v_027_strong",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_028_weak",
+      "ordinal": 28,
+      "japanese_hint": "弱い",
+      "reading_hint": "よわい",
+      "romaji_hint": "yowai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "weak",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "弱い",
+        "reading": "よわい",
+        "romaji": "yowai",
+        "audio_key": "vocab/n5_v_028_weak",
+        "example_audio_key": "examples/n5_v_028_weak",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_029_bright",
+      "ordinal": 29,
+      "japanese_hint": "明るい",
+      "reading_hint": "あかるい",
+      "romaji_hint": "akarui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "bright / cheerful",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "明るい",
+        "reading": "あかるい",
+        "romaji": "akarui",
+        "audio_key": "vocab/n5_v_029_bright",
+        "example_audio_key": "examples/n5_v_029_bright",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_030_dark",
+      "ordinal": 30,
+      "japanese_hint": "暗い",
+      "reading_hint": "くらい",
+      "romaji_hint": "kurai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "dark / gloomy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "暗い",
+        "reading": "くらい",
+        "romaji": "kurai",
+        "audio_key": "vocab/n5_v_030_dark",
+        "example_audio_key": "examples/n5_v_030_dark",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_031_red",
+      "ordinal": 31,
+      "japanese_hint": "赤い",
+      "reading_hint": "あかい",
+      "romaji_hint": "akai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "red",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "赤い",
+        "reading": "あかい",
+        "romaji": "akai",
+        "audio_key": "vocab/n5_v_031_red",
+        "example_audio_key": "examples/n5_v_031_red",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_032_blue",
+      "ordinal": 32,
+      "japanese_hint": "青い",
+      "reading_hint": "あおい",
+      "romaji_hint": "aoi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "blue / green (traditional usage)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "青い",
+        "reading": "あおい",
+        "romaji": "aoi",
+        "audio_key": "vocab/n5_v_032_blue",
+        "example_audio_key": "examples/n5_v_032_blue",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_033_white",
+      "ordinal": 33,
+      "japanese_hint": "白い",
+      "reading_hint": "しろい",
+      "romaji_hint": "shiroi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "white",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "白い",
+        "reading": "しろい",
+        "romaji": "shiroi",
+        "audio_key": "vocab/n5_v_033_white",
+        "example_audio_key": "examples/n5_v_033_white",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_034_black",
+      "ordinal": 34,
+      "japanese_hint": "黒い",
+      "reading_hint": "くろい",
+      "romaji_hint": "kuroi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "black",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "黒い",
+        "reading": "くろい",
+        "romaji": "kuroi",
+        "audio_key": "vocab/n5_v_034_black",
+        "example_audio_key": "examples/n5_v_034_black",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_035_yellow",
+      "ordinal": 35,
+      "japanese_hint": "黄色い",
+      "reading_hint": "きいろい",
+      "romaji_hint": "kiiroi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "yellow",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "黄色い",
+        "reading": "きいろい",
+        "romaji": "kiiroi",
+        "audio_key": "vocab/n5_v_035_yellow",
+        "example_audio_key": "examples/n5_v_035_yellow",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_036_painful",
+      "ordinal": 36,
+      "japanese_hint": "痛い",
+      "reading_hint": "いたい",
+      "romaji_hint": "itai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "painful / ouch",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "痛い",
+        "reading": "いたい",
+        "romaji": "itai",
+        "audio_key": "vocab/n5_v_036_painful",
+        "example_audio_key": "examples/n5_v_036_painful",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_037_heavy",
+      "ordinal": 37,
+      "japanese_hint": "重い",
+      "reading_hint": "おもい",
+      "romaji_hint": "omoi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "heavy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "重い",
+        "reading": "おもい",
+        "romaji": "omoi",
+        "audio_key": "vocab/n5_v_037_heavy",
+        "example_audio_key": "examples/n5_v_037_heavy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_038_light_weight",
+      "ordinal": 38,
+      "japanese_hint": "軽い",
+      "reading_hint": "かるい",
+      "romaji_hint": "karui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "light (in weight)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "軽い",
+        "reading": "かるい",
+        "romaji": "karui",
+        "audio_key": "vocab/n5_v_038_light_weight",
+        "example_audio_key": "examples/n5_v_038_light_weight",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_039_busy",
+      "ordinal": 39,
+      "japanese_hint": "忙しい",
+      "reading_hint": "いそがしい",
+      "romaji_hint": "isogashii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "busy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "忙しい",
+        "reading": "いそがしい",
+        "romaji": "isogashii",
+        "audio_key": "vocab/n5_v_039_busy",
+        "example_audio_key": "examples/n5_v_039_busy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_040_delicious",
+      "ordinal": 40,
+      "japanese_hint": "美味しい",
+      "reading_hint": "おいしい",
+      "romaji_hint": "oishii",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "delicious / tasty",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "美味しい",
+        "reading": "おいしい",
+        "romaji": "oishii",
+        "audio_key": "vocab/n5_v_040_delicious",
+        "example_audio_key": "examples/n5_v_040_delicious",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_041_tasteless",
+      "ordinal": 41,
+      "japanese_hint": "まずい",
+      "reading_hint": "まずい",
+      "romaji_hint": "mazui",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "bad-tasting / awkward",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "まずい",
+        "reading": "まずい",
+        "romaji": "mazui",
+        "audio_key": "vocab/n5_v_041_tasteless",
+        "example_audio_key": "examples/n5_v_041_tasteless",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_042_far",
+      "ordinal": 42,
+      "japanese_hint": "遠い",
+      "reading_hint": "とおい",
+      "romaji_hint": "tooi",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "far / distant",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "遠い",
+        "reading": "とおい",
+        "romaji": "tooi",
+        "audio_key": "vocab/n5_v_042_far",
+        "example_audio_key": "examples/n5_v_042_far",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_043_near",
+      "ordinal": 43,
+      "japanese_hint": "近い",
+      "reading_hint": "ちかい",
+      "romaji_hint": "chikai",
+      "adj_type_hint": "i",
+      "expected_meaning_en": "near / close",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "近い",
+        "reading": "ちかい",
+        "romaji": "chikai",
+        "audio_key": "vocab/n5_v_043_near",
+        "example_audio_key": "examples/n5_v_043_near",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_044_liked",
+      "ordinal": 44,
+      "japanese_hint": "好き",
+      "reading_hint": "すき",
+      "romaji_hint": "suki",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "liked / favorite",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "好き",
+        "reading": "すき",
+        "romaji": "suki",
+        "audio_key": "vocab/n5_v_044_liked",
+        "example_audio_key": "examples/n5_v_044_liked",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_045_disliked",
+      "ordinal": 45,
+      "japanese_hint": "嫌い",
+      "reading_hint": "きらい",
+      "romaji_hint": "kirai",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "disliked",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "嫌い",
+        "reading": "きらい",
+        "romaji": "kirai",
+        "audio_key": "vocab/n5_v_045_disliked",
+        "example_audio_key": "examples/n5_v_045_disliked",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_046_skilled",
+      "ordinal": 46,
+      "japanese_hint": "上手",
+      "reading_hint": "じょうず",
+      "romaji_hint": "jouzu",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "skilled / good at",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "上手",
+        "reading": "じょうず",
+        "romaji": "jouzu",
+        "audio_key": "vocab/n5_v_046_skilled",
+        "example_audio_key": "examples/n5_v_046_skilled",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_047_unskilled",
+      "ordinal": 47,
+      "japanese_hint": "下手",
+      "reading_hint": "へた",
+      "romaji_hint": "heta",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "unskilled / bad at",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "下手",
+        "reading": "へた",
+        "romaji": "heta",
+        "audio_key": "vocab/n5_v_047_unskilled",
+        "example_audio_key": "examples/n5_v_047_unskilled",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_048_healthy",
+      "ordinal": 48,
+      "japanese_hint": "元気",
+      "reading_hint": "げんき",
+      "romaji_hint": "genki",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "energetic / in good spirits / healthy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "元気",
+        "reading": "げんき",
+        "romaji": "genki",
+        "audio_key": "vocab/n5_v_048_healthy",
+        "example_audio_key": "examples/n5_v_048_healthy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_049_famous",
+      "ordinal": 49,
+      "japanese_hint": "有名",
+      "reading_hint": "ゆうめい",
+      "romaji_hint": "yuumei",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "famous",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "有名",
+        "reading": "ゆうめい",
+        "romaji": "yuumei",
+        "audio_key": "vocab/n5_v_049_famous",
+        "example_audio_key": "examples/n5_v_049_famous",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_050_kind_person",
+      "ordinal": 50,
+      "japanese_hint": "親切",
+      "reading_hint": "しんせつ",
+      "romaji_hint": "shinsetsu",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "kind / considerate (toward people)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "親切",
+        "reading": "しんせつ",
+        "romaji": "shinsetsu",
+        "audio_key": "vocab/n5_v_050_kind_person",
+        "example_audio_key": "examples/n5_v_050_kind_person",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_051_quiet",
+      "ordinal": 51,
+      "japanese_hint": "静か",
+      "reading_hint": "しずか",
+      "romaji_hint": "shizuka",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "quiet",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "静か",
+        "reading": "しずか",
+        "romaji": "shizuka",
+        "audio_key": "vocab/n5_v_051_quiet",
+        "example_audio_key": "examples/n5_v_051_quiet",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_052_lively",
+      "ordinal": 52,
+      "japanese_hint": "賑やか",
+      "reading_hint": "にぎやか",
+      "romaji_hint": "nigiyaka",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "lively / bustling",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "賑やか",
+        "reading": "にぎやか",
+        "romaji": "nigiyaka",
+        "audio_key": "vocab/n5_v_052_lively",
+        "example_audio_key": "examples/n5_v_052_lively",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_053_simple",
+      "ordinal": 53,
+      "japanese_hint": "簡単",
+      "reading_hint": "かんたん",
+      "romaji_hint": "kantan",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "simple (NOT the EN word \"simple\" — used as an adj. for difficulty)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "簡単",
+        "reading": "かんたん",
+        "romaji": "kantan",
+        "audio_key": "vocab/n5_v_053_simple",
+        "example_audio_key": "examples/n5_v_053_simple",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_054_ok",
+      "ordinal": 54,
+      "japanese_hint": "大丈夫",
+      "reading_hint": "だいじょうぶ",
+      "romaji_hint": "daijoubu",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "alright / it is OK",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "大丈夫",
+        "reading": "だいじょうぶ",
+        "romaji": "daijoubu",
+        "audio_key": "vocab/n5_v_054_ok",
+        "example_audio_key": "examples/n5_v_054_ok",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_055_important",
+      "ordinal": 55,
+      "japanese_hint": "大切",
+      "reading_hint": "たいせつ",
+      "romaji_hint": "taisetsu",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "important / precious",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "大切",
+        "reading": "たいせつ",
+        "romaji": "taisetsu",
+        "audio_key": "vocab/n5_v_055_important",
+        "example_audio_key": "examples/n5_v_055_important",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_056_convenient",
+      "ordinal": 56,
+      "japanese_hint": "便利",
+      "reading_hint": "べんり",
+      "romaji_hint": "benri",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "convenient",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "便利",
+        "reading": "べんり",
+        "romaji": "benri",
+        "audio_key": "vocab/n5_v_056_convenient",
+        "example_audio_key": "examples/n5_v_056_convenient",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_057_inconvenient",
+      "ordinal": 57,
+      "japanese_hint": "不便",
+      "reading_hint": "ふべん",
+      "romaji_hint": "fuben",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "inconvenient",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "不便",
+        "reading": "ふべん",
+        "romaji": "fuben",
+        "audio_key": "vocab/n5_v_057_inconvenient",
+        "example_audio_key": "examples/n5_v_057_inconvenient",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_058_pretty_clean",
+      "ordinal": 58,
+      "japanese_hint": "綺麗",
+      "reading_hint": "きれい",
+      "romaji_hint": "kirei",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "pretty / clean (acts as na-adj despite ending in い)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "綺麗",
+        "reading": "きれい",
+        "romaji": "kirei",
+        "audio_key": "vocab/n5_v_058_pretty_clean",
+        "example_audio_key": "examples/n5_v_058_pretty_clean",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_059_free_time",
+      "ordinal": 59,
+      "japanese_hint": "暇",
+      "reading_hint": "ひま",
+      "romaji_hint": "hima",
+      "adj_type_hint": "na",
+      "expected_meaning_en": "free / not busy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "adjectives",
+        "japanese": "暇",
+        "reading": "ひま",
+        "romaji": "hima",
+        "audio_key": "vocab/n5_v_059_free_time",
+        "example_audio_key": "examples/n5_v_059_free_time",
+        "difficulty": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,2222 @@
+{
+  "type": "vocab",
+  "jlpt": "n5",
+  "category": "nouns",
+  "description": "JLPT N5 core nouns manifest (123 entries) covering people, family, places, food/drink, objects, transport/tech, body, time, weather, nature, language/study. Each item seeded with japanese + reading + romaji + category + jlpt + audio_keys + difficulty. Codex authors en.primary/notes, ar.primary/notes, example_ja/en/ar. Per CONTENT_GUIDELINES Section 9.",
+  "items": [
+    {
+      "key": "n5_v_001_person",
+      "ordinal": 1,
+      "japanese_hint": "人",
+      "reading_hint": "ひと",
+      "romaji_hint": "hito",
+      "expected_meaning_en": "person",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "人",
+        "reading": "ひと",
+        "romaji": "hito",
+        "audio_key": "vocab/n5_v_001_person",
+        "example_audio_key": "examples/n5_v_001_person",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_002_man",
+      "ordinal": 2,
+      "japanese_hint": "男の人",
+      "reading_hint": "おとこのひと",
+      "romaji_hint": "otoko no hito",
+      "expected_meaning_en": "man",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "男の人",
+        "reading": "おとこのひと",
+        "romaji": "otoko no hito",
+        "audio_key": "vocab/n5_v_002_man",
+        "example_audio_key": "examples/n5_v_002_man",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_003_woman",
+      "ordinal": 3,
+      "japanese_hint": "女の人",
+      "reading_hint": "おんなのひと",
+      "romaji_hint": "onna no hito",
+      "expected_meaning_en": "woman",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "女の人",
+        "reading": "おんなのひと",
+        "romaji": "onna no hito",
+        "audio_key": "vocab/n5_v_003_woman",
+        "example_audio_key": "examples/n5_v_003_woman",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_004_child",
+      "ordinal": 4,
+      "japanese_hint": "子供",
+      "reading_hint": "こども",
+      "romaji_hint": "kodomo",
+      "expected_meaning_en": "child",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "子供",
+        "reading": "こども",
+        "romaji": "kodomo",
+        "audio_key": "vocab/n5_v_004_child",
+        "example_audio_key": "examples/n5_v_004_child",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_005_boy",
+      "ordinal": 5,
+      "japanese_hint": "男の子",
+      "reading_hint": "おとこのこ",
+      "romaji_hint": "otoko no ko",
+      "expected_meaning_en": "boy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "男の子",
+        "reading": "おとこのこ",
+        "romaji": "otoko no ko",
+        "audio_key": "vocab/n5_v_005_boy",
+        "example_audio_key": "examples/n5_v_005_boy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_006_girl",
+      "ordinal": 6,
+      "japanese_hint": "女の子",
+      "reading_hint": "おんなのこ",
+      "romaji_hint": "onna no ko",
+      "expected_meaning_en": "girl",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "女の子",
+        "reading": "おんなのこ",
+        "romaji": "onna no ko",
+        "audio_key": "vocab/n5_v_006_girl",
+        "example_audio_key": "examples/n5_v_006_girl",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_007_friend",
+      "ordinal": 7,
+      "japanese_hint": "友達",
+      "reading_hint": "ともだち",
+      "romaji_hint": "tomodachi",
+      "expected_meaning_en": "friend",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "友達",
+        "reading": "ともだち",
+        "romaji": "tomodachi",
+        "audio_key": "vocab/n5_v_007_friend",
+        "example_audio_key": "examples/n5_v_007_friend",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_008_teacher",
+      "ordinal": 8,
+      "japanese_hint": "先生",
+      "reading_hint": "せんせい",
+      "romaji_hint": "sensei",
+      "expected_meaning_en": "teacher",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "先生",
+        "reading": "せんせい",
+        "romaji": "sensei",
+        "audio_key": "vocab/n5_v_008_teacher",
+        "example_audio_key": "examples/n5_v_008_teacher",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_009_student",
+      "ordinal": 9,
+      "japanese_hint": "学生",
+      "reading_hint": "がくせい",
+      "romaji_hint": "gakusei",
+      "expected_meaning_en": "student",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "学生",
+        "reading": "がくせい",
+        "romaji": "gakusei",
+        "audio_key": "vocab/n5_v_009_student",
+        "example_audio_key": "examples/n5_v_009_student",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_010_doctor",
+      "ordinal": 10,
+      "japanese_hint": "医者",
+      "reading_hint": "いしゃ",
+      "romaji_hint": "isha",
+      "expected_meaning_en": "doctor",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "医者",
+        "reading": "いしゃ",
+        "romaji": "isha",
+        "audio_key": "vocab/n5_v_010_doctor",
+        "example_audio_key": "examples/n5_v_010_doctor",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_011_name",
+      "ordinal": 11,
+      "japanese_hint": "名前",
+      "reading_hint": "なまえ",
+      "romaji_hint": "namae",
+      "expected_meaning_en": "name",
+      "seed": {
+        "jlpt": "n5",
+        "category": "people",
+        "japanese": "名前",
+        "reading": "なまえ",
+        "romaji": "namae",
+        "audio_key": "vocab/n5_v_011_name",
+        "example_audio_key": "examples/n5_v_011_name",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_012_father_own",
+      "ordinal": 12,
+      "japanese_hint": "父",
+      "reading_hint": "ちち",
+      "romaji_hint": "chichi",
+      "expected_meaning_en": "father own",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "父",
+        "reading": "ちち",
+        "romaji": "chichi",
+        "audio_key": "vocab/n5_v_012_father_own",
+        "example_audio_key": "examples/n5_v_012_father_own",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_013_mother_own",
+      "ordinal": 13,
+      "japanese_hint": "母",
+      "reading_hint": "はは",
+      "romaji_hint": "haha",
+      "expected_meaning_en": "mother own",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "母",
+        "reading": "はは",
+        "romaji": "haha",
+        "audio_key": "vocab/n5_v_013_mother_own",
+        "example_audio_key": "examples/n5_v_013_mother_own",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_014_father_polite",
+      "ordinal": 14,
+      "japanese_hint": "お父さん",
+      "reading_hint": "おとうさん",
+      "romaji_hint": "otousan",
+      "expected_meaning_en": "father polite",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "お父さん",
+        "reading": "おとうさん",
+        "romaji": "otousan",
+        "audio_key": "vocab/n5_v_014_father_polite",
+        "example_audio_key": "examples/n5_v_014_father_polite",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_015_mother_polite",
+      "ordinal": 15,
+      "japanese_hint": "お母さん",
+      "reading_hint": "おかあさん",
+      "romaji_hint": "okaasan",
+      "expected_meaning_en": "mother polite",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "お母さん",
+        "reading": "おかあさん",
+        "romaji": "okaasan",
+        "audio_key": "vocab/n5_v_015_mother_polite",
+        "example_audio_key": "examples/n5_v_015_mother_polite",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_016_older_brother",
+      "ordinal": 16,
+      "japanese_hint": "お兄さん",
+      "reading_hint": "おにいさん",
+      "romaji_hint": "oniisan",
+      "expected_meaning_en": "older brother",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "お兄さん",
+        "reading": "おにいさん",
+        "romaji": "oniisan",
+        "audio_key": "vocab/n5_v_016_older_brother",
+        "example_audio_key": "examples/n5_v_016_older_brother",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_017_older_sister",
+      "ordinal": 17,
+      "japanese_hint": "お姉さん",
+      "reading_hint": "おねえさん",
+      "romaji_hint": "oneesan",
+      "expected_meaning_en": "older sister",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "お姉さん",
+        "reading": "おねえさん",
+        "romaji": "oneesan",
+        "audio_key": "vocab/n5_v_017_older_sister",
+        "example_audio_key": "examples/n5_v_017_older_sister",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_018_younger_brother",
+      "ordinal": 18,
+      "japanese_hint": "弟",
+      "reading_hint": "おとうと",
+      "romaji_hint": "otouto",
+      "expected_meaning_en": "younger brother",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "弟",
+        "reading": "おとうと",
+        "romaji": "otouto",
+        "audio_key": "vocab/n5_v_018_younger_brother",
+        "example_audio_key": "examples/n5_v_018_younger_brother",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_019_younger_sister",
+      "ordinal": 19,
+      "japanese_hint": "妹",
+      "reading_hint": "いもうと",
+      "romaji_hint": "imouto",
+      "expected_meaning_en": "younger sister",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "妹",
+        "reading": "いもうと",
+        "romaji": "imouto",
+        "audio_key": "vocab/n5_v_019_younger_sister",
+        "example_audio_key": "examples/n5_v_019_younger_sister",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_020_family",
+      "ordinal": 20,
+      "japanese_hint": "家族",
+      "reading_hint": "かぞく",
+      "romaji_hint": "kazoku",
+      "expected_meaning_en": "family",
+      "seed": {
+        "jlpt": "n5",
+        "category": "family",
+        "japanese": "家族",
+        "reading": "かぞく",
+        "romaji": "kazoku",
+        "audio_key": "vocab/n5_v_020_family",
+        "example_audio_key": "examples/n5_v_020_family",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_021_house",
+      "ordinal": 21,
+      "japanese_hint": "家",
+      "reading_hint": "いえ",
+      "romaji_hint": "ie",
+      "expected_meaning_en": "house",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "家",
+        "reading": "いえ",
+        "romaji": "ie",
+        "audio_key": "vocab/n5_v_021_house",
+        "example_audio_key": "examples/n5_v_021_house",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_022_school",
+      "ordinal": 22,
+      "japanese_hint": "学校",
+      "reading_hint": "がっこう",
+      "romaji_hint": "gakkou",
+      "expected_meaning_en": "school",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "学校",
+        "reading": "がっこう",
+        "romaji": "gakkou",
+        "audio_key": "vocab/n5_v_022_school",
+        "example_audio_key": "examples/n5_v_022_school",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_023_university",
+      "ordinal": 23,
+      "japanese_hint": "大学",
+      "reading_hint": "だいがく",
+      "romaji_hint": "daigaku",
+      "expected_meaning_en": "university",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "大学",
+        "reading": "だいがく",
+        "romaji": "daigaku",
+        "audio_key": "vocab/n5_v_023_university",
+        "example_audio_key": "examples/n5_v_023_university",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_024_hospital",
+      "ordinal": 24,
+      "japanese_hint": "病院",
+      "reading_hint": "びょういん",
+      "romaji_hint": "byouin",
+      "expected_meaning_en": "hospital",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "病院",
+        "reading": "びょういん",
+        "romaji": "byouin",
+        "audio_key": "vocab/n5_v_024_hospital",
+        "example_audio_key": "examples/n5_v_024_hospital",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_025_station",
+      "ordinal": 25,
+      "japanese_hint": "駅",
+      "reading_hint": "えき",
+      "romaji_hint": "eki",
+      "expected_meaning_en": "station",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "駅",
+        "reading": "えき",
+        "romaji": "eki",
+        "audio_key": "vocab/n5_v_025_station",
+        "example_audio_key": "examples/n5_v_025_station",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_026_library",
+      "ordinal": 26,
+      "japanese_hint": "図書館",
+      "reading_hint": "としょかん",
+      "romaji_hint": "toshokan",
+      "expected_meaning_en": "library",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "図書館",
+        "reading": "としょかん",
+        "romaji": "toshokan",
+        "audio_key": "vocab/n5_v_026_library",
+        "example_audio_key": "examples/n5_v_026_library",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_027_post_office",
+      "ordinal": 27,
+      "japanese_hint": "郵便局",
+      "reading_hint": "ゆうびんきょく",
+      "romaji_hint": "yuubinkyoku",
+      "expected_meaning_en": "post office",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "郵便局",
+        "reading": "ゆうびんきょく",
+        "romaji": "yuubinkyoku",
+        "audio_key": "vocab/n5_v_027_post_office",
+        "example_audio_key": "examples/n5_v_027_post_office",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_028_bank",
+      "ordinal": 28,
+      "japanese_hint": "銀行",
+      "reading_hint": "ぎんこう",
+      "romaji_hint": "ginkou",
+      "expected_meaning_en": "bank",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "銀行",
+        "reading": "ぎんこう",
+        "romaji": "ginkou",
+        "audio_key": "vocab/n5_v_028_bank",
+        "example_audio_key": "examples/n5_v_028_bank",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_029_shop",
+      "ordinal": 29,
+      "japanese_hint": "店",
+      "reading_hint": "みせ",
+      "romaji_hint": "mise",
+      "expected_meaning_en": "shop",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "店",
+        "reading": "みせ",
+        "romaji": "mise",
+        "audio_key": "vocab/n5_v_029_shop",
+        "example_audio_key": "examples/n5_v_029_shop",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_030_restaurant",
+      "ordinal": 30,
+      "japanese_hint": "レストラン",
+      "reading_hint": "レストラン",
+      "romaji_hint": "resutoran",
+      "expected_meaning_en": "restaurant",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "レストラン",
+        "reading": "レストラン",
+        "romaji": "resutoran",
+        "audio_key": "vocab/n5_v_030_restaurant",
+        "example_audio_key": "examples/n5_v_030_restaurant",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_031_cafe",
+      "ordinal": 31,
+      "japanese_hint": "喫茶店",
+      "reading_hint": "きっさてん",
+      "romaji_hint": "kissaten",
+      "expected_meaning_en": "cafe",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "喫茶店",
+        "reading": "きっさてん",
+        "romaji": "kissaten",
+        "audio_key": "vocab/n5_v_031_cafe",
+        "example_audio_key": "examples/n5_v_031_cafe",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_032_hotel",
+      "ordinal": 32,
+      "japanese_hint": "ホテル",
+      "reading_hint": "ホテル",
+      "romaji_hint": "hoteru",
+      "expected_meaning_en": "hotel",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "ホテル",
+        "reading": "ホテル",
+        "romaji": "hoteru",
+        "audio_key": "vocab/n5_v_032_hotel",
+        "example_audio_key": "examples/n5_v_032_hotel",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_033_country",
+      "ordinal": 33,
+      "japanese_hint": "国",
+      "reading_hint": "くに",
+      "romaji_hint": "kuni",
+      "expected_meaning_en": "country",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "国",
+        "reading": "くに",
+        "romaji": "kuni",
+        "audio_key": "vocab/n5_v_033_country",
+        "example_audio_key": "examples/n5_v_033_country",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_034_city",
+      "ordinal": 34,
+      "japanese_hint": "町",
+      "reading_hint": "まち",
+      "romaji_hint": "machi",
+      "expected_meaning_en": "city",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "町",
+        "reading": "まち",
+        "romaji": "machi",
+        "audio_key": "vocab/n5_v_034_city",
+        "example_audio_key": "examples/n5_v_034_city",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_035_road",
+      "ordinal": 35,
+      "japanese_hint": "道",
+      "reading_hint": "みち",
+      "romaji_hint": "michi",
+      "expected_meaning_en": "road",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "道",
+        "reading": "みち",
+        "romaji": "michi",
+        "audio_key": "vocab/n5_v_035_road",
+        "example_audio_key": "examples/n5_v_035_road",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_036_park",
+      "ordinal": 36,
+      "japanese_hint": "公園",
+      "reading_hint": "こうえん",
+      "romaji_hint": "kouen",
+      "expected_meaning_en": "park",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "公園",
+        "reading": "こうえん",
+        "romaji": "kouen",
+        "audio_key": "vocab/n5_v_036_park",
+        "example_audio_key": "examples/n5_v_036_park",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_037_room",
+      "ordinal": 37,
+      "japanese_hint": "部屋",
+      "reading_hint": "へや",
+      "romaji_hint": "heya",
+      "expected_meaning_en": "room",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "部屋",
+        "reading": "へや",
+        "romaji": "heya",
+        "audio_key": "vocab/n5_v_037_room",
+        "example_audio_key": "examples/n5_v_037_room",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_038_bathroom",
+      "ordinal": 38,
+      "japanese_hint": "トイレ",
+      "reading_hint": "トイレ",
+      "romaji_hint": "toire",
+      "expected_meaning_en": "bathroom",
+      "seed": {
+        "jlpt": "n5",
+        "category": "places",
+        "japanese": "トイレ",
+        "reading": "トイレ",
+        "romaji": "toire",
+        "audio_key": "vocab/n5_v_038_bathroom",
+        "example_audio_key": "examples/n5_v_038_bathroom",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_039_food",
+      "ordinal": 39,
+      "japanese_hint": "食べ物",
+      "reading_hint": "たべもの",
+      "romaji_hint": "tabemono",
+      "expected_meaning_en": "food",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "食べ物",
+        "reading": "たべもの",
+        "romaji": "tabemono",
+        "audio_key": "vocab/n5_v_039_food",
+        "example_audio_key": "examples/n5_v_039_food",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_040_drink",
+      "ordinal": 40,
+      "japanese_hint": "飲み物",
+      "reading_hint": "のみもの",
+      "romaji_hint": "nomimono",
+      "expected_meaning_en": "drink",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "飲み物",
+        "reading": "のみもの",
+        "romaji": "nomimono",
+        "audio_key": "vocab/n5_v_040_drink",
+        "example_audio_key": "examples/n5_v_040_drink",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_041_water",
+      "ordinal": 41,
+      "japanese_hint": "水",
+      "reading_hint": "みず",
+      "romaji_hint": "mizu",
+      "expected_meaning_en": "water",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "水",
+        "reading": "みず",
+        "romaji": "mizu",
+        "audio_key": "vocab/n5_v_041_water",
+        "example_audio_key": "examples/n5_v_041_water",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_042_tea",
+      "ordinal": 42,
+      "japanese_hint": "お茶",
+      "reading_hint": "おちゃ",
+      "romaji_hint": "ocha",
+      "expected_meaning_en": "tea",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "お茶",
+        "reading": "おちゃ",
+        "romaji": "ocha",
+        "audio_key": "vocab/n5_v_042_tea",
+        "example_audio_key": "examples/n5_v_042_tea",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_043_coffee",
+      "ordinal": 43,
+      "japanese_hint": "コーヒー",
+      "reading_hint": "コーヒー",
+      "romaji_hint": "koohii",
+      "expected_meaning_en": "coffee",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "コーヒー",
+        "reading": "コーヒー",
+        "romaji": "koohii",
+        "audio_key": "vocab/n5_v_043_coffee",
+        "example_audio_key": "examples/n5_v_043_coffee",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_044_milk",
+      "ordinal": 44,
+      "japanese_hint": "牛乳",
+      "reading_hint": "ぎゅうにゅう",
+      "romaji_hint": "gyuunyuu",
+      "expected_meaning_en": "milk",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "牛乳",
+        "reading": "ぎゅうにゅう",
+        "romaji": "gyuunyuu",
+        "audio_key": "vocab/n5_v_044_milk",
+        "example_audio_key": "examples/n5_v_044_milk",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_045_rice_cooked",
+      "ordinal": 45,
+      "japanese_hint": "ご飯",
+      "reading_hint": "ごはん",
+      "romaji_hint": "gohan",
+      "expected_meaning_en": "rice cooked",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "ご飯",
+        "reading": "ごはん",
+        "romaji": "gohan",
+        "audio_key": "vocab/n5_v_045_rice_cooked",
+        "example_audio_key": "examples/n5_v_045_rice_cooked",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_046_bread",
+      "ordinal": 46,
+      "japanese_hint": "パン",
+      "reading_hint": "パン",
+      "romaji_hint": "pan",
+      "expected_meaning_en": "bread",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "パン",
+        "reading": "パン",
+        "romaji": "pan",
+        "audio_key": "vocab/n5_v_046_bread",
+        "example_audio_key": "examples/n5_v_046_bread",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_047_fish_food",
+      "ordinal": 47,
+      "japanese_hint": "魚",
+      "reading_hint": "さかな",
+      "romaji_hint": "sakana",
+      "expected_meaning_en": "fish food",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "魚",
+        "reading": "さかな",
+        "romaji": "sakana",
+        "audio_key": "vocab/n5_v_047_fish_food",
+        "example_audio_key": "examples/n5_v_047_fish_food",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_048_meat",
+      "ordinal": 48,
+      "japanese_hint": "肉",
+      "reading_hint": "にく",
+      "romaji_hint": "niku",
+      "expected_meaning_en": "meat",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "肉",
+        "reading": "にく",
+        "romaji": "niku",
+        "audio_key": "vocab/n5_v_048_meat",
+        "example_audio_key": "examples/n5_v_048_meat",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_049_fruit",
+      "ordinal": 49,
+      "japanese_hint": "果物",
+      "reading_hint": "くだもの",
+      "romaji_hint": "kudamono",
+      "expected_meaning_en": "fruit",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "果物",
+        "reading": "くだもの",
+        "romaji": "kudamono",
+        "audio_key": "vocab/n5_v_049_fruit",
+        "example_audio_key": "examples/n5_v_049_fruit",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_050_vegetable",
+      "ordinal": 50,
+      "japanese_hint": "野菜",
+      "reading_hint": "やさい",
+      "romaji_hint": "yasai",
+      "expected_meaning_en": "vegetable",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "野菜",
+        "reading": "やさい",
+        "romaji": "yasai",
+        "audio_key": "vocab/n5_v_050_vegetable",
+        "example_audio_key": "examples/n5_v_050_vegetable",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_051_egg",
+      "ordinal": 51,
+      "japanese_hint": "卵",
+      "reading_hint": "たまご",
+      "romaji_hint": "tamago",
+      "expected_meaning_en": "egg",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "卵",
+        "reading": "たまご",
+        "romaji": "tamago",
+        "audio_key": "vocab/n5_v_051_egg",
+        "example_audio_key": "examples/n5_v_051_egg",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_052_breakfast",
+      "ordinal": 52,
+      "japanese_hint": "朝ご飯",
+      "reading_hint": "あさごはん",
+      "romaji_hint": "asagohan",
+      "expected_meaning_en": "breakfast",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "朝ご飯",
+        "reading": "あさごはん",
+        "romaji": "asagohan",
+        "audio_key": "vocab/n5_v_052_breakfast",
+        "example_audio_key": "examples/n5_v_052_breakfast",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_053_lunch",
+      "ordinal": 53,
+      "japanese_hint": "昼ご飯",
+      "reading_hint": "ひるごはん",
+      "romaji_hint": "hirugohan",
+      "expected_meaning_en": "lunch",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "昼ご飯",
+        "reading": "ひるごはん",
+        "romaji": "hirugohan",
+        "audio_key": "vocab/n5_v_053_lunch",
+        "example_audio_key": "examples/n5_v_053_lunch",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_054_dinner",
+      "ordinal": 54,
+      "japanese_hint": "晩ご飯",
+      "reading_hint": "ばんごはん",
+      "romaji_hint": "bangohan",
+      "expected_meaning_en": "dinner",
+      "seed": {
+        "jlpt": "n5",
+        "category": "food",
+        "japanese": "晩ご飯",
+        "reading": "ばんごはん",
+        "romaji": "bangohan",
+        "audio_key": "vocab/n5_v_054_dinner",
+        "example_audio_key": "examples/n5_v_054_dinner",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_055_book",
+      "ordinal": 55,
+      "japanese_hint": "本",
+      "reading_hint": "ほん",
+      "romaji_hint": "hon",
+      "expected_meaning_en": "book",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "本",
+        "reading": "ほん",
+        "romaji": "hon",
+        "audio_key": "vocab/n5_v_055_book",
+        "example_audio_key": "examples/n5_v_055_book",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_056_newspaper",
+      "ordinal": 56,
+      "japanese_hint": "新聞",
+      "reading_hint": "しんぶん",
+      "romaji_hint": "shinbun",
+      "expected_meaning_en": "newspaper",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "新聞",
+        "reading": "しんぶん",
+        "romaji": "shinbun",
+        "audio_key": "vocab/n5_v_056_newspaper",
+        "example_audio_key": "examples/n5_v_056_newspaper",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_057_notebook",
+      "ordinal": 57,
+      "japanese_hint": "ノート",
+      "reading_hint": "ノート",
+      "romaji_hint": "nooto",
+      "expected_meaning_en": "notebook",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "ノート",
+        "reading": "ノート",
+        "romaji": "nooto",
+        "audio_key": "vocab/n5_v_057_notebook",
+        "example_audio_key": "examples/n5_v_057_notebook",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_058_pen",
+      "ordinal": 58,
+      "japanese_hint": "ペン",
+      "reading_hint": "ペン",
+      "romaji_hint": "pen",
+      "expected_meaning_en": "pen",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "ペン",
+        "reading": "ペン",
+        "romaji": "pen",
+        "audio_key": "vocab/n5_v_058_pen",
+        "example_audio_key": "examples/n5_v_058_pen",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_059_pencil",
+      "ordinal": 59,
+      "japanese_hint": "鉛筆",
+      "reading_hint": "えんぴつ",
+      "romaji_hint": "enpitsu",
+      "expected_meaning_en": "pencil",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "鉛筆",
+        "reading": "えんぴつ",
+        "romaji": "enpitsu",
+        "audio_key": "vocab/n5_v_059_pencil",
+        "example_audio_key": "examples/n5_v_059_pencil",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_060_dictionary",
+      "ordinal": 60,
+      "japanese_hint": "辞書",
+      "reading_hint": "じしょ",
+      "romaji_hint": "jisho",
+      "expected_meaning_en": "dictionary",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "辞書",
+        "reading": "じしょ",
+        "romaji": "jisho",
+        "audio_key": "vocab/n5_v_060_dictionary",
+        "example_audio_key": "examples/n5_v_060_dictionary",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_061_letter_mail",
+      "ordinal": 61,
+      "japanese_hint": "手紙",
+      "reading_hint": "てがみ",
+      "romaji_hint": "tegami",
+      "expected_meaning_en": "letter mail",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "手紙",
+        "reading": "てがみ",
+        "romaji": "tegami",
+        "audio_key": "vocab/n5_v_061_letter_mail",
+        "example_audio_key": "examples/n5_v_061_letter_mail",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_062_paper",
+      "ordinal": 62,
+      "japanese_hint": "紙",
+      "reading_hint": "かみ",
+      "romaji_hint": "kami",
+      "expected_meaning_en": "paper",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "紙",
+        "reading": "かみ",
+        "romaji": "kami",
+        "audio_key": "vocab/n5_v_062_paper",
+        "example_audio_key": "examples/n5_v_062_paper",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_063_picture",
+      "ordinal": 63,
+      "japanese_hint": "絵",
+      "reading_hint": "え",
+      "romaji_hint": "e",
+      "expected_meaning_en": "picture",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "絵",
+        "reading": "え",
+        "romaji": "e",
+        "audio_key": "vocab/n5_v_063_picture",
+        "example_audio_key": "examples/n5_v_063_picture",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_064_photo",
+      "ordinal": 64,
+      "japanese_hint": "写真",
+      "reading_hint": "しゃしん",
+      "romaji_hint": "shashin",
+      "expected_meaning_en": "photo",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "写真",
+        "reading": "しゃしん",
+        "romaji": "shashin",
+        "audio_key": "vocab/n5_v_064_photo",
+        "example_audio_key": "examples/n5_v_064_photo",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_065_clock",
+      "ordinal": 65,
+      "japanese_hint": "時計",
+      "reading_hint": "とけい",
+      "romaji_hint": "tokei",
+      "expected_meaning_en": "clock",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "時計",
+        "reading": "とけい",
+        "romaji": "tokei",
+        "audio_key": "vocab/n5_v_065_clock",
+        "example_audio_key": "examples/n5_v_065_clock",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_066_umbrella",
+      "ordinal": 66,
+      "japanese_hint": "傘",
+      "reading_hint": "かさ",
+      "romaji_hint": "kasa",
+      "expected_meaning_en": "umbrella",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "傘",
+        "reading": "かさ",
+        "romaji": "kasa",
+        "audio_key": "vocab/n5_v_066_umbrella",
+        "example_audio_key": "examples/n5_v_066_umbrella",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_067_bag",
+      "ordinal": 67,
+      "japanese_hint": "カバン",
+      "reading_hint": "カバン",
+      "romaji_hint": "kaban",
+      "expected_meaning_en": "bag",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "カバン",
+        "reading": "カバン",
+        "romaji": "kaban",
+        "audio_key": "vocab/n5_v_067_bag",
+        "example_audio_key": "examples/n5_v_067_bag",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_068_key",
+      "ordinal": 68,
+      "japanese_hint": "鍵",
+      "reading_hint": "かぎ",
+      "romaji_hint": "kagi",
+      "expected_meaning_en": "key",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "鍵",
+        "reading": "かぎ",
+        "romaji": "kagi",
+        "audio_key": "vocab/n5_v_068_key",
+        "example_audio_key": "examples/n5_v_068_key",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_069_money",
+      "ordinal": 69,
+      "japanese_hint": "お金",
+      "reading_hint": "おかね",
+      "romaji_hint": "okane",
+      "expected_meaning_en": "money",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "お金",
+        "reading": "おかね",
+        "romaji": "okane",
+        "audio_key": "vocab/n5_v_069_money",
+        "example_audio_key": "examples/n5_v_069_money",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_070_chair",
+      "ordinal": 70,
+      "japanese_hint": "椅子",
+      "reading_hint": "いす",
+      "romaji_hint": "isu",
+      "expected_meaning_en": "chair",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "椅子",
+        "reading": "いす",
+        "romaji": "isu",
+        "audio_key": "vocab/n5_v_070_chair",
+        "example_audio_key": "examples/n5_v_070_chair",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_071_table",
+      "ordinal": 71,
+      "japanese_hint": "机",
+      "reading_hint": "つくえ",
+      "romaji_hint": "tsukue",
+      "expected_meaning_en": "table",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "机",
+        "reading": "つくえ",
+        "romaji": "tsukue",
+        "audio_key": "vocab/n5_v_071_table",
+        "example_audio_key": "examples/n5_v_071_table",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_072_bed",
+      "ordinal": 72,
+      "japanese_hint": "ベッド",
+      "reading_hint": "ベッド",
+      "romaji_hint": "beddo",
+      "expected_meaning_en": "bed",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "ベッド",
+        "reading": "ベッド",
+        "romaji": "beddo",
+        "audio_key": "vocab/n5_v_072_bed",
+        "example_audio_key": "examples/n5_v_072_bed",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_073_window",
+      "ordinal": 73,
+      "japanese_hint": "窓",
+      "reading_hint": "まど",
+      "romaji_hint": "mado",
+      "expected_meaning_en": "window",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "窓",
+        "reading": "まど",
+        "romaji": "mado",
+        "audio_key": "vocab/n5_v_073_window",
+        "example_audio_key": "examples/n5_v_073_window",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_074_door",
+      "ordinal": 74,
+      "japanese_hint": "ドア",
+      "reading_hint": "ドア",
+      "romaji_hint": "doa",
+      "expected_meaning_en": "door",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "ドア",
+        "reading": "ドア",
+        "romaji": "doa",
+        "audio_key": "vocab/n5_v_074_door",
+        "example_audio_key": "examples/n5_v_074_door",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_075_car",
+      "ordinal": 75,
+      "japanese_hint": "車",
+      "reading_hint": "くるま",
+      "romaji_hint": "kuruma",
+      "expected_meaning_en": "car",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "車",
+        "reading": "くるま",
+        "romaji": "kuruma",
+        "audio_key": "vocab/n5_v_075_car",
+        "example_audio_key": "examples/n5_v_075_car",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_076_bicycle",
+      "ordinal": 76,
+      "japanese_hint": "自転車",
+      "reading_hint": "じてんしゃ",
+      "romaji_hint": "jitensha",
+      "expected_meaning_en": "bicycle",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "自転車",
+        "reading": "じてんしゃ",
+        "romaji": "jitensha",
+        "audio_key": "vocab/n5_v_076_bicycle",
+        "example_audio_key": "examples/n5_v_076_bicycle",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_077_train",
+      "ordinal": 77,
+      "japanese_hint": "電車",
+      "reading_hint": "でんしゃ",
+      "romaji_hint": "densha",
+      "expected_meaning_en": "train",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "電車",
+        "reading": "でんしゃ",
+        "romaji": "densha",
+        "audio_key": "vocab/n5_v_077_train",
+        "example_audio_key": "examples/n5_v_077_train",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_078_bus",
+      "ordinal": 78,
+      "japanese_hint": "バス",
+      "reading_hint": "バス",
+      "romaji_hint": "basu",
+      "expected_meaning_en": "bus",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "バス",
+        "reading": "バス",
+        "romaji": "basu",
+        "audio_key": "vocab/n5_v_078_bus",
+        "example_audio_key": "examples/n5_v_078_bus",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_079_airplane",
+      "ordinal": 79,
+      "japanese_hint": "飛行機",
+      "reading_hint": "ひこうき",
+      "romaji_hint": "hikouki",
+      "expected_meaning_en": "airplane",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "飛行機",
+        "reading": "ひこうき",
+        "romaji": "hikouki",
+        "audio_key": "vocab/n5_v_079_airplane",
+        "example_audio_key": "examples/n5_v_079_airplane",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_080_telephone",
+      "ordinal": 80,
+      "japanese_hint": "電話",
+      "reading_hint": "でんわ",
+      "romaji_hint": "denwa",
+      "expected_meaning_en": "telephone",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "電話",
+        "reading": "でんわ",
+        "romaji": "denwa",
+        "audio_key": "vocab/n5_v_080_telephone",
+        "example_audio_key": "examples/n5_v_080_telephone",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_081_computer",
+      "ordinal": 81,
+      "japanese_hint": "コンピューター",
+      "reading_hint": "コンピューター",
+      "romaji_hint": "konpyuutaa",
+      "expected_meaning_en": "computer",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "コンピューター",
+        "reading": "コンピューター",
+        "romaji": "konpyuutaa",
+        "audio_key": "vocab/n5_v_081_computer",
+        "example_audio_key": "examples/n5_v_081_computer",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_082_television",
+      "ordinal": 82,
+      "japanese_hint": "テレビ",
+      "reading_hint": "テレビ",
+      "romaji_hint": "terebi",
+      "expected_meaning_en": "television",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "テレビ",
+        "reading": "テレビ",
+        "romaji": "terebi",
+        "audio_key": "vocab/n5_v_082_television",
+        "example_audio_key": "examples/n5_v_082_television",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_083_radio",
+      "ordinal": 83,
+      "japanese_hint": "ラジオ",
+      "reading_hint": "ラジオ",
+      "romaji_hint": "rajio",
+      "expected_meaning_en": "radio",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "ラジオ",
+        "reading": "ラジオ",
+        "romaji": "rajio",
+        "audio_key": "vocab/n5_v_083_radio",
+        "example_audio_key": "examples/n5_v_083_radio",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_084_camera",
+      "ordinal": 84,
+      "japanese_hint": "カメラ",
+      "reading_hint": "カメラ",
+      "romaji_hint": "kamera",
+      "expected_meaning_en": "camera",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "カメラ",
+        "reading": "カメラ",
+        "romaji": "kamera",
+        "audio_key": "vocab/n5_v_084_camera",
+        "example_audio_key": "examples/n5_v_084_camera",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_085_head",
+      "ordinal": 85,
+      "japanese_hint": "頭",
+      "reading_hint": "あたま",
+      "romaji_hint": "atama",
+      "expected_meaning_en": "head",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "頭",
+        "reading": "あたま",
+        "romaji": "atama",
+        "audio_key": "vocab/n5_v_085_head",
+        "example_audio_key": "examples/n5_v_085_head",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_086_face",
+      "ordinal": 86,
+      "japanese_hint": "顔",
+      "reading_hint": "かお",
+      "romaji_hint": "kao",
+      "expected_meaning_en": "face",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "顔",
+        "reading": "かお",
+        "romaji": "kao",
+        "audio_key": "vocab/n5_v_086_face",
+        "example_audio_key": "examples/n5_v_086_face",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_087_eye",
+      "ordinal": 87,
+      "japanese_hint": "目",
+      "reading_hint": "め",
+      "romaji_hint": "me",
+      "expected_meaning_en": "eye",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "目",
+        "reading": "め",
+        "romaji": "me",
+        "audio_key": "vocab/n5_v_087_eye",
+        "example_audio_key": "examples/n5_v_087_eye",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_088_ear",
+      "ordinal": 88,
+      "japanese_hint": "耳",
+      "reading_hint": "みみ",
+      "romaji_hint": "mimi",
+      "expected_meaning_en": "ear",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "耳",
+        "reading": "みみ",
+        "romaji": "mimi",
+        "audio_key": "vocab/n5_v_088_ear",
+        "example_audio_key": "examples/n5_v_088_ear",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_089_mouth",
+      "ordinal": 89,
+      "japanese_hint": "口",
+      "reading_hint": "くち",
+      "romaji_hint": "kuchi",
+      "expected_meaning_en": "mouth",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "口",
+        "reading": "くち",
+        "romaji": "kuchi",
+        "audio_key": "vocab/n5_v_089_mouth",
+        "example_audio_key": "examples/n5_v_089_mouth",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_090_nose",
+      "ordinal": 90,
+      "japanese_hint": "鼻",
+      "reading_hint": "はな",
+      "romaji_hint": "hana",
+      "expected_meaning_en": "nose",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "鼻",
+        "reading": "はな",
+        "romaji": "hana",
+        "audio_key": "vocab/n5_v_090_nose",
+        "example_audio_key": "examples/n5_v_090_nose",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_091_hand",
+      "ordinal": 91,
+      "japanese_hint": "手",
+      "reading_hint": "て",
+      "romaji_hint": "te",
+      "expected_meaning_en": "hand",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "手",
+        "reading": "て",
+        "romaji": "te",
+        "audio_key": "vocab/n5_v_091_hand",
+        "example_audio_key": "examples/n5_v_091_hand",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_092_foot",
+      "ordinal": 92,
+      "japanese_hint": "足",
+      "reading_hint": "あし",
+      "romaji_hint": "ashi",
+      "expected_meaning_en": "foot",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "足",
+        "reading": "あし",
+        "romaji": "ashi",
+        "audio_key": "vocab/n5_v_092_foot",
+        "example_audio_key": "examples/n5_v_092_foot",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_093_body",
+      "ordinal": 93,
+      "japanese_hint": "体",
+      "reading_hint": "からだ",
+      "romaji_hint": "karada",
+      "expected_meaning_en": "body",
+      "seed": {
+        "jlpt": "n5",
+        "category": "body",
+        "japanese": "体",
+        "reading": "からだ",
+        "romaji": "karada",
+        "audio_key": "vocab/n5_v_093_body",
+        "example_audio_key": "examples/n5_v_093_body",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_094_today",
+      "ordinal": 94,
+      "japanese_hint": "今日",
+      "reading_hint": "きょう",
+      "romaji_hint": "kyou",
+      "expected_meaning_en": "today",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "今日",
+        "reading": "きょう",
+        "romaji": "kyou",
+        "audio_key": "vocab/n5_v_094_today",
+        "example_audio_key": "examples/n5_v_094_today",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_095_tomorrow",
+      "ordinal": 95,
+      "japanese_hint": "明日",
+      "reading_hint": "あした",
+      "romaji_hint": "ashita",
+      "expected_meaning_en": "tomorrow",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "明日",
+        "reading": "あした",
+        "romaji": "ashita",
+        "audio_key": "vocab/n5_v_095_tomorrow",
+        "example_audio_key": "examples/n5_v_095_tomorrow",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_096_yesterday",
+      "ordinal": 96,
+      "japanese_hint": "昨日",
+      "reading_hint": "きのう",
+      "romaji_hint": "kinou",
+      "expected_meaning_en": "yesterday",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "昨日",
+        "reading": "きのう",
+        "romaji": "kinou",
+        "audio_key": "vocab/n5_v_096_yesterday",
+        "example_audio_key": "examples/n5_v_096_yesterday",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_097_morning",
+      "ordinal": 97,
+      "japanese_hint": "朝",
+      "reading_hint": "あさ",
+      "romaji_hint": "asa",
+      "expected_meaning_en": "morning",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "朝",
+        "reading": "あさ",
+        "romaji": "asa",
+        "audio_key": "vocab/n5_v_097_morning",
+        "example_audio_key": "examples/n5_v_097_morning",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_098_noon",
+      "ordinal": 98,
+      "japanese_hint": "昼",
+      "reading_hint": "ひる",
+      "romaji_hint": "hiru",
+      "expected_meaning_en": "noon",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "昼",
+        "reading": "ひる",
+        "romaji": "hiru",
+        "audio_key": "vocab/n5_v_098_noon",
+        "example_audio_key": "examples/n5_v_098_noon",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_099_evening",
+      "ordinal": 99,
+      "japanese_hint": "夕方",
+      "reading_hint": "ゆうがた",
+      "romaji_hint": "yuugata",
+      "expected_meaning_en": "evening",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "夕方",
+        "reading": "ゆうがた",
+        "romaji": "yuugata",
+        "audio_key": "vocab/n5_v_099_evening",
+        "example_audio_key": "examples/n5_v_099_evening",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_100_night",
+      "ordinal": 100,
+      "japanese_hint": "夜",
+      "reading_hint": "よる",
+      "romaji_hint": "yoru",
+      "expected_meaning_en": "night",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "夜",
+        "reading": "よる",
+        "romaji": "yoru",
+        "audio_key": "vocab/n5_v_100_night",
+        "example_audio_key": "examples/n5_v_100_night",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_101_week",
+      "ordinal": 101,
+      "japanese_hint": "週",
+      "reading_hint": "しゅう",
+      "romaji_hint": "shuu",
+      "expected_meaning_en": "week",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "週",
+        "reading": "しゅう",
+        "romaji": "shuu",
+        "audio_key": "vocab/n5_v_101_week",
+        "example_audio_key": "examples/n5_v_101_week",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_102_month",
+      "ordinal": 102,
+      "japanese_hint": "月",
+      "reading_hint": "つき",
+      "romaji_hint": "tsuki",
+      "expected_meaning_en": "month",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "月",
+        "reading": "つき",
+        "romaji": "tsuki",
+        "audio_key": "vocab/n5_v_102_month",
+        "example_audio_key": "examples/n5_v_102_month",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_103_year",
+      "ordinal": 103,
+      "japanese_hint": "年",
+      "reading_hint": "とし",
+      "romaji_hint": "toshi",
+      "expected_meaning_en": "year",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "年",
+        "reading": "とし",
+        "romaji": "toshi",
+        "audio_key": "vocab/n5_v_103_year",
+        "example_audio_key": "examples/n5_v_103_year",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_104_time_concept",
+      "ordinal": 104,
+      "japanese_hint": "時間",
+      "reading_hint": "じかん",
+      "romaji_hint": "jikan",
+      "expected_meaning_en": "time concept",
+      "seed": {
+        "jlpt": "n5",
+        "category": "time",
+        "japanese": "時間",
+        "reading": "じかん",
+        "romaji": "jikan",
+        "audio_key": "vocab/n5_v_104_time_concept",
+        "example_audio_key": "examples/n5_v_104_time_concept",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_105_weather",
+      "ordinal": 105,
+      "japanese_hint": "天気",
+      "reading_hint": "てんき",
+      "romaji_hint": "tenki",
+      "expected_meaning_en": "weather",
+      "seed": {
+        "jlpt": "n5",
+        "category": "weather",
+        "japanese": "天気",
+        "reading": "てんき",
+        "romaji": "tenki",
+        "audio_key": "vocab/n5_v_105_weather",
+        "example_audio_key": "examples/n5_v_105_weather",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_106_rain",
+      "ordinal": 106,
+      "japanese_hint": "雨",
+      "reading_hint": "あめ",
+      "romaji_hint": "ame",
+      "expected_meaning_en": "rain",
+      "seed": {
+        "jlpt": "n5",
+        "category": "weather",
+        "japanese": "雨",
+        "reading": "あめ",
+        "romaji": "ame",
+        "audio_key": "vocab/n5_v_106_rain",
+        "example_audio_key": "examples/n5_v_106_rain",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_107_snow",
+      "ordinal": 107,
+      "japanese_hint": "雪",
+      "reading_hint": "ゆき",
+      "romaji_hint": "yuki",
+      "expected_meaning_en": "snow",
+      "seed": {
+        "jlpt": "n5",
+        "category": "weather",
+        "japanese": "雪",
+        "reading": "ゆき",
+        "romaji": "yuki",
+        "audio_key": "vocab/n5_v_107_snow",
+        "example_audio_key": "examples/n5_v_107_snow",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_108_wind",
+      "ordinal": 108,
+      "japanese_hint": "風",
+      "reading_hint": "かぜ",
+      "romaji_hint": "kaze",
+      "expected_meaning_en": "wind",
+      "seed": {
+        "jlpt": "n5",
+        "category": "weather",
+        "japanese": "風",
+        "reading": "かぜ",
+        "romaji": "kaze",
+        "audio_key": "vocab/n5_v_108_wind",
+        "example_audio_key": "examples/n5_v_108_wind",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_109_sky",
+      "ordinal": 109,
+      "japanese_hint": "空",
+      "reading_hint": "そら",
+      "romaji_hint": "sora",
+      "expected_meaning_en": "sky",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "空",
+        "reading": "そら",
+        "romaji": "sora",
+        "audio_key": "vocab/n5_v_109_sky",
+        "example_audio_key": "examples/n5_v_109_sky",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_110_sun",
+      "ordinal": 110,
+      "japanese_hint": "太陽",
+      "reading_hint": "たいよう",
+      "romaji_hint": "taiyou",
+      "expected_meaning_en": "sun",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "太陽",
+        "reading": "たいよう",
+        "romaji": "taiyou",
+        "audio_key": "vocab/n5_v_110_sun",
+        "example_audio_key": "examples/n5_v_110_sun",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_111_moon",
+      "ordinal": 111,
+      "japanese_hint": "月",
+      "reading_hint": "つき",
+      "romaji_hint": "tsuki",
+      "expected_meaning_en": "moon",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "月",
+        "reading": "つき",
+        "romaji": "tsuki",
+        "audio_key": "vocab/n5_v_111_moon",
+        "example_audio_key": "examples/n5_v_111_moon",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_112_mountain",
+      "ordinal": 112,
+      "japanese_hint": "山",
+      "reading_hint": "やま",
+      "romaji_hint": "yama",
+      "expected_meaning_en": "mountain",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "山",
+        "reading": "やま",
+        "romaji": "yama",
+        "audio_key": "vocab/n5_v_112_mountain",
+        "example_audio_key": "examples/n5_v_112_mountain",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_113_river",
+      "ordinal": 113,
+      "japanese_hint": "川",
+      "reading_hint": "かわ",
+      "romaji_hint": "kawa",
+      "expected_meaning_en": "river",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "川",
+        "reading": "かわ",
+        "romaji": "kawa",
+        "audio_key": "vocab/n5_v_113_river",
+        "example_audio_key": "examples/n5_v_113_river",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_114_sea",
+      "ordinal": 114,
+      "japanese_hint": "海",
+      "reading_hint": "うみ",
+      "romaji_hint": "umi",
+      "expected_meaning_en": "sea",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "海",
+        "reading": "うみ",
+        "romaji": "umi",
+        "audio_key": "vocab/n5_v_114_sea",
+        "example_audio_key": "examples/n5_v_114_sea",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_115_tree",
+      "ordinal": 115,
+      "japanese_hint": "木",
+      "reading_hint": "き",
+      "romaji_hint": "ki",
+      "expected_meaning_en": "tree",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "木",
+        "reading": "き",
+        "romaji": "ki",
+        "audio_key": "vocab/n5_v_115_tree",
+        "example_audio_key": "examples/n5_v_115_tree",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_116_flower",
+      "ordinal": 116,
+      "japanese_hint": "花",
+      "reading_hint": "はな",
+      "romaji_hint": "hana",
+      "expected_meaning_en": "flower",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nature",
+        "japanese": "花",
+        "reading": "はな",
+        "romaji": "hana",
+        "audio_key": "vocab/n5_v_116_flower",
+        "example_audio_key": "examples/n5_v_116_flower",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_117_language",
+      "ordinal": 117,
+      "japanese_hint": "言葉",
+      "reading_hint": "ことば",
+      "romaji_hint": "kotoba",
+      "expected_meaning_en": "language",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "言葉",
+        "reading": "ことば",
+        "romaji": "kotoba",
+        "audio_key": "vocab/n5_v_117_language",
+        "example_audio_key": "examples/n5_v_117_language",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_118_english_lang",
+      "ordinal": 118,
+      "japanese_hint": "英語",
+      "reading_hint": "えいご",
+      "romaji_hint": "eigo",
+      "expected_meaning_en": "english lang",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "英語",
+        "reading": "えいご",
+        "romaji": "eigo",
+        "audio_key": "vocab/n5_v_118_english_lang",
+        "example_audio_key": "examples/n5_v_118_english_lang",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_119_japanese_lang",
+      "ordinal": 119,
+      "japanese_hint": "日本語",
+      "reading_hint": "にほんご",
+      "romaji_hint": "nihongo",
+      "expected_meaning_en": "japanese lang",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "日本語",
+        "reading": "にほんご",
+        "romaji": "nihongo",
+        "audio_key": "vocab/n5_v_119_japanese_lang",
+        "example_audio_key": "examples/n5_v_119_japanese_lang",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_120_arabic_lang",
+      "ordinal": 120,
+      "japanese_hint": "アラビア語",
+      "reading_hint": "アラビアご",
+      "romaji_hint": "arabiago",
+      "expected_meaning_en": "arabic lang",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "アラビア語",
+        "reading": "アラビアご",
+        "romaji": "arabiago",
+        "audio_key": "vocab/n5_v_120_arabic_lang",
+        "example_audio_key": "examples/n5_v_120_arabic_lang",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_121_question",
+      "ordinal": 121,
+      "japanese_hint": "質問",
+      "reading_hint": "しつもん",
+      "romaji_hint": "shitsumon",
+      "expected_meaning_en": "question",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "質問",
+        "reading": "しつもん",
+        "romaji": "shitsumon",
+        "audio_key": "vocab/n5_v_121_question",
+        "example_audio_key": "examples/n5_v_121_question",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_122_homework",
+      "ordinal": 122,
+      "japanese_hint": "宿題",
+      "reading_hint": "しゅくだい",
+      "romaji_hint": "shukudai",
+      "expected_meaning_en": "homework",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "宿題",
+        "reading": "しゅくだい",
+        "romaji": "shukudai",
+        "audio_key": "vocab/n5_v_122_homework",
+        "example_audio_key": "examples/n5_v_122_homework",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_123_test",
+      "ordinal": 123,
+      "japanese_hint": "テスト",
+      "reading_hint": "テスト",
+      "romaji_hint": "tesuto",
+      "expected_meaning_en": "test",
+      "seed": {
+        "jlpt": "n5",
+        "category": "nouns",
+        "japanese": "テスト",
+        "reading": "テスト",
+        "romaji": "tesuto",
+        "audio_key": "vocab/n5_v_123_test",
+        "example_audio_key": "examples/n5_v_123_test",
+        "difficulty": 1
+      }
+    }
+  ]
+}
