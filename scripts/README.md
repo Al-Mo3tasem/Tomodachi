@@ -172,6 +172,32 @@ For each item the CLI prints a per-content-type Codex prompt. You paste
 into Codex, paste the JSON response back, enter `END`. Useful for ad-hoc
 single-item drafting; impractical for 100-item batches.
 
+### 2.4 Bulk auto-commit via `--auto-accept`
+
+For post-review batches where multi-agent QA has already happened
+(Claude + Codex + Gemini reviews complete) and you want to commit
+hundreds of items without per-item prompts:
+
+```bash
+node scripts/author_content.js --env=dev \
+  --manifest=scripts/manifests/n5_hiragana.json \
+  --prefill=scripts/output/codex-l2-05-hiragana.json \
+  --auto-accept
+```
+
+What `--auto-accept` does:
+- Validators still gate every write — items that fail are skipped + logged, never silently dropped
+- Existing Firestore docs are overwritten silently (you've accepted that contract)
+- Output is one compact line per item: `[042/104] ✓ a → content_sets/hiragana/items/a`
+- Total elapsed time shown at the end
+
+What `--auto-accept` does NOT allow:
+- Without `--prefill` — blocked (can't auto-accept fields you didn't author)
+- With `--env=prod` — blocked (prod writes require per-item confirmation; use the L2.13 migration script for prod cutover)
+
+Final per-item human review happens in the live app (admin UI) after
+bulk-commit, not in the CLI.
+
 ### 2.4 Dry-run
 
 ```bash

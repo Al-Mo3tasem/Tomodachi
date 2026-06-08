@@ -68,11 +68,12 @@ const __dirname = dirname(__filename);
 // ============================================================
 
 function parseArgs(argv) {
-  const args = { env: 'dev', dryRun: false, useCodex: false };
+  const args = { env: 'dev', dryRun: false, useCodex: false, autoAccept: false };
   for (const a of argv.slice(2)) {
     if (a === '--help' || a === '-h') args.help = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--use-codex') args.useCodex = true;
+    else if (a === '--auto-accept') args.autoAccept = true;
     else if (a.startsWith('--env=')) args.env = a.slice(6);
     else if (a.startsWith('--manifest=')) args.manifest = a.slice(11);
     else if (a.startsWith('--type=')) args.type = a.slice(7);
@@ -136,6 +137,8 @@ ${color.cyan('FLAGS')}
   --use-codex                print Codex paste-in prompt per item
   --prefill=<path>           load a Codex-output JSON file and pre-fill items
                              (silent batch mode — no per-item paste; review menu only)
+  --auto-accept              bypass per-item review menu; validate + commit ALL valid items.
+                             Requires --prefill. Blocked for --env=prod (use review menu).
   --dry-run                  validate + display only; no Firestore writes
   --help                     this help
 
@@ -146,9 +149,13 @@ ${color.cyan('EXAMPLES')}
   ${color.dim('# Author a single new kanji using Codex paste-in, against dev')}
   node scripts/author_content.js --type=kanji --key=k_n5_002_tree --use-codex
 
-  ${color.dim('# Batch authoring from a Codex-output file (recommended L2.05+ flow)')}
+  ${color.dim('# Batch authoring from a Codex-output file (review menu per item)')}
   node scripts/author_content.js --manifest=scripts/manifests/n5_hiragana.json \\
     --prefill=scripts/output/codex-l2-05-hiragana.json
+
+  ${color.dim('# Bulk auto-commit (no per-item prompts; validators still gate writes)')}
+  node scripts/author_content.js --manifest=scripts/manifests/n5_hiragana.json \\
+    --prefill=scripts/output/codex-l2-05-hiragana.json --auto-accept
 
   ${color.dim('# Production write (will require explicit confirmation per item)')}
   node scripts/author_content.js --env=prod --manifest=scripts/manifests/n5_vocab.json
@@ -169,25 +176,38 @@ const EXIT = Symbol('exit');
 const SKIP = Symbol('skip');
 
 async function authorOneItem(ctx, hint) {
-  const { contentType, useCodex, prefills } = ctx;
+  const { contentType, useCodex, prefills, autoAccept } = ctx;
+
+  // Merge seed + prefill (no per-item printing in auto-accept mode)
+  const seed = hint.seed && typeof hint.seed === 'object' ? hint.seed : {};
+  let item = { key: hint.key, ...seed };
+  if (contentType === 'lesson') item = { lessonKey: hint.key, ...seed };
+  const prefill = prefills && prefills.get(hint.key);
+  if (prefill) item = { ...item, ...prefill, key: item.key };
+
+  // Auto-accept fast path: validate + commit silently. Dialect markers
+  // are non-blocking (matches review-menu behavior). Validator failures
+  // produce a compact one-line error and skip the item.
+  if (autoAccept) {
+    const result = validateContentItem(contentType, item);
+    const blockingErrs = result.errors.filter(e =>
+      !(e.message && e.message.includes('dialect markers detected')));
+    if (blockingErrs.length > 0) {
+      const msg = blockingErrs.map(e => `${e.field} ${e.message}`).join('; ');
+      return { action: 'errored', error: msg };
+    }
+    const writeResult = await commitItem(ctx, item);
+    if (writeResult === SKIP) return { action: 'skipped', reason: 'commit_aborted' };
+    return { action: 'authored', writePath: writeResult };
+  }
+
+  // Interactive path — verbose per-item header
   console.log('');
   console.log(color.bold(`━━━ ${contentType} :: ${hint.key} ━━━`));
   if (hint.ordinal) console.log(color.gray(`  ordinal: ${hint.ordinal}`));
   if (hint.japanese_hint) console.log(color.gray(`  hint: ${hint.japanese_hint}`));
   if (hint.expected_meaning_en) console.log(color.gray(`  expected EN: ${hint.expected_meaning_en}`));
-
-  // Manifest items may pre-populate item fields via a `seed` object —
-  // useful for kana where the glyph/romaji/row are deterministic and
-  // typing them 104 times would be wasteful. seed values appear as
-  // "current" defaults in the form walk; user can press Enter to accept.
-  const seed = hint.seed && typeof hint.seed === 'object' ? hint.seed : {};
-  let item = { key: hint.key, ...seed };
-  if (contentType === 'lesson') item = { lessonKey: hint.key, ...seed };
-
-  // 0) Prefill from a Codex-output file (--prefill). Wins over seed.
-  const prefill = prefills && prefills.get(hint.key);
   if (prefill) {
-    item = { ...item, ...prefill, key: item.key };
     console.log(color.green(`  ✓ loaded prefill from file (${Object.keys(prefill).length} fields)`));
   }
 
@@ -305,10 +325,14 @@ async function authorOneItem(ctx, hint) {
 // ============================================================
 
 async function commitItem(ctx, item) {
-  const { contentType, env, dryRun, db } = ctx;
+  const { contentType, env, dryRun, db, autoAccept } = ctx;
   const path = pathFor(contentType, item);
 
   if (dryRun) {
+    if (autoAccept) {
+      // Compact dry-run log; main loop's progress line shows the result
+      return path;
+    }
     console.log('');
     console.log(color.cyan(`  [dry-run] would write to ${env}:${path}`));
     console.log(color.dim('  payload:'));
@@ -317,8 +341,12 @@ async function commitItem(ctx, item) {
   }
 
   // Live write — check for overwrite + extra prod confirm.
+  // In auto-accept mode: silently overwrite existing docs (user has
+  // accepted the bulk-author contract). Prod is blocked for auto-accept
+  // at the main()-level guard, so the env==='prod' branch below is only
+  // reachable in interactive mode.
   const existing = await fetchExisting(db, contentType, item);
-  if (existing) {
+  if (existing && !autoAccept) {
     console.log(color.yellow(`  ⚠ ${path} already exists in ${env}.`));
     const ans = (await ask(`  Overwrite existing doc? [y/N] `) || '').toLowerCase();
     if (ans !== 'y') return SKIP;
@@ -330,7 +358,9 @@ async function commitItem(ctx, item) {
   }
 
   await writeItem(db, contentType, item);
-  console.log(color.green(`  ✓ wrote ${env}:${path}`));
+  if (!autoAccept) {
+    console.log(color.green(`  ✓ wrote ${env}:${path}`));
+  }
   return path;
 }
 
@@ -344,6 +374,19 @@ async function main() {
 
   if (!isValidEnv(args.env)) {
     console.error(color.red(`✕ unknown env "${args.env}". Allowed: dev, staging, prod`));
+    process.exit(1);
+  }
+
+  // --auto-accept safety guards
+  if (args.autoAccept && !args.prefill) {
+    console.error(color.red('✕ --auto-accept requires --prefill.'));
+    console.error(color.yellow('   You cannot auto-accept fields you have not provided. Use the review menu for manual authoring.'));
+    process.exit(1);
+  }
+  if (args.autoAccept && args.env === 'prod') {
+    console.error(color.red('✕ --auto-accept is not allowed with --env=prod.'));
+    console.error(color.yellow('   Prod writes require per-item confirmation. Author on --env=dev first, then'));
+    console.error(color.yellow('   migrate to prod via the L2.13 migration script.'));
     process.exit(1);
   }
 
@@ -410,7 +453,10 @@ async function main() {
   }
 
   // Graceful Ctrl-C — save progress before exiting
-  const ctx = { env: args.env, contentType, useCodex: args.useCodex, dryRun: args.dryRun, db, prefills };
+  const ctx = { env: args.env, contentType, useCodex: args.useCodex, dryRun: args.dryRun, db, prefills, autoAccept: args.autoAccept };
+  if (args.autoAccept) {
+    console.log(color.cyan(`Auto-accept mode: validators gate writes; review menu is skipped.`));
+  }
   const progress = loadProgress(args.env);
   let interrupted = false;
   process.on('SIGINT', () => {
@@ -424,8 +470,12 @@ async function main() {
 
   // Walk the queue
   const summary = { authored: 0, skipped: 0, errored: 0 };
+  const total = workQueue.length;
+  const t0 = Date.now();
+  let i = 0;
   for (const hint of workQueue) {
     if (interrupted) break;
+    i++;
     try {
       const result = await authorOneItem(ctx, hint);
       if (result === EXIT) {
@@ -439,10 +489,24 @@ async function main() {
         action: result.action,
         ...(result.writePath ? { writePath: result.writePath } : {}),
         ...(result.reason ? { reason: result.reason } : {}),
+        ...(result.error ? { error: result.error } : {}),
         authoredAt: new Date().toISOString()
       });
       saveProgress(args.env, progress);
       summary[result.action]++;
+
+      // Auto-accept per-item progress line (compact)
+      if (args.autoAccept) {
+        const counter = color.gray(`[${String(i).padStart(3, '0')}/${total}]`);
+        if (result.action === 'authored') {
+          const tail = args.dryRun ? color.cyan(' (dry-run)') : color.gray(` → ${result.writePath}`);
+          console.log(`${counter} ${color.green('✓')} ${hint.key}${tail}`);
+        } else if (result.action === 'skipped') {
+          console.log(`${counter} ${color.yellow('⊘')} ${hint.key} ${color.gray(`(${result.reason || 'skipped'})`)}`);
+        } else if (result.action === 'errored') {
+          console.log(`${counter} ${color.red('✕')} ${hint.key} ${color.gray(result.error || 'validation_failed')}`);
+        }
+      }
     } catch (e) {
       console.error(color.red(`  ✕ error authoring ${hint.key}: ${e.message}`));
       recordEntry(progress, {
@@ -459,11 +523,13 @@ async function main() {
   }
 
   // Final summary
+  const elapsedSec = ((Date.now() - t0) / 1000).toFixed(1);
   console.log('');
   console.log(color.bold('━━━ Session summary ━━━'));
   console.log(`  ${color.green('✓')} authored: ${summary.authored}`);
   console.log(`  ${color.yellow('⊘')} skipped:  ${summary.skipped}`);
   console.log(`  ${color.red('✕')} errored:  ${summary.errored}`);
+  console.log(`  ${color.gray(`elapsed:  ${elapsedSec}s`)}`);
   console.log('');
   closeRL();
 }
