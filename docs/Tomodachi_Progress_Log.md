@@ -16,6 +16,36 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-08 — L2.05 + L2.06 + L2.08 — N5 kana + kanji authored to dev (311 docs, multi-agent pipeline)
+**Status:** ✅ DONE
+**Scope:** Code | Data
+**Summary:** Wave 1 of Phase L2.B content authoring complete. 311 docs now live in `tomodachi-dev`: 104 hiragana + 104 katakana + 103 kanji. The full N5 kana set plus the canonical N5 kanji list, with bilingual EN + AR content meeting CONTENT_GUIDELINES §8 and §10 quality bars. This is the first real content batch in Firestore — until today, `content_sets/*` was empty post-R2 cutover.
+
+**The multi-agent pipeline that emerged:**
+1. **Claude writes Codex specs** (one per content type) — framing brand-moat stakes, required web research with named sources (Tofugu, WaniKani, Jisho, Arabic-language YouTube channels like عرب نيهون), Careem/Anghami AR voice rules, parallel-authoring anti-translationese examples, strict output JSON schema, acceptance + self-review checklists. Specs at `docs/codex-spec-l2-{05,06,08}-{hiragana,katakana,kanji}-2026-06-06.md`.
+2. **Codex drafts in parallel sessions** — one Codex session covered both kana files (hiragana + katakana = 208 entries), a second session covered all 103 kanji. Outputs written to gitignored `scripts/output/codex-l2-*.json`.
+3. **Codex voice-tightening follow-up** — initial Codex drafts were technically correct but defaulted to textbook-formal Arabic ("fa-iqtarib minhu ka-sawti", "wa-yazhar al-ma'na fawran"). Claude wrote per-session follow-up prompts at `docs/codex-followup-l2-*` asking for Careem/Anghami app-micro-copy register. Codex re-drafted; AR average length dropped from ~120 chars to ~40 chars while preserving pedagogical content.
+4. **Gemini AR review** — reusable prompt at `docs/gemini-review-prompt-2026-06-06.md` instructs Gemini as a native-Arabic quality reviewer to flag translationese, dialect markers, Latin loanwords, wrong register, with strict JSON output schema. Gemini returned 59 flagged items across the three files: 5 hiragana (vowel-length mismatches + overloaded phonetic anchors), 18 katakana (mostly English-loanword phonetic anchors like ماركت/كوفي/تيبل/ميني/مول/ريموت/واي فاي), 36 kanji reading_stories (English transliterations like queue/key/ten/jack/niche/Coke).
+5. **Claude applied 55, skipped 4** — applied all 5 hiragana fixes (preserving Arabic-transliteration convention over Gemini's Latin romaji suggestions), 14 of 18 katakana fixes (skipped 4 visual-Latin-letter anchors because the L2.06 spec explicitly authorized them; for `chi` kept the T visual but used Gemini's تشيلي phonetic), and all 36 kanji reading_story fixes including the elegant «قيلولة» pick for 休 rest (afternoon nap — Arabic-cultural perfect fit).
+6. **Strict final pass by Claude** — re-ran validators (311/311), dialect scan (0 hits), Latin-in-AR scan (0 outside «» glyphs and yoon romaji targets), AR length scan (hira 40, kata 41, kanji 23 avg chars — Careem register confirmed), spot-read of all 55 tweaked items, anchor-repetition observation (17 anchor words reused across 2+ kanji, intentional and pedagogically reinforcing).
+7. **Bulk-commit via `--auto-accept`** — after the user's direction "humans will revise on the site directly, not per item in the CLI," shipped `--auto-accept` mode (commit `e80fbf9`) for bulk-commit-with-validator-gate. ~20 seconds per content type to Firestore. Two CLI bugs caught and fixed mid-flight: dry-run was polluting the progress file (now strictly read-only) and `--auto-accept` was honoring the progress filter (now bypasses it for idempotent bulk-write semantics) — both shipped in `dcb9a10`.
+
+**The AR moat moment:** Five Arabic-speaking friends had flagged our L1 landing-page content for translationese earlier in the project. The wave-1 content was authored explicitly to defend against the same failure mode — and the three-stage AR review (Codex re-draft → Gemini flag → Claude strict pass) caught real issues at each stage: ~5% of katakana, ~35% of kanji reading_stories had loanword/translationese issues that would have shipped without it.
+
+**Files / Areas:** 311 Firestore docs at `tomodachi-dev:content_sets/{hiragana,katakana,kanji}/items/*`. Updated: `docs/Phases_and_Tasks.md` (L2.05/06/08 marked DONE with outcome paragraphs). Tracked Codex/Gemini specs + follow-up prompts in `docs/`. CLI hardening commits `e80fbf9` (--auto-accept), `dcb9a10` (dry-run + progress-filter fixes), plus the prior Codex-spec + manifest commits in the `cf1593d → 6c1312d` chain.
+
+**Verification:** End-to-end CLI runs against `tomodachi-dev` per content type. Each bulk-commit run showed `[NNN/total] ✓ <key> → content_sets/<type>/items/<key>` per item with final summary "✓ authored: N / ⊘ skipped: 0 / ✕ errored: 0". Local progress JSON at `scripts/progress/author_progress.dev.json` accurately reflects the 311 writes.
+
+**Open Follow-up:**
+- L2.07 vocab (4 batches: verbs/nouns/adjectives/misc = 353 items) — manifests + Codex specs already prepped at `scripts/manifests/n5_vocab_*.json` and `docs/codex-spec-l2-07{a,b,c,d}-*.md`. Ready to fire as parallel Codex sessions.
+- L2.09 grammar (54 patterns) — manifest + spec already prepped at `scripts/manifests/n5_grammar.json` and `docs/codex-spec-l2-09-grammar-2026-06-06.md`. Ready to fire.
+- L2.10 listening drills — deferred until L2.07 vocab + L2.09 grammar land (drills test the vocab/grammar).
+- L2.11 audio generation (Azure TTS) — deferred until all content is in Firestore.
+- L2.13 dev→staging→prod migration — at L2.13 the content gets migrated to `tomodachi-prod`; for now `tomodachi-dev` is the canonical source. Migration script `scripts/migrate_v1_to_v2.js` to be authored at that phase.
+- Live-app human review pass on the 311 docs — per project lead's direction, final per-item human review happens via the live app surface (admin UI to be built) rather than in the CLI. Tracked as "future task once admin UI exists."
+
+---
+
 ## 2026-06-06 — L2.04 — Interactive content authoring CLI shipped
 **Status:** ✅ DONE
 **Scope:** Code | Docs

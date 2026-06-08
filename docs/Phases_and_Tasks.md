@@ -545,17 +545,21 @@ Tool is **interactive**, not batch — each item gets the lead's attention. Outp
 
 **Outcome:** Shipped `scripts/author_content.js` + `scripts/lib/{admin,codex,manifest,prompts}.js` (~1050 lines total). Decision points settled per the upfront plan: Codex paste-in mode (no API call from the CLI) (#1B), hybrid input — short fields inline + long fields shell out to `$EDITOR` (#2C), manifest-file pattern for the work queue (#5B). Per-type form definitions cover all seven content types (hiragana, katakana, vocab, kanji, grammar, listening, radicals); validators from `js/validators/content.js` (L2.03) gate every write. AR dialect markers were demoted from blocking to warning-only in the CLI, consistent with the [common-conversational-MSA voice rule]([[feedback-ar-voice-common-tech-not-strict-msa]]) — the lead retains per-item judgment. Resume after Ctrl-C works via the gitignored `scripts/progress/author_progress.<env>.json` ledger. Production writes require an explicit `y` confirmation per item in addition to the `[a]ccept` keystroke. End-to-end dry-run verified: 5-item sample manifest, paste-in Codex flow, valid item accepted (writes to `dev:content_sets/vocab/items/n5_v_001_eat`), invalid item blocked, dialect-only item accepted as warning. Setup steps (service account, `$EDITOR`) documented in [scripts/README.md](../scripts/README.md) with numbered instructions per the [external-tool-detail rule]([[feedback-detailed-external-instructions]]).
 
-#### L2.05 — Author Hiragana mnemonics & polish
+#### L2.05 — Author Hiragana mnemonics & polish — ✅ DONE 2026-06-08
 **Deps:** L2.04
-**Owner:** User (drives) + Codex (drafts) → Claude (review)
+**Owner:** User (drives) + Codex (drafts) → Claude (review) → Gemini (final AR review)
 **Description:** Hiragana is already seeded in Firestore but mnemonics may be missing or weak. Walk through all 46 + dakuten + yōon (~70 items) one at a time. Each gets EN mnemonic + AR mnemonic per `CONTENT_GUIDELINES.md` §8.
 **Acceptance:** Every hiragana doc has both EN and AR mnemonics meeting the §8 quality bar; reviewed.
 
-#### L2.06 — Author Katakana content
+**Outcome:** 104 hiragana docs (46 base + 20 dakuten + 5 handakuten + 33 yoon) written to `tomodachi-dev:content_sets/hiragana/items/*`. Final scope expanded from the original ~70 to 104 to cover the complete N5 kana set. Pipeline used: (1) Codex drafted from `docs/codex-spec-l2-05-hiragana-2026-06-06.md` with brand-stakes framing + web research mandate + native-AR-imagery rules; (2) Codex voice-tightening follow-up to drop textbook-formal Arabic for Careem/Anghami app-micro-copy register; (3) Gemini quality review flagged 5 items (vowel-length mismatches: «سو/سورة» → «سو/سوني», «نو/نور» → «نو/نوتة», «مو/موز» → «مو/موسيقى», «رو/روح» → «رو/روما», and the syllabic ん using «نون ساكنة» pedagogical term); (4) Claude applied the 5 tweaks then ran strict final review (validators 104/104, length 40 avg chars, 0 dialect/Latin); (5) bulk-commit via `--auto-accept` after the user's "don't manually validate each" direction — humans review on the live site instead.
+
+#### L2.06 — Author Katakana content — ✅ DONE 2026-06-08
 **Deps:** L2.04
-**Owner:** User + Codex + Claude (review)
+**Owner:** User + Codex + Claude + Gemini (review pipeline)
 **Description:** All 46 katakana + dakuten + yōon, same structure as hiragana. Authored one-by-one.
 **Acceptance:** Katakana set fully in Firestore; reviewed.
+
+**Outcome:** 104 katakana docs written to `tomodachi-dev:content_sets/katakana/items/*` via same pipeline as L2.05 (Codex spec at `docs/codex-spec-l2-06-katakana-2026-06-06.md`, Codex draft + voice-tightening follow-up, Gemini AR review, Claude apply + strict pass, bulk-commit). Mnemonics intentionally distinct from hiragana siblings (e.g., ア = "antenna up" vs あ = "A with scarf"). Latin letter visual anchors (K, T, L, U, X) kept intentionally per spec — Gemini's 18 flags partitioned into 14 applied (phonetic-anchor loanword replacements like كوفي→كوريا, ماركت→مال, ريموت→ريشة, واي فاي→وادي) and 4 skipped (visual-anchor Latin letters are intentional). Final state: validators 104/104, length 41 avg, 0 dialect/Latin.
 
 #### L2.07 — Author N5 vocabulary (~800 words)
 **Deps:** L2.04
@@ -563,11 +567,13 @@ Tool is **interactive**, not batch — each item gets the lead's attention. Outp
 **Description:** Walk the JLPT N5 vocab list using the L2.04 tool. Per item: EN translation + EN usage note + AR translation + AR usage note + example sentence (JA, EN, AR). Each item authored individually per `CONTENT_GUIDELINES.md` §2.3, §9. Realistic pacing: ~50 items/day with proper care = ~16 working days.
 **Acceptance:** 800 vocab docs in Firestore; project lead has reviewed each AR string; spot-check by Claude of 50 random docs shows zero MSA violations.
 
-#### L2.08 — Author N5 kanji (~100 kanji)
+#### L2.08 — Author N5 kanji (~100 kanji) — ✅ DONE 2026-06-08
 **Deps:** L2.04
-**Owner:** User + Codex + Claude (review)
+**Owner:** User + Codex + Claude + Gemini (review pipeline)
 **Description:** Per kanji: readings, EN+AR meanings, EN meaning_story + AR meaning_story, EN reading_story + AR reading_story (independently authored, NOT translated — per `CONTENT_GUIDELINES.md` §10.5), radicals, stroke count, example vocab. ~100 kanji × deep care = ~10-15 working days.
 **Acceptance:** 100 kanji docs; every mnemonic pair reviewed.
+
+**Outcome:** 103 N5 kanji docs (manifest baseline aligned with JLPT N5 canonical list per Tofugu/Tanos) written to `tomodachi-dev:content_sets/kanji/items/*`. Each carries the WaniKani-inspired two-mnemonic structure (meaning_story + reading_story per locale = 4 stories per kanji, 412 stories total). Pipeline: (1) Codex drafted from `docs/codex-spec-l2-08-kanji-2026-06-06.md` with explicit guidance that AR reading_story must use Arabic-native phonetic anchors not English transliterations; (2) Codex voice-tightening + 6 specific phonetic-anchor fixes after first review (إيش/dialect → إيقاع; niche/Latin → نيّة; buy/Latin → بَيع; doc/Latin → دُكّان; new/Latin → نُور; Queue/Latin → قيلولة — the قيلولة pick for 休 rest is particularly elegant Arabic-cultural fit); (3) Gemini AR review flagged 36 additional reading_stories that still used transliterated English (queue, key, ten, jack, dan, ritz, hook, guy, coke, etc.); (4) Claude applied all 36 Gemini suggestions and ran strict final review (validators 103/103, all onyomi/kunyomi/stroke_count spot-checked against Jisho, 0 Latin in AR fields, 0 dialect markers, AR length 23 avg chars — tight Careem/Anghami register). Final write was held up briefly by a CLI bug: dry-run smoke tests had polluted the progress file with stale kanji entries that made the `--auto-accept` re-run see "Nothing pending" and exit silently. Fixed in commit `dcb9a10` (dry-run is now strictly read-only; `--auto-accept` ignores the progress filter for idempotent bulk-write semantics) and re-ran clean.
 
 #### L2.09 — Author N5 grammar (~50 points)
 **Deps:** L2.04
