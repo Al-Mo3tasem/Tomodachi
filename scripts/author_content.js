@@ -400,12 +400,20 @@ async function main() {
       process.exit(1);
     }
     const progress = loadProgress(args.env);
-    const pending = pendingItems(manifest, progress);
+    // --auto-accept bypasses the progress filter — bulk-write semantics
+    // means a re-run should overwrite everything (Firestore writes are
+    // idempotent for identical content). Interactive mode honors the
+    // filter so Ctrl-C/resume works as expected.
+    const pending = args.autoAccept ? manifest.items : pendingItems(manifest, progress);
     const stats = progressStats(progress, contentType);
     console.log('');
     console.log(color.bold(`Tomodachi authoring — env=${color.cyan(args.env)} type=${color.cyan(contentType)}`));
     console.log(color.gray(`Manifest: ${args.manifest} (${manifest.items.length} items)`));
-    console.log(color.gray(`Progress: ${stats.authored} authored, ${stats.skipped} skipped, ${stats.errored} errored`));
+    if (args.autoAccept) {
+      console.log(color.gray(`Mode:     auto-accept — progress filter bypassed (idempotent writes)`));
+    } else {
+      console.log(color.gray(`Progress: ${stats.authored} authored, ${stats.skipped} skipped, ${stats.errored} errored`));
+    }
     console.log(color.gray(`Pending:  ${pending.length} item(s)`));
     if (pending.length === 0) {
       console.log(color.green('Nothing pending. ✓'));
@@ -482,17 +490,21 @@ async function main() {
         console.log(color.yellow('  ⚠ session ended by user.'));
         break;
       }
-      recordEntry(progress, {
-        key: hint.key,
-        type: contentType,
-        env: args.env,
-        action: result.action,
-        ...(result.writePath ? { writePath: result.writePath } : {}),
-        ...(result.reason ? { reason: result.reason } : {}),
-        ...(result.error ? { error: result.error } : {}),
-        authoredAt: new Date().toISOString()
-      });
-      saveProgress(args.env, progress);
+      // Dry-run is read-only — don't pollute the progress file with
+      // entries that never actually wrote to Firestore.
+      if (!args.dryRun) {
+        recordEntry(progress, {
+          key: hint.key,
+          type: contentType,
+          env: args.env,
+          action: result.action,
+          ...(result.writePath ? { writePath: result.writePath } : {}),
+          ...(result.reason ? { reason: result.reason } : {}),
+          ...(result.error ? { error: result.error } : {}),
+          authoredAt: new Date().toISOString()
+        });
+        saveProgress(args.env, progress);
+      }
       summary[result.action]++;
 
       // Auto-accept per-item progress line (compact)
@@ -509,15 +521,17 @@ async function main() {
       }
     } catch (e) {
       console.error(color.red(`  ✕ error authoring ${hint.key}: ${e.message}`));
-      recordEntry(progress, {
-        key: hint.key,
-        type: contentType,
-        env: args.env,
-        action: 'errored',
-        error: e.message,
-        authoredAt: new Date().toISOString()
-      });
-      saveProgress(args.env, progress);
+      if (!args.dryRun) {
+        recordEntry(progress, {
+          key: hint.key,
+          type: contentType,
+          env: args.env,
+          action: 'errored',
+          error: e.message,
+          authoredAt: new Date().toISOString()
+        });
+        saveProgress(args.env, progress);
+      }
       summary.errored++;
     }
   }
