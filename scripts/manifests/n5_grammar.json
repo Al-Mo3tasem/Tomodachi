@@ -1,0 +1,547 @@
+{
+  "type": "grammar",
+  "jlpt": "n5",
+  "description": "JLPT N5 grammar manifest (54 patterns). Covers particles, polite verb forms, plain forms, adjective conjugation, comparisons, connectors, and time/sequence constructions. Per CONTENT_GUIDELINES Section 11.",
+  "items": [
+    {
+      "key": "g_n5_001_wa_topic",
+      "ordinal": 1,
+      "japanese_hint": "は",
+      "topic_hint": "Topic-marking particle (pronounced wa)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 1
+      }
+    },
+    {
+      "key": "g_n5_002_ga_subject",
+      "ordinal": 2,
+      "japanese_hint": "が",
+      "topic_hint": "Subject-marking particle",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 2
+      }
+    },
+    {
+      "key": "g_n5_003_wo_object",
+      "ordinal": 3,
+      "japanese_hint": "を",
+      "topic_hint": "Direct-object particle (pronounced o)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 3
+      }
+    },
+    {
+      "key": "g_n5_004_ni_target",
+      "ordinal": 4,
+      "japanese_hint": "に",
+      "topic_hint": "Particle for target/destination/time",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 4
+      }
+    },
+    {
+      "key": "g_n5_005_de_location",
+      "ordinal": 5,
+      "japanese_hint": "で",
+      "topic_hint": "Particle for location of action / means",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 5
+      }
+    },
+    {
+      "key": "g_n5_006_he_direction",
+      "ordinal": 6,
+      "japanese_hint": "へ",
+      "topic_hint": "Direction particle (pronounced e)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 6
+      }
+    },
+    {
+      "key": "g_n5_007_to_with_and",
+      "ordinal": 7,
+      "japanese_hint": "と",
+      "topic_hint": "Particle for \"with\" (someone) / exhaustive \"and\"",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 7
+      }
+    },
+    {
+      "key": "g_n5_008_no_possessive",
+      "ordinal": 8,
+      "japanese_hint": "の",
+      "topic_hint": "Possessive/modifying particle",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 8
+      }
+    },
+    {
+      "key": "g_n5_009_kara_from",
+      "ordinal": 9,
+      "japanese_hint": "から",
+      "topic_hint": "Particle for \"from\" (origin point)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 9
+      }
+    },
+    {
+      "key": "g_n5_010_made_until",
+      "ordinal": 10,
+      "japanese_hint": "まで",
+      "topic_hint": "Particle for \"until\" (endpoint)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 10
+      }
+    },
+    {
+      "key": "g_n5_011_mo_also",
+      "ordinal": 11,
+      "japanese_hint": "も",
+      "topic_hint": "Particle for \"also / too\"",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 11
+      }
+    },
+    {
+      "key": "g_n5_012_ya_and_etc",
+      "ordinal": 12,
+      "japanese_hint": "や",
+      "topic_hint": "Particle for non-exhaustive \"and\"",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 12
+      }
+    },
+    {
+      "key": "g_n5_013_ka_question",
+      "ordinal": 13,
+      "japanese_hint": "か",
+      "topic_hint": "Sentence-final question marker",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 13
+      }
+    },
+    {
+      "key": "g_n5_014_ne_confirm",
+      "ordinal": 14,
+      "japanese_hint": "ね",
+      "topic_hint": "Sentence-final particle for confirmation / agreement",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 14
+      }
+    },
+    {
+      "key": "g_n5_015_yo_assert",
+      "ordinal": 15,
+      "japanese_hint": "よ",
+      "topic_hint": "Sentence-final particle for asserting new information",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 15
+      }
+    },
+    {
+      "key": "g_n5_016_desu_copula",
+      "ordinal": 16,
+      "japanese_hint": "です",
+      "topic_hint": "Polite copula (am / is / are)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 16
+      }
+    },
+    {
+      "key": "g_n5_017_da_copula",
+      "ordinal": 17,
+      "japanese_hint": "だ",
+      "topic_hint": "Plain copula",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 17
+      }
+    },
+    {
+      "key": "g_n5_018_deshita_past",
+      "ordinal": 18,
+      "japanese_hint": "でした",
+      "topic_hint": "Past polite copula",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 18
+      }
+    },
+    {
+      "key": "g_n5_019_ja_nai_neg",
+      "ordinal": 19,
+      "japanese_hint": "じゃない / ではない",
+      "topic_hint": "Negative copula",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 19
+      }
+    },
+    {
+      "key": "g_n5_020_masu_polite",
+      "ordinal": 20,
+      "japanese_hint": "〜ます",
+      "topic_hint": "Polite non-past verb ending",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 20
+      }
+    },
+    {
+      "key": "g_n5_021_masen_neg",
+      "ordinal": 21,
+      "japanese_hint": "〜ません",
+      "topic_hint": "Polite negative non-past verb ending",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 21
+      }
+    },
+    {
+      "key": "g_n5_022_mashita_past",
+      "ordinal": 22,
+      "japanese_hint": "〜ました",
+      "topic_hint": "Polite past verb ending",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 22
+      }
+    },
+    {
+      "key": "g_n5_023_masendeshita",
+      "ordinal": 23,
+      "japanese_hint": "〜ませんでした",
+      "topic_hint": "Polite past negative verb ending",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 23
+      }
+    },
+    {
+      "key": "g_n5_024_mashou",
+      "ordinal": 24,
+      "japanese_hint": "〜ましょう / 〜ましょうか",
+      "topic_hint": "Let's do / Shall we do (volitional polite)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 24
+      }
+    },
+    {
+      "key": "g_n5_025_te_kudasai",
+      "ordinal": 25,
+      "japanese_hint": "〜てください",
+      "topic_hint": "Polite request: please do",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 25
+      }
+    },
+    {
+      "key": "g_n5_026_te_form",
+      "ordinal": 26,
+      "japanese_hint": "〜て form",
+      "topic_hint": "Verb te-form (connecting / requesting / continuous base)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 26
+      }
+    },
+    {
+      "key": "g_n5_027_te_iru",
+      "ordinal": 27,
+      "japanese_hint": "〜ている",
+      "topic_hint": "Continuous / state-resulting from action",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 27
+      }
+    },
+    {
+      "key": "g_n5_028_te_mo_ii",
+      "ordinal": 28,
+      "japanese_hint": "〜てもいい",
+      "topic_hint": "Permission: may / it is OK to",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 28
+      }
+    },
+    {
+      "key": "g_n5_029_te_wa_ikenai",
+      "ordinal": 29,
+      "japanese_hint": "〜てはいけない",
+      "topic_hint": "Prohibition: must not",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 29
+      }
+    },
+    {
+      "key": "g_n5_030_tai_want",
+      "ordinal": 30,
+      "japanese_hint": "〜たい",
+      "topic_hint": "Want to do (first-person desiderative)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 30
+      }
+    },
+    {
+      "key": "g_n5_031_nai_neg",
+      "ordinal": 31,
+      "japanese_hint": "〜ない",
+      "topic_hint": "Plain negative verb form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 31
+      }
+    },
+    {
+      "key": "g_n5_032_ta_past",
+      "ordinal": 32,
+      "japanese_hint": "〜た",
+      "topic_hint": "Plain past verb form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 32
+      }
+    },
+    {
+      "key": "g_n5_033_i_adj",
+      "ordinal": 33,
+      "japanese_hint": "〜い adjective",
+      "topic_hint": "i-adjective basic form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 33
+      }
+    },
+    {
+      "key": "g_n5_034_na_adj",
+      "ordinal": 34,
+      "japanese_hint": "〜な adjective",
+      "topic_hint": "na-adjective basic form (uses な before nouns, だ as predicate)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 34
+      }
+    },
+    {
+      "key": "g_n5_035_i_adj_neg",
+      "ordinal": 35,
+      "japanese_hint": "〜くない",
+      "topic_hint": "Negative i-adjective form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 35
+      }
+    },
+    {
+      "key": "g_n5_036_i_adj_past",
+      "ordinal": 36,
+      "japanese_hint": "〜かった",
+      "topic_hint": "Past i-adjective form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 36
+      }
+    },
+    {
+      "key": "g_n5_037_na_adj_neg",
+      "ordinal": 37,
+      "japanese_hint": "na-adj じゃない",
+      "topic_hint": "Negative na-adjective form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 37
+      }
+    },
+    {
+      "key": "g_n5_038_na_adj_past",
+      "ordinal": 38,
+      "japanese_hint": "na-adj でした",
+      "topic_hint": "Past na-adjective form",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 38
+      }
+    },
+    {
+      "key": "g_n5_039_arimasu_inanimate",
+      "ordinal": 39,
+      "japanese_hint": "あります",
+      "topic_hint": "Existence verb for inanimate things",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 39
+      }
+    },
+    {
+      "key": "g_n5_040_imasu_animate",
+      "ordinal": 40,
+      "japanese_hint": "います",
+      "topic_hint": "Existence verb for animate things (people/animals)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 40
+      }
+    },
+    {
+      "key": "g_n5_041_yori_than",
+      "ordinal": 41,
+      "japanese_hint": "A より B",
+      "topic_hint": "Comparison: B more than A",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 41
+      }
+    },
+    {
+      "key": "g_n5_042_ichiban_most",
+      "ordinal": 42,
+      "japanese_hint": "一番",
+      "topic_hint": "Superlative: most / number one",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 42
+      }
+    },
+    {
+      "key": "g_n5_043_dochira_which",
+      "ordinal": 43,
+      "japanese_hint": "どちら / どっち",
+      "topic_hint": "Which (between two options)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 43
+      }
+    },
+    {
+      "key": "g_n5_044_demo_but",
+      "ordinal": 44,
+      "japanese_hint": "でも",
+      "topic_hint": "But / however (sentence-initial)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 44
+      }
+    },
+    {
+      "key": "g_n5_045_sorekara_then",
+      "ordinal": 45,
+      "japanese_hint": "それから / そして",
+      "topic_hint": "And then / additionally (sentence connector)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 45
+      }
+    },
+    {
+      "key": "g_n5_046_dakara_so",
+      "ordinal": 46,
+      "japanese_hint": "だから",
+      "topic_hint": "So / therefore (sentence connector)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 46
+      }
+    },
+    {
+      "key": "g_n5_047_kara_because",
+      "ordinal": 47,
+      "japanese_hint": "〜から (reason)",
+      "topic_hint": "Because (reason particle attached to a clause)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 47
+      }
+    },
+    {
+      "key": "g_n5_048_kedo_but",
+      "ordinal": 48,
+      "japanese_hint": "〜けど / 〜けれども",
+      "topic_hint": "But / although (clause-final)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 48
+      }
+    },
+    {
+      "key": "g_n5_049_toki_when",
+      "ordinal": 49,
+      "japanese_hint": "〜時",
+      "topic_hint": "When (clause + 時)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 49
+      }
+    },
+    {
+      "key": "g_n5_050_mae_ni_before",
+      "ordinal": 50,
+      "japanese_hint": "〜前に",
+      "topic_hint": "Before doing X",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 50
+      }
+    },
+    {
+      "key": "g_n5_051_ato_de_after",
+      "ordinal": 51,
+      "japanese_hint": "〜後で",
+      "topic_hint": "After doing X",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 51
+      }
+    },
+    {
+      "key": "g_n5_052_nagara_while",
+      "ordinal": 52,
+      "japanese_hint": "〜ながら",
+      "topic_hint": "While doing X (simultaneous actions)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 52
+      }
+    },
+    {
+      "key": "g_n5_053_koto_ga_dekiru",
+      "ordinal": 53,
+      "japanese_hint": "〜ことができる",
+      "topic_hint": "Can / be able to do (ability)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 53
+      }
+    },
+    {
+      "key": "g_n5_054_deshou_probably",
+      "ordinal": 54,
+      "japanese_hint": "でしょう",
+      "topic_hint": "Probably / it seems (politeness softener)",
+      "seed": {
+        "jlpt": "n5",
+        "ordinal": 54
+      }
+    }
+  ]
+}

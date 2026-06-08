@@ -1,0 +1,1566 @@
+{
+  "type": "vocab",
+  "jlpt": "n5",
+  "category": "verbs",
+  "description": "JLPT N5 core verbs manifest (82 entries). Each item seeded with japanese + reading + romaji + jlpt + category + audio_key + example_audio_key + difficulty. Codex authors en.primary/notes, ar.primary/notes, example_ja/en/ar. The class_hint field signals ichidan/godan/irregular for the spec/Codex context. Per CONTENT_GUIDELINES Section 9.",
+  "items": [
+    {
+      "key": "n5_v_001_be_animate",
+      "ordinal": 1,
+      "japanese_hint": "いる",
+      "reading_hint": "いる",
+      "romaji_hint": "iru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to exist (animate)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "いる",
+        "reading": "いる",
+        "romaji": "iru",
+        "audio_key": "vocab/n5_v_001_be_animate",
+        "example_audio_key": "examples/n5_v_001_be_animate",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_002_be_inanimate",
+      "ordinal": 2,
+      "japanese_hint": "ある",
+      "reading_hint": "ある",
+      "romaji_hint": "aru",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to exist (inanimate)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "ある",
+        "reading": "ある",
+        "romaji": "aru",
+        "audio_key": "vocab/n5_v_002_be_inanimate",
+        "example_audio_key": "examples/n5_v_002_be_inanimate",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_003_do",
+      "ordinal": 3,
+      "japanese_hint": "する",
+      "reading_hint": "する",
+      "romaji_hint": "suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to do",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "する",
+        "reading": "する",
+        "romaji": "suru",
+        "audio_key": "vocab/n5_v_003_do",
+        "example_audio_key": "examples/n5_v_003_do",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_004_come",
+      "ordinal": 4,
+      "japanese_hint": "来る",
+      "reading_hint": "くる",
+      "romaji_hint": "kuru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to come",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "来る",
+        "reading": "くる",
+        "romaji": "kuru",
+        "audio_key": "vocab/n5_v_004_come",
+        "example_audio_key": "examples/n5_v_004_come",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_005_go",
+      "ordinal": 5,
+      "japanese_hint": "行く",
+      "reading_hint": "いく",
+      "romaji_hint": "iku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to go",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "行く",
+        "reading": "いく",
+        "romaji": "iku",
+        "audio_key": "vocab/n5_v_005_go",
+        "example_audio_key": "examples/n5_v_005_go",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_006_return_home",
+      "ordinal": 6,
+      "japanese_hint": "帰る",
+      "reading_hint": "かえる",
+      "romaji_hint": "kaeru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to return / go home",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "帰る",
+        "reading": "かえる",
+        "romaji": "kaeru",
+        "audio_key": "vocab/n5_v_006_return_home",
+        "example_audio_key": "examples/n5_v_006_return_home",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_007_see",
+      "ordinal": 7,
+      "japanese_hint": "見る",
+      "reading_hint": "みる",
+      "romaji_hint": "miru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to see / watch",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "見る",
+        "reading": "みる",
+        "romaji": "miru",
+        "audio_key": "vocab/n5_v_007_see",
+        "example_audio_key": "examples/n5_v_007_see",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_008_hear",
+      "ordinal": 8,
+      "japanese_hint": "聞く",
+      "reading_hint": "きく",
+      "romaji_hint": "kiku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to hear / listen / ask",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "聞く",
+        "reading": "きく",
+        "romaji": "kiku",
+        "audio_key": "vocab/n5_v_008_hear",
+        "example_audio_key": "examples/n5_v_008_hear",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_009_read",
+      "ordinal": 9,
+      "japanese_hint": "読む",
+      "reading_hint": "よむ",
+      "romaji_hint": "yomu",
+      "class_hint": "godan-mu",
+      "expected_meaning_en": "to read",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "読む",
+        "reading": "よむ",
+        "romaji": "yomu",
+        "audio_key": "vocab/n5_v_009_read",
+        "example_audio_key": "examples/n5_v_009_read",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_010_write",
+      "ordinal": 10,
+      "japanese_hint": "書く",
+      "reading_hint": "かく",
+      "romaji_hint": "kaku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to write",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "書く",
+        "reading": "かく",
+        "romaji": "kaku",
+        "audio_key": "vocab/n5_v_010_write",
+        "example_audio_key": "examples/n5_v_010_write",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_011_speak",
+      "ordinal": 11,
+      "japanese_hint": "話す",
+      "reading_hint": "はなす",
+      "romaji_hint": "hanasu",
+      "class_hint": "godan-su",
+      "expected_meaning_en": "to speak / talk",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "話す",
+        "reading": "はなす",
+        "romaji": "hanasu",
+        "audio_key": "vocab/n5_v_011_speak",
+        "example_audio_key": "examples/n5_v_011_speak",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_012_say",
+      "ordinal": 12,
+      "japanese_hint": "言う",
+      "reading_hint": "いう",
+      "romaji_hint": "iu",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to say",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "言う",
+        "reading": "いう",
+        "romaji": "iu",
+        "audio_key": "vocab/n5_v_012_say",
+        "example_audio_key": "examples/n5_v_012_say",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_013_teach",
+      "ordinal": 13,
+      "japanese_hint": "教える",
+      "reading_hint": "おしえる",
+      "romaji_hint": "oshieru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to teach / inform",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "教える",
+        "reading": "おしえる",
+        "romaji": "oshieru",
+        "audio_key": "vocab/n5_v_013_teach",
+        "example_audio_key": "examples/n5_v_013_teach",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_014_learn",
+      "ordinal": 14,
+      "japanese_hint": "習う",
+      "reading_hint": "ならう",
+      "romaji_hint": "narau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to learn (instruction-based)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "習う",
+        "reading": "ならう",
+        "romaji": "narau",
+        "audio_key": "vocab/n5_v_014_learn",
+        "example_audio_key": "examples/n5_v_014_learn",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_015_study",
+      "ordinal": 15,
+      "japanese_hint": "勉強する",
+      "reading_hint": "べんきょうする",
+      "romaji_hint": "benkyou suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to study",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "勉強する",
+        "reading": "べんきょうする",
+        "romaji": "benkyou suru",
+        "audio_key": "vocab/n5_v_015_study",
+        "example_audio_key": "examples/n5_v_015_study",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_016_eat",
+      "ordinal": 16,
+      "japanese_hint": "食べる",
+      "reading_hint": "たべる",
+      "romaji_hint": "taberu",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to eat",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "食べる",
+        "reading": "たべる",
+        "romaji": "taberu",
+        "audio_key": "vocab/n5_v_016_eat",
+        "example_audio_key": "examples/n5_v_016_eat",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_017_drink",
+      "ordinal": 17,
+      "japanese_hint": "飲む",
+      "reading_hint": "のむ",
+      "romaji_hint": "nomu",
+      "class_hint": "godan-mu",
+      "expected_meaning_en": "to drink",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "飲む",
+        "reading": "のむ",
+        "romaji": "nomu",
+        "audio_key": "vocab/n5_v_017_drink",
+        "example_audio_key": "examples/n5_v_017_drink",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_018_wake_up",
+      "ordinal": 18,
+      "japanese_hint": "起きる",
+      "reading_hint": "おきる",
+      "romaji_hint": "okiru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to wake up / get up",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "起きる",
+        "reading": "おきる",
+        "romaji": "okiru",
+        "audio_key": "vocab/n5_v_018_wake_up",
+        "example_audio_key": "examples/n5_v_018_wake_up",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_019_sleep",
+      "ordinal": 19,
+      "japanese_hint": "寝る",
+      "reading_hint": "ねる",
+      "romaji_hint": "neru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to sleep / go to bed",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "寝る",
+        "reading": "ねる",
+        "romaji": "neru",
+        "audio_key": "vocab/n5_v_019_sleep",
+        "example_audio_key": "examples/n5_v_019_sleep",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_020_stand",
+      "ordinal": 20,
+      "japanese_hint": "立つ",
+      "reading_hint": "たつ",
+      "romaji_hint": "tatsu",
+      "class_hint": "godan-tsu",
+      "expected_meaning_en": "to stand up",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "立つ",
+        "reading": "たつ",
+        "romaji": "tatsu",
+        "audio_key": "vocab/n5_v_020_stand",
+        "example_audio_key": "examples/n5_v_020_stand",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_021_sit",
+      "ordinal": 21,
+      "japanese_hint": "座る",
+      "reading_hint": "すわる",
+      "romaji_hint": "suwaru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to sit",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "座る",
+        "reading": "すわる",
+        "romaji": "suwaru",
+        "audio_key": "vocab/n5_v_021_sit",
+        "example_audio_key": "examples/n5_v_021_sit",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_022_walk",
+      "ordinal": 22,
+      "japanese_hint": "歩く",
+      "reading_hint": "あるく",
+      "romaji_hint": "aruku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to walk",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "歩く",
+        "reading": "あるく",
+        "romaji": "aruku",
+        "audio_key": "vocab/n5_v_022_walk",
+        "example_audio_key": "examples/n5_v_022_walk",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_023_run",
+      "ordinal": 23,
+      "japanese_hint": "走る",
+      "reading_hint": "はしる",
+      "romaji_hint": "hashiru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to run",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "走る",
+        "reading": "はしる",
+        "romaji": "hashiru",
+        "audio_key": "vocab/n5_v_023_run",
+        "example_audio_key": "examples/n5_v_023_run",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_024_swim",
+      "ordinal": 24,
+      "japanese_hint": "泳ぐ",
+      "reading_hint": "およぐ",
+      "romaji_hint": "oyogu",
+      "class_hint": "godan-gu",
+      "expected_meaning_en": "to swim",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "泳ぐ",
+        "reading": "およぐ",
+        "romaji": "oyogu",
+        "audio_key": "vocab/n5_v_024_swim",
+        "example_audio_key": "examples/n5_v_024_swim",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_025_fly",
+      "ordinal": 25,
+      "japanese_hint": "飛ぶ",
+      "reading_hint": "とぶ",
+      "romaji_hint": "tobu",
+      "class_hint": "godan-bu",
+      "expected_meaning_en": "to fly / jump",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "飛ぶ",
+        "reading": "とぶ",
+        "romaji": "tobu",
+        "audio_key": "vocab/n5_v_025_fly",
+        "example_audio_key": "examples/n5_v_025_fly",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_026_work",
+      "ordinal": 26,
+      "japanese_hint": "働く",
+      "reading_hint": "はたらく",
+      "romaji_hint": "hataraku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to work",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "働く",
+        "reading": "はたらく",
+        "romaji": "hataraku",
+        "audio_key": "vocab/n5_v_026_work",
+        "example_audio_key": "examples/n5_v_026_work",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_027_rest",
+      "ordinal": 27,
+      "japanese_hint": "休む",
+      "reading_hint": "やすむ",
+      "romaji_hint": "yasumu",
+      "class_hint": "godan-mu",
+      "expected_meaning_en": "to rest / take a break / be absent",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "休む",
+        "reading": "やすむ",
+        "romaji": "yasumu",
+        "audio_key": "vocab/n5_v_027_rest",
+        "example_audio_key": "examples/n5_v_027_rest",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_028_play",
+      "ordinal": 28,
+      "japanese_hint": "遊ぶ",
+      "reading_hint": "あそぶ",
+      "romaji_hint": "asobu",
+      "class_hint": "godan-bu",
+      "expected_meaning_en": "to play / hang out",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "遊ぶ",
+        "reading": "あそぶ",
+        "romaji": "asobu",
+        "audio_key": "vocab/n5_v_028_play",
+        "example_audio_key": "examples/n5_v_028_play",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_029_practice",
+      "ordinal": 29,
+      "japanese_hint": "練習する",
+      "reading_hint": "れんしゅうする",
+      "romaji_hint": "renshuu suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to practice",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "練習する",
+        "reading": "れんしゅうする",
+        "romaji": "renshuu suru",
+        "audio_key": "vocab/n5_v_029_practice",
+        "example_audio_key": "examples/n5_v_029_practice",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_030_travel",
+      "ordinal": 30,
+      "japanese_hint": "旅行する",
+      "reading_hint": "りょこうする",
+      "romaji_hint": "ryokou suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to travel",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "旅行する",
+        "reading": "りょこうする",
+        "romaji": "ryokou suru",
+        "audio_key": "vocab/n5_v_030_travel",
+        "example_audio_key": "examples/n5_v_030_travel",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_031_buy",
+      "ordinal": 31,
+      "japanese_hint": "買う",
+      "reading_hint": "かう",
+      "romaji_hint": "kau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to buy",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "買う",
+        "reading": "かう",
+        "romaji": "kau",
+        "audio_key": "vocab/n5_v_031_buy",
+        "example_audio_key": "examples/n5_v_031_buy",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_032_sell",
+      "ordinal": 32,
+      "japanese_hint": "売る",
+      "reading_hint": "うる",
+      "romaji_hint": "uru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to sell",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "売る",
+        "reading": "うる",
+        "romaji": "uru",
+        "audio_key": "vocab/n5_v_032_sell",
+        "example_audio_key": "examples/n5_v_032_sell",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_033_pay",
+      "ordinal": 33,
+      "japanese_hint": "払う",
+      "reading_hint": "はらう",
+      "romaji_hint": "harau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to pay",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "払う",
+        "reading": "はらう",
+        "romaji": "harau",
+        "audio_key": "vocab/n5_v_033_pay",
+        "example_audio_key": "examples/n5_v_033_pay",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_034_make",
+      "ordinal": 34,
+      "japanese_hint": "作る",
+      "reading_hint": "つくる",
+      "romaji_hint": "tsukuru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to make",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "作る",
+        "reading": "つくる",
+        "romaji": "tsukuru",
+        "audio_key": "vocab/n5_v_034_make",
+        "example_audio_key": "examples/n5_v_034_make",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_035_use",
+      "ordinal": 35,
+      "japanese_hint": "使う",
+      "reading_hint": "つかう",
+      "romaji_hint": "tsukau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to use",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "使う",
+        "reading": "つかう",
+        "romaji": "tsukau",
+        "audio_key": "vocab/n5_v_035_use",
+        "example_audio_key": "examples/n5_v_035_use",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_036_hold",
+      "ordinal": 36,
+      "japanese_hint": "持つ",
+      "reading_hint": "もつ",
+      "romaji_hint": "motsu",
+      "class_hint": "godan-tsu",
+      "expected_meaning_en": "to hold / have / carry",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "持つ",
+        "reading": "もつ",
+        "romaji": "motsu",
+        "audio_key": "vocab/n5_v_036_hold",
+        "example_audio_key": "examples/n5_v_036_hold",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_037_take",
+      "ordinal": 37,
+      "japanese_hint": "取る",
+      "reading_hint": "とる",
+      "romaji_hint": "toru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to take / grab",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "取る",
+        "reading": "とる",
+        "romaji": "toru",
+        "audio_key": "vocab/n5_v_037_take",
+        "example_audio_key": "examples/n5_v_037_take",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_038_give",
+      "ordinal": 38,
+      "japanese_hint": "あげる",
+      "reading_hint": "あげる",
+      "romaji_hint": "ageru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to give (to someone outside in-group)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "あげる",
+        "reading": "あげる",
+        "romaji": "ageru",
+        "audio_key": "vocab/n5_v_038_give",
+        "example_audio_key": "examples/n5_v_038_give",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_039_receive",
+      "ordinal": 39,
+      "japanese_hint": "もらう",
+      "reading_hint": "もらう",
+      "romaji_hint": "morau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to receive",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "もらう",
+        "reading": "もらう",
+        "romaji": "morau",
+        "audio_key": "vocab/n5_v_039_receive",
+        "example_audio_key": "examples/n5_v_039_receive",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_040_lend",
+      "ordinal": 40,
+      "japanese_hint": "貸す",
+      "reading_hint": "かす",
+      "romaji_hint": "kasu",
+      "class_hint": "godan-su",
+      "expected_meaning_en": "to lend",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "貸す",
+        "reading": "かす",
+        "romaji": "kasu",
+        "audio_key": "vocab/n5_v_040_lend",
+        "example_audio_key": "examples/n5_v_040_lend",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_041_borrow",
+      "ordinal": 41,
+      "japanese_hint": "借りる",
+      "reading_hint": "かりる",
+      "romaji_hint": "kariru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to borrow / rent",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "借りる",
+        "reading": "かりる",
+        "romaji": "kariru",
+        "audio_key": "vocab/n5_v_041_borrow",
+        "example_audio_key": "examples/n5_v_041_borrow",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_042_open_tr",
+      "ordinal": 42,
+      "japanese_hint": "開ける",
+      "reading_hint": "あける",
+      "romaji_hint": "akeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to open (transitive)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "開ける",
+        "reading": "あける",
+        "romaji": "akeru",
+        "audio_key": "vocab/n5_v_042_open_tr",
+        "example_audio_key": "examples/n5_v_042_open_tr",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_043_close_tr",
+      "ordinal": 43,
+      "japanese_hint": "閉める",
+      "reading_hint": "しめる",
+      "romaji_hint": "shimeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to close (transitive)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "閉める",
+        "reading": "しめる",
+        "romaji": "shimeru",
+        "audio_key": "vocab/n5_v_043_close_tr",
+        "example_audio_key": "examples/n5_v_043_close_tr",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_044_turn_on",
+      "ordinal": 44,
+      "japanese_hint": "つける",
+      "reading_hint": "つける",
+      "romaji_hint": "tsukeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to turn on / switch on",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "つける",
+        "reading": "つける",
+        "romaji": "tsukeru",
+        "audio_key": "vocab/n5_v_044_turn_on",
+        "example_audio_key": "examples/n5_v_044_turn_on",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_045_turn_off",
+      "ordinal": 45,
+      "japanese_hint": "消す",
+      "reading_hint": "けす",
+      "romaji_hint": "kesu",
+      "class_hint": "godan-su",
+      "expected_meaning_en": "to turn off / erase",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "消す",
+        "reading": "けす",
+        "romaji": "kesu",
+        "audio_key": "vocab/n5_v_045_turn_off",
+        "example_audio_key": "examples/n5_v_045_turn_off",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_046_put_in",
+      "ordinal": 46,
+      "japanese_hint": "入れる",
+      "reading_hint": "いれる",
+      "romaji_hint": "ireru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to put in / insert",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "入れる",
+        "reading": "いれる",
+        "romaji": "ireru",
+        "audio_key": "vocab/n5_v_046_put_in",
+        "example_audio_key": "examples/n5_v_046_put_in",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_047_take_out",
+      "ordinal": 47,
+      "japanese_hint": "出す",
+      "reading_hint": "だす",
+      "romaji_hint": "dasu",
+      "class_hint": "godan-su",
+      "expected_meaning_en": "to take out / submit / send",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "出す",
+        "reading": "だす",
+        "romaji": "dasu",
+        "audio_key": "vocab/n5_v_047_take_out",
+        "example_audio_key": "examples/n5_v_047_take_out",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_048_enter",
+      "ordinal": 48,
+      "japanese_hint": "入る",
+      "reading_hint": "はいる",
+      "romaji_hint": "hairu",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to enter",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "入る",
+        "reading": "はいる",
+        "romaji": "hairu",
+        "audio_key": "vocab/n5_v_048_enter",
+        "example_audio_key": "examples/n5_v_048_enter",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_049_exit",
+      "ordinal": 49,
+      "japanese_hint": "出る",
+      "reading_hint": "でる",
+      "romaji_hint": "deru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to exit / leave",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "出る",
+        "reading": "でる",
+        "romaji": "deru",
+        "audio_key": "vocab/n5_v_049_exit",
+        "example_audio_key": "examples/n5_v_049_exit",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_050_start_tr",
+      "ordinal": 50,
+      "japanese_hint": "始める",
+      "reading_hint": "はじめる",
+      "romaji_hint": "hajimeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to begin / start (transitive)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "始める",
+        "reading": "はじめる",
+        "romaji": "hajimeru",
+        "audio_key": "vocab/n5_v_050_start_tr",
+        "example_audio_key": "examples/n5_v_050_start_tr",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_051_end_intr",
+      "ordinal": 51,
+      "japanese_hint": "終わる",
+      "reading_hint": "おわる",
+      "romaji_hint": "owaru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to end / finish (intransitive)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "終わる",
+        "reading": "おわる",
+        "romaji": "owaru",
+        "audio_key": "vocab/n5_v_051_end_intr",
+        "example_audio_key": "examples/n5_v_051_end_intr",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_052_wait",
+      "ordinal": 52,
+      "japanese_hint": "待つ",
+      "reading_hint": "まつ",
+      "romaji_hint": "matsu",
+      "class_hint": "godan-tsu",
+      "expected_meaning_en": "to wait",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "待つ",
+        "reading": "まつ",
+        "romaji": "matsu",
+        "audio_key": "vocab/n5_v_052_wait",
+        "example_audio_key": "examples/n5_v_052_wait",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_053_meet",
+      "ordinal": 53,
+      "japanese_hint": "会う",
+      "reading_hint": "あう",
+      "romaji_hint": "au",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to meet / see (a person)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "会う",
+        "reading": "あう",
+        "romaji": "au",
+        "audio_key": "vocab/n5_v_053_meet",
+        "example_audio_key": "examples/n5_v_053_meet",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_054_call",
+      "ordinal": 54,
+      "japanese_hint": "呼ぶ",
+      "reading_hint": "よぶ",
+      "romaji_hint": "yobu",
+      "class_hint": "godan-bu",
+      "expected_meaning_en": "to call (out to) / summon",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "呼ぶ",
+        "reading": "よぶ",
+        "romaji": "yobu",
+        "audio_key": "vocab/n5_v_054_call",
+        "example_audio_key": "examples/n5_v_054_call",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_055_answer",
+      "ordinal": 55,
+      "japanese_hint": "答える",
+      "reading_hint": "こたえる",
+      "romaji_hint": "kotaeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to answer",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "答える",
+        "reading": "こたえる",
+        "romaji": "kotaeru",
+        "audio_key": "vocab/n5_v_055_answer",
+        "example_audio_key": "examples/n5_v_055_answer",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_056_think",
+      "ordinal": 56,
+      "japanese_hint": "思う",
+      "reading_hint": "おもう",
+      "romaji_hint": "omou",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to think (feel)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "思う",
+        "reading": "おもう",
+        "romaji": "omou",
+        "audio_key": "vocab/n5_v_056_think",
+        "example_audio_key": "examples/n5_v_056_think",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_057_know",
+      "ordinal": 57,
+      "japanese_hint": "知る",
+      "reading_hint": "しる",
+      "romaji_hint": "shiru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to know / learn of",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "知る",
+        "reading": "しる",
+        "romaji": "shiru",
+        "audio_key": "vocab/n5_v_057_know",
+        "example_audio_key": "examples/n5_v_057_know",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_058_understand",
+      "ordinal": 58,
+      "japanese_hint": "分かる",
+      "reading_hint": "わかる",
+      "romaji_hint": "wakaru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to understand / be clear",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "分かる",
+        "reading": "わかる",
+        "romaji": "wakaru",
+        "audio_key": "vocab/n5_v_058_understand",
+        "example_audio_key": "examples/n5_v_058_understand",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_059_be_able",
+      "ordinal": 59,
+      "japanese_hint": "出来る",
+      "reading_hint": "できる",
+      "romaji_hint": "dekiru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to be able / can do",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "出来る",
+        "reading": "できる",
+        "romaji": "dekiru",
+        "audio_key": "vocab/n5_v_059_be_able",
+        "example_audio_key": "examples/n5_v_059_be_able",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_060_remember",
+      "ordinal": 60,
+      "japanese_hint": "覚える",
+      "reading_hint": "おぼえる",
+      "romaji_hint": "oboeru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to remember / memorize",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "覚える",
+        "reading": "おぼえる",
+        "romaji": "oboeru",
+        "audio_key": "vocab/n5_v_060_remember",
+        "example_audio_key": "examples/n5_v_060_remember",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_061_forget",
+      "ordinal": 61,
+      "japanese_hint": "忘れる",
+      "reading_hint": "わすれる",
+      "romaji_hint": "wasureru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to forget",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "忘れる",
+        "reading": "わすれる",
+        "romaji": "wasureru",
+        "audio_key": "vocab/n5_v_061_forget",
+        "example_audio_key": "examples/n5_v_061_forget",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_062_wear_upper",
+      "ordinal": 62,
+      "japanese_hint": "着る",
+      "reading_hint": "きる",
+      "romaji_hint": "kiru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to wear (above the waist)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "着る",
+        "reading": "きる",
+        "romaji": "kiru",
+        "audio_key": "vocab/n5_v_062_wear_upper",
+        "example_audio_key": "examples/n5_v_062_wear_upper",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_063_wear_lower",
+      "ordinal": 63,
+      "japanese_hint": "履く",
+      "reading_hint": "はく",
+      "romaji_hint": "haku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to wear (below the waist)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "履く",
+        "reading": "はく",
+        "romaji": "haku",
+        "audio_key": "vocab/n5_v_063_wear_lower",
+        "example_audio_key": "examples/n5_v_063_wear_lower",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_064_take_off",
+      "ordinal": 64,
+      "japanese_hint": "脱ぐ",
+      "reading_hint": "ぬぐ",
+      "romaji_hint": "nugu",
+      "class_hint": "godan-gu",
+      "expected_meaning_en": "to take off (clothes)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "脱ぐ",
+        "reading": "ぬぐ",
+        "romaji": "nugu",
+        "audio_key": "vocab/n5_v_064_take_off",
+        "example_audio_key": "examples/n5_v_064_take_off",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_065_wash",
+      "ordinal": 65,
+      "japanese_hint": "洗う",
+      "reading_hint": "あらう",
+      "romaji_hint": "arau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to wash",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "洗う",
+        "reading": "あらう",
+        "romaji": "arau",
+        "audio_key": "vocab/n5_v_065_wash",
+        "example_audio_key": "examples/n5_v_065_wash",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_066_clean",
+      "ordinal": 66,
+      "japanese_hint": "掃除する",
+      "reading_hint": "そうじする",
+      "romaji_hint": "souji suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to clean (sweep / tidy)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "掃除する",
+        "reading": "そうじする",
+        "romaji": "souji suru",
+        "audio_key": "vocab/n5_v_066_clean",
+        "example_audio_key": "examples/n5_v_066_clean",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_067_laundry",
+      "ordinal": 67,
+      "japanese_hint": "洗濯する",
+      "reading_hint": "せんたくする",
+      "romaji_hint": "sentaku suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to do laundry",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "洗濯する",
+        "reading": "せんたくする",
+        "romaji": "sentaku suru",
+        "audio_key": "vocab/n5_v_067_laundry",
+        "example_audio_key": "examples/n5_v_067_laundry",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_068_cook",
+      "ordinal": 68,
+      "japanese_hint": "料理する",
+      "reading_hint": "りょうりする",
+      "romaji_hint": "ryouri suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to cook",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "料理する",
+        "reading": "りょうりする",
+        "romaji": "ryouri suru",
+        "audio_key": "vocab/n5_v_068_cook",
+        "example_audio_key": "examples/n5_v_068_cook",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_069_ride",
+      "ordinal": 69,
+      "japanese_hint": "乗る",
+      "reading_hint": "のる",
+      "romaji_hint": "noru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to ride / board (transport)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "乗る",
+        "reading": "のる",
+        "romaji": "noru",
+        "audio_key": "vocab/n5_v_069_ride",
+        "example_audio_key": "examples/n5_v_069_ride",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_070_get_off",
+      "ordinal": 70,
+      "japanese_hint": "降りる",
+      "reading_hint": "おりる",
+      "romaji_hint": "oriru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to get off / disembark",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "降りる",
+        "reading": "おりる",
+        "romaji": "oriru",
+        "audio_key": "vocab/n5_v_070_get_off",
+        "example_audio_key": "examples/n5_v_070_get_off",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_071_arrive",
+      "ordinal": 71,
+      "japanese_hint": "着く",
+      "reading_hint": "つく",
+      "romaji_hint": "tsuku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to arrive",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "着く",
+        "reading": "つく",
+        "romaji": "tsuku",
+        "audio_key": "vocab/n5_v_071_arrive",
+        "example_audio_key": "examples/n5_v_071_arrive",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_072_cross",
+      "ordinal": 72,
+      "japanese_hint": "渡る",
+      "reading_hint": "わたる",
+      "romaji_hint": "wataru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to cross (e.g., a road)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "渡る",
+        "reading": "わたる",
+        "romaji": "wataru",
+        "audio_key": "vocab/n5_v_072_cross",
+        "example_audio_key": "examples/n5_v_072_cross",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_073_turn",
+      "ordinal": 73,
+      "japanese_hint": "曲がる",
+      "reading_hint": "まがる",
+      "romaji_hint": "magaru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to turn (a corner)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "曲がる",
+        "reading": "まがる",
+        "romaji": "magaru",
+        "audio_key": "vocab/n5_v_073_turn",
+        "example_audio_key": "examples/n5_v_073_turn",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_074_take_photo",
+      "ordinal": 74,
+      "japanese_hint": "撮る",
+      "reading_hint": "とる",
+      "romaji_hint": "toru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to take (a photo)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "撮る",
+        "reading": "とる",
+        "romaji": "toru",
+        "audio_key": "vocab/n5_v_074_take_photo",
+        "example_audio_key": "examples/n5_v_074_take_photo",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_075_sing",
+      "ordinal": 75,
+      "japanese_hint": "歌う",
+      "reading_hint": "うたう",
+      "romaji_hint": "utau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to sing",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "歌う",
+        "reading": "うたう",
+        "romaji": "utau",
+        "audio_key": "vocab/n5_v_075_sing",
+        "example_audio_key": "examples/n5_v_075_sing",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_076_dance",
+      "ordinal": 76,
+      "japanese_hint": "踊る",
+      "reading_hint": "おどる",
+      "romaji_hint": "odoru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to dance",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "踊る",
+        "reading": "おどる",
+        "romaji": "odoru",
+        "audio_key": "vocab/n5_v_076_dance",
+        "example_audio_key": "examples/n5_v_076_dance",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_077_cry",
+      "ordinal": 77,
+      "japanese_hint": "泣く",
+      "reading_hint": "なく",
+      "romaji_hint": "naku",
+      "class_hint": "godan-ku",
+      "expected_meaning_en": "to cry",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "泣く",
+        "reading": "なく",
+        "romaji": "naku",
+        "audio_key": "vocab/n5_v_077_cry",
+        "example_audio_key": "examples/n5_v_077_cry",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_078_laugh",
+      "ordinal": 78,
+      "japanese_hint": "笑う",
+      "reading_hint": "わらう",
+      "romaji_hint": "warau",
+      "class_hint": "godan-u",
+      "expected_meaning_en": "to laugh / smile",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "笑う",
+        "reading": "わらう",
+        "romaji": "warau",
+        "audio_key": "vocab/n5_v_078_laugh",
+        "example_audio_key": "examples/n5_v_078_laugh",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_079_watch_over",
+      "ordinal": 79,
+      "japanese_hint": "見せる",
+      "reading_hint": "みせる",
+      "romaji_hint": "miseru",
+      "class_hint": "ichidan",
+      "expected_meaning_en": "to show",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "見せる",
+        "reading": "みせる",
+        "romaji": "miseru",
+        "audio_key": "vocab/n5_v_079_watch_over",
+        "example_audio_key": "examples/n5_v_079_watch_over",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_080_explain",
+      "ordinal": 80,
+      "japanese_hint": "説明する",
+      "reading_hint": "せつめいする",
+      "romaji_hint": "setsumei suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to explain",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "説明する",
+        "reading": "せつめいする",
+        "romaji": "setsumei suru",
+        "audio_key": "vocab/n5_v_080_explain",
+        "example_audio_key": "examples/n5_v_080_explain",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_081_ask_question",
+      "ordinal": 81,
+      "japanese_hint": "質問する",
+      "reading_hint": "しつもんする",
+      "romaji_hint": "shitsumon suru",
+      "class_hint": "irregular",
+      "expected_meaning_en": "to ask (a question)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "質問する",
+        "reading": "しつもんする",
+        "romaji": "shitsumon suru",
+        "audio_key": "vocab/n5_v_081_ask_question",
+        "example_audio_key": "examples/n5_v_081_ask_question",
+        "difficulty": 1
+      }
+    },
+    {
+      "key": "n5_v_082_need",
+      "ordinal": 82,
+      "japanese_hint": "要る",
+      "reading_hint": "いる",
+      "romaji_hint": "iru",
+      "class_hint": "godan-ru",
+      "expected_meaning_en": "to need (NOT to exist — different verb)",
+      "seed": {
+        "jlpt": "n5",
+        "category": "verbs",
+        "japanese": "要る",
+        "reading": "いる",
+        "romaji": "iru",
+        "audio_key": "vocab/n5_v_082_need",
+        "example_audio_key": "examples/n5_v_082_need",
+        "difficulty": 1
+      }
+    }
+  ]
+}
