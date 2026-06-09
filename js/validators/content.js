@@ -23,7 +23,7 @@ const KANA_ROWS = [
 ];
 
 const VOCAB_CATEGORIES = [
-  'verbs', 'nouns', 'adjectives', 'adverbs', 'expressions',
+  'verbs', 'nouns', 'people', 'adjectives', 'adverbs', 'expressions',
   'counters', 'time', 'days', 'family', 'food', 'places',
   'body', 'feelings', 'weather', 'nature'
 ];
@@ -36,20 +36,21 @@ const LISTENING_ERROR_CATEGORIES = [
   'translation_wrong', 'audio_mismatch', 'typo', 'other'
 ];
 
-// Key-format regexes (per CONTENT_GUIDELINES + Master Plan §4)
+// Key-format regexes (per CONTENT_GUIDELINES + Master Plan §4).
+// Slug suffixes allow [a-z0-9_]+ so legitimate slugs like `number_1` work.
 const KEY_PATTERNS = {
   // Kana keys: short Latin slug (e.g., 'a', 'ka', 'gi', 'kya', 'n')
   kana:      /^[a-z]{1,4}$/,
-  // Vocab: n5_v_NNN_{en_root}  e.g., 'n5_v_001_eat'
-  vocab:     /^n[3-5]_v_\d{3}_[a-z_]+$/,
+  // Vocab: n5_v_NNN_{en_root}  e.g., 'n5_v_001_eat', 'n5_v_061_number_1'
+  vocab:     /^n[3-5]_v_\d{3}_[a-z0-9_]+$/,
   // Kanji: k_n5_NNN_{en_concept}  e.g., 'k_n5_001_person'
-  kanji:     /^k_n[3-5]_\d{3}_[a-z_]+$/,
+  kanji:     /^k_n[3-5]_\d{3}_[a-z0-9_]+$/,
   // Grammar: g_n5_NNN_{en_handle}  e.g., 'g_n5_001_wa_topic'
-  grammar:   /^g_n[3-5]_\d{3}_[a-z_]+$/,
+  grammar:   /^g_n[3-5]_\d{3}_[a-z0-9_]+$/,
   // Listening: n5_l_NNN_{en_handle}  e.g., 'n5_l_001_greeting'
-  listening: /^n[3-5]_l_\d{3}_[a-z_]+$/,
+  listening: /^n[3-5]_l_\d{3}_[a-z0-9_]+$/,
   // Radicals: k_rad_{en_concept}  e.g., 'k_rad_person'
-  radical:   /^k_rad_[a-z_]+$/,
+  radical:   /^k_rad_[a-z0-9_]+$/,
   // Lessons: track-prefixed track-position  e.g., 'hiragana:01', 'vocab:greetings:1'
   lesson:    /^[a-z]+(:[a-z0-9_]+)+$/
 };

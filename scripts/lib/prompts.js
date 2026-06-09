@@ -151,7 +151,7 @@ export function editInEditor(initial, suffix = '.md') {
 //   default: value or function(item) → value, applied if user input is empty
 
 const VOCAB_CATEGORIES = [
-  'verbs', 'nouns', 'adjectives', 'adverbs', 'expressions',
+  'verbs', 'nouns', 'people', 'adjectives', 'adverbs', 'expressions',
   'counters', 'time', 'days', 'family', 'food', 'places',
   'body', 'feelings', 'weather', 'nature'
 ];
