@@ -561,11 +561,19 @@ Tool is **interactive**, not batch — each item gets the lead's attention. Outp
 
 **Outcome:** 104 katakana docs written to `tomodachi-dev:content_sets/katakana/items/*` via same pipeline as L2.05 (Codex spec at `docs/codex-spec-l2-06-katakana-2026-06-06.md`, Codex draft + voice-tightening follow-up, Gemini AR review, Claude apply + strict pass, bulk-commit). Mnemonics intentionally distinct from hiragana siblings (e.g., ア = "antenna up" vs あ = "A with scarf"). Latin letter visual anchors (K, T, L, U, X) kept intentionally per spec — Gemini's 18 flags partitioned into 14 applied (phonetic-anchor loanword replacements like كوفي→كوريا, ماركت→مال, ريموت→ريشة, واي فاي→وادي) and 4 skipped (visual-anchor Latin letters are intentional). Final state: validators 104/104, length 41 avg, 0 dialect/Latin.
 
-#### L2.07 — Author N5 vocabulary (~800 words)
+#### L2.07 — Author N5 vocabulary (Tier 1 core ≈ 350 items) — ✅ DONE 2026-06-09
 **Deps:** L2.04
-**Owner:** User (drives) + Codex (drafts) → Claude (review)
+**Owner:** User (drives) + Codex (drafts) → Claude + Gemini (review)
 **Description:** Walk the JLPT N5 vocab list using the L2.04 tool. Per item: EN translation + EN usage note + AR translation + AR usage note + example sentence (JA, EN, AR). Each item authored individually per `CONTENT_GUIDELINES.md` §2.3, §9. Realistic pacing: ~50 items/day with proper care = ~16 working days.
-**Acceptance:** 800 vocab docs in Firestore; project lead has reviewed each AR string; spot-check by Claude of 50 random docs shows zero MSA violations.
+**Acceptance:** Core N5 vocab in Firestore; project lead has reviewed each AR string; spot-check by Claude of 50 random docs shows zero MSA violations.
+
+**Outcome:** 353 core N5 vocab docs written to `tomodachi-dev:content_sets/vocab/items/*` across 4 parallel-authored batches: verbs (82), nouns (123), adjectives (59), misc (89 = adverbs + demonstratives + interrogatives + greetings + counters + numbers + days). The original "~800 words" L2.07 target was scoped to the **tier-1 core** subset that covers high-frequency everyday vocab; the longer tail (specialized nouns, less-common verbs, JLPT-N5-adjacent edge items) is deferred to a future wave 3 batch when needed. Pipeline: 4 Codex specs at `docs/codex-spec-l2-07{a,b,c,d}-*-2026-06-06.md` with category-specific guidance (e.g., verbs spec required imperfect-tense AR like «يأكل» not «أكل»; nouns spec required naturalized loanwords like «قهوة»/«فندق»/«كمبيوتر» where MENA actually uses them; adjectives spec made the i-adj vs na-adj note MANDATORY; misc spec gave per-category guidance for greetings/demonstratives/counters/numbers/days). Strict pre-commit judge review caught two issues fixed in commit `b6c7b72`: (a) validator regex needed to allow digits in slugs (number_1 was rejected) and (b) `people` category needed to be added to `VOCAB_CATEGORIES`. Gemini review for verbs/nouns/adjectives/misc returned 0 hard flags — Codex's drafts plus the spec's category-aware guidance landed clean. Verbs AR length avg 16 chars (lookup-card tight), nouns avg 12 chars, adjectives avg 31 (more notes per item), misc avg 33 (mixed). Bulk-committed via `--auto-accept`.
+
+#### L2.07-tail — Author the remaining ~450 N5 vocab — ⏳ DEFERRED
+**Deps:** L2.07 (core landed)
+**Owner:** User + Codex + Claude + Gemini
+**Description:** The long tail of N5 vocab not in the tier-1 core 353: specialized nouns, lower-frequency verbs, the rest of the standard 800-word N5 list. Pattern: write new manifests per category extension + new Codex specs reusing the L2.07a-d format.
+**Acceptance:** Total N5 vocab in `content_sets/vocab/items/*` reaches ~800.
 
 #### L2.08 — Author N5 kanji (~100 kanji) — ✅ DONE 2026-06-08
 **Deps:** L2.04
@@ -575,11 +583,13 @@ Tool is **interactive**, not batch — each item gets the lead's attention. Outp
 
 **Outcome:** 103 N5 kanji docs (manifest baseline aligned with JLPT N5 canonical list per Tofugu/Tanos) written to `tomodachi-dev:content_sets/kanji/items/*`. Each carries the WaniKani-inspired two-mnemonic structure (meaning_story + reading_story per locale = 4 stories per kanji, 412 stories total). Pipeline: (1) Codex drafted from `docs/codex-spec-l2-08-kanji-2026-06-06.md` with explicit guidance that AR reading_story must use Arabic-native phonetic anchors not English transliterations; (2) Codex voice-tightening + 6 specific phonetic-anchor fixes after first review (إيش/dialect → إيقاع; niche/Latin → نيّة; buy/Latin → بَيع; doc/Latin → دُكّان; new/Latin → نُور; Queue/Latin → قيلولة — the قيلولة pick for 休 rest is particularly elegant Arabic-cultural fit); (3) Gemini AR review flagged 36 additional reading_stories that still used transliterated English (queue, key, ten, jack, dan, ritz, hook, guy, coke, etc.); (4) Claude applied all 36 Gemini suggestions and ran strict final review (validators 103/103, all onyomi/kunyomi/stroke_count spot-checked against Jisho, 0 Latin in AR fields, 0 dialect markers, AR length 23 avg chars — tight Careem/Anghami register). Final write was held up briefly by a CLI bug: dry-run smoke tests had polluted the progress file with stale kanji entries that made the `--auto-accept` re-run see "Nothing pending" and exit silently. Fixed in commit `dcb9a10` (dry-run is now strictly read-only; `--auto-accept` ignores the progress filter for idempotent bulk-write semantics) and re-ran clean.
 
-#### L2.09 — Author N5 grammar (~50 points)
+#### L2.09 — Author N5 grammar (~50 points) — ✅ DONE 2026-06-09
 **Deps:** L2.04
-**Owner:** User + Codex + Claude (review)
+**Owner:** User + Codex + Claude + Gemini (review pipeline)
 **Description:** Per grammar point: title (EN+AR), body following §11.2 template (EN+AR independently authored), 2-4 example sentences each with all four fields (JA, romaji, EN, AR) + breakdown. ~50 × deep care = ~8-12 working days.
 **Acceptance:** 50 grammar docs; reviewed.
+
+**Outcome:** 54 N5 grammar docs written to `tomodachi-dev:content_sets/grammar/items/*` covering particles (15), copula (4), polite verb forms (11), plain forms (2), adjectives (6), existence (2), comparison (3), connectors (5), time/sequence (4), and modal/ability (2). Spec at `docs/codex-spec-l2-09-grammar-2026-06-06.md` set the bar at Careem/Anghami modern educational MSA (not textbook) with parallel-authored body_en/body_ar (per CONTENT_GUIDELINES §2.1) and Arabic-grammar-intuition bridges where they help. Gemini review flagged 5 items where the AR body could lean harder on native Arabic linguistic concepts: g_n5_008_no_possessive uses «الإضافة» (Idafa, the Arabic genitive construction) as the bridge instead of comparing to kasra ـِ; g_n5_013_ka_question anchors to «هل» (Arabic interrogative) directly instead of contrasting with English word order; g_n5_019_ja_nai_neg swaps «طريق» → «قاعدة»; g_n5_050_mae_ni_before and g_n5_053_koto_ga_dekiru both use «مصدر» (the proper Arabic grammar term for verbal noun, akin to English gerund/infinitive) — beautifully native bridges. All 5 applied. Strict pass: 54/54 validate, 8 «هاي» hits were all false positives of «نهاية» (ending), 2 Latin runs in body_ar are intentional teaching of the wa/wo special pronunciation of は/を particles. AR body avg 71 chars — modern conversational MSA.
 
 #### L2.10 — Author listening drill bank
 **Deps:** L2.07

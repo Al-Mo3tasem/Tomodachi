@@ -16,6 +16,41 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-09 — L2.07 (core) + L2.09 — N5 vocab + grammar authored to dev (407 docs, 5 parallel Codex sessions)
+**Status:** ✅ DONE
+**Scope:** Code | Data
+**Summary:** Wave 2 of Phase L2.B content authoring complete. 407 additional docs landed in `tomodachi-dev` across 5 parallel Codex sessions: 82 verbs + 123 nouns + 59 adjectives + 89 misc (adverbs/demonstratives/interrogatives/greetings/counters/numbers/days) + 54 grammar patterns. Combined with wave 1's 311 kana+kanji, `tomodachi-dev:content_sets/*` now holds **718 N5 content docs** — the foundation for MVP-content app exercises is complete (modulo audio generation L2.11 + the listening drill bank L2.10).
+
+**Pipeline ran the same multi-agent pattern proven in wave 1:**
+1. **Five Codex specs** at `docs/codex-spec-l2-{07a,07b,07c,07d,09}-*-2026-06-06.md`, each with category-specific guidance per CONTENT_GUIDELINES §9 (vocab) and §11 (grammar). Specs emphasized: imperfect-tense AR verb form for vocab, naturalized loanword preference for tech/objects nouns, mandatory i-adj/na-adj notes for adjectives, per-category guidance for misc (greetings/demonstratives/counters/numbers/days), Careem/Anghami register for grammar bodies with Arabic-grammar-intuition bridges.
+2. **Five parallel Codex sessions** drafted all 407 items. Outputs at `scripts/output/codex-l2-{07a-d,09}-*.json` (gitignored).
+3. **Gemini AR review** — only flagged 5 items, all in grammar (verbs/nouns/adjectives/misc came in clean per Gemini). The 5 grammar flags were native-Arabic linguistic-bridge improvements: «الإضافة» (Idafa) for の possessive, «هل» Arabic interrogative for the か question particle, «قاعدة» replacing «طريق» (calque-feeling word), «مصدر» (Arabic verbal-noun term) for 前に and ことができる. All 5 applied — particularly elegant native-linguistic anchoring.
+4. **Claude strict-judge pass** caught two structural issues before commit:
+   - 14 misc vocab keys (`n5_v_061_number_1` through `n5_v_074_number_10000`) failed the validator because the regex required `[a-z_]+` after the 3-digit ordinal — digits in slugs were forbidden. Loosened to `[a-z0-9_]+` (commit `b6c7b72`) — `number_1` is a perfectly descriptive slug.
+   - `VOCAB_CATEGORIES` needed `'people'` added — the nouns manifest uses `category='people'` for person/family/etc., which the original 15-category enum didn't include.
+   - Once both fixes landed, **407/407 validators pass**. False-positive analysis: 8 grammar «هاي» hits all matched inside «نهاية» (ending — proper MSA); 2 grammar Latin runs were intentional teaching (the special wa/wo pronunciation of は/を particles); 59 adjectives "Latin" runs were intentional («i-adjective»/«na-adjective» linguistic-class term, mandatory per the L2.07c spec).
+5. **Bulk-commit via `--auto-accept`** — 5 commands ran clean (the mode shipped earlier in `e80fbf9` with the dry-run / progress-filter fixes in `dcb9a10`).
+
+**Pre-CLI strict-review verdict** (the "Claude as final judge before commit" pass that the project lead asked for):
+- L2.09 grammar: 54/54 valid, Gemini's 5 tweaks applied, AR body avg 71 chars (modern educational MSA), 0 real dialect/Latin issues
+- L2.07a verbs: 82/82 valid, AR avg 16 chars (lookup-card tight), 0 issues
+- L2.07b nouns: 123/123 valid, AR avg 12 chars, 0 issues
+- L2.07c adjectives: 59/59 valid, AR avg 31 chars, intentional Latin term per spec
+- L2.07d misc: 89/89 valid post-regex-fix, AR avg 33 chars, 0 issues
+
+**Files / Areas:** 407 Firestore docs at `tomodachi-dev:content_sets/{vocab,grammar}/items/*`. Updated: `docs/Phases_and_Tasks.md` (L2.07 marked DONE for the tier-1 core; L2.07-tail added as deferred for the remaining ~450 words to reach the 800-word target; L2.09 marked DONE). Validator + categories committed in `b6c7b72`. Output JSON in gitignored `scripts/output/codex-l2-*.json`.
+
+**Verification:** All 5 bulk-commit runs reported `407/407 authored, 0/0 errored` per session summary lines. Local progress JSON at `scripts/progress/author_progress.dev.json` reflects 718 total dev writes.
+
+**Open Follow-up:**
+- L2.07-tail (~450 remaining N5 vocab to reach the full 800-word target): deferred. Pattern is established — new manifests per category extension + Codex specs reusing the L2.07a-d format, same review pipeline.
+- L2.10 listening drills (~100 items): unblocked now that vocab + grammar exist (drills test them). Same pipeline.
+- L2.11 audio generation (Azure TTS for all 718 docs needing audio_key resolution): now unblocked.
+- L2.13 dev→staging→prod migration: deferred until content is content-locked. The 718 docs in `tomodachi-dev` are the canonical source; migration script `scripts/migrate_v1_to_v2.js` to be authored at that phase.
+- Live-app human review: per the project lead's direction ("humans will revise on the site directly"), final per-item human review happens via the live app rather than the CLI walk. Admin UI needed to make this efficient — separate task.
+
+---
+
 ## 2026-06-08 — L2.05 + L2.06 + L2.08 — N5 kana + kanji authored to dev (311 docs, multi-agent pipeline)
 **Status:** ✅ DONE
 **Scope:** Code | Data
