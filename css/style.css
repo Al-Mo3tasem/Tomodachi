@@ -4231,3 +4231,237 @@ input:focus-visible {
 .empty-state {
   line-height: 1.6;
 }
+
+/* ============================================================
+ * 2026-06-12 — ROUND 2: LIVING WASHI + SPACING RHYTHM
+ * The "dynamic, authentic" background system plus a button/spacing
+ * rhythm pass. Three motion layers, all compositor-friendly
+ * (transform-only animations) and all disabled under
+ * prefers-reduced-motion:
+ *   1. Seigaiha (青海波) wave texture — the classic Japanese
+ *      sea-wave pattern, brand-tinted at ~3%, drifting at 120s/loop.
+ *   2. Aurora blobs — two blurred brand-color light fields breathing
+ *      behind the landing hero and auth card.
+ *   3. Sakura petals — six petals falling through the hero, barely
+ *      visible. Authenticity, not confetti.
+ * ============================================================ */
+
+/* ----- Layer 1: drifting seigaiha texture (all major canvases) ----- */
+#screen-landing.active::before,
+.auth-container::before,
+.app::before,
+.policy-page::before {
+  content: '';
+  position: fixed;
+  /* Oversized by exactly one drift loop (200×100px) so the wrap is seamless */
+  inset: -100px 0 0 -200px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cg fill='none' stroke='%23B91C1C' stroke-width='1'%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ccircle cx='50' cy='50' r='38'/%3E%3Ccircle cx='50' cy='50' r='28'/%3E%3Ccircle cx='50' cy='50' r='18'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='0' cy='0' r='48'/%3E%3Ccircle cx='0' cy='0' r='38'/%3E%3Ccircle cx='0' cy='0' r='28'/%3E%3Ccircle cx='0' cy='0' r='18'/%3E%3Ccircle cx='0' cy='0' r='8'/%3E%3Ccircle cx='100' cy='0' r='48'/%3E%3Ccircle cx='100' cy='0' r='38'/%3E%3Ccircle cx='100' cy='0' r='28'/%3E%3Ccircle cx='100' cy='0' r='18'/%3E%3Ccircle cx='100' cy='0' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100px 50px;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  animation: seigaiha-drift 120s linear infinite;
+}
+
+[data-theme="dark"] #screen-landing.active::before,
+[data-theme="dark"] .auth-container::before,
+[data-theme="dark"] .app::before,
+[data-theme="dark"] .policy-page::before {
+  /* Same geometry, lifted crimson + slightly stronger so it reads on charcoal */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cg fill='none' stroke='%23E04848' stroke-width='1'%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ccircle cx='50' cy='50' r='38'/%3E%3Ccircle cx='50' cy='50' r='28'/%3E%3Ccircle cx='50' cy='50' r='18'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3Ccircle cx='0' cy='0' r='48'/%3E%3Ccircle cx='0' cy='0' r='38'/%3E%3Ccircle cx='0' cy='0' r='28'/%3E%3Ccircle cx='0' cy='0' r='18'/%3E%3Ccircle cx='0' cy='0' r='8'/%3E%3Ccircle cx='100' cy='0' r='48'/%3E%3Ccircle cx='100' cy='0' r='38'/%3E%3Ccircle cx='100' cy='0' r='28'/%3E%3Ccircle cx='100' cy='0' r='18'/%3E%3Ccircle cx='100' cy='0' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.055;
+}
+
+@keyframes seigaiha-drift {
+  to { transform: translate3d(200px, 100px, 0); }
+}
+
+/* ----- Layer 2: aurora blobs (hero) ----- */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(48px);
+}
+
+.hero::before {
+  width: 520px;
+  height: 520px;
+  top: -18%;
+  inset-inline-start: 4%;
+  background: radial-gradient(circle, rgba(185, 28, 28, 0.09), transparent 65%);
+  animation: aurora-a 26s ease-in-out infinite alternate;
+}
+
+.hero::after {
+  width: 420px;
+  height: 420px;
+  bottom: -22%;
+  inset-inline-end: 6%;
+  background: radial-gradient(circle, rgba(200, 169, 117, 0.12), transparent 65%);
+  animation: aurora-b 21s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] .hero::before {
+  background: radial-gradient(circle, rgba(224, 72, 72, 0.13), transparent 65%);
+}
+
+[data-theme="dark"] .hero::after {
+  background: radial-gradient(circle, rgba(200, 169, 117, 0.09), transparent 65%);
+}
+
+@keyframes aurora-a {
+  to { transform: translate3d(70px, 50px, 0) scale(1.18); }
+}
+
+@keyframes aurora-b {
+  to { transform: translate3d(-60px, -40px, 0) scale(1.12); }
+}
+
+/* Hero content sits above the motion layers */
+.hero-inner { position: relative; z-index: 1; }
+
+/* ----- Layer 3: sakura petals (landing hero only) ----- */
+.sakura {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sakura span {
+  position: absolute;
+  top: -24px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, rgba(236, 173, 173, 0.85), rgba(217, 119, 119, 0.55));
+  border-radius: 100% 4px 100% 4px;
+  opacity: 0;
+  animation: petal-fall 22s linear infinite;
+}
+
+[data-theme="dark"] .sakura span {
+  background: linear-gradient(135deg, rgba(240, 150, 150, 0.5), rgba(224, 72, 72, 0.28));
+}
+
+.sakura span:nth-child(1) { inset-inline-start: 12%; animation-duration: 24s; animation-delay: 0s; }
+.sakura span:nth-child(2) { inset-inline-start: 30%; animation-duration: 19s; animation-delay: 6s; width: 9px; height: 9px; }
+.sakura span:nth-child(3) { inset-inline-start: 48%; animation-duration: 27s; animation-delay: 2.5s; }
+.sakura span:nth-child(4) { inset-inline-start: 64%; animation-duration: 21s; animation-delay: 10s; width: 10px; height: 10px; }
+.sakura span:nth-child(5) { inset-inline-start: 78%; animation-duration: 25s; animation-delay: 4s; }
+.sakura span:nth-child(6) { inset-inline-start: 90%; animation-duration: 18s; animation-delay: 13s; width: 8px; height: 8px; }
+
+@keyframes petal-fall {
+  0%   { transform: translate3d(0, -4vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 0.7; }
+  85%  { opacity: 0.6; }
+  100% { transform: translate3d(-9vw, 108vh, 0) rotate(280deg); opacity: 0; }
+}
+
+/* ----- Scroll-reveal (classes applied by JS only — no-JS stays visible) ----- */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+.revealed {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ----- Phone mockups: editorial tilt on desktop ----- */
+@media (min-width: 901px) {
+  .screenshot-card:nth-child(1) .screenshot-frame { transform: rotate(-2.5deg); }
+  .screenshot-card:nth-child(3) .screenshot-frame { transform: rotate(2.5deg); }
+  .screenshot-card:nth-child(1):hover .screenshot-frame,
+  .screenshot-card:nth-child(3):hover .screenshot-frame {
+    transform: rotate(0deg) translateY(-6px);
+  }
+  .screenshot-card:nth-child(2):hover .screenshot-frame {
+    transform: translateY(-6px);
+  }
+}
+
+/* ----- Reduced motion: the page stands still ----- */
+@media (prefers-reduced-motion: reduce) {
+  #screen-landing.active::before,
+  .auth-container::before,
+  .app::before,
+  .policy-page::before,
+  .hero::before,
+  .hero::after {
+    animation: none;
+  }
+  .sakura { display: none; }
+  .reveal-init { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+ * Spacing & button rhythm pass
+ * Consistent control heights (52 / 42 / 34), aligned hero form,
+ * landing section rhythm, centered game inputs.
+ * ============================================================ */
+
+.btn { min-height: 42px; }
+.btn-sm { min-height: 34px; }
+.btn-lg { min-height: 52px; padding-inline: var(--space-8); }
+
+/* Hero form: input and CTA share one 52px line */
+.hero-form { gap: var(--space-3); margin-bottom: var(--space-5); }
+.hero-email { height: 52px; padding-block: 0; }
+.hero-counter { font-size: 0.875rem; }
+
+/* Landing nav pills: one consistent 34px control line */
+#btn-landing-signin,
+.btn-install {
+  min-height: 34px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.locale-toggle { min-height: 28px; }
+
+/* Auth: roomier card, aligned tab heights */
+.auth-card { padding: var(--space-8); }
+.auth-tab { min-height: 40px; }
+
+/* Landing section rhythm: consistent vertical breathing */
+.features { padding: var(--space-12) var(--space-5) var(--space-10); }
+.screenshots { padding: var(--space-12) var(--space-5); }
+.faq { padding: var(--space-12) var(--space-5) var(--space-16); }
+
+/* App container + dashboard rhythm */
+.container { padding: var(--space-8) var(--space-6); }
+.dashboard-grid { gap: var(--space-6); }
+.stat-box { padding: var(--space-5) var(--space-4); }
+
+/* Game inputs: centered, content-width — the card stays the hero */
+.game-input-area {
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.choice-grid { max-width: 520px; margin-inline: auto; }
+
+/* Modal action rows: equal-height confident buttons */
+.results-actions .btn,
+.invite-actions .btn { min-height: 48px; }
+
+/* Select dock: large CTA aligned with the meta block */
+.select-footer { padding-block: var(--space-4); align-items: center; }
+.select-footer .btn-lg { min-width: 220px; }
+
+@media (max-width: 600px) {
+  .select-footer .btn-lg { min-width: 0; width: 100%; }
+  .container { padding: var(--space-6) var(--space-4); }
+}

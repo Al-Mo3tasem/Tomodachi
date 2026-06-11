@@ -16,6 +16,22 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-12 — Content push live + UI round 2: living-washi motion system + spacing rhythm
+**Status:** ✅ DONE
+**Scope:** Code | Data | GitHub Pages
+**Summary:** Project lead approved both pending pushes: the 179 reviewed content docs were written to `tomodachi-dev` (`push-fixes.mjs`, all validated), and the two quality-pass commits went to GitHub main (prod redeploy). The 2026-06-11 content-review entry's IN PROGRESS status is hereby closed.
+
+**UI round 2 — "living washi" dynamic background (lead's authenticity request):** three compositor-only motion layers, all transform-animated and fully disabled under prefers-reduced-motion:
+1. **Seigaiha (青海波) texture** — the classic Japanese wave pattern as an inline-SVG tile, brand-tinted at 5% opacity, drifting one tile per 120s across every canvas (landing, auth, app, policy). Reads as animated washi paper grain.
+2. **Aurora blobs** — two blurred brand-color light fields (crimson + tan) breathing behind the hero at 26s/21s alternate loops; lifted alphas in dark.
+3. **Sakura petals** — six CSS-shaped petals (border-radius 100% 4px) falling through the hero over 18–27s staggered loops, theme-tinted, aria-hidden.
+
+**Spacing/button rhythm pass:** unified control heights (52px hero line / 42px default / 34px nav pills / 48px modal actions), hero email+CTA aligned on one line height, landing sections on a consistent space-12/16 rhythm with JS-only scroll-reveal (no-JS users never see hidden content), desktop phone mockups get ±2.5° editorial tilt that straightens on hover, game input area centered at max 480px so the kana card stays the visual hero, select-dock CTA min-width 220px.
+
+**Files / Areas:** `css/style.css` (+~250 lines round-2 layer), `index.html` (petal markup + reveal script), cache-buster `?v=20260612a` on the style link across all 4 HTML files.
+**Verification:** computed-style checks confirm all three animations run (seigaiha-drift 120s / aurora-a 26s / petals mid-fall at staggered offsets); button lines measured 52/52 + 34/34; game input 480px centered; Playwright screenshots of landing + dashboard + game in light AND dark; scroll-reveal classes confirmed applying on intersection; braces balanced 749/749.
+**Open Follow-up:** none new — schema-gap task and n5_v_079 rename still pending from 2026-06-11.
+
 ## 2026-06-11 — Full 718-item bilingual content review (L2 quality pass) — fixes staged, push pending lead review
 **Status:** 🔵 IN PROGRESS (fixes applied locally + validated; Firestore push awaits project-lead go-ahead)
 **Scope:** Data | Code | Docs
