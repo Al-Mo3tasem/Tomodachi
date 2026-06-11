@@ -16,6 +16,28 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-11 — Full 718-item bilingual content review (L2 quality pass) — fixes staged, push pending lead review
+**Status:** 🔵 IN PROGRESS (fixes applied locally + validated; Firestore push awaits project-lead go-ahead)
+**Scope:** Data | Code | Docs
+**Summary:** Item-by-item EN+AR review of all 718 L2 content docs (104+104 kana, 353 vocab, 103 kanji, 54 grammar) via 25 parallel review agents working from a guidelines digest (`scripts/tmp/review/REVIEW_GUIDE.md`), followed by a Claude acceptance pass over every proposal per PROJECT_RULES §11.3. Result: **215 accepted fixes across 179 docs — 60 critical, 155 improvements.** All 215 verified against current values before applying; merged docs re-validated against `js/validators/content.js` (179/179 pass).
+
+**Where the auto-accepted wave-2 content actually failed (systemic patterns):**
+1. **Kanji AR reading-stories (worst area, ~25 criticals):** phonetic hooks that don't contain the reading's sound — «كوكب» (kawkab) for コウ/コク, «شوك» (shawk) for ショク, «قيلولة» (qay-) for キュウ, «نعم» (naʿam) for ナン, misspelled «جيء» for ジ. Replaced with hooks that genuinely carry the sound («كُوخ», «شُكْر», «قُيُود», «فنّان», «جِئْ») under the convention that Arabic's missing /o/ maps to و and /e/ to ي.
+2. **Calqued demonstratives in misc vocab:** «ذلك هناك» for あれ/あの, doubled «هناك كرسي هناك» — replaced with native forms incl. the三-way هنا/هناك/هنالك gradation for ここ/そこ/あそこ.
+3. **Grammar AR bodies:** 9 lessons under the 4-sentence minimum; 2 factual errors (でした presented as valid for i-adjectives; «غالبًا» hedging the categorical i-ends-in-い rule).
+4. **Two real brand names in mnemonics** (Ritz, Coke + سوني) — guideline violation, replaced.
+5. **ぢ/づ cards taught "di/du" as the sound** without noting modern ji/zu pronunciation.
+6. **AR digit style:** Latin digits inside Arabic example sentences (numbers/counters/time cards) → spelled-out forms with correct gender agreement; dual idafa fix «قلمَي رصاص».
+7. Aspect/semantic errors: 覚えます glossed statively, متعاون for "kind", مريح for "convenient", ورقة for 紙 (mass noun), بare واجب for 宿題.
+
+**Validator fix (code):** `detectArabicDialectMarkers` used substring matching, false-flagging proper MSA («فينقلب» → فين, «يبقى» → بقى, «نهاية» → هاي). Now tokenizes on Arabic-letter boundaries with diacritic stripping; 6-case regression test passed (MSA passes, real Egyptian still caught).
+
+**Pipeline artifacts (local, gitignored):** review guide + 25 batch manifests + 25 fixes files + `ALL_FIXES.json` + `apply-fixes.mjs` (applied to the `scripts/output/*.json` mirrors) + `push-fixes.mjs` (fetch-merge-validate-write; **dry-run green: 179/179**). The push to `tomodachi-dev` was intentionally NOT executed — pending project-lead review per the session's local-until-review policy. To publish: `cd scripts && node tmp/review/push-fixes.mjs` (add `--dry-run` to re-verify first).
+**Also flagged, out of scope:** `n5_v_079` key slug says `watch_over` but the content is 見せる (to show) — key renames touch audio/related references, needs its own pass.
+**Files / Areas:** `js/validators/content.js`, `scripts/output/*.json` (local mirrors), `scripts/tmp/review/*`.
+**Verification:** every fix verified against current doc values pre-apply; post-merge validation 179/179; detector regression test 6/6.
+**Open Follow-up:** (1) project lead reviews `scripts/tmp/review/ALL_FIXES.json` (or spot-checks) then runs the push; (2) content schema gap — game client reads legacy `content_sets/{setId}` docs, the 718 new per-item docs are unreachable by the app; needs a planned task per §2.6; (3) n5_v_079 key rename.
+
 ## 2026-06-11 — Premium identity pass: unified design system + game-code i18n retrofit + 8 bug fixes
 **Status:** ✅ DONE
 **Scope:** Code | Docs

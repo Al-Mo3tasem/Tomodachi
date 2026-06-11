@@ -165,7 +165,14 @@ function detectArabicDialectMarkers(field, val) {
     'دلوقتي', 'ازاي', 'فين', 'بصّ', 'بصش', 'شوف', 'عايز', 'عاوز',
     'يلّا', 'خلّاص', 'كده', 'بقى', 'أوي'
   ];
-  const hits = FORBIDDEN.filter(m => val.includes(m));
+  // Match whole words only. Plain substring matching produced false positives
+  // on proper MSA: «فينقلب» contains «فين», «يبقى» contains «بقى», «نهاية»
+  // contains «هاي». Tokenize on non-Arabic-letter boundaries and compare
+  // diacritic-stripped tokens against the marker list.
+  const strip = (s) => s.replace(/[ً-ْٰ]/g, '');
+  const tokens = strip(val).split(/[^ء-ي]+/u).filter(Boolean);
+  const bare = FORBIDDEN.map(strip);
+  const hits = [...new Set(tokens.filter(tk => bare.includes(tk)))];
   if (hits.length > 0) {
     return fail(err(field, `dialect markers detected (review): ${hits.join(', ')}`));
   }
