@@ -7,7 +7,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "play_again": "Play Again",
-    "rematch": "Rematch"
+    "rematch": "Rematch",
+    "enter": "Enter"
   },
   "hero": {
     "tagline": "Learn Japanese With Friends",
@@ -368,7 +369,16 @@
   "leaderboard": {
     "title": "Leaderboard",
     "subtitle": "Best scores by game and set size",
-    "loading": "Loading rankings…"
+    "loading": "Loading rankings…",
+    "empty_bracket": "No scores in this bracket yet. Be the first!",
+    "preview_cta": "Play Survival Rush to climb the ranks!",
+    "preview_tag": "Survival · {{bracket}}",
+    "bracket_full": "Full 46",
+    "bracket_chars_one": "{{count}} char",
+    "bracket_chars_other": "{{count}} chars",
+    "mode_survival": "🔥 Survival",
+    "mode_coop": "🤝 Co-op",
+    "team_fallback": "Team"
   },
   "settings": {
     "title": "Settings",
@@ -408,6 +418,15 @@
   "game": {
     "exit_title": "Exit game",
     "speak_title": "Hear pronunciation",
+    "typing_placeholder": "type the rōmaji…",
+    "select_chars_first": "Select at least one character first.",
+    "mode_soon": "This mode is coming soon!",
+    "confirm_leave_survival": "Leave Survival Rush?",
+    "confirm_quit_zen": "Quit this run? Your current score will be saved.",
+    "streak": "🔥 {{count}} streak",
+    "feedback": {
+      "times_up": "Time's up — {{answer}}"
+    },
     "pause": {
       "title": "Paused",
       "desc": "Your timer is frozen. Take your time.",
@@ -417,7 +436,27 @@
       "title": "Complete",
       "score_label": "Score",
       "dashboard_btn": "Dashboard",
-      "play_again_btn": "Play Again"
+      "play_again_btn": "Play Again",
+      "title_run_ended": "Run Ended",
+      "title_game_over": "Game Over",
+      "title_reading_done": "Reading Session Done",
+      "title_listening_done": "Listening Session Done",
+      "label_final_score": "Final Score",
+      "label_chars_cleared": "Characters Cleared",
+      "saving": "Saving…",
+      "score_saved": "Score saved.",
+      "new_best": "🏆 New personal best!",
+      "ranked_html": "Ranked <strong>#{{rank}}</strong> · {{board}}",
+      "board_full": "Full-46 board",
+      "board_chars_one": "{{count}}-char board",
+      "board_chars_other": "{{count}}-char board"
+    },
+    "stats": {
+      "correct": "Correct",
+      "missed": "Missed",
+      "accuracy": "Accuracy",
+      "best_streak": "Best Streak",
+      "round": "Round"
     }
   },
   "lobby": {
@@ -428,10 +467,34 @@
   "duel": {
     "forfeit_title": "Forfeit duel",
     "round_label": "Round 1",
+    "round_n": "Round {{n}}",
     "you": "You",
     "opponent": "Opponent",
     "vs": "VS",
     "get_ready": "Get ready…",
+    "your_friend": "your friend",
+    "lobby_title": "⚔️ Duel Lobby",
+    "lobby_sending": "Sending challenge…",
+    "lobby_waiting": "Waiting for {{name}}…",
+    "lobby_waiting_hint": "They will get a challenge pop-up. Keep this screen open.",
+    "send_failed": "Could not send the challenge: {{message}}",
+    "confirm_forfeit": "Forfeit the duel? Your opponent wins.",
+    "toast": {
+      "no_friend": "No friend account found to challenge.",
+      "friend_offline": "Your friend must be online to receive a challenge.",
+      "min_chars": "Pick at least 4 characters for a duel.",
+      "invite_gone": "That challenge is no longer available.",
+      "join_failed": "Could not join the duel: {{message}}",
+      "connection_lost": "Lost connection to the duel.",
+      "cancelled": "The duel was cancelled."
+    },
+    "feedback": {
+      "locked_in": "Locked in — waiting for {{name}}…",
+      "fastest": "⚡ Fastest! +100",
+      "second": "Correct — just behind. +50",
+      "wrong": "Wrong. −50 · answer: {{char}} = {{romaji}}",
+      "too_slow": "Too slow! 0 · answer: {{char}} = {{romaji}}"
+    },
     "stall": {
       "title": "Opponent unreachable",
       "desc": "Your opponent seems to have disconnected.",
@@ -439,6 +502,14 @@
     },
     "result": {
       "victory": "Victory!",
+      "defeat": "Defeat",
+      "draw": "Draw!",
+      "opponent_left": "{{name}} left the duel.",
+      "you_left": "You left the duel.",
+      "detail_draw": "Dead even — a true rivalry.",
+      "detail_won": "You out-duelled your friend!",
+      "detail_lost": "{{name}} got the better of you.",
+      "rounds_won": "🏆 {{count}} rounds",
       "dashboard_btn": "Dashboard",
       "rematch_btn": "Rematch"
     }
@@ -449,6 +520,32 @@
     "you": "You",
     "friend": "Friend",
     "sync_up": "Sync up…",
+    "lobby_title": "🤝 Sync Match Lobby",
+    "lobby_sending": "Sending invite…",
+    "lobby_waiting": "Waiting for {{name}}…",
+    "lobby_waiting_hint": "They will get a co-op invite. Keep this screen open.",
+    "send_failed": "Could not send the invite: {{message}}",
+    "confirm_leave": "Leave the co-op match? It ends for both of you.",
+    "toast": {
+      "no_friend": "No friend account found to team up with.",
+      "friend_offline": "Your friend must be online for a co-op match.",
+      "min_chars": "Pick at least 4 characters for Sync Match.",
+      "invite_gone": "That co-op invite is no longer available.",
+      "join_failed": "Could not join the match: {{message}}",
+      "connection_lost": "Lost connection to the match.",
+      "cancelled": "The co-op match was cancelled."
+    },
+    "hud_round": "Round {{current}} / {{total}}",
+    "feedback": {
+      "synced": "✓ Synced — round cleared!",
+      "got_it": "✓ Got it! Waiting for {{name}}…",
+      "not_quite": "Not quite — keep trying!"
+    },
+    "stats": {
+      "cleared": "Cleared",
+      "perfect": "Perfect",
+      "completion": "Completion"
+    },
     "stall": {
       "title": "Partner unreachable",
       "desc": "Your teammate seems to have disconnected.",
@@ -456,6 +553,9 @@
     },
     "result": {
       "title_cleared": "All Cleared!",
+      "title_ended": "Match Ended",
+      "title_times_up": "Time's Up!",
+      "detail_cleared": "Your team cleared {{cleared}} of {{total}} cards together.",
       "team_score_label": "Team Score",
       "dashboard_btn": "Dashboard",
       "again_btn": "Play Again"
@@ -467,7 +567,14 @@
     "duel_action": "wants to duel you.",
     "coop_action": "wants to team up.",
     "decline_btn": "Decline",
-    "accept_btn": "Accept"
+    "accept_btn": "Accept",
+    "from_fallback": "Your friend",
+    "details_duel": "{{count}} characters · {{wincon}} · {{input}}",
+    "details_coop": "{{count}} characters · Co-op · {{input}}",
+    "wincon_first10": "First to 10",
+    "wincon_rounds20": "20 rounds",
+    "input_typing": "Typing",
+    "input_multiple": "Multiple choice"
   },
   "error": {
     "auth": {

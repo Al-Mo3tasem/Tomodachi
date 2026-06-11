@@ -7,7 +7,8 @@
     "cancel": "إلغاء",
     "save": "حفظ",
     "play_again": "جولة أخرى",
-    "rematch": "إعادة المواجهة"
+    "rematch": "إعادة المواجهة",
+    "enter": "إدخال"
   },
   "hero": {
     "tagline": "تعلّم اليابانية مع أصدقائك",
@@ -368,7 +369,19 @@
   "leaderboard": {
     "title": "لوحة الترتيب",
     "subtitle": "أفضل النتائج حسب اللعبة وحجم المجموعة",
-    "loading": "جارٍ تحميل الترتيب…"
+    "loading": "جارٍ تحميل الترتيب…",
+    "empty_bracket": "لا نتائج في هذه الفئة بعد — كن أول من يسجّل!",
+    "preview_cta": "العب «تحدي البقاء» لتصعد في الترتيب!",
+    "preview_tag": "تحدي البقاء · {{bracket}}",
+    "bracket_full": "كل الأحرف (46)",
+    "bracket_chars_one": "حرف واحد",
+    "bracket_chars_two": "حرفان",
+    "bracket_chars_few": "{{count}} أحرف",
+    "bracket_chars_many": "{{count}} حرفاً",
+    "bracket_chars_other": "{{count}} حرف",
+    "mode_survival": "🔥 تحدي البقاء",
+    "mode_coop": "🤝 تعاوني",
+    "team_fallback": "فريق"
   },
   "settings": {
     "title": "الإعدادات",
@@ -408,6 +421,15 @@
   "game": {
     "exit_title": "الخروج من الجولة",
     "speak_title": "سماع النطق",
+    "typing_placeholder": "اكتب الروماجي…",
+    "select_chars_first": "اختر حرفاً واحداً على الأقل.",
+    "mode_soon": "هذا الوضع قادم قريباً!",
+    "confirm_leave_survival": "أتريد مغادرة تحدي البقاء؟",
+    "confirm_quit_zen": "أتريد إنهاء الجولة؟ سيُحفَظ ما أحرزته حتى الآن.",
+    "streak": "🔥 سلسلة من {{count}}",
+    "feedback": {
+      "times_up": "انتهى الوقت — {{answer}}"
+    },
     "pause": {
       "title": "متوقف مؤقتاً",
       "desc": "المؤقّت متوقف. خذ وقتك.",
@@ -417,7 +439,30 @@
       "title": "اكتملت الجولة",
       "score_label": "النتيجة",
       "dashboard_btn": "لوحة التحكم",
-      "play_again_btn": "جولة أخرى"
+      "play_again_btn": "جولة أخرى",
+      "title_run_ended": "انتهت الجولة",
+      "title_game_over": "انتهت اللعبة",
+      "title_reading_done": "انتهت جلسة القراءة",
+      "title_listening_done": "انتهت جلسة الاستماع",
+      "label_final_score": "النتيجة النهائية",
+      "label_chars_cleared": "الأحرف المُنجَزة",
+      "saving": "جارٍ الحفظ…",
+      "score_saved": "تم حفظ النتيجة.",
+      "new_best": "🏆 رقم قياسي جديد!",
+      "ranked_html": "ترتيبك <strong>#{{rank}}</strong> · {{board}}",
+      "board_full": "فئة الأحرف الكاملة (46)",
+      "board_chars_one": "فئة حرف واحد",
+      "board_chars_two": "فئة حرفين",
+      "board_chars_few": "فئة {{count}} أحرف",
+      "board_chars_many": "فئة {{count}} حرفاً",
+      "board_chars_other": "فئة {{count}} حرف"
+    },
+    "stats": {
+      "correct": "صحيحة",
+      "missed": "فائتة",
+      "accuracy": "الدقة",
+      "best_streak": "أفضل سلسلة",
+      "round": "الجولة"
     }
   },
   "lobby": {
@@ -428,10 +473,34 @@
   "duel": {
     "forfeit_title": "الانسحاب من المبارزة",
     "round_label": "الجولة 1",
+    "round_n": "الجولة {{n}}",
     "you": "أنت",
     "opponent": "الخصم",
     "vs": "ضد",
     "get_ready": "استعد…",
+    "your_friend": "صديقك",
+    "lobby_title": "⚔️ ردهة المبارزة",
+    "lobby_sending": "جارٍ إرسال التحدي…",
+    "lobby_waiting": "في انتظار {{name}}…",
+    "lobby_waiting_hint": "سيصل التحدي إلى صديقك الآن — أبقِ هذه الشاشة مفتوحة.",
+    "send_failed": "تعذّر إرسال التحدي: {{message}}",
+    "confirm_forfeit": "أتريد الانسحاب من المبارزة؟ سيُحتسَب الفوز لخصمك.",
+    "toast": {
+      "no_friend": "لا يوجد حساب صديق لتحدّيه.",
+      "friend_offline": "يجب أن يكون صديقك متصلاً ليستقبل التحدي.",
+      "min_chars": "اختر 4 أحرف على الأقل للمبارزة.",
+      "invite_gone": "لم يعد هذا التحدي متاحاً.",
+      "join_failed": "تعذّر الانضمام إلى المبارزة: {{message}}",
+      "connection_lost": "انقطع الاتصال بالمبارزة.",
+      "cancelled": "أُلغيت المبارزة."
+    },
+    "feedback": {
+      "locked_in": "ثُبِّتت إجابتك — في انتظار {{name}}…",
+      "fastest": "⚡ الأسرع! +100",
+      "second": "صحيحة — بفارق لحظة. +50",
+      "wrong": "خاطئة. −50 · الإجابة: {{char}} = {{romaji}}",
+      "too_slow": "تأخّرت! 0 · الإجابة: {{char}} = {{romaji}}"
+    },
     "stall": {
       "title": "تعذّر الوصول إلى الخصم",
       "desc": "يبدو أن اتصال خصمك انقطع.",
@@ -439,6 +508,14 @@
     },
     "result": {
       "victory": "فوز!",
+      "defeat": "هزيمة",
+      "draw": "تعادل!",
+      "opponent_left": "غادر {{name}} المبارزة.",
+      "you_left": "غادرتَ المبارزة.",
+      "detail_draw": "تعادل تام — منافسة حقيقية.",
+      "detail_won": "تفوقتَ على صديقك في المبارزة!",
+      "detail_lost": "كانت الغلبة لـ{{name}} هذه المرة.",
+      "rounds_won": "🏆 {{count}} جولة",
       "dashboard_btn": "لوحة التحكم",
       "rematch_btn": "إعادة المواجهة"
     }
@@ -449,6 +526,32 @@
     "you": "أنت",
     "friend": "الصديق",
     "sync_up": "جارٍ المزامنة…",
+    "lobby_title": "🤝 ردهة المباراة المتزامنة",
+    "lobby_sending": "جارٍ إرسال الدعوة…",
+    "lobby_waiting": "في انتظار {{name}}…",
+    "lobby_waiting_hint": "ستصل الدعوة إلى صديقك الآن — أبقِ هذه الشاشة مفتوحة.",
+    "send_failed": "تعذّر إرسال الدعوة: {{message}}",
+    "confirm_leave": "أتريد مغادرة المباراة التعاونية؟ ستنتهي لكليكما.",
+    "toast": {
+      "no_friend": "لا يوجد حساب صديق للتعاون معه.",
+      "friend_offline": "يجب أن يكون صديقك متصلاً للمباراة التعاونية.",
+      "min_chars": "اختر 4 أحرف على الأقل للمباراة المتزامنة.",
+      "invite_gone": "لم تعد هذه الدعوة متاحة.",
+      "join_failed": "تعذّر الانضمام إلى المباراة: {{message}}",
+      "connection_lost": "انقطع الاتصال بالمباراة.",
+      "cancelled": "أُلغيت المباراة التعاونية."
+    },
+    "hud_round": "الجولة {{current}} / {{total}}",
+    "feedback": {
+      "synced": "✓ تزامنتما — اجتزتما الجولة!",
+      "got_it": "✓ أحسنت! في انتظار {{name}}…",
+      "not_quite": "ليست صحيحة — حاول مرة أخرى!"
+    },
+    "stats": {
+      "cleared": "منجزة",
+      "perfect": "جولات كاملة",
+      "completion": "نسبة الإنجاز"
+    },
     "stall": {
       "title": "تعذّر الوصول إلى الشريك",
       "desc": "يبدو أن اتصال شريكك انقطع.",
@@ -456,6 +559,9 @@
     },
     "result": {
       "title_cleared": "اكتملت كلها!",
+      "title_ended": "انتهت المباراة",
+      "title_times_up": "انتهى الوقت!",
+      "detail_cleared": "أنجز فريقكما {{cleared}} من {{total}} بطاقة معاً.",
       "team_score_label": "نتيجة الفريق",
       "dashboard_btn": "لوحة التحكم",
       "again_btn": "جولة أخرى"
@@ -467,7 +573,14 @@
     "duel_action": "يدعوك إلى مبارزة.",
     "coop_action": "يدعوك إلى التعاون.",
     "decline_btn": "رفض",
-    "accept_btn": "قبول"
+    "accept_btn": "قبول",
+    "from_fallback": "صديقك",
+    "details_duel": "الأحرف: {{count}} · {{wincon}} · {{input}}",
+    "details_coop": "الأحرف: {{count}} · تعاوني · {{input}}",
+    "wincon_first10": "الأسبق إلى 10",
+    "wincon_rounds20": "20 جولة",
+    "input_typing": "كتابة",
+    "input_multiple": "اختيار من متعدد"
   },
   "error": {
     "auth": {

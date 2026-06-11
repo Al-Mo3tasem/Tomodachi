@@ -12,13 +12,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260528c';
+} from '../core/core.js?v=20260610a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260528c';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260526a';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260528c';
+} from '../data/firebase.js?v=20260610a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260610a';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260610a';
+import { t } from '../i18n/index.js?v=20260610a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -69,18 +70,18 @@ export async function sendCoopChallenge() {
 
   const friend = state.friend;
   if (!friend || !friend.uid) {
-    toast('No friend account found to team up with.', 'warning');
+    toast(t('coop.toast.no_friend'), 'warning');
     return;
   }
   const fp = state.friendPresence;
   if (!fp || fp.status === 'offline') {
-    toast('Your friend must be online for a co-op match.', 'warning');
+    toast(t('coop.toast.friend_offline'), 'warning');
     return;
   }
 
   const chars = buildCharPool();
   if (chars.length < 4) {
-    toast('Pick at least 4 characters for Sync Match.', 'warning');
+    toast(t('coop.toast.min_chars'), 'warning');
     return;
   }
 
@@ -112,15 +113,15 @@ export async function sendCoopChallenge() {
   };
 
   try {
-    showLobby('Sending invite…', '');
+    showLobby(t('coop.lobby_sending'), '');
     const ref = await addDoc(collection(db, 'game_sessions'), session);
     c = freshCoop(ref, ref.id, true);
     subscribe();
-    showLobby(`Waiting for ${friend.displayName || 'your friend'}…`,
-              'They will get a co-op invite. Keep this screen open.');
+    showLobby(t('coop.lobby_waiting', { name: friend.displayName || t('duel.your_friend') }),
+              t('coop.lobby_waiting_hint'));
   } catch (err) {
     console.error('sendCoopChallenge failed:', err);
-    toast('Could not send the invite: ' + err.message, 'error');
+    toast(t('coop.send_failed', { message: err.message }), 'error');
     goDashboard();
   }
 }
@@ -144,7 +145,7 @@ export async function acceptCoop(invite) {
   try {
     const snap = await getDoc(ref);
     if (!snap.exists() || snap.data().status !== 'waiting') {
-      toast('That co-op invite is no longer available.', 'warning');
+      toast(t('coop.toast.invite_gone'), 'warning');
       return;
     }
     c = freshCoop(ref, invite.id, false);
@@ -159,7 +160,7 @@ export async function acceptCoop(invite) {
     enterCoopScreen();
   } catch (err) {
     console.error('acceptCoop failed:', err);
-    toast('Could not join the match: ' + err.message, 'error');
+    toast(t('coop.toast.join_failed', { message: err.message }), 'error');
     c = null;
   }
 }
@@ -177,7 +178,7 @@ export async function exitCoop() {
     goDashboard();
     return;
   }
-  if (!confirm('Leave the co-op match? It ends for both of you.')) return;
+  if (!confirm(t('coop.confirm_leave'))) return;
   try {
     await updateDoc(c.ref, {
       status: 'completed',
@@ -243,7 +244,7 @@ function subscribe() {
     handleSnapshot(snap.data());
   }, (err) => {
     console.error('Co-op listener failed:', err);
-    toast('Lost connection to the match.', 'error');
+    toast(t('coop.toast.connection_lost'), 'error');
   });
 }
 
@@ -254,8 +255,8 @@ function handleSnapshot(data) {
 
   switch (data.status) {
     case 'waiting':
-      showLobby(`Waiting for ${opponentName()}…`,
-                'They will get a co-op invite. Keep this screen open.');
+      showLobby(t('coop.lobby_waiting', { name: opponentName() }),
+                t('coop.lobby_waiting_hint'));
       break;
     case 'countdown':
     case 'active':
@@ -397,12 +398,12 @@ function submitAnswer(value, btnEl) {
     playSound('correct');
     lockAll(q);
     const oppCleared = ((c.data.progress || {})[`r${N}`] || {})[otherId(c.data)]?.cleared;
-    setFeedback('good', oppCleared ? '✓ Synced — round cleared!' : `✓ Got it! Waiting for ${opponentName()}…`);
+    setFeedback('good', oppCleared ? t('coop.feedback.synced') : t('coop.feedback.got_it', { name: opponentName() }));
     writeMyProgress();
   } else {
     playSound('wrong');
     if (c.myMissedRound !== N) { c.myMissedRound = N; writeMyProgress(); }
-    setFeedback('bad', 'Not quite — keep trying!');
+    setFeedback('bad', t('coop.feedback.not_quite'));
     if (c.data.settings.inputMethod === 'typing') {
       const inp = $('coop-answer-input');
       if (inp) {
@@ -464,7 +465,7 @@ function updateHud(data) {
   const N = data.questions?.length || 0;
   const round = data.currentRound || 0;
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
-  set('coop-hud-rounds', `Round ${Math.min(round + 1, N)} / ${N}`);
+  set('coop-hud-rounds', t('coop.hud_round', { current: Math.min(round + 1, N), total: N }));
   set('coop-hud-cleared', `✓ ${data.correctRounds || 0}`);
   updateClock(data);
 }
@@ -545,8 +546,9 @@ function buildInput(data, q) {
     form.innerHTML = `
       <input type="text" class="answer-input" id="coop-answer-input"
              autocomplete="off" autocapitalize="none" autocorrect="off"
-             spellcheck="false" placeholder="type the rōmaji…">
-      <button type="submit" class="btn btn-primary answer-submit">Enter</button>`;
+             spellcheck="false" placeholder="${t('game.typing_placeholder')}"
+             data-i18n-placeholder="game.typing_placeholder">
+      <button type="submit" class="btn btn-primary answer-submit" data-i18n="common.enter">${t('common.enter')}</button>`;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const inp = $('coop-answer-input');
@@ -634,18 +636,18 @@ async function showCoopResults(data) {
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set('coop-result-emoji', reason === 'cleared' ? '🎉' : reason === 'abandoned' ? '🚪' : '⏱️');
   set('coop-result-title',
-    reason === 'cleared' ? 'All Cleared!' :
-    reason === 'abandoned' ? 'Match Ended' : "Time's Up!");
-  set('coop-result-detail', `Your team cleared ${cleared} of ${N} cards together.`);
+    reason === 'cleared' ? t('coop.result.title_cleared') :
+    reason === 'abandoned' ? t('coop.result.title_ended') : t('coop.result.title_times_up'));
+  set('coop-result-detail', t('coop.result.detail_cleared', { cleared, total: N }));
   countUp($('coop-result-score'), score);
 
   const statsHost = $('coop-result-stats');
   if (statsHost) {
     const acc = N ? Math.round((cleared / N) * 100) : 0;
     const cells = [
-      { label: 'Cleared', value: `${cleared}/${N}` },
-      { label: 'Perfect', value: data.perfectRounds || 0 },
-      { label: 'Completion', value: `${acc}%` }
+      { label: t('coop.stats.cleared'), value: `${cleared}/${N}` },
+      { label: t('coop.stats.perfect'), value: data.perfectRounds || 0 },
+      { label: t('coop.stats.completion'), value: `${acc}%` }
     ];
     statsHost.innerHTML = cells
       .map(x => `<div class="rstat"><div class="rstat-value">${x.value}</div><div class="rstat-label">${x.label}</div></div>`)
@@ -724,7 +726,7 @@ function clearStallWatchdog() {
 
 function handleEnded(reason) {
   if (!c || c.ended) return;
-  if (reason === 'cancelled') toast('The co-op match was cancelled.', 'info', 4000);
+  if (reason === 'cancelled') toast(t('coop.toast.cancelled'), 'info', 4000);
   teardown();
   goDashboard();
 }
@@ -801,8 +803,8 @@ function otherId(data) {
 }
 
 function opponentName() {
-  if (!c || !c.data) return 'your friend';
-  return c.data.players?.[otherId(c.data)]?.displayName || 'your friend';
+  if (!c || !c.data) return t('duel.your_friend');
+  return c.data.players?.[otherId(c.data)]?.displayName || t('duel.your_friend');
 }
 
 function showLobby(statusText, detailText) {
@@ -810,7 +812,7 @@ function showLobby(statusText, detailText) {
   const title = $('lobby-title');
   const s = $('lobby-status');
   const det = $('lobby-detail');
-  if (title) title.textContent = '🤝 Sync Match Lobby';
+  if (title) title.textContent = t('coop.lobby_title');
   if (s) s.textContent = statusText;
   if (det) det.textContent = detailText || '';
 }

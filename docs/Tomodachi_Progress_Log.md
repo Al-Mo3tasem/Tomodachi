@@ -16,6 +16,32 @@ This file records the important implementation, debugging, deployment, and docum
 
 ---
 
+## 2026-06-11 — Premium identity pass: unified design system + game-code i18n retrofit + 8 bug fixes
+**Status:** ✅ DONE
+**Scope:** Code | Docs
+**Summary:** Closed the visual split between the L1-branded landing and the pre-brand iOS-clone app screens. One token-driven design language now covers every surface in both themes: light = warm washi paper (`#F6F3EB` base), dark = warm urushi charcoal (`#161311` — never pure black), with the scarf-crimson accent lifted to `#E04848` in dark for contrast. All hardcoded iOS-era colors (system green/red/orange, Apple-blue button shadow) replaced with theme tokens incl. new `--bg-inset`, `--success/danger/warning-soft`, `--shadow-brand`, `--page-wash`, `--overlay-scrim`, `--footer-glass`.
+
+**UI changes:** inline `#tomo-logo` SVG symbol (currentColor 友 + fixed crimson scarf) replaces the `<img>` logo on index + all 3 policy pages; chrome emojis (⚙️ 🔊 🏯) and the four mode emojis replaced with Lucide stroke icons in brand-tinted tiles; leaderboard top-3 medal chips; bigger game card with subtle crimson wash; streak pill; focus-visible rings everywhere; toggles now brand-crimson when on.
+
+**i18n retrofit (the big one):** `engine.js`, `duel.js`, `coop.js`, `leaderboards.js` never imported `t()` — every gameplay string (feedback, results titles/stats, lobby, invites, confirms, toasts, brackets) was hardcoded English and showed raw EN inside the AR experience. All ~70 strings keyed into `en.json`/`ar.json` (AR authored per CONTENT_GUIDELINES, incl. Arabic plural forms for character-count brackets) and wired through `t()`. Generated leaderboard tabs carry `data-i18n` so apply.js re-translates them on locale switch.
+
+**Bugs fixed:**
+1. Dark-theme landing/policy pages were unreadable (hardcoded cream bg + dark-theme text vars) — backgrounds now token-driven.
+2. `.reset-confirm` panel visible on Settings open (`display:flex` beat the `hidden` attr) — `[hidden]` override added.
+3. hiraquest→tomodachi localStorage migration in core.js was a no-op (`oldK` built with the new prefix).
+4. `--space-7` used but undefined (footer padding collapsed to 0) — token added.
+5. Logo 友 invisible in dark mode (hardcoded `#18181B` fill) — currentColor via inline symbol.
+6. `@username` rendered as `username@` in RTL — bidi isolation on `#dash-username`/`.lb-name`/`.duel-p-name`.
+7. `theme-color` meta still iOS gray/black — now matches brand `--bg-base` values.
+8. Policy pages ignored the saved theme + still used the pre-brand 🏯 mark; `<time>` dates now localize (AR: «31 مايو 2026»).
+
+**Dev-env unblock:** the game reads legacy `content_sets/{setId}` docs (embedded `characters[]`), which existed in prod but not in `tomodachi-dev` — the select screen was silently empty in dev. Re-seeded the 10 legacy hiragana sets from git history via `scripts/tmp/seed-dev-game-sets.mjs` (one-off, gitignored). **Open schema gap (needs a planned task):** the 718 new L2 docs live at `content_sets/{type}/items/{key}` and are unreachable by the current game client.
+
+**Cache-busters:** uniform bump to `?v=20260610a` everywhere — critical because ES modules with mismatched `?v=` on the same import load as separate instances (a second uninitialized i18next would have returned raw keys).
+**Files / Areas:** `css/style.css`, `index.html`, `privacy/terms/cookies.html`, `js/core/core.js`, `js/policy-init.js`, `js/games/{engine,duel,coop}.js`, `js/data/leaderboards.js`, `js/i18n/locales/{en,ar}.json`.
+**Verification:** `node --check` on all changed modules; locale JSON parse + full EN↔AR key parity; Playwright walkthrough on local dev — landing/auth/dashboard/select/game/settings/leaderboard/policy in EN+AR × light+dark; reset-confirm hidden; RTL bidi verified; real zen game played end-to-end.
+**Open Follow-up:** content schema migration task (game → new per-item docs); real screenshots for the landing phone frames; duel/coop two-client live test after these changes.
+
 ## 2026-06-09 — L2.07 (core) + L2.09 — N5 vocab + grammar authored to dev (407 docs, 5 parallel Codex sessions)
 **Status:** ✅ DONE
 **Scope:** Code | Data

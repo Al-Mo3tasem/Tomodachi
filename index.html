@@ -72,20 +72,35 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260601d">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260601d">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260610a">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260610a">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Tomodachi">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260601h">
+  <link rel="stylesheet" href="css/style.css?v=20260610a">
 </head>
 <body>
+  <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
+       near-black 友, which disappears against the dark theme; inlining lets
+       the glyph use currentColor while the scarf keeps its fixed crimson.
+       Consumers: .landing-brand-icon, .nav-icon, .brand-icon, footer mark. -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="tomo-logo" viewBox="0 0 240 280">
+      <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 138 C 210 200, 145 220, 120 220 C 95 220, 30 200, 30 138 Z" fill="#7F1D1D"/>
+      <path d="M 30 110 C 30 180, 95 200, 120 200 C 145 200, 210 180, 210 110 L 210 130 C 210 195, 145 213, 120 213 C 95 213, 30 195, 30 130 Z" fill="#B91C1C"/>
+      <path d="M 30 165 C 18 178, 14 195, 8 218 L 24 200 L 32 218 L 38 178 Z" fill="#7F1D1D"/>
+      <path d="M 210 165 C 222 178, 226 195, 232 218 L 216 200 L 208 218 L 202 178 Z" fill="#7F1D1D"/>
+      <text x="120" y="135" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-weight="900" font-size="110" text-anchor="middle" fill="currentColor">友</text>
+    </symbol>
+  </svg>
+
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay active">
     <div class="spinner"></div>
@@ -96,7 +111,7 @@
   <section id="screen-landing" class="screen active">
     <header class="landing-nav">
       <div class="landing-brand">
-        <span class="landing-brand-icon"><img src="assets/brand/logo.svg?v=20260601d" alt="" width="28" height="32"></span>
+        <span class="landing-brand-icon"><svg class="logo-mark" width="28" height="32" role="img" aria-label="Tomodachi"><use href="#tomo-logo"/></svg></span>
         <span class="landing-brand-name">Tomodachi</span>
       </div>
       <div class="landing-nav-right">
@@ -262,7 +277,7 @@
       <div class="landing-footer-inner">
         <div class="landing-footer-brand">
           <span class="landing-footer-mark">
-            <span class="landing-brand-icon"><img src="assets/brand/logo.svg?v=20260601d" alt="" width="28" height="32"></span>
+            <span class="landing-brand-icon"><svg class="logo-mark" width="28" height="32" role="img" aria-label="Tomodachi"><use href="#tomo-logo"/></svg></span>
             <span class="landing-brand-name">Tomodachi</span>
           </span>
           <span class="landing-footer-tagline" data-i18n="footer.tagline">Learn Japanese together</span>
@@ -289,7 +304,7 @@
       </div>
 
       <div class="brand">
-        <div class="brand-icon"><img src="assets/brand/logo.svg?v=20260601d" alt="Tomodachi"></div>
+        <div class="brand-icon"><svg class="logo-mark" role="img" aria-label="Tomodachi"><use href="#tomo-logo"/></svg></div>
         <h1 class="brand-title" data-i18n="auth.brand.title">Tomodachi</h1>
         <p class="brand-subtitle" data-i18n="auth.brand.subtitle">Master Japanese, together</p>
       </div>
@@ -362,7 +377,7 @@
     <nav class="nav">
       <div class="nav-left">
         <div class="nav-brand" id="nav-brand">
-          <span class="nav-icon"><img src="assets/brand/logo.svg?v=20260601d" alt="" width="24" height="28"></span>
+          <span class="nav-icon"><svg class="logo-mark" width="24" height="28" role="img" aria-label="Tomodachi"><use href="#tomo-logo"/></svg></span>
           <span class="nav-title">Tomodachi</span>
         </div>
       </div>
@@ -377,7 +392,13 @@
         </div>
         <button class="nav-btn" id="btn-settings"
                 title="Settings" aria-label="Settings"
-                data-i18n-attr="title:nav.settings_title,aria-label:nav.settings_title">⚙️</button>
+                data-i18n-attr="title:nav.settings_title,aria-label:nav.settings_title">
+          <!-- Lucide "settings". MIT. -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
         <button class="btn btn-ghost btn-sm" id="btn-logout" data-i18n="nav.logout">Logout</button>
       </div>
     </nav>
@@ -448,7 +469,13 @@
             <h3 class="card-title" data-i18n="dashboard.modes.title">Game Modes</h3>
             <div class="modes-list">
               <button class="mode-btn" data-mode="zen">
-                <span class="mode-emoji">🧘</span>
+                <span class="mode-icon" aria-hidden="true">
+                  <!-- Lucide "leaf" — calm pace. MIT. -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                  </svg>
+                </span>
                 <div class="mode-details">
                   <div class="mode-name" data-i18n="modes.zen.name">Zen Mode</div>
                   <div class="mode-desc" data-i18n="modes.zen.desc">Timed practice — read or listen</div>
@@ -456,7 +483,12 @@
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="survival">
-                <span class="mode-emoji">🔥</span>
+                <span class="mode-icon" aria-hidden="true">
+                  <!-- Lucide "flame" — speed challenge. MIT. -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                  </svg>
+                </span>
                 <div class="mode-details">
                   <div class="mode-name" data-i18n="modes.survival.name">Survival Rush</div>
                   <div class="mode-desc" data-i18n="modes.survival.desc">Solo speed challenge</div>
@@ -464,7 +496,19 @@
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="duel">
-                <span class="mode-emoji">⚔️</span>
+                <span class="mode-icon" aria-hidden="true">
+                  <!-- Lucide "swords" — head-to-head duel. MIT. -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/>
+                    <line x1="13" x2="19" y1="19" y2="13"/>
+                    <line x1="16" x2="20" y1="16" y2="20"/>
+                    <line x1="19" x2="21" y1="21" y2="19"/>
+                    <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 10"/>
+                    <line x1="5" x2="9" y1="14" y2="18"/>
+                    <line x1="7" x2="4" y1="17" y2="20"/>
+                    <line x1="3" x2="5" y1="19" y2="21"/>
+                  </svg>
+                </span>
                 <div class="mode-details">
                   <div class="mode-name" data-i18n="modes.duel.name">Duel Mode</div>
                   <div class="mode-desc" data-i18n="modes.duel.desc">Real-time VS your friend</div>
@@ -472,7 +516,15 @@
                 <span class="mode-arrow">→</span>
               </button>
               <button class="mode-btn" data-mode="coop">
-                <span class="mode-emoji">🤝</span>
+                <span class="mode-icon" aria-hidden="true">
+                  <!-- Lucide "users" — team up. MIT. -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </span>
                 <div class="mode-details">
                   <div class="mode-name" data-i18n="modes.coop.name">Sync Match</div>
                   <div class="mode-desc" data-i18n="modes.coop.desc">Team up — beat the clock together</div>
@@ -706,7 +758,14 @@
             <div class="game-card-char" id="game-card-char">あ</div>
             <button class="speak-btn" id="game-speak"
                     title="Hear pronunciation" aria-label="Hear pronunciation"
-                    data-i18n-attr="title:game.speak_title,aria-label:game.speak_title">🔊</button>
+                    data-i18n-attr="title:game.speak_title,aria-label:game.speak_title">
+              <!-- Lucide "volume-2". MIT. -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+            </button>
           </div>
           <div class="game-feedback" id="game-feedback"></div>
         </div>
@@ -987,7 +1046,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260601h"></script>
+  <script type="module" src="js/app.js?v=20260610a"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

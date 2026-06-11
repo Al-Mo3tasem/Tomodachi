@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260528c';
+import { APP_CONFIG } from '../config/firebase.js?v=20260610a';
 
 // ----- One-shot localStorage migration: hiraquest-* → tomodachi-* (R1.05a).
 // Runs on module load; harmless after the first time. Removed once we're
@@ -13,7 +13,7 @@ const _MIGRATE_KEYS = [
   'duelinput', 'coopinput', 'theme', 'last-bracket'
 ];
 for (const k of _MIGRATE_KEYS) {
-  const oldK = 'tomodachi-' + k;
+  const oldK = 'hiraquest-' + k;
   const newK = 'tomodachi-' + k;
   const oldV = localStorage.getItem(oldK);
   if (oldV !== null && localStorage.getItem(newK) === null) {
@@ -100,8 +100,9 @@ export function setTheme(theme) {
   state.theme = theme;
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = theme === 'dark';
+  // Values match --bg-base in css/style.css (urushi charcoal / washi paper).
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#F5F5F7');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#161311' : '#F6F3EB');
 }
 
 // ----- Async Helpers -----

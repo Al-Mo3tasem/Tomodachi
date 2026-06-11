@@ -5,8 +5,9 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $, showScreen } from '../core/core.js?v=20260528c';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260528c';
+import { state, $, showScreen } from '../core/core.js?v=20260610a';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260610a';
+import { t } from '../i18n/index.js?v=20260610a';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -20,7 +21,7 @@ export function bracketFor(count) {
 }
 
 function bracketLabel(bracket) {
-  return bracket === 46 ? 'Full 46' : `${bracket} chars`;
+  return bracket === 46 ? t('leaderboard.bracket_full') : t('leaderboard.bracket_chars', { count: bracket });
 }
 
 // ----- Generic write -----
@@ -129,11 +130,11 @@ export async function renderLeaderboardPreview() {
   const entries = await fetchLeaderboard('survival', bracket);
 
   if (!entries.length) {
-    host.innerHTML = '<p class="empty-state">Play Survival Rush to climb the ranks!</p>';
+    host.innerHTML = `<p class="empty-state" data-i18n="leaderboard.preview_cta">${t('leaderboard.preview_cta')}</p>`;
     return;
   }
 
-  host.innerHTML = `<div class="lb-preview-tag">Survival · ${bracketLabel(bracket)}</div>`;
+  host.innerHTML = `<div class="lb-preview-tag">${t('leaderboard.preview_tag', { bracket: bracketLabel(bracket) })}</div>`;
   entries.slice(0, 3).forEach((e, i) => {
     const row = document.createElement('div');
     row.className = 'lb-row lb-row-compact';
@@ -156,25 +157,28 @@ let lbBracket = 10;
 export async function openLeaderboard() {
   showScreen('screen-leaderboard');
 
+  // Rebuilt on every open (not cached) so a locale switch between visits
+  // re-renders tab labels in the new language. The data-i18n attribute on
+  // mode tabs additionally covers mid-screen locale switches via apply.js.
   const modes = $('lb-modes');
-  if (modes && !modes.dataset.built) {
+  if (modes) {
     modes.innerHTML = '';
     [
-      { id: 'survival', label: '🔥 Survival' },
-      { id: 'coop', label: '🤝 Co-op' }
+      { id: 'survival', key: 'leaderboard.mode_survival' },
+      { id: 'coop', key: 'leaderboard.mode_coop' }
     ].forEach(m => {
       const btn = document.createElement('button');
       btn.className = 'lb-mode-tab';
       btn.dataset.mode = m.id;
-      btn.textContent = m.label;
+      btn.setAttribute('data-i18n', m.key);
+      btn.textContent = t(m.key);
       btn.addEventListener('click', () => selectMode(m.id));
       modes.appendChild(btn);
     });
-    modes.dataset.built = '1';
   }
 
   const tabs = $('lb-brackets');
-  if (tabs && !tabs.dataset.built) {
+  if (tabs) {
     tabs.innerHTML = '';
     BRACKETS.forEach(b => {
       const btn = document.createElement('button');
@@ -184,7 +188,6 @@ export async function openLeaderboard() {
       btn.addEventListener('click', () => selectBracket(b));
       tabs.appendChild(btn);
     });
-    tabs.dataset.built = '1';
   }
 
   lbBracket = Number(localStorage.getItem('tomodachi-last-bracket')) || 10;
@@ -210,11 +213,11 @@ async function renderBoard() {
   });
   const list = $('lb-list');
   if (!list) return;
-  list.innerHTML = '<p class="empty-state">Loading rankings…</p>';
+  list.innerHTML = `<p class="empty-state">${t('leaderboard.loading')}</p>`;
 
   const entries = await fetchLeaderboard(lbMode, lbBracket);
   if (!entries.length) {
-    list.innerHTML = '<p class="empty-state">No scores in this bracket yet. Be the first!</p>';
+    list.innerHTML = `<p class="empty-state">${t('leaderboard.empty_bracket')}</p>`;
     return;
   }
 
@@ -228,7 +231,7 @@ async function renderBoard() {
       if ((e.playerIds || []).includes(state.user?.uid)) row.classList.add('lb-row-me');
       const players = e.players || [];
       const avatars = players.map(p => `<span class="lb-avatar">${p.avatarEmoji || '🌸'}</span>`).join('');
-      const names = players.map(p => escapeHtml(p.displayName || 'Player')).join(' & ') || 'Team';
+      const names = players.map(p => escapeHtml(p.displayName || t('nav.user_default_name'))).join(' & ') || t('leaderboard.team_fallback');
       row.innerHTML = `
         <span class="lb-rank lb-rank-${i + 1}">${medal(i + 1)}</span>
         <span class="lb-avatars">${avatars}</span>

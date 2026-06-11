@@ -14,13 +14,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260528c';
+} from '../core/core.js?v=20260610a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260528c';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260526a';
-import { acceptCoop, isInCoop } from './coop.js?v=20260528c';
+} from '../data/firebase.js?v=20260610a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260610a';
+import { acceptCoop, isInCoop } from './coop.js?v=20260610a';
+import { t } from '../i18n/index.js?v=20260610a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -110,22 +111,22 @@ function showInvite(invite) {
   const host = data.players?.[data.hostId] || {};
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   const s = data.settings || {};
-  const inp = s.inputMethod === 'typing' ? 'Typing' : 'Multiple choice';
+  const inp = s.inputMethod === 'typing' ? t('invite.input_typing') : t('invite.input_multiple');
 
   set('invite-avatar', host.avatarEmoji || '🎮');
-  set('invite-from', host.displayName || host.username || 'Your friend');
+  set('invite-from', host.displayName || host.username || t('invite.from_fallback'));
 
   if (data.gameType === 'coop') {
     set('invite-emoji', '🤝');
-    set('invite-title', 'Co-op Invite!');
-    set('invite-text-action', 'wants to team up in Sync Match.');
-    set('invite-details', `${s.characterCount || '?'} characters · Co-op · ${inp}`);
+    set('invite-title', t('invite.coop_title'));
+    set('invite-text-action', t('invite.coop_action'));
+    set('invite-details', t('invite.details_coop', { count: s.characterCount || '?', input: inp }));
   } else {
-    const wc = s.winCondition === 'rounds_20' ? '20 rounds' : 'First to 10';
+    const wc = s.winCondition === 'rounds_20' ? t('invite.wincon_rounds20') : t('invite.wincon_first10');
     set('invite-emoji', '⚔️');
-    set('invite-title', 'Duel Challenge!');
-    set('invite-text-action', 'wants to duel you.');
-    set('invite-details', `${s.characterCount || '?'} characters · ${wc} · ${inp}`);
+    set('invite-title', t('invite.duel_title'));
+    set('invite-text-action', t('invite.duel_action'));
+    set('invite-details', t('invite.details_duel', { count: s.characterCount || '?', wincon: wc, input: inp }));
   }
   overlay.classList.add('active');
   playSound('start');
@@ -146,18 +147,18 @@ export async function sendChallenge() {
   if (d) teardown();
   const friend = state.friend;
   if (!friend || !friend.uid) {
-    toast('No friend account found to challenge.', 'warning');
+    toast(t('duel.toast.no_friend'), 'warning');
     return;
   }
   const fp = state.friendPresence;
   if (!fp || fp.status === 'offline') {
-    toast('Your friend must be online to receive a challenge.', 'warning');
+    toast(t('duel.toast.friend_offline'), 'warning');
     return;
   }
 
   const chars = buildCharPool();
   if (chars.length < 4) {
-    toast('Pick at least 4 characters for a duel.', 'warning');
+    toast(t('duel.toast.min_chars'), 'warning');
     return;
   }
 
@@ -197,15 +198,15 @@ export async function sendChallenge() {
   };
 
   try {
-    showLobby('Sending challenge…', '');
+    showLobby(t('duel.lobby_sending'), '');
     const ref = await addDoc(collection(db, 'game_sessions'), session);
     d = freshDuel(ref, ref.id, true);
     subscribe();
-    showLobby(`Waiting for ${friend.displayName || 'your friend'}…`,
-              'They will get a challenge pop-up. Keep this screen open.');
+    showLobby(t('duel.lobby_waiting', { name: friend.displayName || t('duel.your_friend') }),
+              t('duel.lobby_waiting_hint'));
   } catch (err) {
     console.error('sendChallenge failed:', err);
-    toast('Could not send the challenge: ' + err.message, 'error');
+    toast(t('duel.send_failed', { message: err.message }), 'error');
     goDashboard();
   }
 }
@@ -237,7 +238,7 @@ export async function acceptInvite() {
   try {
     const snap = await getDoc(ref);
     if (!snap.exists() || snap.data().status !== 'waiting') {
-      toast('That challenge is no longer available.', 'warning');
+      toast(t('duel.toast.invite_gone'), 'warning');
       return;
     }
     const guestInfo = {
@@ -259,7 +260,7 @@ export async function acceptInvite() {
     enterDuelScreen();
   } catch (err) {
     console.error('acceptInvite failed:', err);
-    toast('Could not join the duel: ' + err.message, 'error');
+    toast(t('duel.toast.join_failed', { message: err.message }), 'error');
     d = null;
   }
 }
@@ -286,7 +287,7 @@ function subscribe() {
     handleSnapshot(snap.data());
   }, (err) => {
     console.error('Duel listener failed:', err);
-    toast('Lost connection to the duel.', 'error');
+    toast(t('duel.toast.connection_lost'), 'error');
   });
 }
 
@@ -297,8 +298,8 @@ function handleSnapshot(data) {
 
   switch (data.status) {
     case 'waiting':
-      showLobby(`Waiting for ${opponentName()}…`,
-                'They will get a challenge pop-up. Keep this screen open.');
+      showLobby(t('duel.lobby_waiting', { name: opponentName() }),
+                t('duel.lobby_waiting_hint'));
       break;
     case 'countdown':
     case 'active':
@@ -517,17 +518,17 @@ function updatePanels(data) {
 
   const setText = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   setText('duel-self-avatar', players[myId]?.avatarEmoji || '🌸');
-  setText('duel-self-name', players[myId]?.displayName || 'You');
+  setText('duel-self-name', players[myId]?.displayName || t('duel.you'));
   setText('duel-self-score', scores[myId] || 0);
   setText('duel-self-won', `🏆 ${won[myId] || 0}`);
   setText('duel-opp-avatar', players[oppId]?.avatarEmoji || '🎮');
-  setText('duel-opp-name', players[oppId]?.displayName || 'Opponent');
+  setText('duel-opp-name', players[oppId]?.displayName || t('duel.opponent'));
   setText('duel-opp-score', scores[oppId] || 0);
   setText('duel-opp-won', `🏆 ${won[oppId] || 0}`);
 
   // Round label
   const total = data.settings?.winCondition === 'rounds_20' ? ` / ${TOTAL_ROUNDS}` : '';
-  setText('duel-round-label', `Round ${(data.currentRound || 0) + 1}${total}`);
+  setText('duel-round-label', t('duel.round_n', { n: (data.currentRound || 0) + 1 }) + total);
 
   // Opponent answered indicator
   const oppAns = (data.answers || {})[`r${data.currentRound}`]?.[oppId];
@@ -568,8 +569,9 @@ function buildInput(data, q) {
     form.innerHTML = `
       <input type="text" class="answer-input" id="duel-answer-input"
              autocomplete="off" autocapitalize="none" autocorrect="off"
-             spellcheck="false" placeholder="type the rōmaji…">
-      <button type="submit" class="btn btn-primary answer-submit">Enter</button>`;
+             spellcheck="false" placeholder="${t('game.typing_placeholder')}"
+             data-i18n-placeholder="game.typing_placeholder">
+      <button type="submit" class="btn btn-primary answer-submit" data-i18n="common.enter">${t('common.enter')}</button>`;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const inp = $('duel-answer-input');
@@ -610,7 +612,7 @@ function lockInput(value, correct, q, mine) {
     const fb = $('duel-feedback');
     if (fb && d.data.roundState === 'answering') {
       fb.className = 'game-feedback show';
-      fb.innerHTML = `<span class="fb-text">Locked in — waiting for ${opponentName()}…</span>`;
+      fb.innerHTML = `<span class="fb-text">${t('duel.feedback.locked_in', { name: opponentName() })}</span>`;
     }
   }
 }
@@ -637,10 +639,10 @@ function renderReveal(data) {
   const fb = $('duel-feedback');
   if (fb) {
     const map = {
-      first: { cls: 'good', txt: `⚡ Fastest! +100` },
-      second: { cls: 'good', txt: `Correct — just behind. +50` },
-      wrong: { cls: 'bad', txt: `Wrong. −50 · answer: ${q.char} = ${q.romaji}` },
-      none: { cls: 'bad', txt: `Too slow! 0 · answer: ${q.char} = ${q.romaji}` }
+      first: { cls: 'good', txt: t('duel.feedback.fastest') },
+      second: { cls: 'good', txt: t('duel.feedback.second') },
+      wrong: { cls: 'bad', txt: t('duel.feedback.wrong', { char: q.char, romaji: q.romaji }) },
+      none: { cls: 'bad', txt: t('duel.feedback.too_slow', { char: q.char, romaji: q.romaji }) }
     };
     const r = map[myOutcome] || map.none;
     fb.className = `game-feedback show ${r.cls}`;
@@ -698,15 +700,15 @@ async function showResults(data) {
 
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set('duel-result-emoji', draw ? '🤝' : iWon ? '🏆' : '💪');
-  set('duel-result-title', draw ? 'Draw!' : iWon ? 'Victory!' : 'Defeat');
+  set('duel-result-title', draw ? t('duel.result.draw') : iWon ? t('duel.result.victory') : t('duel.result.defeat'));
   if (forfeit) {
     set('duel-result-detail', iWon
-      ? `${opponentName()} left the duel.`
-      : 'You left the duel.');
+      ? t('duel.result.opponent_left', { name: opponentName() })
+      : t('duel.result.you_left'));
   } else {
     set('duel-result-detail', draw
-      ? 'Dead even — a true rivalry.'
-      : iWon ? 'You out-duelled your friend!' : `${opponentName()} got the better of you.`);
+      ? t('duel.result.detail_draw')
+      : iWon ? t('duel.result.detail_won') : t('duel.result.detail_lost', { name: opponentName() }));
   }
 
   const scores = data.scores || {};
@@ -715,15 +717,15 @@ async function showResults(data) {
   if (scoreHost) {
     scoreHost.innerHTML = `
       <div class="dr-side ${iWon && !draw ? 'dr-win' : ''}">
-        <div class="dr-name">You</div>
+        <div class="dr-name">${t('duel.you')}</div>
         <div class="dr-score">${scores[myId] || 0}</div>
-        <div class="dr-sub">🏆 ${won[myId] || 0} rounds</div>
+        <div class="dr-sub">${t('duel.result.rounds_won', { count: won[myId] || 0 })}</div>
       </div>
-      <div class="dr-vs">vs</div>
+      <div class="dr-vs">${t('duel.vs')}</div>
       <div class="dr-side ${!iWon && !draw ? 'dr-win' : ''}">
         <div class="dr-name">${opponentName()}</div>
         <div class="dr-score">${scores[oppId] || 0}</div>
-        <div class="dr-sub">🏆 ${won[oppId] || 0} rounds</div>
+        <div class="dr-sub">${t('duel.result.rounds_won', { count: won[oppId] || 0 })}</div>
       </div>`;
   }
 
@@ -783,7 +785,7 @@ export async function exitDuel() {
     return;
   }
   // Live duel → confirm forfeit.
-  if (!confirm('Forfeit the duel? Your opponent wins.')) return;
+  if (!confirm(t('duel.confirm_forfeit'))) return;
   try {
     await updateDoc(d.ref, {
       status: 'completed',
@@ -817,7 +819,7 @@ export function onFriendPresence(presence) {
 function handleEnded(reason) {
   if (!d || d.ended) return;
   if (reason === 'cancelled') {
-    toast('The duel was cancelled.', 'info', 4000);
+    toast(t('duel.toast.cancelled'), 'info', 4000);
   }
   teardown();
   goDashboard();
@@ -940,9 +942,9 @@ function otherId(data) {
 }
 
 function opponentName() {
-  if (!d || !d.data) return 'your friend';
+  if (!d || !d.data) return t('duel.your_friend');
   const oppId = otherId(d.data);
-  return d.data.players?.[oppId]?.displayName || 'your friend';
+  return d.data.players?.[oppId]?.displayName || t('duel.your_friend');
 }
 
 function showLobby(statusText, detailText) {
@@ -950,7 +952,7 @@ function showLobby(statusText, detailText) {
   const title = $('lobby-title');
   const s = $('lobby-status');
   const det = $('lobby-detail');
-  if (title) title.textContent = '⚔️ Duel Lobby';
+  if (title) title.textContent = t('duel.lobby_title');
   if (s) s.textContent = statusText;
   if (det) det.textContent = detailText || '';
 }

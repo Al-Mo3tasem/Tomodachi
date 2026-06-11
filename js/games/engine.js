@@ -14,15 +14,16 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260528c';
+} from '../core/core.js?v=20260610a';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260528c';
+} from '../data/firebase.js?v=20260610a';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260526a';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260528c';
+} from '../audio/audio.js?v=20260610a';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260610a';
+import { t } from '../i18n/index.js?v=20260610a';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -57,14 +58,13 @@ let visHandler = null;
 /** Start a game of the given type using state.selectedChars. */
 export function startGame(type) {
   if (type !== 'zen' && type !== 'survival') {
-    const soon = { duel: 'Duel Mode arrives in Phase 3', coop: 'Sync Match arrives in Phase 4' };
-    toast(soon[type] || 'This mode is coming soon!', 'info', 4000);
+    toast(t('game.mode_soon'), 'info', 4000);
     return false;
   }
 
   const chars = buildCharPool();
   if (chars.length === 0) {
-    toast('Select at least one character first.', 'warning');
+    toast(t('game.select_chars_first'), 'warning');
     return false;
   }
 
@@ -148,13 +148,13 @@ export function requestExit() {
   }
   // Survival
   if (g.correct === 0 && g.wrong === 0) {
-    if (confirm('Leave Survival Rush?')) {
+    if (confirm(t('game.confirm_leave_survival'))) {
       cleanup();
       goHome();
     }
     return;
   }
-  if (confirm('Quit this run? Your current score will be saved.')) {
+  if (confirm(t('game.confirm_quit_zen'))) {
     endGame('quit');
   }
 }
@@ -298,8 +298,9 @@ function buildInputArea() {
     form.innerHTML = `
       <input type="text" class="answer-input" id="answer-input"
              autocomplete="off" autocapitalize="none" autocorrect="off"
-             spellcheck="false" placeholder="type the rōmaji…">
-      <button type="submit" class="btn btn-primary answer-submit">Enter</button>
+             spellcheck="false" placeholder="${t('game.typing_placeholder')}"
+             data-i18n-placeholder="game.typing_placeholder">
+      <button type="submit" class="btn btn-primary answer-submit" data-i18n="common.enter">${t('common.enter')}</button>
     `;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -563,9 +564,10 @@ function showFeedback(isCorrect, btnEl, timedOut) {
     const answer = `${g.current.char} = ${g.current.romaji}`;
     if (isCorrect) {
       fb.innerHTML = `<span class="fb-mark">✓</span><span class="fb-text">${answer}</span>`;
+    } else if (timedOut) {
+      fb.innerHTML = `<span class="fb-mark">✗</span><span class="fb-text">${t('game.feedback.times_up', { answer: `<strong>${answer}</strong>` })}</span>`;
     } else {
-      const lead = timedOut ? "Time's up — " : '';
-      fb.innerHTML = `<span class="fb-mark">✗</span><span class="fb-text">${lead}<strong>${answer}</strong></span>`;
+      fb.innerHTML = `<span class="fb-mark">✗</span><span class="fb-text"><strong>${answer}</strong></span>`;
     }
   }
 
@@ -602,7 +604,7 @@ function renderHud() {
     const round = Math.floor(g.correct / RAMP_EVERY) + 1;
     hud.innerHTML = `
       <span class="hud-lives">${hearts}</span>
-      <span class="hud-chip">Round ${round}</span>
+      <span class="hud-chip">${t('duel.round_n', { n: round })}</span>
       <span class="hud-chip hud-score">${liveScore().toLocaleString()}</span>
     `;
   } else {
@@ -622,7 +624,7 @@ function renderHud() {
   const streak = $('game-streak');
   if (streak) {
     if (g.streak >= 3) {
-      streak.textContent = `🔥 ${g.streak} streak`;
+      streak.textContent = t('game.streak', { count: g.streak });
       streak.classList.add('show');
     } else {
       streak.classList.remove('show');
@@ -804,31 +806,31 @@ function showResults(s) {
   const accPct = Math.round(s.accuracy * 100);
 
   if (s.mode === 'survival') {
-    if (title) title.textContent = s.reason === 'quit' ? 'Run Ended' : 'Game Over';
+    if (title) title.textContent = s.reason === 'quit' ? t('game.results.title_run_ended') : t('game.results.title_game_over');
     if (emoji) emoji.textContent = accPct >= 80 ? '🏆' : accPct >= 50 ? '💪' : '🌱';
-    if (scoreLabel) scoreLabel.textContent = 'Final Score';
+    if (scoreLabel) scoreLabel.textContent = t('game.results.label_final_score');
     if (scoreEl) countUp(scoreEl, s.score);
   } else {
-    if (title) title.textContent = s.practice === 'listen' ? 'Listening Session Done' : 'Reading Session Done';
+    if (title) title.textContent = s.practice === 'listen' ? t('game.results.title_listening_done') : t('game.results.title_reading_done');
     if (emoji) emoji.textContent = accPct >= 90 ? '🌸' : accPct >= 60 ? '🧘' : '📚';
-    if (scoreLabel) scoreLabel.textContent = 'Characters Cleared';
+    if (scoreLabel) scoreLabel.textContent = t('game.results.label_chars_cleared');
     if (scoreEl) countUp(scoreEl, s.correct);
   }
 
   if (statsHost) {
     const cells = [
-      { label: 'Correct', value: s.correct },
-      { label: 'Missed', value: s.wrong },
-      { label: 'Accuracy', value: `${accPct}%` },
-      { label: 'Best Streak', value: s.bestStreak }
+      { label: t('game.stats.correct'), value: s.correct },
+      { label: t('game.stats.missed'), value: s.wrong },
+      { label: t('game.stats.accuracy'), value: `${accPct}%` },
+      { label: t('game.stats.best_streak'), value: s.bestStreak }
     ];
-    if (s.mode === 'survival') cells[2] = { label: 'Round', value: s.round };
+    if (s.mode === 'survival') cells[2] = { label: t('game.stats.round'), value: s.round };
     statsHost.innerHTML = cells
       .map(c => `<div class="rstat"><div class="rstat-value">${c.value}</div><div class="rstat-label">${c.label}</div></div>`)
       .join('');
   }
 
-  if (note) note.innerHTML = s.mode === 'survival' ? '<span class="muted">Saving…</span>' : '';
+  if (note) note.innerHTML = s.mode === 'survival' ? `<span class="muted">${t('game.results.saving')}</span>` : '';
 
   overlay.classList.add('active');
   persistResults(s, note);
@@ -849,14 +851,15 @@ async function persistResults(s, noteEl) {
 
   if (s.mode === 'survival' && noteEl) {
     const parts = [];
-    if (newBest) parts.push('🏆 New personal best!');
+    if (newBest) parts.push(t('game.results.new_best'));
     if (rank) {
       const b = bracketFor(s.characterCount);
-      parts.push(`Ranked <strong>#${rank}</strong> · ${b === 46 ? 'Full 46' : b + '-char'} board`);
+      const board = b === 46 ? t('game.results.board_full') : t('game.results.board_chars', { count: b });
+      parts.push(t('game.results.ranked_html', { rank, board }));
     }
     noteEl.innerHTML = parts.length
       ? parts.map(p => `<div>${p}</div>`).join('')
-      : '<span class="muted">Score saved.</span>';
+      : `<span class="muted">${t('game.results.score_saved')}</span>`;
   }
 
   const celebrate =
