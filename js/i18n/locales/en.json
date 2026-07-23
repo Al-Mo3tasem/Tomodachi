@@ -47,6 +47,7 @@
   },
   "footer": {
     "tagline": "Learn Japanese together",
+    "farewell": "— see you tomorrow.",
     "privacy_link": "Privacy",
     "terms_link": "Terms",
     "cookies_link": "Cookies",
@@ -253,11 +254,50 @@
       "create_account": "Create Account"
     }
   },
+  "mock": {
+    "greeting": "Good evening, Omar",
+    "greeting_sub": "Ready for today's lesson?",
+    "stat_accuracy": "Accuracy",
+    "stat_streak": "Day streak",
+    "stat_xp": "Total XP",
+    "daily_goal": "Daily goal",
+    "daily_goal_count": "3 of 5 done",
+    "continue_title": "Continue learning",
+    "continue_sub": "Hiragana · Lesson 4 · 6 min",
+    "continue_btn": "Continue",
+    "review_title": "Review due",
+    "review_sub": "12 cards ready to practise",
+    "review_btn": "Start",
+    "you": "You",
+    "round": "Round 3 of 10",
+    "question": "Which sound matches this character?",
+    "opponent_status": "Sara is answering…",
+    "league": "Weekly League",
+    "league_ends": "Ends in 2d 14h",
+    "your_position": "Your position",
+    "name_sara": "Sara",
+    "name_maya": "Maya",
+    "name_kenji": "Kenji",
+    "name_nadia": "Nadia",
+    "name_karim": "Karim",
+    "name_yuki": "Yuki",
+    "time": "9:41",
+    "week": "This week",
+    "duel_card_title": "Duel with Sara",
+    "duel_card_sub": "Your turn — Round 3",
+    "duel_card_btn": "Play",
+    "seg_friends": "Friends",
+    "seg_global": "Global",
+    "benefit_dashboard": "See exactly what to learn next.",
+    "benefit_duel": "Test your recall against a friend.",
+    "benefit_leaderboard": "Turn daily progress into friendly competition."
+  },
   "nav": {
     "settings_title": "Settings",
     "logout": "Logout",
     "user_default_name": "Player",
-    "install_app": "Install app"
+    "install_app": "Install app",
+    "theme_toggle": "Switch color theme"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -339,12 +379,12 @@
       "session": "Session"
     },
     "seg": {
-      "read": "👁️ Read",
-      "listen": "👂 Listen",
-      "first_to_10": "🏁 First to 10",
-      "rounds_20": "🔟 20 Rounds",
-      "typing": "⌨️ Typing",
-      "choices": "🔘 Choices"
+      "read": "Read",
+      "listen": "Listen",
+      "first_to_10": "First to 10",
+      "rounds_20": "20 Rounds",
+      "typing": "Typing",
+      "choices": "Choices"
     },
     "panel": {
       "premade": "Premade Sets",

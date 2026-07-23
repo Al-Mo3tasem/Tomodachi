@@ -5,9 +5,9 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $, showScreen } from '../core/core.js?v=20260610a';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260610a';
-import { t } from '../i18n/index.js?v=20260610a';
+import { state, $, showScreen } from '../core/core.js?v=20260723a';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260723a';
+import { t } from '../i18n/index.js?v=20260723a';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -141,7 +141,7 @@ export async function renderLeaderboardPreview() {
     if (e.userId === state.user?.uid) row.classList.add('lb-row-me');
     row.innerHTML = `
       <span class="lb-rank">${medal(i + 1)}</span>
-      <span class="lb-avatar">${e.avatarEmoji || '🌸'}</span>
+      <span class="lb-avatar">${escapeHtml(e.avatarEmoji || '🌸')}</span>
       <span class="lb-name">${escapeHtml(e.displayName || e.username)}</span>
       <span class="lb-score">${e.score.toLocaleString()}</span>
     `;
@@ -230,7 +230,7 @@ async function renderBoard() {
     if (lbMode === 'coop') {
       if ((e.playerIds || []).includes(state.user?.uid)) row.classList.add('lb-row-me');
       const players = e.players || [];
-      const avatars = players.map(p => `<span class="lb-avatar">${p.avatarEmoji || '🌸'}</span>`).join('');
+      const avatars = players.map(p => `<span class="lb-avatar">${escapeHtml(p.avatarEmoji || '🌸')}</span>`).join('');
       const names = players.map(p => escapeHtml(p.displayName || t('nav.user_default_name'))).join(' & ') || t('leaderboard.team_fallback');
       row.innerHTML = `
         <span class="lb-rank lb-rank-${i + 1}">${medal(i + 1)}</span>
@@ -245,7 +245,7 @@ async function renderBoard() {
       if (e.userId === state.user?.uid) row.classList.add('lb-row-me');
       row.innerHTML = `
         <span class="lb-rank lb-rank-${i + 1}">${medal(i + 1)}</span>
-        <span class="lb-avatar">${e.avatarEmoji || '🌸'}</span>
+        <span class="lb-avatar">${escapeHtml(e.avatarEmoji || '🌸')}</span>
         <div class="lb-name-block">
           <span class="lb-name">${escapeHtml(e.displayName || e.username)}</span>
           <span class="lb-date">${date}</span>

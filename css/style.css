@@ -395,21 +395,8 @@ body {
   white-space: nowrap;
 }
 
-.btn-primary {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 92%, #fff) 0%, var(--accent) 100%);
-  color: var(--accent-contrast);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(45,28,15,0.12);
-}
 
-.btn-primary:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-brand);
-}
 
-.btn-primary:active {
-  transform: scale(0.98);
-}
 
 .btn-secondary {
   background: var(--bg-hover);
@@ -445,9 +432,17 @@ body {
   width: 100%;
 }
 
+/* Symmetric horizontal padding so the hover background is a pill centered
+ * on the [arrow + label] content. The old `padding-inline-start: 0` (while
+ * the base .btn kept padding-inline-end: 20px) shrank only the start side,
+ * so justify-content:center centered the text inside a lopsided content box
+ * and it read as left-shifted within the hover fill. The negative start
+ * margin cancels the restored start padding, so the arrow still sits flush
+ * with the page title below it. */
 .back-btn {
   margin-bottom: var(--space-4);
-  padding-inline-start: 0;
+  margin-inline-start: calc(var(--space-3) * -1);
+  padding-inline: var(--space-3);
 }
 
 /* ----- Forms ----- */
@@ -662,37 +657,13 @@ body {
 }
 
 /* Friend Card */
-.friend-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
 
-.friend-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  background: var(--bg-base);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-}
 
-.friend-name {
-  font-weight: 600;
-  font-size: 1.0625rem;
-}
 
-.friend-status {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
+
+
+
+
 
 .status-dot {
   width: 8px;
@@ -710,9 +681,7 @@ body {
   background: var(--warning);
 }
 
-.friend-actions {
-  margin-top: var(--space-4);
-}
+
 
 /* Game Modes */
 .modes-list {
@@ -743,11 +712,7 @@ body {
   transform: translateX(4px);
 }
 
-.mode-emoji {
-  font-size: 1.75rem;
-  width: 40px;
-  text-align: center;
-}
+
 
 .mode-details {
   flex: 1;
@@ -1074,22 +1039,11 @@ body {
 }
 
 /* ----- Game Placeholder ----- */
-.game-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-}
 
-.game-placeholder {
-  text-align: center;
-  padding: var(--space-12);
-}
 
-.game-placeholder h2 {
-  font-size: 1.5rem;
-  margin-bottom: var(--space-4);
-}
+
+
+
 
 /* ----- Toasts ----- */
 .toast-container {
@@ -1134,9 +1088,7 @@ body {
 }
 
 /* ----- Scrollbar ----- */
-::-webkit-scrollbar {
-  width: 6px;
-}
+
 
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -1184,20 +1136,28 @@ body {
    PHASE 2 — Games, Leaderboards & Polish
    ============================================ */
 
-/* ----- Disabled buttons (was missing) ----- */
+/* ----- Disabled buttons -----
+   No !important here: the Round-3 layer intentionally keeps the disabled
+   primary CTA visually confident (higher opacity + brand shadow), and
+   !important made those later rules dead. Hover lift is prevented by the
+   R3 hover rules using :not(:disabled). */
 .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  transform: none;
 }
 
-/* ----- Toast accents ----- */
-.toast-success { border-inline-start: 3px solid var(--success); }
-.toast-error   { border-inline-start: 3px solid var(--danger); }
-.toast-warning { border-inline-start: 3px solid var(--warning); }
-.toast-info    { border-inline-start: 3px solid var(--accent); }
-.toast-icon { font-size: 1rem; }
+/* ----- Toasts: status is carried by a tinted line icon (modern, icon-led,
+   like Linear/Vercel/Sonner) — not an emoji and not a colored side-bar. The
+   glyph is a currentColor Lucide icon; each severity just sets that color. */
+.toast-icon { display: inline-flex; align-items: center; flex-shrink: 0; }
+.toast-icon svg { width: 18px; height: 18px; }
+.toast-success .toast-icon { color: var(--success); }
+.toast-error   .toast-icon { color: var(--danger); }
+.toast-warning .toast-icon { color: var(--warning); }
+/* info stays NEUTRAL, not brand-accent: --accent is red here, which would
+   make a neutral "Duel was cancelled" notice read as urgent/error. */
+.toast-info    .toast-icon { color: var(--text-secondary); }
 
 /* ----- Dashboard: mastery bar ----- */
 .mastery-bar-wrap { margin-top: var(--space-5); }
@@ -1244,23 +1204,10 @@ body {
 .history-sub { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
 
 /* ----- Dashboard: "coming soon" modes ----- */
-.mode-btn-soon { opacity: 0.72; }
-.mode-btn-soon:hover {
-  transform: none;
-  border-color: var(--border);
-  background: var(--bg-base);
-}
 
-.mode-tag {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--text-tertiary);
-  background: var(--bg-hover);
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
+
+
+
 
 /* ----- Select screen: mode options ----- */
 .select-options {
@@ -1323,6 +1270,27 @@ body {
 .seg-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Stacked segmented buttons (game-setup mode selectors): a line icon over
+ * its label. Scoped to .seg-stacked so the duration row (a numeric scale)
+ * and the duel/leaderboard segmented controls keep their compact text-only
+ * form. The icon is currentColor, so it inherits the seg-btn's active/idle
+ * color for free (idle = text-secondary, active = text-primary). */
+.seg-stacked .seg-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 16px;
+  min-width: 78px;
+  line-height: 1.15;
+}
+.seg-stacked .seg-label { white-space: nowrap; }
+.seg-stacked .seg-ic {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 /* ----- Settings: avatar picker ----- */
@@ -2577,6 +2545,23 @@ body {
    * used to get dark-theme text vars on a hardcoded cream background —
    * white-on-cream, unreadable. --page-wash/--bg-base flip with the theme. */
   background: var(--page-wash), var(--bg-base);
+  /* Decorative layers (aurora, kanji watermarks) intentionally overflow
+   * their sections vertically for continuity; clip only the horizontal
+   * axis so they never cause a sideways scrollbar. `clip` (not `hidden`)
+   * avoids creating a scroll container. */
+  /* `clip` on BOTH axes: decorative bleed (aurora, watermarks) must neither
+   * cause sideways scrolling nor extend the page below the footer — layout
+   * overflow from absolutely-positioned bleed still grows the scrollable
+   * area unless clipped. Unlike `hidden`, `clip` creates no scroll
+   * container, so the sticky nav keeps working against the viewport. */
+  overflow: clip;
+  /* Make this section a stacking context: without it, the z-index:-1
+   * decorative layers escape to the root context and paint BENEATH this
+   * section's opaque background — i.e. invisible (verified: they only
+   * flashed during the .screen fadeIn, which is itself a temporary
+   * stacking context). isolate keeps them above our background, below
+   * all in-flow content. */
+  isolation: isolate;
 }
 
 .landing-nav {
@@ -2861,45 +2846,15 @@ body {
   padding: 4px; /* breathing room so the SVG border doesn't clip the cards */
 }
 
-.features-border-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: visible;
-}
 
-.features-border-svg rect {
-  fill: none;
-  stroke: url(#features-border-gradient);
-  stroke-width: 1.5;
-  /* `pathLength="100"` normalizes the rect's perimeter to 100 units, so
-   * the dash + gap below work the same regardless of viewport size.
-   * 18 units of glow + 100 units of gap = ONE glow visible at a time
-   * traveling around the perimeter. Loop = -118 to restart cleanly. */
-  stroke-dasharray: 18, 100;
-  stroke-dashoffset: 0;
-  animation: features-border-trace 12s linear infinite;
-  transition: opacity 0.4s ease;
-  opacity: 0.55;
-}
 
-@keyframes features-border-trace {
-  to { stroke-dashoffset: -118; }
-}
+
+
+
 
 /* When any card in the group is hovered, the group border fades out so
  * the focus shifts to the hovered card's own animated border. The
- * :has() selector lights this up in all modern browsers (Chrome 105+,
- * Firefox 121+, Safari 15.4+ — all shipped 18+ months). */
-.features-wrap:has(.feature-card:hover) .features-border-svg rect {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .features-border-svg rect { animation: none; }
-}
+ * :has() selector lights this up in all modern browsers. */
 
 .features-grid {
   display: grid;
@@ -2936,36 +2891,9 @@ body {
  * background and brand-colored stroke icon. Per-card color variation
  * via :nth-child to create visual rhythm across the row.
  * (Replaces the L1.05 emoji icons per L1 polish 2026-05-28.) */
-.feature-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-  line-height: 1;
-}
 
-.feature-icon svg {
-  width: 22px;
-  height: 22px;
-}
 
-.feature-card:nth-child(1) .feature-icon {
-  background: var(--brand-primary-soft);
-  color: var(--brand-primary);
-}
 
-.feature-card:nth-child(2) .feature-icon {
-  background: var(--brand-accent-soft);
-  color: var(--brand-accent);
-}
-
-.feature-card:nth-child(3) .feature-icon {
-  background: var(--brand-amber-soft);
-  color: var(--brand-amber);
-}
 
 .feature-title {
   font-size: 1.0625rem;
@@ -3062,44 +2990,46 @@ body {
   max-width: 260px;
 }
 
-/* Phone-frame placeholder. Fixed dark bezel works in both light and
- * dark themes — actual phone hardware is dark regardless of OS theme.
- * When real screenshots ship, the .screenshot-placeholder gets replaced
- * by an <img> inside the frame. The frame itself stays. */
+/* Phone-frame placeholder — modern flagship hardware: slim uniform
+ * bezel, large corner radius, and a 1px "titanium band" ring drawn
+ * with the first box-shadow layer (kept in every shadow variant or
+ * the band vanishes on hover). The notch is gone — the Dynamic
+ * Island pill lives inside each mock's status bar (.mk-island), so
+ * screen content can never collide with it. Dark bezel works in both
+ * themes — phone hardware is dark regardless of OS theme. */
 .screenshot-frame {
   width: 100%;
   aspect-ratio: 9 / 19.5;
-  border-radius: 32px;
-  border: 8px solid #1c1c1e;
-  background: #1c1c1e;
+  border-radius: 40px;
+  border: 7px solid #0e0e10;
+  background: #0e0e10;
   overflow: hidden;
-  box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.12),
-    0 8px 16px rgba(0, 0, 0, 0.06);
   position: relative;
+  box-shadow:
+    0 0 0 1.25px #4c4c54,
+    0 16px 32px rgba(45, 28, 15, 0.13),
+    0 4px 9px rgba(45, 28, 15, 0.07);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* Faint notch hint at the top — gives the frame a phone identity
- * without overcomplicating with a full Dynamic Island shape. */
-.screenshot-frame::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 14px;
-  background: #1c1c1e;
-  border-radius: 0 0 10px 10px;
-  z-index: 2;
+[data-theme="dark"] .screenshot-frame {
+  box-shadow:
+    0 0 0 1.25px #5c5c64,
+    0 16px 32px rgba(0, 0, 0, 0.44),
+    0 4px 9px rgba(0, 0, 0, 0.3);
 }
 
 .screenshot-card:hover .screenshot-frame {
   transform: translateY(-4px);
   box-shadow:
-    0 32px 56px rgba(0, 0, 0, 0.14),
-    0 12px 20px rgba(0, 0, 0, 0.08);
+    0 0 0 1.25px #4c4c54,
+    0 24px 44px rgba(45, 28, 15, 0.16),
+    0 8px 16px rgba(45, 28, 15, 0.09);
+}
+[data-theme="dark"] .screenshot-card:hover .screenshot-frame {
+  box-shadow:
+    0 0 0 1.25px #5c5c64,
+    0 24px 44px rgba(0, 0, 0, 0.5),
+    0 8px 16px rgba(0, 0, 0, 0.34);
 }
 
 .screenshot-placeholder {
@@ -3114,53 +3044,24 @@ body {
 /* Faint brand-kanji watermark — signals "screen content coming"
  * without putting fake UI elements that would look half-baked.
  * 5% opacity keeps it almost invisible, more felt than seen. */
-.screenshot-placeholder::after {
-  content: '友';
-  font-family: var(--font-jp);
-  font-size: 5rem;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.05);
-  line-height: 1;
-}
+
 
 /* L1 polish-3 (2026-06-01): per-phone distinct premium light colors,
  * each a different warm-neutral tone harmonizing with the scarf-crimson
  * brand palette. Solid fills (no gradients) — quieter, more premium,
  * easier on the eye than the previous brand-tinted gradients. */
-.placeholder-dashboard {
-  background: #F2EFE7;   /* warm cream */
-}
 
-.placeholder-duel {
-  background: #F1E6E2;   /* soft blush */
-}
 
-.placeholder-leaderboard {
-  background: #EDE6D8;   /* warm sand */
-}
+
+
+
 
 /* "Coming soon / قريبًا" — quiet editorial-style text centered inside
  * the phone frame. No pill, no badge, no glass — just typography. Same
  * voice as the rest of the section: matches .screenshot-card figcaption
  * weight + color, with subtle italic in EN for the "label" feel. Arabic
  * stays upright since italic doesn't apply to Arabic script. */
-.placeholder-badge {
-  position: relative;
-  z-index: 1;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-style: italic;
-  letter-spacing: -0.005em;
-  color: var(--text-secondary);
-  opacity: 0.85;
-}
 
-:lang(ar) .placeholder-badge {
-  font-style: normal;
-  letter-spacing: 0;
-  font-weight: 600;
-}
 
 .screenshot-card figcaption {
   font-size: 0.9375rem;
@@ -4276,16 +4177,22 @@ input:focus-visible {
   to { transform: translate3d(200px, 100px, 0); }
 }
 
-/* ----- Layer 2: aurora blobs (hero) ----- */
+/* ----- Layer 2: aurora blobs (hero) -----
+ * The hero must NOT clip: its glows and the kanji watermark are meant to
+ * drift past the section edge so the page reads as one continuous surface.
+ * They sit at z-index -1, painting behind all in-flow content (cards, nav
+ * text) but above the landing background — horizontal bleed is contained
+ * by overflow-x: clip on #screen-landing.active instead. */
 .hero {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero::before,
 .hero::after {
   content: '';
   position: absolute;
+  z-index: -1;
   border-radius: 50%;
   pointer-events: none;
   filter: blur(48px);
@@ -4416,7 +4323,6 @@ input:focus-visible {
 
 /* Hero form: input and CTA share one 52px line */
 .hero-form { gap: var(--space-3); margin-bottom: var(--space-5); }
-.hero-email { height: 52px; padding-block: 0; }
 .hero-counter { font-size: 0.875rem; }
 
 /* Landing nav pills: one consistent 34px control line */
@@ -4465,3 +4371,1044 @@ input:focus-visible {
   .select-footer .btn-lg { min-width: 0; width: 100%; }
   .container { padding: var(--space-6) var(--space-4); }
 }
+
+/* ============================================================================
+   ROUND 3 — EDITORIAL PREMIUM (2026-07-18)
+   Approved directions: L1 ink&paper · T1 Fraunces · B1 crimson+shine ·
+   I1 combo bar · N1 nav morph · H1 split hero · F1 bento · S1 real mocks ·
+   D1 stat digits · G1 flashcard + G3 brush · M1 modals · R1 medals ·
+   Q1/FT1 editorial FAQ+footer · MO1 motion · X1 details bundle + glass layer.
+   Appended last on purpose: equal-specificity rules here win the cascade.
+   ========================================================================== */
+
+:root {
+  --font-display: 'Fraunces', 'Cairo', Georgia, serif;
+  --font-digits: 'Space Grotesk', 'Inter', sans-serif;
+  --font-kana: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+  --gold-soft: rgba(184, 134, 11, 0.22);
+}
+
+/* ---------- X1 details bundle ------------------------------------------- */
+::selection { background: rgba(185, 28, 28, 0.88); color: #fff; }
+[data-theme="dark"] ::selection { background: rgba(224, 72, 72, 0.85); color: #fff; }
+
+/* Outline only — setting border-radius here squared off every pill/button
+   the moment it received keyboard focus (audit: game controls, locale pills). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+::-webkit-scrollbar-track { background: transparent; }
+
+.stat-value, .results-score, .lb-score, .lb-rank, .hero-counter,
+.game-hud-stats, /* ---------- T1 typography ----------------------------------------------- */
+.hero-tagline,
+.section-title,
+.page-title,
+.results-title,
+.waitlist-success-title,
+.brand-title,
+.policy-content h1,
+.policy-content h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.hero-tagline {
+  font-size: clamp(2.6rem, 5.2vw, 4rem);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+[dir="rtl"] .hero-tagline { line-height: 1.22; }
+.section-title { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+
+/* ---------- B1 buttons --------------------------------------------------- */
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  box-shadow: var(--shadow-brand);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(185, 28, 28, 0.38);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0; inset-inline-start: -80%;
+  width: 55%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.btn-primary:hover:not(:disabled)::after { animation: btn-shine 0.7s ease; }
+@keyframes btn-shine { to { inset-inline-start: 130%; } }
+/* Disabled primary stays visually confident (the CTA is the page's anchor);
+   interactivity is still gated by the disabled attribute itself. */
+.btn-primary:disabled { background: var(--accent); opacity: 0.82; box-shadow: var(--shadow-brand); cursor: not-allowed; }
+
+/* ---------- N1 landing nav morph ----------------------------------------- */
+.landing-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* margin-inline: auto in BOTH states — `auto` cannot be interpolated, so
+     animating into it made the pill snap to the start edge before re-centering.
+     With auto always on, only interpolable lengths animate (max-width via
+     calc %<->px, margin-top) and the morph stays centered throughout. */
+  margin-inline: auto;
+  margin-top: 0;
+  transition: max-width 0.3s cubic-bezier(0.33, 1, 0.45, 1), margin-top 0.3s cubic-bezier(0.33, 1, 0.45, 1),
+              border-radius 0.26s ease, box-shadow 0.26s ease, background 0.26s ease,
+              padding 0.26s ease, border-color 0.26s ease;
+  border-bottom: 1px solid transparent;
+}
+.landing-nav.is-scrolled {
+  max-width: 720px;
+  margin-top: 10px;
+  border-radius: var(--radius-full);
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  padding-block: 8px;
+}
+.landing-nav.is-scrolled .landing-brand-name { display: none; }
+
+/* ---------- H1 hero split ------------------------------------------------ */
+.hero-inner.hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: center;
+  text-align: start;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-block: clamp(48px, 8vh, 96px);
+}
+.hero-split .hero-promise { margin-inline: 0; max-width: 46ch; }
+.hero-split .hero-counter { text-align: start; }
+.hero-rule { width: 44px; height: 3px; background: var(--accent); border-radius: 2px; margin-bottom: 20px; }
+
+.hero-art { position: relative; min-height: 300px; }
+.hero-art-frame {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transform: rotate(2.5deg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  transition: transform 0.6s var(--transition-spring);
+  background: var(--bg-surface);
+}
+.hero-art:hover .hero-art-frame { transform: rotate(0.5deg) translateY(-4px); }
+.hero-art-frame img { display: block; width: 100%; height: auto; }
+.hero-mascot {
+  position: absolute;
+  inset-inline-start: -26px;
+  bottom: -18px;
+  width: clamp(84px, 9vw, 120px);
+  border-radius: 14px;
+  border: 3px solid var(--bg-surface);
+  box-shadow: 0 12px 26px rgba(45, 28, 15, 0.3);
+  animation: mascot-bob 5s ease-in-out infinite;
+}
+@keyframes mascot-bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+
+.hero-kanji-wm {
+  position: absolute;
+  inset-inline-end: -4%;
+  bottom: -22%;
+  font-family: var(--font-kana);
+  font-weight: 900;
+  font-size: clamp(280px, 34vw, 520px);
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.045;
+  pointer-events: none;
+  user-select: none;
+  /* Behind in-flow content so the glyph flows under the feature cards and
+   * across the section boundary instead of being clipped at it. */
+  z-index: -1;
+}
+
+
+/* ---------- I1 waitlist combo bar ---------------------------------------- */
+.hero-split .hero-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 6px 6px 6px 18px;
+  box-shadow: var(--shadow-lg);
+  max-width: 460px;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+.hero-split .hero-form:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light), var(--shadow-lg);
+}
+.hero-split .hero-email {
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 12px 0;
+}
+.hero-split .hero-email:focus { border: none; box-shadow: none; outline: none; }
+.hero-split .hero-cta { flex-shrink: 0; border-radius: 12px; min-height: 46px; }
+
+/* ---------- F1 bento features -------------------------------------------- */
+.features-grid.features-bento {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  grid-auto-rows: minmax(150px, auto);
+  gap: 16px;
+}
+.features-bento .feature-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  padding: 26px 26px 20px;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+.features-bento .feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(185, 28, 28, 0.25);
+}
+.features-bento .feature-card--featured {
+  grid-row: span 2;
+  background:
+    radial-gradient(120% 90% at 100% 100%, var(--accent-light), transparent 55%),
+    var(--bg-surface);
+}
+.features-bento .feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+.features-bento .feature-card:hover::before { opacity: 1; }
+.feature-ill {
+  position: absolute;
+  inset-inline-end: 14px;
+  bottom: 10px;
+  width: 64px;
+  opacity: 0.95;
+  pointer-events: none;
+  transition: transform var(--transition-spring);
+  /* art ships on cream paper — frame it as a deliberate sticker so it reads
+     intentionally in BOTH themes instead of a raw square on dark surfaces */
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(45, 28, 15, 0.18);
+  rotate: -2deg;
+}
+.feature-ill--lg { width: clamp(110px, 12vw, 170px); }
+.features-bento .feature-card:hover .feature-ill { transform: translateY(-4px) rotate(-2deg) scale(1.04); }
+.features-bento .feature-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; }
+.features-bento .feature-card--featured .feature-title { font-size: 1.6rem; }
+.features-bento .feature-body { max-width: 34ch; }
+.features-bento .feature-card--featured .feature-body { max-width: 30ch; }
+
+/* ---------- Q1 editorial FAQ --------------------------------------------- */
+.faq.faq-editorial {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.6fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.faq-editorial .faq-side { position: sticky; top: 90px; text-align: start; }
+.faq-editorial .faq-side .section-title { margin-bottom: 18px; }
+.faq-mascot { width: clamp(90px, 10vw, 130px); transform: rotate(-4deg); border-radius: 14px; border: 3px solid var(--bg-surface); box-shadow: 0 10px 20px rgba(45, 28, 15, 0.22); }
+.faq-editorial .faq-item {
+  border-inline-start: 2px solid transparent;
+  transition: border-color var(--transition-base), background var(--transition-base);
+  padding-inline-start: 14px;
+}
+.faq-editorial .faq-item[open] {
+  border-inline-start-color: var(--accent);
+  background: linear-gradient(90deg, var(--accent-light), transparent 40%);
+  border-radius: 4px;
+}
+.faq-editorial .faq-question { position: relative; padding-inline-end: 34px; }
+.faq-editorial .faq-question::after {
+  content: "+";
+  position: absolute;
+  inset-inline-end: 8px;
+  top: 50%;
+  translate: 0 -50%;
+  font-family: var(--font-digits);
+  font-size: 1.2rem;
+  color: var(--accent);
+  transition: rotate 0.35s var(--transition-spring);
+}
+.faq-editorial .faq-item[open] .faq-question::after { rotate: 45deg; }
+
+/* ---------- FT1 editorial footer ----------------------------------------- */
+/* Overflow stays visible here: the section-level `overflow: clip` on
+   #screen-landing.active bounds the watermark's bleed (paint AND scroll
+   area) exactly at the page edge, and the ink-dot ornament straddling the
+   top hairline stays whole. */
+.landing-footer { position: relative; overflow: visible; }
+.footer-farewell {
+  text-align: center;
+  padding: clamp(48px, 8vh, 90px) 20px 30px;
+  position: relative;
+  z-index: 1;
+}
+.footer-farewell-jp {
+  display: block;
+  font-family: var(--font-kana);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  color: var(--text-primary);
+  letter-spacing: 0.06em;
+}
+.footer-farewell-note {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+.footer-kanji-wm {
+  position: absolute;
+  inset-inline-start: -6%;
+  bottom: -34%;
+  font-family: var(--font-kana);
+  font-weight: 900;
+  font-size: clamp(240px, 26vw, 420px);
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- D1 dashboard stats ------------------------------------------- */
+.stat-box {
+  position: relative;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  border-radius: var(--radius-md);
+}
+.stat-box:hover { transform: translateY(-2px); }
+.stat-value { font-size: 1.65rem; font-weight: 700; letter-spacing: -0.02em; }
+.mastery-bar { overflow: hidden; }
+.mastery-bar-fill {
+  background: linear-gradient(90deg, var(--accent), var(--brand-accent));
+  position: relative;
+}
+.mastery-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  animation: mastery-shimmer 2.6s ease-in-out infinite;
+}
+@keyframes mastery-shimmer { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(100%); } }
+[dir="rtl"] .mastery-bar-fill::after { animation-name: mastery-shimmer-rtl; }
+@keyframes mastery-shimmer-rtl { 0% { transform: translateX(100%); } 60%, 100% { transform: translateX(-100%); } }
+
+/* ---------- G1 flashcard + G3 brush correct ------------------------------ */
+.game-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 24px 50px rgba(45, 28, 15, 0.16), 0 3px 8px rgba(45, 28, 15, 0.08);
+  transform: rotate(-1.2deg);
+  transition: transform 0.5s var(--transition-spring), box-shadow var(--transition-base);
+}
+.game-card:hover { transform: rotate(0deg) translateY(-3px); }
+[data-theme="dark"] .game-card { box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5), 0 3px 8px rgba(0, 0, 0, 0.3); }
+.game-card-char { font-family: var(--font-kana); font-weight: 900; }
+
+.game-feedback { position: relative; z-index: 1; }
+.game-feedback.good {
+  color: #fff;
+  padding: 6px 26px;
+}
+.game-feedback.good::before {
+  content: "";
+  position: absolute;
+  inset: -4px -10px;
+  z-index: -1;
+  background: var(--accent);
+  border-radius: 50% 46% 52% 48% / 62% 54% 60% 52%;
+  transform: skewX(-8deg) rotate(-1.5deg);
+  animation: brush-sweep 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left center;
+}
+[dir="rtl"] .game-feedback.good::before { transform-origin: right center; }
+@keyframes brush-sweep {
+  from { scale: 0 1; opacity: 0.4; }
+  to { scale: 1 1; opacity: 1; }
+}
+.game-feedback.bad { animation: fb-shake 0.3s ease; }
+@keyframes fb-shake {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-5px); }
+  60% { transform: translateX(5px); }
+}
+
+/* ---------- M1 modals / overlays / toasts -------------------------------- */
+.results-overlay, .pause-overlay {
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.results-card, .pause-card {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+}
+/* Keyed on .active so the pop actually plays when the overlay OPENS —
+   keyed on the card alone it ran once at page load, invisibly. */
+.results-overlay.active .results-card,
+.pause-overlay.active .pause-card {
+  animation: modal-pop 0.45s var(--transition-spring);
+}
+@keyframes modal-pop {
+  from { transform: scale(0.92) translateY(14px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.results-title { font-family: var(--font-display); }
+.results-score { font-size: 3rem; font-weight: 700; letter-spacing: -0.03em; }
+.toast {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------- R1 leaderboard medals ---------------------------------------- */
+.lb-row { transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast); }
+.lb-row:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.lb-list > .lb-row:nth-child(1):not(.lb-row-compact) {
+  background: linear-gradient(90deg, rgba(232, 200, 120, 0.16), transparent 60%);
+  border-color: var(--gold-soft);
+}
+.lb-list > .lb-row:nth-child(2):not(.lb-row-compact) {
+  background: linear-gradient(90deg, rgba(160, 160, 170, 0.14), transparent 60%);
+}
+.lb-list > .lb-row:nth-child(3):not(.lb-row-compact) {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.13), transparent 60%);
+}
+.lb-row-me { border-inline-start: 3px solid var(--accent); }
+
+/* ---------- glass + paper grain layer ------------------------------------ */
+#screen-landing.active::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.028'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] #screen-landing.active::after { mix-blend-mode: screen; opacity: 0.35; }
+
+/* ---------- responsive --------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero-inner.hero-split { grid-template-columns: 1fr; text-align: center; }
+  .hero-split .hero-promise { margin-inline: auto; }
+  .hero-split .hero-counter { text-align: center; }
+  .hero-rule { margin-inline: auto; }
+  .hero-split .hero-form { margin-inline: auto; }
+  .hero-art { display: none; }
+  .features-grid.features-bento { grid-template-columns: 1fr; }
+  .features-bento .feature-card--featured { grid-row: auto; }
+  .faq.faq-editorial { grid-template-columns: 1fr; }
+  .faq-editorial .faq-side { position: static; display: flex; align-items: center; justify-content: space-between; }
+  .faq-mascot { width: 64px; }
+  .landing-nav.is-scrolled { max-width: calc(100% - 24px); }
+}
+
+/* ---------- polish pass: one continuous page ----------------------------- */
+/* Shared vertical rhythm: every landing section breathes on the same scale
+   instead of the previous mix of --space-6/--space-8 block paddings. */
+.features,
+.screenshots,
+.faq.faq-editorial {
+  padding-block: clamp(56px, 8vh, 96px);
+}
+
+/* Footer transition: the solid footer is intentional — mark the boundary
+   with a centered ink-dot ornament sitting ON the hairline, so it reads as
+   a deliberate editorial divider rather than two unrelated surfaces. */
+.landing-footer { margin-top: clamp(40px, 6vh, 72px); }
+.landing-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% -50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px var(--bg-base);
+}
+
+/* ---------- polish pass: hero form grid ----------------------------------- */
+/* The copy column is the layout grid: rule, headline, promise, form and
+   counter all share one start edge and a consistent vertical scale. */
+.hero-split .hero-promise { margin-block: 18px 32px; }
+.hero-split .hero-form { margin-inline: 0; margin-block: 0 14px; }
+.hero-split .hero-counter {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+.hero-split .hero-error { margin-block: 8px 0; }
+
+/* ---------- polish pass: duel VS breathing room --------------------------- */
+/* ---------- polish pass: duel HUD breathing room --------------------------- */
+.duel-hud { gap: var(--space-4); }
+.duel-vs-badge {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  font-family: var(--font-digits);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  box-shadow: var(--shadow-sm);
+}
+/* Logical alignment so the mirrored opponent panel also mirrors under RTL. */
+.duel-player-opp { text-align: end; }
+@media (max-width: 440px) {
+  .duel-hud { gap: var(--space-3); }
+  .duel-player { padding: var(--space-2); gap: var(--space-2); }
+  .duel-p-avatar { width: 32px; height: 32px; font-size: 1rem; }
+  .duel-p-score { font-size: 1.25rem; }
+}
+
+/* ---------- theme toggle -------------------------------------------------- */
+.theme-toggle {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast),
+              background var(--transition-fast), transform var(--transition-fast);
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+.theme-toggle:active { transform: scale(0.92); }
+.theme-toggle svg {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  transition: opacity 0.25s ease, transform 0.4s var(--transition-spring);
+}
+/* The icon shows the mode you would SWITCH TO: moon in light, sun in dark. */
+[data-theme="light"] .theme-toggle .theme-icon-sun,
+[data-theme="dark"] .theme-toggle .theme-icon-moon { opacity: 0; transform: rotate(90deg) scale(0.4); }
+[data-theme="light"] .theme-toggle .theme-icon-moon,
+[data-theme="dark"] .theme-toggle .theme-icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+/* ============================================================
+   AUDIT FIXES (2026-07-18) — from the 12-agent site-wide audit.
+   Each block cites the defect it closes.
+   ============================================================ */
+
+/* [hidden] must always win. Two shipped bugs came from author display rules
+   (.btn, .hero-split .hero-form) outranking the UA's [hidden] { display:none }:
+   the waitlist form stayed visible after success, and Settings' "Reset"
+   button stayed clickable behind its confirm panel. Kill the class of bug. */
+[hidden] { display: none !important; }
+
+/* Bento stickers reserved no space — body text ran underneath them at
+   901–1000px and on phones. Reserve the sticker zone; shrink it on mobile. */
+.features-bento .feature-card:not(.feature-card--featured) { padding-inline-end: calc(64px + 34px); }
+@media (max-width: 900px) {
+  .features-bento .feature-card,
+  .features-bento .feature-card:not(.feature-card--featured) { padding-inline-end: 88px; }
+  .feature-ill { width: 48px; }
+  .feature-ill--lg { width: 76px; }
+}
+
+/* Landing nav overflowed ≤480px once the Install pill appeared.
+   Scoped to .landing-nav — the footer and policy headers reuse
+   .landing-brand-name and must keep their wordmark. */
+@media (max-width: 560px) {
+  .landing-nav { padding-inline: var(--space-3); gap: var(--space-2); }
+  .landing-nav .landing-brand-name { display: none; }
+  .btn-install, #btn-landing-signin { white-space: nowrap; padding-inline: 10px; font-size: 0.8rem; }
+  .theme-toggle { width: 34px; height: 34px; }
+}
+/* Authed nav overflowed at 360px (Logout pushed past the edge). */
+@media (max-width: 480px) {
+  .nav { gap: var(--space-2); }
+  .nav-name-text { display: none; }
+}
+/* Policy nav wrapped badly at ~360px. */
+.policy-back { white-space: nowrap; }
+@media (max-width: 480px) {
+  .policy-nav { flex-wrap: wrap; row-gap: var(--space-2); }
+}
+
+/* Duel/coop countdown hardcoded white text — ~2.8:1 on the light scrim. */
+.duel-countdown-num { color: var(--text-primary); }
+.duel-countdown-text { color: var(--text-secondary); }
+
+/* Co-op teammate pips: long usernames blew the row apart. */
+.coop-pip-name { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.coop-team { min-width: 0; flex-wrap: wrap; }
+
+/* RTL bidi: Latin-only fields (email/password/username) reorder mid-typing
+   under direction:rtl — force LTR content flow, keep visual end alignment. */
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] #reg-username,
+[dir="rtl"] #settings-username {
+  direction: ltr;
+  text-align: end;
+}
+
+/* FAQ open marker: legacy rule swapped content to "−", which the R3 45°
+   rotation turned into a slash. Pin "+" so it rotates into a proper ×. */
+.faq-editorial .faq-item[open] .faq-question::after { content: "+"; }
+
+/* FAQ open tint + bento top-line used physical 90deg gradients — mirrored
+   wrong side in RTL relative to their logical borders. */
+[dir="rtl"] .faq-editorial .faq-item[open] { background: linear-gradient(270deg, var(--accent-light), transparent 40%); }
+[dir="rtl"] .features-bento .feature-card::before { background: linear-gradient(270deg, var(--accent), transparent 70%); }
+
+/* Dashboard mode arrow: LTR hover rule outranked the RTL mirror, so hovering
+   in Arabic un-mirrored the arrow. Function order matters — flip FIRST
+   (rightmost), then translate in unflipped page space so -4px is "forward". */
+[dir="rtl"] .mode-btn:hover .mode-arrow { transform: translateX(-4px) scaleX(-1); }
+
+/* Install pill + carousel dot used --brand-primary, which never lifts in
+   dark mode (≈2.2:1 on charcoal). Route through the theme-aware accent. */
+.btn-install { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+.screenshots-dot.is-active { background: var(--accent); }
+
+/* Waitlist success card floated centered inside the start-aligned column. */
+.hero-split .waitlist-success { align-items: flex-start; text-align: start; margin-inline: 0; }
+
+/* Dark theme: sticker/mascot shadows were light-theme browns that vanish
+   on charcoal — swap for true dark shadows (same treatment .game-card got). */
+[data-theme="dark"] .hero-mascot { box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55); }
+[data-theme="dark"] .feature-ill { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); }
+[data-theme="dark"] .faq-mascot { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.55); }
+[data-theme="dark"] .hero-art-frame { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 24px 64px rgba(0, 0, 0, 0.55); }
+
+/* Hover glows hardcoded light-crimson; follow the theme accent instead. */
+.btn-primary:hover:not(:disabled) { box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 38%, transparent); }
+.features-bento .feature-card:hover { border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+
+/* Waitlist combo bar: physical padding broke RTL inset + lopsided ≤600px. */
+.hero-split .hero-form { padding: 6px; padding-inline-start: 18px; }
+@media (max-width: 600px) {
+  .hero-split .hero-form { padding: 6px; }
+  .hero-split .hero-email { padding: 10px 12px; }
+}
+
+/* N1 nav morph: max-width none→720px is not interpolable (it snapped), and
+   margin-inline:auto disabled the flex stretch so the pill shrink-wrapped —
+   explicit width:100% is required in BOTH states (cross-axis auto margins
+   defeat align-items stretch; only max-width may differ between states). */
+.landing-nav { width: 100%; max-width: 100%; }
+.landing-nav.is-scrolled { width: 100%; max-width: 720px; }
+/* Source order: this unconditional rule sits after the ≤900px override,
+   which would otherwise be dead — re-assert the mobile pill insets here. */
+@media (max-width: 900px) {
+  .landing-nav.is-scrolled { max-width: calc(100% - 24px); }
+}
+
+/* Same ordering hazard for the hero form/success: the polish margins above
+   defeat the ≤900px centering that ships earlier in the file. Re-assert. */
+@media (max-width: 900px) {
+  .hero-split .hero-form,
+  .hero-split .waitlist-success { margin-inline: auto; }
+  .hero-split .waitlist-success { align-items: center; text-align: center; }
+}
+
+/* RTL follow-ups: physical gradients that read backwards against their
+   logical anchors, verified by the RTL refuter. */
+[dir="rtl"] .mastery-bar-fill { background: linear-gradient(270deg, var(--accent), var(--brand-accent)); }
+[dir="rtl"] .features-bento .feature-card--featured {
+  background:
+    radial-gradient(120% 90% at 0% 100%, var(--accent-light), transparent 55%),
+    var(--bg-surface);
+}
+[dir="rtl"] .lb-list > .lb-row:nth-child(1):not(.lb-row-compact) { background: linear-gradient(270deg, rgba(232, 200, 120, 0.16), transparent 60%); }
+[dir="rtl"] .lb-list > .lb-row:nth-child(2):not(.lb-row-compact) { background: linear-gradient(270deg, rgba(160, 160, 170, 0.14), transparent 60%); }
+[dir="rtl"] .lb-list > .lb-row:nth-child(3):not(.lb-row-compact) { background: linear-gradient(270deg, rgba(205, 127, 50, 0.13), transparent 60%); }
+
+/* Dark theme: the install pill's HOVER kept the unremapped light crimson. */
+.btn-install:hover { color: var(--accent-contrast); background: var(--accent); border-color: var(--accent); }
+
+/* ---------- reduced motion ----------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::after,
+  .mastery-bar-fill::after,
+  .hero-mascot,
+  .game-feedback.good::before,
+  .game-feedback.bad { animation: none !important; }
+  .hero-art-frame, .game-card { transition: none; transform: none; }
+  .landing-nav { transition: none; }
+  .theme-toggle svg { transition: opacity 0.2s ease; }
+}
+
+/* ============================================================
+   PHONE MOCKS v3 (2026-07-19) — believable product screens.
+   Design brief: each phone must communicate its purpose in ~2s
+   (dashboard: what next / duel: who + what + score / leaderboard:
+   who leads, where am I, what period), one consistent data story
+   (user = Omar aka "You"; weekly league XP vs labelled Total XP),
+   and no dead space without a reason. All strings are i18n keys;
+   the mocks stay aria-hidden decoration for AT.
+   v3: every screen opens with an iOS-style status bar (.mk-sbar:
+   time + Dynamic Island + signal/wifi/battery) and closes with a
+   home indicator (.mk-home) — content can never touch the glass
+   edges, and the frame reads as current-generation hardware.
+   ============================================================ */
+.screenshot-placeholder.mock-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  height: 100%;
+  padding: 8px 14px 8px;
+  background: var(--bg-base);
+  font-family: var(--font-digits);
+  text-align: start;
+}
+.screenshot-placeholder.mock-screen::after { content: none; }
+/* List-style screens distribute leftover height across all gaps instead
+   of pooling it above the tab bar (gap: 12px stays as the minimum). The
+   duel screen keeps flex-start — its centered .mk-qgroup owns the slack.
+   Two-class selectors to match the base rule's specificity (a bare
+   .mock-dashboard would lose to .screenshot-placeholder.mock-screen). */
+.screenshot-placeholder.mock-dashboard,
+.screenshot-placeholder.mock-lb { justify-content: space-between; }
+
+/* shared: status bar. The island is centered independently of the
+   time/icon flanks so RTL keeps it dead-center for free. Pinned LTR:
+   real iOS never mirrors the status bar in Arabic — time stays left,
+   battery stays at the outer-right corner (nub facing the bezel). */
+.mk-sbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 24px;
+  padding-inline: 8px;
+  flex-shrink: 0;
+  direction: ltr;
+}
+.mk-time {
+  font: 700 12px var(--font-digits);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+.mk-island {
+  position: absolute;
+  inset-inline: 0;
+  top: 2px;
+  margin-inline: auto;
+  width: 74px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: #0e0e10;
+}
+[data-theme="dark"] .mk-island { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09); }
+.mk-sicons { width: 47px; height: 12px; color: var(--text-primary); flex-shrink: 0; }
+
+/* shared: home indicator */
+.mk-home {
+  flex-shrink: 0;
+  width: 56px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--text-primary);
+  opacity: 0.22;
+  margin: 2px auto 0;
+}
+
+/* shared */
+.mk-av {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-style: normal;
+  flex-shrink: 0;
+}
+/* Solid fill — the old accent→gold gradient tail blended into the warm
+   track color, making 60% read as a full bar and contradicting the
+   "3 of 5 done" label. Track darkened one step for a crisp boundary. */
+.mock-bar { height: 7px; border-radius: var(--radius-full); background: var(--border); overflow: hidden; }
+.mock-bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+
+/* --- dashboard --- */
+.mk-greet b { display: block; font: 600 15px/1.25 var(--font-sans); color: var(--text-primary); }
+.mk-greet span { font: 500 10.5px var(--font-sans); color: var(--text-secondary); }
+.mock-stats { display: flex; gap: 8px; }
+.mock-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 10px 4px;
+  text-align: center;
+}
+.mock-stat b { font-size: 15px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.mock-stat i { font: 500 8.5px var(--font-sans); font-style: normal; color: var(--text-secondary); }
+.mock-stat--flame b { color: var(--accent); }
+.mk-goal { display: flex; flex-direction: column; gap: 6px; }
+.mk-goal-head { display: flex; justify-content: space-between; font: 600 10px var(--font-sans); color: var(--text-primary); }
+.mk-goal-head em { font-style: normal; font-weight: 500; color: var(--text-secondary); }
+.mk-week { display: flex; align-items: center; justify-content: space-between; }
+.mk-week > span { font: 600 10px var(--font-sans); color: var(--text-primary); }
+.mk-days { display: flex; gap: 5px; }
+.mk-days i {
+  width: 11px;
+  height: 11px;
+  border-radius: var(--radius-full);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+}
+.mk-days i.on { background: var(--accent); border-color: var(--accent); }
+.mk-days i.hf { background: linear-gradient(90deg, var(--accent) 50%, var(--bg-inset) 50%); border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); }
+[dir="rtl"] .mk-days i.hf { background: linear-gradient(270deg, var(--accent) 50%, var(--bg-inset) 50%); }
+.mk-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 12px 11px;
+}
+.mk-card--accent {
+  background: linear-gradient(135deg, var(--accent-light), var(--bg-surface) 75%);
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.mk-card-txt { flex: 1; min-width: 0; }
+.mk-card-txt b { display: block; font: 600 11px var(--font-sans); color: var(--text-primary); }
+.mk-card-txt span { display: block; font: 500 8.5px var(--font-sans); color: var(--text-secondary); margin-top: 2px; }
+.mk-btn {
+  flex-shrink: 0;
+  font: 600 9.5px var(--font-sans);
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-radius: 9px;
+  padding: 7px 11px;
+  white-space: nowrap;
+}
+.mk-btn--ghost { background: transparent; color: var(--accent); border: 1px solid currentColor; }
+/* Tab bar + home indicator travel as one .mk-foot child. No auto margin
+   here — flexbox hands free space to auto margins BEFORE justify-content,
+   so a margin-top:auto would swallow the slack and turn the screens'
+   space-between distribution into a dead band above the tab bar. */
+.mk-foot { display: flex; flex-direction: column; gap: 5px; }
+.mk-tabbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 8px 0;
+  border-top: 1px solid var(--border);
+}
+.mk-tabbar i { width: 18px; height: 4px; border-radius: var(--radius-full); background: var(--border-strong); }
+.mk-tabbar i.on { background: var(--accent); }
+
+/* --- duel --- */
+.mock-vs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+.mk-player {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px 9px;
+  font: 600 10px var(--font-sans);
+  color: var(--text-primary);
+}
+.mk-player b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-player em { font-style: normal; font: 700 12px var(--font-digits); color: var(--accent); }
+.mk-player--you { border-color: var(--accent); }
+.mock-vs .mk-player:last-child { justify-content: flex-end; }
+.mk-vs {
+  justify-self: center;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 9.5px var(--font-digits);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+}
+.mk-round { display: flex; justify-content: space-between; align-items: center; font: 600 9.5px var(--font-sans); color: var(--text-secondary); }
+.mk-timer { font: 700 10.5px var(--font-digits); font-style: normal; color: var(--accent); background: var(--accent-light); border-radius: 7px; padding: 2px 7px; }
+/* Question + kana card + answers + opponent status travel as one
+   centered cluster — the flex autos above/below keep the focus group
+   in the visual middle with symmetric breathing room. */
+.mk-qgroup { display: flex; flex-direction: column; gap: 14px; margin-block: auto; }
+.mk-q { font: 600 11.5px/1.35 var(--font-sans); color: var(--text-primary); text-align: center; }
+.mock-duel .mock-kana-card {
+  margin-inline: auto;
+  width: 118px;
+  height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  rotate: -1.5deg;
+}
+.mock-kana-card span { font-family: var(--font-kana); font-weight: 900; font-size: 58px; color: var(--text-primary); }
+.mock-answers { display: flex; gap: 10px; justify-content: center; }
+.mock-answers i {
+  font-style: normal;
+  font: 600 15px var(--font-digits);
+  width: 56px;
+  padding: 13px 0;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  color: var(--text-secondary);
+}
+.mock-answers i.ok { position: relative; background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+.mock-answers i.ok::after {
+  content: "\2713";
+  position: absolute;
+  top: -5px;
+  inset-inline-end: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: #FFFFFF;
+  font-size: 9px;
+  line-height: 15px;
+}
+.mk-status { font: 500 9px var(--font-sans); color: var(--text-tertiary); text-align: center; }
+
+/* --- leaderboard --- */
+.mk-lg-head { display: flex; justify-content: space-between; align-items: baseline; }
+.mk-lg-head b { font: 600 12.5px var(--font-sans); color: var(--text-primary); }
+.mk-lg-head span { font: 500 9px var(--font-sans); color: var(--text-secondary); }
+.mk-seg { display: flex; background: var(--bg-inset); border-radius: 9px; padding: 2.5px; gap: 2px; }
+.mk-seg i { flex: 1; text-align: center; font: 600 9.5px var(--font-sans); font-style: normal; color: var(--text-secondary); padding: 5px 0; border-radius: 7px; }
+.mk-seg i.on { background: var(--bg-surface); color: var(--text-primary); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+.mock-podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-block: 2px 0; }
+.mock-podium .pod { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 62px; font: 500 9px var(--font-sans); color: var(--text-secondary); }
+.mock-podium .pod b { font-weight: 600; color: var(--text-primary); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock-podium .pod em { font: 700 9px var(--font-digits); font-style: normal; color: var(--accent); white-space: nowrap; }
+.mock-podium .pod u {
+  text-decoration: none;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+  margin-top: 2px;
+  border-radius: 9px 9px 0 0;
+  font: 700 11px var(--font-digits);
+  color: var(--text-primary);
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-surface));
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.mock-podium .pod-1 u { height: 52px; background: linear-gradient(180deg, #F6E3B4, #E8C878); color: #6B4E11; border-color: transparent; }
+.mock-podium .pod-2 u { height: 38px; }
+.mock-podium .pod-3 u { height: 28px; background: linear-gradient(180deg, #EFD9C8, #DDBFA4); color: #6E4C2F; border-color: transparent; }
+[data-theme="dark"] .mock-podium .pod-1 u { background: linear-gradient(180deg, #8A6D2A, #6B4E11); color: #F6E3B4; }
+[data-theme="dark"] .mock-podium .pod-3 u { background: linear-gradient(180deg, #7A5C40, #5D452F); color: #EFD9C8; }
+.mk-your { font: 600 9px var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); }
+[dir="rtl"] .mk-your { letter-spacing: 0; }
+.mock-lbrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 9px;
+  font: 600 10.5px var(--font-sans);
+  color: var(--text-primary);
+}
+.mock-lbrow b { font: 700 10px var(--font-digits); color: var(--text-secondary); min-width: 12px; flex-shrink: 0; }
+.mock-lbrow span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock-lbrow em { font-style: normal; font: 700 10px var(--font-digits); color: var(--accent); white-space: nowrap; }
+.mock-lbrow u { text-decoration: none; font: 700 8.5px var(--font-digits); color: var(--success); background: var(--success-soft); border-radius: 6px; padding: 1.5px 5px; }
+/* softened self-highlight per design review (full accent was loud) */
+.mock-lbrow.you { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: var(--accent-light); }
+
+/* --- presentation: dim the pattern behind the devices, lighter shadows,
+       caption title + benefit line --- */
+.screenshots { position: relative; }
+.screenshots::before {
+  content: "";
+  position: absolute;
+  inset: 10% 0 4%;
+  background: radial-gradient(70% 60% at 50% 50%, var(--bg-base) 35%, transparent 80%);
+  pointer-events: none;
+}
+.screenshots > * { position: relative; }
+/* Caption block centers on the phone's vertical centerline. The card is a
+ * centered flex column, so the figcaption box was already centered — but it
+ * shrink-wrapped to the longer benefit line and its text stayed start-aligned,
+ * which read as left-aligned under the frame. width:100% + text-align:center
+ * makes both lines share the frame's axis and wrap symmetrically. */
+.screenshot-card figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  text-align: center;
+}
+.cap-title { font: 600 1rem var(--font-sans); color: var(--text-primary); }
+.cap-benefit { font: 500 0.8125rem var(--font-sans); color: var(--text-secondary); }

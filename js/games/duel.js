@@ -14,14 +14,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260610a';
+} from '../core/core.js?v=20260723a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260610a';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260610a';
-import { acceptCoop, isInCoop } from './coop.js?v=20260610a';
-import { t } from '../i18n/index.js?v=20260610a';
+} from '../data/firebase.js?v=20260723a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260723a';
+import { acceptCoop, isInCoop } from './coop.js?v=20260723a';
+import { t } from '../i18n/index.js?v=20260723a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -786,6 +786,11 @@ export async function exitDuel() {
   }
   // Live duel → confirm forfeit.
   if (!confirm(t('duel.confirm_forfeit'))) return;
+  // Snapshot the final state BEFORE teardown so we can record the loss.
+  // The forfeiting client leaves immediately (no showResults), so unlike a
+  // normal finish it must write its own stats here — otherwise the game
+  // lands in history as "Lost" while the W–L record never moves.
+  const finalData = { ...data, status: 'completed', winnerId: otherId(data), isDraw: false, endReason: 'forfeit' };
   try {
     await updateDoc(d.ref, {
       status: 'completed',
@@ -795,6 +800,7 @@ export async function exitDuel() {
       updatedAt: serverTimestamp()
     });
   } catch (err) { console.error('forfeit failed:', err); }
+  await writeDuelStats(finalData);
   teardown();
   goDashboard();
 }
@@ -878,12 +884,16 @@ export async function resolveStall() {
   // User chose to leave a stalled duel — claim the win and go.
   setOverlay('duel-stall', false);
   if (d && d.data && d.ref) {
+    // Same as the forfeit path: we leave without showResults, so record
+    // the (winning) result here or it never reaches the W–L stat.
+    const finalData = { ...d.data, status: 'completed', winnerId: me(), isDraw: false, endReason: 'forfeit' };
     try {
       await updateDoc(d.ref, {
         status: 'completed', winnerId: me(), isDraw: false,
         endReason: 'forfeit', updatedAt: serverTimestamp()
       });
     } catch (err) { console.error('resolveStall failed:', err); }
+    await writeDuelStats(finalData);
   }
   teardown();
   goDashboard();

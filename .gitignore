@@ -23,3 +23,8 @@ audio/
 /scripts/progress/
 /scripts/secrets/
 /scripts/tmp/
+
+# Generated image assets (L2 image pipeline). _candidates are throwaway rejected
+# attempts; finals get reviewed then hosted (Firebase Storage / CDN). Don't let a
+# stray `git add .` stage ~1GB of PNGs — force-add specific finals if ever needed.
+/assets/generated/

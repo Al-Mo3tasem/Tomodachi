@@ -26,8 +26,8 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="ar_SA">
   <meta property="og:image" content="https://al-mo3tasem.github.io/Tomodachi/assets/brand/og-card.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
   <meta property="og:image:alt" content="Tomodachi — Learn Japanese with Friends. A red scarf cradles the kanji 友 (friend).">
 
   <!-- Twitter / X card — upgraded to summary_large_image at L1.15. -->
@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260610a">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260610a">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260723a">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260723a">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -81,10 +81,22 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Tomodachi">
+  <!-- Pre-paint theme resolution: stored choice wins, else system preference.
+       Runs before the stylesheet so the first paint is already in the right
+       theme (no flash). Kept inline + dependency-free on purpose. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('tomodachi-theme') ||
+          (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable — keep the markup default */ }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260612a">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260723a">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -115,6 +127,17 @@
         <span class="landing-brand-name">Tomodachi</span>
       </div>
       <div class="landing-nav-right">
+        <button type="button" class="theme-toggle"
+                aria-label="Switch color theme" aria-pressed="false"
+                data-i18n-attr="aria-label:nav.theme_toggle">
+          <!-- Lucide "sun" / "moon". MIT. Visibility swapped by [data-theme]. -->
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
         <div class="landing-locale-bar">
           <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
           <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
@@ -133,73 +156,58 @@
       <div class="sakura" aria-hidden="true">
         <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
-      <div class="hero-inner">
-        <h1 class="hero-tagline" data-i18n="hero.tagline">Learn Japanese With Friends</h1>
-        <p class="hero-promise" data-i18n="hero.promise">Tomodachi teaches Japanese with Arabic-first bilingual lessons, duels, and co-op with friends.</p>
+      <div class="hero-inner hero-split">
+        <div class="hero-copy">
+          <div class="hero-rule" aria-hidden="true"></div>
+          <h1 class="hero-tagline" data-i18n="hero.tagline">Learn Japanese With Friends</h1>
+          <p class="hero-promise" data-i18n="hero.promise">Tomodachi teaches Japanese with Arabic-first bilingual lessons, duels, and co-op with friends.</p>
 
-        <form id="form-waitlist" class="hero-form">
-          <input type="email" id="waitlist-email"
-                 class="hero-email"
-                 placeholder="your@email.com"
-                 data-i18n-placeholder="hero.email_placeholder"
-                 required autocomplete="email">
-          <button type="submit" id="waitlist-submit" class="btn btn-primary btn-lg hero-cta" disabled data-i18n="hero.cta_label">Join Waitlist</button>
-        </form>
+          <form id="form-waitlist" class="hero-form">
+            <input type="email" id="waitlist-email"
+                   class="hero-email"
+                   placeholder="your@email.com"
+                   data-i18n-placeholder="hero.email_placeholder"
+                   required autocomplete="email">
+            <button type="submit" id="waitlist-submit" class="btn btn-primary btn-lg hero-cta" disabled data-i18n="hero.cta_label">Join Waitlist</button>
+          </form>
 
-        <p class="hero-counter" id="hero-counter">350+ people already on the list</p>
-        <p class="form-error hero-error" id="waitlist-error"></p>
+          <p class="hero-counter" id="hero-counter">350+ people already on the list</p>
+          <p class="form-error hero-error" id="waitlist-error"></p>
 
-        <div class="waitlist-success" id="waitlist-success" hidden>
-          <div class="waitlist-success-icon" aria-hidden="true">✓</div>
-          <h2 class="waitlist-success-title" data-i18n="hero.success_title">You're on the list</h2>
-          <p class="waitlist-success-body" data-i18n="hero.success_body">We'll let you know when Tomodachi launches.</p>
+          <div class="waitlist-success" id="waitlist-success" hidden>
+            <div class="waitlist-success-icon" aria-hidden="true">✓</div>
+            <h2 class="waitlist-success-title" data-i18n="hero.success_title">You're on the list</h2>
+            <p class="waitlist-success-body" data-i18n="hero.success_body">We'll let you know when Tomodachi launches.</p>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-art-frame">
+            <img src="assets/brand/og-card-hero.webp" alt="" loading="eager" decoding="async">
+          </div>
+          <img class="hero-mascot" src="assets/brand/mascot-tomo.webp" alt="">
         </div>
       </div>
+      <div class="hero-kanji-wm" aria-hidden="true">友</div>
     </div>
 
     <section class="features">
       <div class="features-wrap">
-        <div class="features-grid">
+        <div class="features-grid features-bento">
+          <article class="feature-card feature-card--featured">
+            <h3 class="feature-title" data-i18n="features.arabic_first.title">Arabic From the Start</h3>
+            <p class="feature-body" data-i18n="features.arabic_first.body">Lessons are authored in Arabic, with grammar notes and memory hooks built for Arabic linguistic instincts.</p>
+            <img class="feature-ill feature-ill--lg" src="assets/brand/feature-bilingual.webp" alt="" loading="lazy" decoding="async">
+          </article>
           <article class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <!-- Lucide "languages" — represents multilingual learning. MIT. -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m5 8 6 6"/>
-              <path d="m4 14 6-6 2-3"/>
-              <path d="M2 5h12"/>
-              <path d="M7 2h1"/>
-              <path d="m22 22-5-10-5 10"/>
-              <path d="M14 18h6"/>
-            </svg>
-          </div>
-          <h3 class="feature-title" data-i18n="features.arabic_first.title">Arabic From the Start</h3>
-          <p class="feature-body" data-i18n="features.arabic_first.body">Lessons are authored in Arabic, with grammar notes and memory hooks built for Arabic linguistic instincts.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <!-- Lucide "users" — represents multiplayer / friends. MIT. -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-          </div>
-          <h3 class="feature-title" data-i18n="features.multiplayer.title">Duels and Co-Op</h3>
-          <p class="feature-body" data-i18n="features.multiplayer.body">Live duels and co-op sessions bring friends into the same drill, keeping practice social without slowing it down.</p>
-        </article>
-        <article class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <!-- Lucide "waves" — represents calm rhythm / pace. MIT. -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-              <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-              <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-            </svg>
-          </div>
-          <h3 class="feature-title" data-i18n="features.calm_pace.title">Pace Without Guilt</h3>
-          <p class="feature-body" data-i18n="features.calm_pace.body">Miss a day? Your streak survives. Tomodachi keeps pace with real schedules, not guilt loops.</p>
-        </article>
+            <h3 class="feature-title" data-i18n="features.multiplayer.title">Duels and Co-Op</h3>
+            <p class="feature-body" data-i18n="features.multiplayer.body">Live duels and co-op sessions bring friends into the same drill, keeping practice social without slowing it down.</p>
+            <img class="feature-ill" src="assets/brand/feature-duel.webp" alt="" loading="lazy" decoding="async">
+          </article>
+          <article class="feature-card">
+            <h3 class="feature-title" data-i18n="features.calm_pace.title">Pace Without Guilt</h3>
+            <p class="feature-body" data-i18n="features.calm_pace.body">Miss a day? Your streak survives. Tomodachi keeps pace with real schedules, not guilt loops.</p>
+            <img class="feature-ill" src="assets/brand/feature-streak.webp" alt="" loading="lazy" decoding="async">
+          </article>
         </div>
       </div>
     </section>
@@ -212,27 +220,111 @@
       <div class="screenshots-grid">
         <figure class="screenshot-card">
           <div class="screenshot-frame">
-            <div class="screenshot-placeholder placeholder-dashboard">
-              <span class="placeholder-badge" data-i18n="screenshots.coming_soon">Coming soon</span>
+            <!-- One consistent story across all three phones: the user is Omar
+                 ("You"), dueling Sara, ranked #7 in the weekly league. Total XP
+                 (840) on the dashboard vs weekly XP (820) on the leaderboard
+                 are labelled so the numbers can differ credibly. -->
+            <div class="screenshot-placeholder mock-screen mock-dashboard" aria-hidden="true">
+              <div class="mk-sbar">
+                <i class="mk-time" data-i18n="mock.time">9:41</i>
+                <span class="mk-island"></span>
+                <svg class="mk-sicons" viewBox="0 0 47 12" fill="currentColor"><rect x="0" y="7.5" width="2.6" height="4.5" rx="0.8"/><rect x="3.8" y="5.5" width="2.6" height="6.5" rx="0.8"/><rect x="7.6" y="3.2" width="2.6" height="8.8" rx="0.8"/><rect x="11.4" y="0.8" width="2.6" height="11.2" rx="0.8"/><path d="M18.5 4.6a8 8 0 0 1 11 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M20.8 7.2a4.7 4.7 0 0 1 6.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="24" cy="10" r="1.5"/><rect x="34" y="1.8" width="10.5" height="8.4" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity="0.5"/><rect x="35.4" y="3.2" width="6.2" height="5.6" rx="1.4"/><path d="M45.6 4.4v3.2a1.7 1.7 0 0 0 0-3.2z" opacity="0.5"/></svg>
+              </div>
+              <div class="mk-greet"><b data-i18n="mock.greeting">Good evening, Omar</b><span data-i18n="mock.greeting_sub">Ready for today's lesson?</span></div>
+              <div class="mock-stats">
+                <span class="mock-stat"><b>68%</b><i data-i18n="mock.stat_accuracy">Accuracy</i></span>
+                <span class="mock-stat mock-stat--flame"><b>12</b><i data-i18n="mock.stat_streak">Day streak</i></span>
+                <span class="mock-stat"><b>840</b><i data-i18n="mock.stat_xp">Total XP</i></span>
+              </div>
+              <div class="mk-goal">
+                <div class="mk-goal-head"><span data-i18n="mock.daily_goal">Daily goal</span><em data-i18n="mock.daily_goal_count">3 of 5 done</em></div>
+                <div class="mock-bar"><i style="width:60%"></i></div>
+              </div>
+              <div class="mk-week">
+                <span data-i18n="mock.week">This week</span>
+                <div class="mk-days"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="hf"></i><i></i></div>
+              </div>
+              <div class="mk-card mk-card--accent">
+                <div class="mk-card-txt"><b data-i18n="mock.continue_title">Continue learning</b><span data-i18n="mock.continue_sub">Hiragana · Lesson 4 · 6 min</span></div>
+                <span class="mk-btn" data-i18n="mock.continue_btn">Continue</span>
+              </div>
+              <div class="mk-card">
+                <div class="mk-card-txt"><b data-i18n="mock.review_title">Review due</b><span data-i18n="mock.review_sub">12 cards ready to practise</span></div>
+                <span class="mk-btn mk-btn--ghost" data-i18n="mock.review_btn">Start</span>
+              </div>
+              <div class="mk-card">
+                <div class="mk-card-txt"><b data-i18n="mock.duel_card_title">Duel with Sara</b><span data-i18n="mock.duel_card_sub">Your turn — Round 3</span></div>
+                <span class="mk-btn mk-btn--ghost" data-i18n="mock.duel_card_btn">Play</span>
+              </div>
+              <div class="mk-foot">
+                <div class="mk-tabbar"><i class="on"></i><i></i><i></i><i></i></div>
+                <i class="mk-home"></i>
+              </div>
             </div>
           </div>
-          <figcaption data-i18n="common.dashboard">Dashboard</figcaption>
+          <figcaption>
+            <span class="cap-title" data-i18n="common.dashboard">Dashboard</span>
+            <span class="cap-benefit" data-i18n="mock.benefit_dashboard">See exactly what to learn next.</span>
+          </figcaption>
         </figure>
         <figure class="screenshot-card">
           <div class="screenshot-frame">
-            <div class="screenshot-placeholder placeholder-duel">
-              <span class="placeholder-badge" data-i18n="screenshots.coming_soon">Coming soon</span>
+            <div class="screenshot-placeholder mock-screen mock-duel" aria-hidden="true">
+              <div class="mk-sbar">
+                <i class="mk-time" data-i18n="mock.time">9:41</i>
+                <span class="mk-island"></span>
+                <svg class="mk-sicons" viewBox="0 0 47 12" fill="currentColor"><rect x="0" y="7.5" width="2.6" height="4.5" rx="0.8"/><rect x="3.8" y="5.5" width="2.6" height="6.5" rx="0.8"/><rect x="7.6" y="3.2" width="2.6" height="8.8" rx="0.8"/><rect x="11.4" y="0.8" width="2.6" height="11.2" rx="0.8"/><path d="M18.5 4.6a8 8 0 0 1 11 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M20.8 7.2a4.7 4.7 0 0 1 6.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="24" cy="10" r="1.5"/><rect x="34" y="1.8" width="10.5" height="8.4" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity="0.5"/><rect x="35.4" y="3.2" width="6.2" height="5.6" rx="1.4"/><path d="M45.6 4.4v3.2a1.7 1.7 0 0 0 0-3.2z" opacity="0.5"/></svg>
+              </div>
+              <div class="mock-vs">
+                <span class="mk-player mk-player--you"><i class="mk-av">🌸</i><b data-i18n="mock.you">You</b><em>2</em></span>
+                <b class="mk-vs">VS</b>
+                <span class="mk-player"><em>1</em><b data-i18n="mock.name_sara">Sara</b><i class="mk-av">🦊</i></span>
+              </div>
+              <div class="mk-round"><span data-i18n="mock.round">Round 3 of 10</span><em class="mk-timer">00:08</em></div>
+              <div class="mk-qgroup">
+                <div class="mk-q" data-i18n="mock.question">Which sound matches this character?</div>
+                <div class="mock-kana-card"><span>あ</span></div>
+                <div class="mock-answers"><i class="ok">a</i><i>o</i><i>e</i></div>
+                <div class="mk-status" data-i18n="mock.opponent_status">Sara is answering…</div>
+              </div>
+              <i class="mk-home"></i>
             </div>
           </div>
-          <figcaption data-i18n="modes.duel.name">Duel Mode</figcaption>
+          <figcaption>
+            <span class="cap-title" data-i18n="modes.duel.name">Duel Mode</span>
+            <span class="cap-benefit" data-i18n="mock.benefit_duel">Test your recall against a friend.</span>
+          </figcaption>
         </figure>
         <figure class="screenshot-card">
           <div class="screenshot-frame">
-            <div class="screenshot-placeholder placeholder-leaderboard">
-              <span class="placeholder-badge" data-i18n="screenshots.coming_soon">Coming soon</span>
+            <div class="screenshot-placeholder mock-screen mock-lb" aria-hidden="true">
+              <div class="mk-sbar">
+                <i class="mk-time" data-i18n="mock.time">9:41</i>
+                <span class="mk-island"></span>
+                <svg class="mk-sicons" viewBox="0 0 47 12" fill="currentColor"><rect x="0" y="7.5" width="2.6" height="4.5" rx="0.8"/><rect x="3.8" y="5.5" width="2.6" height="6.5" rx="0.8"/><rect x="7.6" y="3.2" width="2.6" height="8.8" rx="0.8"/><rect x="11.4" y="0.8" width="2.6" height="11.2" rx="0.8"/><path d="M18.5 4.6a8 8 0 0 1 11 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M20.8 7.2a4.7 4.7 0 0 1 6.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="24" cy="10" r="1.5"/><rect x="34" y="1.8" width="10.5" height="8.4" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity="0.5"/><rect x="35.4" y="3.2" width="6.2" height="5.6" rx="1.4"/><path d="M45.6 4.4v3.2a1.7 1.7 0 0 0 0-3.2z" opacity="0.5"/></svg>
+              </div>
+              <div class="mk-lg-head"><b data-i18n="mock.league">Weekly League</b><span data-i18n="mock.league_ends">Ends in 2d 14h</span></div>
+              <div class="mk-seg"><i class="on" data-i18n="mock.seg_friends">Friends</i><i data-i18n="mock.seg_global">Global</i></div>
+              <div class="mock-podium">
+                <span class="pod pod-2"><i class="mk-av">🦊</i><b data-i18n="mock.name_sara">Sara</b><em>1,280 XP</em><u>2</u></span>
+                <span class="pod pod-1"><i class="mk-av">🐼</i><b data-i18n="mock.name_maya">Maya</b><em>1,420 XP</em><u>1</u></span>
+                <span class="pod pod-3"><i class="mk-av">🍀</i><b data-i18n="mock.name_kenji">Kenji</b><em>1,150 XP</em><u>3</u></span>
+              </div>
+              <div class="mk-your" data-i18n="mock.your_position">Your position</div>
+              <div class="mock-lbrow"><b>5</b><i class="mk-av">🗻</i><span data-i18n="mock.name_yuki">Yuki</span><em>902 XP</em></div>
+              <div class="mock-lbrow"><b>6</b><i class="mk-av">⭐</i><span data-i18n="mock.name_nadia">Nadia</span><em>861 XP</em></div>
+              <div class="mock-lbrow you"><b>7</b><i class="mk-av">🌸</i><span data-i18n="mock.you">You</span><u>↑2</u><em>820 XP</em></div>
+              <div class="mock-lbrow"><b>8</b><i class="mk-av">🎧</i><span data-i18n="mock.name_karim">Karim</span><em>794 XP</em></div>
+              <div class="mk-foot">
+                <div class="mk-tabbar"><i></i><i></i><i class="on"></i><i></i></div>
+                <i class="mk-home"></i>
+              </div>
             </div>
           </div>
-          <figcaption data-i18n="leaderboard.title">Leaderboard</figcaption>
+          <figcaption>
+            <span class="cap-title" data-i18n="leaderboard.title">Leaderboard</span>
+            <span class="cap-benefit" data-i18n="mock.benefit_leaderboard">Turn daily progress into friendly competition.</span>
+          </figcaption>
         </figure>
       </div>
       <div class="screenshots-dots" id="screenshots-dots" role="tablist" aria-label="Phone preview carousel">
@@ -242,9 +334,10 @@
       </div>
     </section>
 
-    <section class="faq">
-      <header class="faq-header">
+    <section class="faq faq-editorial">
+      <header class="faq-header faq-side">
         <h2 class="section-title" data-i18n="faq.section_title">Common questions</h2>
+        <img class="faq-mascot" src="assets/brand/mascot-tomo.webp" alt="" loading="lazy" decoding="async">
       </header>
       <div class="faq-list">
         <details class="faq-item" name="faq-group">
@@ -279,6 +372,11 @@
     </section>
 
     <footer class="landing-footer">
+      <div class="footer-farewell" aria-hidden="true">
+        <span class="footer-farewell-jp">また明日</span>
+        <span class="footer-farewell-note" data-i18n="footer.farewell">— see you tomorrow.</span>
+      </div>
+      <div class="footer-kanji-wm" aria-hidden="true">友</div>
       <div class="landing-footer-inner">
         <div class="landing-footer-brand">
           <span class="landing-footer-mark">
@@ -395,6 +493,16 @@
           <span class="nav-avatar" id="nav-avatar">🌸</span>
           <span class="nav-name-text" id="nav-name">Player</span>
         </div>
+        <button type="button" class="theme-toggle"
+                aria-label="Switch color theme" aria-pressed="false"
+                data-i18n-attr="aria-label:nav.theme_toggle">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
         <button class="nav-btn" id="btn-settings"
                 title="Settings" aria-label="Settings"
                 data-i18n-attr="title:nav.settings_title,aria-label:nav.settings_title">
@@ -572,23 +680,41 @@
           <div class="select-options-info" id="select-options-info"></div>
           <div class="option-row" id="option-practice">
             <span class="option-label" data-i18n="select.option.practice">Practice</span>
-            <div class="segmented" id="seg-practice">
-              <button type="button" class="seg-btn" data-practice="read" data-i18n="select.seg.read">👁️ Read</button>
-              <button type="button" class="seg-btn" data-practice="listen" data-i18n="select.seg.listen">👂 Listen</button>
+            <div class="segmented seg-stacked" id="seg-practice">
+              <button type="button" class="seg-btn" data-practice="read">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/></svg>
+                <span class="seg-label" data-i18n="select.seg.read">Read</span>
+              </button>
+              <button type="button" class="seg-btn" data-practice="listen">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2z"/><path d="M3 15a2 2 0 0 0 2 2h1v-5H5a2 2 0 0 0-2 2z"/></svg>
+                <span class="seg-label" data-i18n="select.seg.listen">Listen</span>
+              </button>
             </div>
           </div>
           <div class="option-row" id="option-wincon">
             <span class="option-label" data-i18n="select.option.win_condition">Win Condition</span>
-            <div class="segmented" id="seg-wincon">
-              <button type="button" class="seg-btn" data-wincon="first_to_10" data-i18n="select.seg.first_to_10">🏁 First to 10</button>
-              <button type="button" class="seg-btn" data-wincon="rounds_20" data-i18n="select.seg.rounds_20">🔟 20 Rounds</button>
+            <div class="segmented seg-stacked" id="seg-wincon">
+              <button type="button" class="seg-btn" data-wincon="first_to_10">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                <span class="seg-label" data-i18n="select.seg.first_to_10">First to 10</span>
+              </button>
+              <button type="button" class="seg-btn" data-wincon="rounds_20">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+                <span class="seg-label" data-i18n="select.seg.rounds_20">20 Rounds</span>
+              </button>
             </div>
           </div>
           <div class="option-row" id="option-input">
             <span class="option-label" data-i18n="select.option.answer_with">Answer With</span>
-            <div class="segmented" id="seg-input">
-              <button type="button" class="seg-btn" data-input="typing" data-i18n="select.seg.typing">⌨️ Typing</button>
-              <button type="button" class="seg-btn" data-input="multiple" data-i18n="select.seg.choices">🔘 Choices</button>
+            <div class="segmented seg-stacked" id="seg-input">
+              <button type="button" class="seg-btn" data-input="typing">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M8 13h8"/></svg>
+                <span class="seg-label" data-i18n="select.seg.typing">Typing</span>
+              </button>
+              <button type="button" class="seg-btn" data-input="multiple">
+                <svg class="seg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span class="seg-label" data-i18n="select.seg.choices">Choices</span>
+              </button>
             </div>
           </div>
           <div class="option-row" id="option-duration">
@@ -712,7 +838,7 @@
               <div class="setting-desc" data-i18n="settings.row.notify_desc">Toast alerts when your friend comes online</div>
             </div>
             <label class="toggle">
-              <input type="checkbox" id="toggle-notify" checked>
+              <input type="checkbox" id="toggle-notify">
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -1051,7 +1177,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260610a"></script>
+  <script type="module" src="js/app.js?v=20260723a"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles
@@ -1104,6 +1230,62 @@
         s.classList.add('reveal-init');
         io.observe(s);
       });
+    })();
+
+    // Nav morph — scrolling down detaches the landing nav into a floating
+    // glass pill. Class-toggle only; CSS handles the transition. Asymmetric
+    // thresholds (engage past 72px, release under 24px) so wheel/trackpad
+    // jitter around a single boundary can never make the pill oscillate.
+    (function () {
+      var nav = document.querySelector('.landing-nav');
+      var landing = document.getElementById('screen-landing');
+      if (!nav || !landing) return;
+      var ticking = false;
+      var pinned = false;
+      function update() {
+        ticking = false;
+        // Leaving the landing screen must reset the pill, not freeze it:
+        // showScreen() strips 'active' before its scrollTo(0,0), and the
+        // return trip fires no scroll event at y=0 — a bare early-return
+        // here would strand a stale is-scrolled pill at the top.
+        if (!landing.classList.contains('active')) {
+          pinned = false;
+          nav.classList.remove('is-scrolled');
+          return;
+        }
+        var y = window.scrollY;
+        if (!pinned && y > 72) pinned = true;
+        else if (pinned && y < 24) pinned = false;
+        nav.classList.toggle('is-scrolled', pinned);
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }, { passive: true });
+      update();
+    })();
+
+    // Magnetic hero CTA — the button leans a few px toward the cursor.
+    // Skipped for touch devices and reduced motion.
+    (function () {
+      if (window.matchMedia && (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          !window.matchMedia('(hover: hover)').matches)) return;
+      var cta = document.querySelector('.hero-cta');
+      var form = document.getElementById('form-waitlist');
+      if (!cta || !form) return;
+      form.addEventListener('mousemove', function (e) {
+        if (cta.disabled) { cta.style.transform = ''; return; }
+        var r = cta.getBoundingClientRect();
+        var dx = e.clientX - (r.left + r.width / 2);
+        var dy = e.clientY - (r.top + r.height / 2);
+        var dist = Math.hypot(dx, dy);
+        if (dist > 0 && dist < 140) {
+          var pull = (140 - dist) / 140 * 6;
+          cta.style.transform = 'translate(' + (dx / dist * pull) + 'px,' + (dy / dist * pull) + 'px)';
+        } else {
+          cta.style.transform = '';
+        }
+      });
+      form.addEventListener('mouseleave', function () { cta.style.transform = ''; });
     })();
   </script>
 </body>

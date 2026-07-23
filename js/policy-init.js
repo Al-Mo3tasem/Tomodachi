@@ -12,15 +12,28 @@
 // identical to the landing-page toggle.
 // ============================================
 
-import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260610a';
+import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260723a';
 
-// Policy pages hardcode data-theme="light" in their markup; without this
-// sync, a user who chose dark in the app landed on a flash-bang light page.
-// Same storage key as core.js setTheme(); no Firebase needed here.
-const storedTheme = localStorage.getItem('tomodachi-theme');
-if (storedTheme === 'dark' || storedTheme === 'light') {
-  document.documentElement.setAttribute('data-theme', storedTheme);
+// Theme on policy pages: the <head> pre-paint script already resolved
+// stored-choice-else-system before first paint. Here we only wire the nav
+// quick-toggle. Same storage key as core.js setTheme(); no Firebase needed.
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('tomodachi-theme', theme);
+  document.querySelectorAll('.theme-toggle').forEach((btn) => {
+    btn.setAttribute('aria-pressed', String(theme === 'dark'));
+  });
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#161311' : '#F6F3EB');
 }
+
+document.querySelectorAll('.theme-toggle').forEach((btn) => {
+  btn.setAttribute('aria-pressed', String(document.documentElement.getAttribute('data-theme') === 'dark'));
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+});
 
 function bindLocaleToggles() {
   const update = () => {

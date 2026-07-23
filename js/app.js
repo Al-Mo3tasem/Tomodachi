@@ -4,38 +4,38 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260610a';
-import { getFunctionUrl } from './config/functions.js?v=20260610a';
+import { APP_CONFIG } from './config/firebase.js?v=20260723a';
+import { getFunctionUrl } from './config/functions.js?v=20260723a';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260610a';
+} from './core/core.js?v=20260723a';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260610a';
+} from './data/firebase.js?v=20260723a';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260610a';
+} from './games/engine.js?v=20260723a';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260610a';
-import { isSpeechSupported } from './audio/audio.js?v=20260610a';
+} from './data/leaderboards.js?v=20260723a';
+import { isSpeechSupported } from './audio/audio.js?v=20260723a';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260610a';
+} from './games/duel.js?v=20260723a';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260610a';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260610a';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260610a';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260610a';
+} from './games/coop.js?v=20260723a';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260723a';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260723a';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260723a';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -704,6 +704,9 @@ async function handleWaitlistSubmit(e) {
 // ============================================
 
 let presenceUnsub = null;
+// uid → last-observed online boolean, for edge-triggered "came online"
+// toasts (see renderFriend). undefined = never observed yet this session.
+const lastFriendOnline = {};
 
 function initPresence() {
   if (!state.user) return;
@@ -794,14 +797,18 @@ function renderFriend() {
   }
   if (inviteBtn) inviteBtn.disabled = !isOnline;
 
-  if (isOnline) {
-    const lastToast = sessionStorage.getItem('last-online-toast');
-    const now = Date.now();
-    const notifyToggle = $('toggle-notify');
-    if ((!lastToast || (now - parseInt(lastToast)) > 60000) && notifyToggle && notifyToggle.checked) {
-      toast(t('dashboard.friend.online_toast', { name: p.displayName || p.username }), 'success');
-      sessionStorage.setItem('last-online-toast', now.toString());
-    }
+  // Edge-triggered "came online" toast: fire ONLY on a genuine
+  // offline→online flip observed during this session — never on every
+  // presence snapshot or every dashboard re-entry (which is what made it
+  // pop each time you left a tab). First sighting (prev === undefined)
+  // never toasts, so a friend who was already online before you opened
+  // the app stays silent. Gated on the (now default-off) notify toggle.
+  const fid = p.userId || p.uid || 'friend';
+  const prevOnline = lastFriendOnline[fid];
+  lastFriendOnline[fid] = isOnline;
+  const notifyToggle = $('toggle-notify');
+  if (isOnline && prevOnline === false && notifyToggle && notifyToggle.checked) {
+    toast(t('dashboard.friend.online_toast', { name: p.displayName || p.username }), 'success');
   }
 
   // Let the multiplayer engines react to opponent disconnects.
@@ -842,7 +849,14 @@ function renderSets() {
     const el = document.createElement('div');
     el.className = 'set-item';
     el.dataset.id = set.id;
+    // Keyboard parity with click: these rows act as toggle buttons.
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-pressed', 'false');
     el.addEventListener('click', () => toggleSet(set.id));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSet(set.id); }
+    });
 
     const chars = (set.characters || []).map(c => c.char).join(' ');
     el.innerHTML = `
@@ -877,7 +891,13 @@ function renderCustomGrid() {
     const el = document.createElement('div');
     el.className = 'char-tile';
     el.dataset.char = c.char;
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-pressed', 'false');
     el.addEventListener('click', () => toggleChar(c.char));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleChar(c.char); }
+    });
     el.innerHTML = `<span class="jp">${c.char}</span><span class="romaji">${c.romaji}</span>`;
     grid.appendChild(el);
   });
@@ -933,13 +953,24 @@ async function loadHistory() {
     );
     const snap = await getDocs(q);
 
-    if (snap.empty) {
+    // Only genuinely-finished games belong in history. Abandoned or
+    // declined challenges (status 'waiting' / 'cancelled' / 'countdown' /
+    // 'active') carry no winnerId, which the duel renderer below would
+    // otherwise paint as a phantom "Lost" — a loss that never happened and
+    // never touched the W–L stat (hence history said Lost while the record
+    // stayed 0–0). Every real result — solo, co-op, duel — is written with
+    // status 'completed', so this keeps all of them and drops only ghosts.
+    const games = [];
+    snap.forEach(docSnap => {
+      const sess = docSnap.data();
+      if (sess.status === 'completed') games.push(sess);
+    });
+
+    if (!games.length) {
       list.innerHTML = `<p class="empty-state">${escapeText(t('dashboard.history.empty'))}</p>`;
       return;
     }
 
-    const games = [];
-    snap.forEach(docSnap => games.push(docSnap.data()));
     games.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
 
     list.innerHTML = '';
@@ -1013,10 +1044,14 @@ function toMillis(ts) {
 
 function updateSelectionUI() {
   document.querySelectorAll('.set-item').forEach(el => {
-    el.classList.toggle('selected', state.selectedSets.has(el.dataset.id));
+    const on = state.selectedSets.has(el.dataset.id);
+    el.classList.toggle('selected', on);
+    el.setAttribute('aria-pressed', String(on));
   });
   document.querySelectorAll('.char-tile').forEach(el => {
-    el.classList.toggle('selected', state.selectedChars.has(el.dataset.char));
+    const on = state.selectedChars.has(el.dataset.char);
+    el.classList.toggle('selected', on);
+    el.setAttribute('aria-pressed', String(on));
   });
 
   const totalChars = state.selectedChars.size;
@@ -1694,7 +1729,14 @@ function bindLocaleToggles() {
 }
 
 async function init() {
-  setTheme(state.theme);
+  setTheme(state.theme, false); // apply only — never persist a boot-time fallback
+  // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
+  // single source of truth (persists, syncs settings checkbox + aria-pressed).
+  document.querySelectorAll('.theme-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setTheme(state.theme === 'dark' ? 'light' : 'dark');
+    });
+  });
   // initI18n must run BEFORE attachListeners + onAuthStateChanged so that
   // t() is callable everywhere downstream (auth listener may call enter-
   // AppAsUser immediately on cached session, which calls t() for toasts).

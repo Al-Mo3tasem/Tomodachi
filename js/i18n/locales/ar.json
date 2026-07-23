@@ -47,6 +47,7 @@
   },
   "footer": {
     "tagline": "اليابانية مع رفاقك",
+    "farewell": "— إلى الغد.",
     "privacy_link": "الخصوصية",
     "terms_link": "الشروط",
     "cookies_link": "ملفات تعريف الارتباط",
@@ -253,11 +254,50 @@
       "create_account": "إنشاء حساب"
     }
   },
+  "mock": {
+    "greeting": "مساء الخير يا عمر",
+    "greeting_sub": "جاهز لدرس اليوم؟",
+    "stat_accuracy": "الدقة",
+    "stat_streak": "أيام متتالية",
+    "stat_xp": "إجمالي النقاط",
+    "daily_goal": "هدف اليوم",
+    "daily_goal_count": "أنجزت 3 من 5",
+    "continue_title": "تابع التعلّم",
+    "continue_sub": "هيراغانا · الدرس 4 · 6 دقائق",
+    "continue_btn": "متابعة",
+    "review_title": "مراجعة مستحقة",
+    "review_sub": "12 بطاقة جاهزة للمراجعة",
+    "review_btn": "ابدأ",
+    "you": "أنت",
+    "round": "الجولة 3 من 10",
+    "question": "أي صوت يطابق هذا الحرف؟",
+    "opponent_status": "سارة تجيب الآن…",
+    "league": "دوري الأسبوع",
+    "league_ends": "ينتهي بعد يومين",
+    "your_position": "ترتيبك",
+    "name_sara": "سارة",
+    "name_maya": "مايا",
+    "name_kenji": "كينجي",
+    "name_nadia": "نادية",
+    "name_karim": "كريم",
+    "name_yuki": "يوكي",
+    "time": "٩:٤١",
+    "week": "هذا الأسبوع",
+    "duel_card_title": "مبارزة مع سارة",
+    "duel_card_sub": "دورك الآن — الجولة 3",
+    "duel_card_btn": "العب",
+    "seg_friends": "الأصدقاء",
+    "seg_global": "العالمي",
+    "benefit_dashboard": "اعرف تمامًا ما ستتعلّمه تاليًا.",
+    "benefit_duel": "اختبر حفظك في مواجهة صديق.",
+    "benefit_leaderboard": "حوّل تقدّمك اليومي إلى منافسة ودّية."
+  },
   "nav": {
     "settings_title": "الإعدادات",
     "logout": "تسجيل الخروج",
     "user_default_name": "لاعب",
-    "install_app": "تثبيت التطبيق"
+    "install_app": "تثبيت التطبيق",
+    "theme_toggle": "تبديل مظهر الألوان"
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -339,12 +379,12 @@
       "session": "الجلسة"
     },
     "seg": {
-      "read": "👁️ قراءة",
-      "listen": "👂 استماع",
-      "first_to_10": "🏁 أول من يصل إلى 10",
-      "rounds_20": "🔟 20 جولة",
-      "typing": "⌨️ كتابة",
-      "choices": "🔘 اختيارات"
+      "read": "قراءة",
+      "listen": "استماع",
+      "first_to_10": "أول من يصل إلى 10",
+      "rounds_20": "20 جولة",
+      "typing": "كتابة",
+      "choices": "اختيارات"
     },
     "panel": {
       "premade": "مجموعات جاهزة",

@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260610a';
+import { APP_CONFIG } from '../config/firebase.js?v=20260723a';
 
 // ----- One-shot localStorage migration: hiraquest-* → tomodachi-* (R1.05a).
 // Runs on module load; harmless after the first time. Removed once we're
@@ -48,7 +48,11 @@ export const state = {
   duelInput: localStorage.getItem('tomodachi-duelinput') || 'multiple',    // 'multiple' | 'typing'
   coopInput: localStorage.getItem('tomodachi-coopinput') || 'multiple',    // 'multiple' | 'typing'
 
-  theme: localStorage.getItem('tomodachi-theme') || APP_CONFIG.defaultTheme
+  // Stored choice wins; first-visit falls back to the system preference
+  // (mirrors the pre-paint script in each page's <head>), then the config default.
+  theme: localStorage.getItem('tomodachi-theme') ||
+    (typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark' : APP_CONFIG.defaultTheme)
 };
 
 // ----- DOM Helpers -----
@@ -78,10 +82,18 @@ export function toast(message, type = 'info', duration = 3000) {
 
   const toastEl = document.createElement('div');
   toastEl.className = `toast toast-${type}`;
-  const icons = { info: 'ℹ️', success: '✅', error: '❌', warning: '⚠️' };
+  // Status icons: monochrome Lucide line glyphs, tinted per severity by CSS
+  // (.toast-icon color). These are trusted literals, so innerHTML is safe
+  // here; the user-supplied message still goes through textContent below.
+  const icons = {
+    success: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    error:   '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+    warning: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+  };
   const icon = document.createElement('span');
   icon.className = 'toast-icon';
-  icon.textContent = icons[type] || icons.info;
+  icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[type] || icons.info}</svg>`;
   const text = document.createElement('span');
   text.textContent = message;
   toastEl.append(icon, text);
@@ -94,12 +106,19 @@ export function toast(message, type = 'info', duration = 3000) {
 }
 
 // ----- Theme -----
-export function setTheme(theme) {
+// persist=false applies without writing localStorage — used at boot so a
+// first-visit system-preference fallback isn't frozen as an explicit choice
+// (the OS theme keeps steering until the user actually touches a toggle).
+export function setTheme(theme, persist = true) {
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('tomodachi-theme', theme);
+  if (persist) localStorage.setItem('tomodachi-theme', theme);
   state.theme = theme;
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = theme === 'dark';
+  // Nav quick-toggles (landing + app chrome): pressed state = dark active.
+  document.querySelectorAll('.theme-toggle').forEach((btn) => {
+    btn.setAttribute('aria-pressed', String(theme === 'dark'));
+  });
   // Values match --bg-base in css/style.css (urushi charcoal / washi paper).
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', theme === 'dark' ? '#161311' : '#F6F3EB');

@@ -7,11 +7,22 @@
   <meta name="description" content="Tomodachi's cookie policy: which cookies we use, why, and how to control them.">
   <link rel="canonical" href="https://al-mo3tasem.github.io/Tomodachi/cookies.html">
   <meta name="robots" content="index, follow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260610a">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260719b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260612a">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+  <!-- Pre-paint theme resolution: stored choice wins, else system preference.
+       Runs before the stylesheet so the first paint is already themed. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('tomodachi-theme') ||
+          (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable */ }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=20260719b">
 </head>
 <body class="policy-page">
   <!-- Inline brand symbol (mirrors index.html) — currentColor 友 keeps the
@@ -32,6 +43,16 @@
       <span class="landing-brand-name">Tomodachi</span>
     </a>
     <div class="policy-nav-actions">
+      <button type="button" class="theme-toggle"
+              aria-label="Switch color theme" aria-pressed="false"
+              data-i18n-attr="aria-label:nav.theme_toggle">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+        </svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
       <div class="landing-locale-bar">
         <button type="button" class="locale-toggle" data-locale="en" data-i18n="locale.label_en">EN</button>
         <button type="button" class="locale-toggle" data-locale="ar" data-i18n="locale.label_ar">العربية</button>
@@ -82,6 +103,6 @@
     </article>
   </main>
 
-  <script type="module" src="js/policy-init.js?v=20260610a"></script>
+  <script type="module" src="js/policy-init.js?v=20260719b"></script>
 </body>
 </html>
