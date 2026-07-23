@@ -3,7 +3,7 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260723a';
+import { APP_CONFIG } from '../config/firebase.js?v=20260723b';
 
 // ----- One-shot localStorage migration: hiraquest-* → tomodachi-* (R1.05a).
 // Runs on module load; harmless after the first time. Removed once we're

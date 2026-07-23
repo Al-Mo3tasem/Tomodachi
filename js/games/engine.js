@@ -14,16 +14,16 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260723a';
+} from '../core/core.js?v=20260723b';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260723a';
+} from '../data/firebase.js?v=20260723b';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260723a';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260723a';
-import { t } from '../i18n/index.js?v=20260723a';
+} from '../audio/audio.js?v=20260723b';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260723b';
+import { t } from '../i18n/index.js?v=20260723b';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -437,7 +437,14 @@ function renderInput() {
 
 function makeChoices() {
   if (g.practice === 'listen') {
-    const pool = g.allChars.filter(c => c.char !== g.current.char).map(c => c.char);
+    // Exclude distractors that SOUND like the prompt: the question is the
+    // spoken glyph, so a homophone (e.g. katakana ア when the prompt is あ,
+    // both "a") would be an audibly-correct "wrong" answer. Filtering by
+    // romaji is a no-op for a single syllabary (unique romaji per glyph) but
+    // prevents the collision once hiragana + katakana coexist.
+    const pool = g.allChars
+      .filter(c => c.char !== g.current.char && c.romaji !== g.current.romaji)
+      .map(c => c.char);
     const picks = shuffle(pool).slice(0, 3);
     return shuffle([g.current.char, ...picks]);
   }

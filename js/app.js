@@ -4,38 +4,39 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260723a';
-import { getFunctionUrl } from './config/functions.js?v=20260723a';
+import { APP_CONFIG } from './config/firebase.js?v=20260723b';
+import { getFunctionUrl } from './config/functions.js?v=20260723b';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260723a';
+} from './core/core.js?v=20260723b';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260723a';
+} from './data/firebase.js?v=20260723b';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260723a';
+} from './games/engine.js?v=20260723b';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260723a';
-import { isSpeechSupported } from './audio/audio.js?v=20260723a';
+} from './data/leaderboards.js?v=20260723b';
+import { isSpeechSupported } from './audio/audio.js?v=20260723b';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260723b';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260723a';
+} from './games/duel.js?v=20260723b';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260723a';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260723a';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260723a';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260723a';
+} from './games/coop.js?v=20260723b';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260723b';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260723b';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260723b';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -822,6 +823,15 @@ function renderFriend() {
 
 async function loadContentSets() {
   try {
+    // v2 bridge (flag-gated; localhost dev only). Reads authored per-item
+    // docs and adapts them to the legacy set shape. Returns [] if the §4.16
+    // read rule isn't live yet — in which case we fall through to the legacy
+    // top-level read so the picker is never empty.
+    if (contentV2Enabled()) {
+      const v2 = await loadV2ContentSets();
+      if (v2.length) { state.contentSets = v2; return; }
+      console.warn('[content-v2] no sets returned; falling back to legacy content_sets read');
+    }
     const snap = await withTimeout(getDocs(collection(db, 'content_sets')), 'Loading Hiragana sets', 12000);
     state.contentSets = [];
     snap.forEach(docSnap => {
