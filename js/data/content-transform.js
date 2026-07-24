@@ -125,3 +125,76 @@ export function buildKanaSets(itemsByType) {
   out.sort((a, b) => a.order - b.order);
   return out;
 }
+
+// ============================================
+// Vocab → practice sets, grouped by the authored `category` tag
+// (user decision 2026-07-24: practice-game vocab groups by category; the
+// thematic lesson clusters are a different surface and live in the lesson
+// path). Sets order AFTER all kana (kana = 0–199, vocab = 200+), in a
+// pedagogically sensible category sequence.
+// ============================================
+
+// Taught-order for categories + display labels. Labels are English for now —
+// set-name i18n is a flagged follow-up (legacy set names were locale-neutral
+// Japanese like あ行; category names have no such neutral form).
+export const VOCAB_CATEGORY_ORDER = [
+  ['expressions', 'Expressions'],
+  ['time',        'Time'],
+  ['days',        'Days'],
+  ['counters',    'Counters'],
+  ['people',      'People'],
+  ['family',      'Family'],
+  ['food',        'Food & Drink'],
+  ['places',      'Places'],
+  ['body',        'Body'],
+  ['weather',     'Weather'],
+  ['nature',      'Nature'],
+  ['verbs',       'Verbs'],
+  ['adjectives',  'Adjectives'],
+  ['adverbs',     'Adverbs'],
+  ['nouns',       'Nouns']
+];
+const VOCAB_CAT_INDEX = new Map(VOCAB_CATEGORY_ORDER.map(([c], i) => [c, i]));
+const VOCAB_CAT_LABEL = new Map(VOCAB_CATEGORY_ORDER);
+
+// Group vocab items into sets shaped like kana sets. The displayed "char" is
+// the KANA READING (たべもの), not the kanji surface form (食べ物): kanji is
+// excluded from the game for now (lead decision 2026-07-24), the N5 audience
+// is pre-kanji so a kanji card would be unreadable, and TTS pronounces
+// unambiguous kana correctly where kanji can misread. This also dissolves
+// kanji homographs (人 = ひと vs にん become distinct cards). De-dupe is by
+// the displayed kana form. Easiest first within a set (difficulty order).
+export function groupVocabItems(items) {
+  const byCat = new Map();
+  const seen = new Set();
+  for (const it of items) {
+    const display = it && (it.reading || it.japanese);
+    if (!it || !display || !it.romaji) continue;
+    if (seen.has(display)) continue;   // two entries with one kana form → keep first
+    seen.add(display);
+    const cat = it.category || 'nouns';
+    if (!byCat.has(cat)) byCat.set(cat, []);
+    byCat.get(cat).push({
+      char: display,
+      romaji: String(it.romaji).toLowerCase(),
+      _d: it.difficulty || 3
+    });
+  }
+
+  const sets = [];
+  for (const [cat, characters] of byCat) {
+    if (!characters.length) continue;
+    characters.sort((a, b) => a._d - b._d);
+    characters.forEach(c => delete c._d);
+    const ci = VOCAB_CAT_INDEX.has(cat) ? VOCAB_CAT_INDEX.get(cat) : 98;
+    sets.push({
+      id: `vocab_${cat}`,
+      name: VOCAB_CAT_LABEL.get(cat) || cat,
+      order: 200 + ci,
+      type: 'vocab',
+      characters
+    });
+  }
+  sets.sort((a, b) => a.order - b.order);
+  return sets;
+}

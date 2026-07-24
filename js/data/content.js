@@ -17,9 +17,9 @@
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260723b';
-import { db, collection, getDocs } from './firebase.js?v=20260723b';
-import { KANA_TYPES, groupKanaItems } from './content-transform.js?v=20260723b';
+import { getEnv } from '../config/firebase.js?v=20260724a';
+import { db, collection, getDocs } from './firebase.js?v=20260724a';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260724a';
 
 // Per-environment flag. Default OFF everywhere except localhost dev.
 export function contentV2Enabled() {
@@ -43,14 +43,29 @@ export async function loadV2ContentSets() {
     snap.forEach(d => items.push(d.data()));
     const sets = groupKanaItems(type, items);
     if (!sets.length) {
-      // A type resolved with ZERO sets (unauthored / mid phased-rollout). Do
-      // NOT ship a partial catalog that silently drops a whole syllabary —
+      // A kana type resolved with ZERO sets (unauthored / mid phased-rollout).
+      // Do NOT ship a partial catalog that silently drops a whole syllabary —
       // bail so app.js falls back to the legacy read (which has full coverage).
       console.warn(`[content-v2] "${type}" produced no sets; falling back to legacy to avoid a partial catalog`);
       return [];
     }
     out.push(...sets);
   }
+
+  // Vocab: optional extra. Kana is the completeness bar (the legacy fallback
+  // only has kana anyway) — an empty/failed vocab read logs and ships kana-only
+  // rather than throwing away a perfectly good kana catalog.
+  try {
+    const snap = await getDocs(collection(db, 'content_sets', 'vocab', 'items'));
+    const items = [];
+    snap.forEach(d => items.push(d.data()));
+    const vocabSets = groupVocabItems(items);
+    if (vocabSets.length) out.push(...vocabSets);
+    else console.warn('[content-v2] vocab produced no sets; continuing kana-only');
+  } catch (err) {
+    console.error('[content-v2] vocab read failed; continuing kana-only:', err);
+  }
+
   out.sort((a, b) => a.order - b.order);
   return out;
 }

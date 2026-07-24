@@ -14,14 +14,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260723b';
+} from '../core/core.js?v=20260724a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260723b';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260723b';
-import { acceptCoop, isInCoop } from './coop.js?v=20260723b';
-import { t } from '../i18n/index.js?v=20260723b';
+} from '../data/firebase.js?v=20260724a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260724a';
+import { acceptCoop, isInCoop } from './coop.js?v=20260724a';
+import { t } from '../i18n/index.js?v=20260724a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -903,12 +903,19 @@ export async function resolveStall() {
 // HELPERS
 // ============================================
 
+// kana vs vocab (see engine.js setKind rationale): distractors must come from
+// the question's own kind or they're trivially eliminable.
+function setKind(set) {
+  return set.type === 'vocab' ? 'vocab' : 'kana';
+}
+
 function buildCharPool() {
   const all = [];
   state.contentSets.forEach(set => {
+    const kind = setKind(set);
     (set.characters || []).forEach(c => {
       if (state.selectedChars.has(c.char) && !all.find(x => x.char === c.char)) {
-        all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase() });
+        all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase(), kind });
       }
     });
   });
@@ -916,11 +923,14 @@ function buildCharPool() {
 }
 
 function allRomaji() {
-  const s = new Set();
-  state.contentSets.forEach(set => (set.characters || []).forEach(c => {
-    if (c.romaji) s.add(c.romaji.toLowerCase());
-  }));
-  return [...s];
+  const pools = { kana: new Set(), vocab: new Set() };
+  state.contentSets.forEach(set => {
+    const kind = setKind(set);
+    (set.characters || []).forEach(c => {
+      if (c.romaji) pools[kind].add(c.romaji.toLowerCase());
+    });
+  });
+  return { kana: [...pools.kana], vocab: [...pools.vocab] };
 }
 
 function buildQuestions(chars, inputMethod) {
@@ -932,7 +942,16 @@ function buildQuestions(chars, inputMethod) {
     const c = bag.shift();
     const q = { char: c.char, romaji: c.romaji, choices: null };
     if (inputMethod === 'multiple') {
-      const distractors = shuffle(pool.filter(r => r !== c.romaji)).slice(0, 3);
+      // Same-kind distractors first (kana readings for kana, words for words);
+      // top up cross-kind only if the same-kind pool can't fill 3.
+      const kind = c.kind || 'kana';
+      const sameKind = (pool[kind] || []).filter(r => r !== c.romaji);
+      let distractors = shuffle(sameKind).slice(0, 3);
+      if (distractors.length < 3) {
+        const other = kind === 'kana' ? 'vocab' : 'kana';
+        const rest = (pool[other] || []).filter(r => r !== c.romaji && !distractors.includes(r));
+        distractors = distractors.concat(shuffle(rest).slice(0, 3 - distractors.length));
+      }
       q.choices = shuffle([c.romaji, ...distractors]);
     }
     questions.push(q);
@@ -942,7 +961,9 @@ function buildQuestions(chars, inputMethod) {
 
 function romajiMatches(input, romaji) {
   const a = String(input).trim().toLowerCase().replace(/\s+/g, '');
-  const r = String(romaji).trim().toLowerCase();
+  // Target is space-stripped too — vocab romaji can contain spaces and the
+  // input side already strips them (see engine.js answerMatches).
+  const r = String(romaji).trim().toLowerCase().replace(/\s+/g, '');
   if (a === r) return true;
   return (ROMAJI_ALT[r] || []).includes(a);
 }

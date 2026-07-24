@@ -90,11 +90,22 @@ export function initAdmin(env) {
 }
 
 // Returns the Firestore path for a content item, by type.
-// Lessons live at /content_sets/lessons/{lessonKey}; everything else at
-// /content_sets/{type}/items/{key}.
+// Everything — lessons included — lives at /content_sets/{type}/items/{docKey}.
+//
+// Lessons previously targeted /content_sets/lessons/{lessonKey}, a 3-segment
+// (odd) path: Firestore treats odd-segment paths as COLLECTION references, so
+// db.doc(path) would throw "Document references must have an even number of
+// segments" the moment the first lesson container was authored. Unified on the
+// items-subcollection shape instead, which the deployed §4.16 read rule
+// (match /content_sets/{contentType}/items/{itemKey}) already covers with
+// contentType = 'lessons' — no extra rule needed.
+//
+// lessonKey contains ':' (e.g. 'hiragana:01'), which is legal in a Firestore
+// doc id but awkward in consoles/URLs; store with ':' → '_' (hiragana_01) and
+// keep the original lessonKey as a field inside the doc.
 export function pathFor(contentType, item) {
   if (contentType === 'lesson') {
-    return `content_sets/lessons/${item.lessonKey}`;
+    return `content_sets/lessons/items/${String(item.lessonKey).replace(/:/g, '_')}`;
   }
   return `content_sets/${contentType}/items/${item.key}`;
 }

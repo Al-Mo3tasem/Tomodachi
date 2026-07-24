@@ -14,16 +14,16 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260723b';
+} from '../core/core.js?v=20260724a';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260723b';
+} from '../data/firebase.js?v=20260724a';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260723b';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260723b';
-import { t } from '../i18n/index.js?v=20260723b';
+} from '../audio/audio.js?v=20260724a';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260724a';
+import { t } from '../i18n/index.js?v=20260724a';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -235,33 +235,50 @@ export function speakCurrent() {
 // SETUP
 // ============================================
 
+// Content "kind" of a set: single-mora kana vs whole vocab words. Distractor
+// pools are scoped by kind — a kana question offering たべます as a wrong
+// option (or a vocab question offering あ) would be trivially eliminable and
+// break the game's difficulty. Legacy sets (no .type, or hiragana/katakana)
+// are all kana.
+function setKind(set) {
+  return set.type === 'vocab' ? 'vocab' : 'kana';
+}
+
 function buildCharPool() {
   const all = [];
   state.contentSets.forEach(set => {
+    const kind = setKind(set);
     (set.characters || []).forEach(c => {
       if (state.selectedChars.has(c.char) && !all.find(x => x.char === c.char)) {
-        all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase() });
+        all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase(), kind });
       }
     });
   });
   return all;
 }
 
+// Per-kind romaji pools for multiple-choice distractors.
 function collectRomaji() {
-  const set = new Set();
-  state.contentSets.forEach(s => (s.characters || []).forEach(c => {
-    if (c.romaji) set.add(c.romaji.toLowerCase());
-  }));
-  return [...set];
+  const pools = { kana: new Set(), vocab: new Set() };
+  state.contentSets.forEach(s => {
+    const kind = setKind(s);
+    (s.characters || []).forEach(c => {
+      if (c.romaji) pools[kind].add(c.romaji.toLowerCase());
+    });
+  });
+  return { kana: [...pools.kana], vocab: [...pools.vocab] };
 }
 
 function collectChars() {
   const all = [];
-  state.contentSets.forEach(s => (s.characters || []).forEach(c => {
-    if (!all.find(x => x.char === c.char)) {
-      all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase() });
-    }
-  }));
+  state.contentSets.forEach(s => {
+    const kind = setKind(s);
+    (s.characters || []).forEach(c => {
+      if (!all.find(x => x.char === c.char)) {
+        all.push({ char: c.char, romaji: (c.romaji || '').toLowerCase(), kind });
+      }
+    });
+  });
   return all;
 }
 
@@ -389,6 +406,11 @@ function renderCard() {
       charEl.textContent = g.current.char;
       charEl.classList.remove('listen-prompt');
     }
+    // Vocab words are longer than one glyph — scale the card type down so
+    // ごはん doesn't wrap into a vertical stack (card was sized for 1 kana).
+    const len = (g.practice === 'listen' && !g.revealed) ? 1 : String(g.current.char).length;
+    charEl.classList.toggle('is-word', len > 1);
+    charEl.classList.toggle('is-long-word', len > 5);
   }
   if (card) {
     card.classList.remove('flip-in', 'correct', 'wrong');
@@ -436,20 +458,33 @@ function renderInput() {
 }
 
 function makeChoices() {
+  const kind = g.current.kind || 'kana';
   if (g.practice === 'listen') {
-    // Exclude distractors that SOUND like the prompt: the question is the
-    // spoken glyph, so a homophone (e.g. katakana ア when the prompt is あ,
-    // both "a") would be an audibly-correct "wrong" answer. Filtering by
-    // romaji is a no-op for a single syllabary (unique romaji per glyph) but
-    // prevents the collision once hiragana + katakana coexist.
-    const pool = g.allChars
-      .filter(c => c.char !== g.current.char && c.romaji !== g.current.romaji)
+    // Distractors come from the SAME content kind as the prompt, and exclude
+    // homophones (katakana ア when the prompt is あ — both "a" — would be an
+    // audibly-correct "wrong" answer). Top up from other kinds only if the
+    // same-kind pool can't fill 3 slots.
+    const sameKind = g.allChars
+      .filter(c => c.kind === kind && c.char !== g.current.char && c.romaji !== g.current.romaji)
       .map(c => c.char);
-    const picks = shuffle(pool).slice(0, 3);
+    let picks = shuffle(sameKind).slice(0, 3);
+    if (picks.length < 3) {
+      const rest = g.allChars
+        .filter(c => c.kind !== kind && c.romaji !== g.current.romaji)
+        .map(c => c.char);
+      picks = picks.concat(shuffle(rest).slice(0, 3 - picks.length));
+    }
     return shuffle([g.current.char, ...picks]);
   }
-  const pool = g.allRomaji.filter(r => r !== g.current.romaji);
-  const picks = shuffle(pool).slice(0, 3);
+  // Read mode: romaji distractors from the same kind (kana readings for kana,
+  // words for words), topped up cross-kind only if short.
+  const sameKind = (g.allRomaji[kind] || []).filter(r => r !== g.current.romaji);
+  let picks = shuffle(sameKind).slice(0, 3);
+  if (picks.length < 3) {
+    const other = kind === 'kana' ? 'vocab' : 'kana';
+    const rest = (g.allRomaji[other] || []).filter(r => r !== g.current.romaji && !picks.includes(r));
+    picks = picks.concat(shuffle(rest).slice(0, 3 - picks.length));
+  }
   return shuffle([g.current.romaji, ...picks]);
 }
 
@@ -468,7 +503,10 @@ function updateSpeakButton() {
 
 function answerMatches(input, romaji) {
   const a = String(input).trim().toLowerCase().replace(/\s+/g, '');
-  const r = String(romaji).trim().toLowerCase();
+  // Strip whitespace from the TARGET too: vocab romaji can contain spaces
+  // ("dou itashimashite") and the input side is space-stripped, so a spaced
+  // target would otherwise be unanswerable in typing mode.
+  const r = String(romaji).trim().toLowerCase().replace(/\s+/g, '');
   if (a === r) return true;
   return (ROMAJI_ALT[r] || []).includes(a);
 }
