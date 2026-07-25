@@ -1,0 +1,202 @@
+[
+ {
+  "n": 1,
+  "key": "vocab:food",
+  "group": "edited"
+ },
+ {
+  "n": 2,
+  "key": "vocab:school",
+  "group": "edited"
+ },
+ {
+  "n": 3,
+  "key": "vocab:greetings",
+  "group": "keep"
+ },
+ {
+  "n": 4,
+  "key": "vocab:places",
+  "group": "edited"
+ },
+ {
+  "n": 5,
+  "key": "vocab:verbs",
+  "group": "edited"
+ },
+ {
+  "n": 6,
+  "key": "vocab:social_verbs",
+  "group": "edited"
+ },
+ {
+  "n": 7,
+  "key": "vocab:family",
+  "group": "edited"
+ },
+ {
+  "n": 8,
+  "key": "katakana:01",
+  "group": "edited"
+ },
+ {
+  "n": 9,
+  "key": "katakana:04",
+  "group": "keep"
+ },
+ {
+  "n": 10,
+  "key": "katakana:05",
+  "group": "edited"
+ },
+ {
+  "n": 11,
+  "key": "katakana:07",
+  "group": "edited"
+ },
+ {
+  "n": 12,
+  "key": "katakana:10",
+  "group": "keep"
+ },
+ {
+  "n": 13,
+  "key": "katakana:11",
+  "group": "edited"
+ },
+ {
+  "n": 14,
+  "key": "katakana:13",
+  "group": "keep"
+ },
+ {
+  "n": 15,
+  "key": "katakana:14",
+  "group": "edited"
+ },
+ {
+  "n": 16,
+  "key": "katakana:16",
+  "group": "edited"
+ },
+ {
+  "n": 17,
+  "key": "vocab:home_verbs",
+  "group": "edited"
+ },
+ {
+  "n": 18,
+  "key": "vocab:transport",
+  "group": "edited"
+ },
+ {
+  "n": 19,
+  "key": "vocab:colors",
+  "group": "keep"
+ },
+ {
+  "n": 20,
+  "key": "vocab:adverbs",
+  "group": "edited"
+ },
+ {
+  "n": 21,
+  "key": "vocab:adjectives",
+  "group": "keep"
+ },
+ {
+  "n": 22,
+  "key": "vocab:demonstratives",
+  "group": "edited"
+ },
+ {
+  "n": 23,
+  "key": "vocab:numbers",
+  "group": "keep"
+ },
+ {
+  "n": 24,
+  "key": "vocab:nature",
+  "group": "edited"
+ },
+ {
+  "n": 25,
+  "key": "vocab:counters",
+  "group": "edited"
+ },
+ {
+  "n": 26,
+  "key": "vocab:body",
+  "group": "edited"
+ },
+ {
+  "n": 27,
+  "key": "hiragana:01",
+  "group": "edited"
+ },
+ {
+  "n": 28,
+  "key": "hiragana:02",
+  "group": "edited"
+ },
+ {
+  "n": 29,
+  "key": "hiragana:03",
+  "group": "keep"
+ },
+ {
+  "n": 30,
+  "key": "hiragana:04",
+  "group": "keep"
+ },
+ {
+  "n": 31,
+  "key": "hiragana:05",
+  "group": "keep"
+ },
+ {
+  "n": 32,
+  "key": "hiragana:06",
+  "group": "edited"
+ },
+ {
+  "n": 33,
+  "key": "hiragana:09",
+  "group": "edited"
+ },
+ {
+  "n": 34,
+  "key": "hiragana:10",
+  "group": "edited"
+ },
+ {
+  "n": 35,
+  "key": "hiragana:11",
+  "group": "edited"
+ },
+ {
+  "n": 36,
+  "key": "hiragana:12",
+  "group": "edited"
+ },
+ {
+  "n": 37,
+  "key": "hiragana:13",
+  "group": "edited"
+ },
+ {
+  "n": 38,
+  "key": "hiragana:14",
+  "group": "edited"
+ },
+ {
+  "n": 39,
+  "key": "hiragana:15",
+  "group": "edited"
+ },
+ {
+  "n": 40,
+  "key": "hiragana:16",
+  "group": "edited"
+ }
+]

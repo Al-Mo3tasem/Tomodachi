@@ -1,0 +1,2316 @@
+{
+ "version": 2,
+ "generated": "2026-07-24",
+ "rulings": "lead review 2026-07-24: counters split late; greetings split by dakuten; food→pos5; n5_v_104 retired; ゼロ deferred with counters; collision groups machine-readable",
+ "retired": [
+  "n5_v_104_time_concept"
+ ],
+ "flags": {
+  "na_adjectives": [
+   "n5_v_058_pretty_clean"
+  ],
+  "gloss_fix_target": {
+   "n5_v_003_tall": "tall; expensive (antonym pair with 安い)"
+  },
+  "key_oddities_to_confirm": [
+   "n5_v_079_watch_over (見せる = to show)",
+   "n5_v_022_kind_or_easy (易しい = easy)"
+  ]
+ },
+ "collisionGroups": [
+  {
+   "reading": "いる",
+   "keys": [
+    "n5_v_001_be_animate",
+    "n5_v_082_need"
+   ]
+  },
+  {
+   "reading": "とる",
+   "keys": [
+    "n5_v_037_take",
+    "n5_v_074_take_photo"
+   ]
+  },
+  {
+   "reading": "ほん",
+   "keys": [
+    "n5_v_053_counter_long",
+    "n5_v_055_book"
+   ]
+  },
+  {
+   "reading": "かい",
+   "keys": [
+    "n5_v_057_counter_floor",
+    "n5_v_058_counter_times"
+   ]
+  },
+  {
+   "reading": "はな",
+   "keys": [
+    "n5_v_090_nose",
+    "n5_v_116_flower"
+   ]
+  },
+  {
+   "reading": "つき",
+   "keys": [
+    "n5_v_102_month",
+    "n5_v_111_moon"
+   ]
+  }
+ ],
+ "clusters": [
+  {
+   "cluster": "Greetings 1 (dakuten-free)",
+   "proposedSlot": 11,
+   "items": [
+    {
+     "key": "n5_v_035_hello",
+     "reading": "こんにちは",
+     "en": "hello",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_036_good_morning",
+     "reading": "おはよう",
+     "en": "good morning",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_041_excuse_me",
+     "reading": "すみません",
+     "en": "excuse me",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_049_yes",
+     "reading": "はい",
+     "en": "yes",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_050_no",
+     "reading": "いいえ",
+     "en": "no",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_039_goodbye",
+     "reading": "さようなら",
+     "en": "goodbye",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_038_goodnight",
+     "reading": "おやすみ",
+     "en": "good night",
+     "earliestFeasibleLesson": 8
+    }
+   ]
+  },
+  {
+   "cluster": "Greetings 2",
+   "proposedSlot": 15,
+   "note": "requires dakuten rows (≤L14); ありがとう correctly here — contains が (reviewer list had it dakuten-free in error)",
+   "items": [
+    {
+     "key": "n5_v_037_good_evening",
+     "reading": "こんばんは",
+     "en": "good evening",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_040_thank_you",
+     "reading": "ありがとう",
+     "en": "thank you",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_043_please",
+     "reading": "おねがいします",
+     "en": "please",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_044_nice_to_meet",
+     "reading": "はじめまして",
+     "en": "nice to meet you",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_042_no_worries",
+     "reading": "どういたしまして",
+     "en": "you are welcome",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_045_ill_eat",
+     "reading": "いただきます",
+     "en": "said before eating",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_046_done_eating",
+     "reading": "ごちそうさま",
+     "en": "said after eating",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_048_im_home",
+     "reading": "ただいま",
+     "en": "I am home",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_047_welcome_home",
+     "reading": "おかえりなさい",
+     "en": "welcome home",
+     "earliestFeasibleLesson": 9
+    }
+   ]
+  },
+  {
+   "cluster": "Numbers 1-10 + big numbers",
+   "proposedSlot": 19,
+   "items": [
+    {
+     "key": "n5_v_061_number_1",
+     "reading": "いち",
+     "en": "one",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_062_number_2",
+     "reading": "に",
+     "en": "two",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_063_number_3",
+     "reading": "さん",
+     "en": "three",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_064_number_4",
+     "reading": "よん",
+     "en": "four",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_065_number_5",
+     "reading": "ご",
+     "en": "five",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_066_number_6",
+     "reading": "ろく",
+     "en": "six",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_067_number_7",
+     "reading": "なな",
+     "en": "seven",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_068_number_8",
+     "reading": "はち",
+     "en": "eight",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_069_number_9",
+     "reading": "きゅう",
+     "en": "nine",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_070_number_10",
+     "reading": "じゅう",
+     "en": "ten",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_071_number_100",
+     "reading": "ひゃく",
+     "en": "hundred",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_072_number_1000",
+     "reading": "せん",
+     "en": "thousand",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_073_number_10000",
+     "reading": "まん",
+     "en": "ten thousand",
+     "earliestFeasibleLesson": 10
+    }
+   ]
+  },
+  {
+   "cluster": "Demonstratives & question words",
+   "proposedSlot": 22,
+   "items": [
+    {
+     "key": "n5_v_015_this_thing",
+     "reading": "これ",
+     "en": "this",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_016_that_thing",
+     "reading": "それ",
+     "en": "that",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_017_that_thing_far",
+     "reading": "あれ",
+     "en": "that over there",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_018_which_thing",
+     "reading": "どれ",
+     "en": "which one",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_019_this_adj",
+     "reading": "この",
+     "en": "this",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_020_that_adj",
+     "reading": "その",
+     "en": "that",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_021_that_adj_far",
+     "reading": "あの",
+     "en": "that over there",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_022_which_adj",
+     "reading": "どの",
+     "en": "which",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_023_here",
+     "reading": "ここ",
+     "en": "here",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_024_there",
+     "reading": "そこ",
+     "en": "there",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_025_over_there",
+     "reading": "あそこ",
+     "en": "over there",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_026_where",
+     "reading": "どこ",
+     "en": "where",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_027_what",
+     "reading": "なに",
+     "en": "what",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_028_who",
+     "reading": "だれ",
+     "en": "who",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_029_when",
+     "reading": "いつ",
+     "en": "when",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_031_how",
+     "reading": "どう",
+     "en": "how",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_030_why",
+     "reading": "どうして",
+     "en": "why",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_034_which_of_two",
+     "reading": "どちら",
+     "en": "which one",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_032_how_much",
+     "reading": "いくら",
+     "en": "how much",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_033_how_many",
+     "reading": "いくつ",
+     "en": "how many",
+     "earliestFeasibleLesson": 4
+    }
+   ]
+  },
+  {
+   "cluster": "Adjectives 1 (basic)",
+   "proposedSlot": 24,
+   "note": "きれい is the lone NA-adjective — flagged; if adjacent grammar teaches i-adj behavior, call it out or defer to Adjectives 2",
+   "items": [
+    {
+     "key": "n5_v_001_big",
+     "reading": "おおきい",
+     "en": "big",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_002_small",
+     "reading": "ちいさい",
+     "en": "small",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_003_tall",
+     "reading": "たかい",
+     "en": "tall",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_004_cheap",
+     "reading": "やすい",
+     "en": "cheap",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_005_new",
+     "reading": "あたらしい",
+     "en": "new",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_006_old",
+     "reading": "ふるい",
+     "en": "old",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_016_good",
+     "reading": "いい",
+     "en": "good",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_017_bad",
+     "reading": "わるい",
+     "en": "bad",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_007_long",
+     "reading": "ながい",
+     "en": "long",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_008_short",
+     "reading": "みじかい",
+     "en": "short",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_009_early",
+     "reading": "はやい",
+     "en": "early",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_010_late",
+     "reading": "おそい",
+     "en": "late",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_025_many",
+     "reading": "おおい",
+     "en": "many",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_026_few",
+     "reading": "すくない",
+     "en": "few",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_021_difficult",
+     "reading": "むずかしい",
+     "en": "difficult",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_022_kind_or_easy",
+     "reading": "やさしい",
+     "en": "easy",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_019_interesting",
+     "reading": "おもしろい",
+     "en": "interesting",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_020_boring",
+     "reading": "つまらない",
+     "en": "boring",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_024_cute",
+     "reading": "かわいい",
+     "en": "cute",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_058_pretty_clean",
+     "reading": "きれい",
+     "en": "pretty",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_027_strong",
+     "reading": "つよい",
+     "en": "strong",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_028_weak",
+     "reading": "よわい",
+     "en": "weak",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_029_bright",
+     "reading": "あかるい",
+     "en": "bright",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_030_dark",
+     "reading": "くらい",
+     "en": "dark",
+     "earliestFeasibleLesson": 9
+    }
+   ]
+  },
+  {
+   "cluster": "Food & drink",
+   "proposedSlot": 27,
+   "note": "moved to position 5 per ruling (objects before を); katakana loanwords inside will defer per validator",
+   "items": [
+    {
+     "key": "n5_v_041_water",
+     "reading": "みず",
+     "en": "water",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_042_tea",
+     "reading": "おちゃ",
+     "en": "tea",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_045_rice_cooked",
+     "reading": "ごはん",
+     "en": "cooked rice",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_046_bread",
+     "reading": "パン",
+     "en": "bread",
+     "earliestFeasibleLesson": 52,
+     "deferToLesson": 52,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_039_food",
+     "reading": "たべもの",
+     "en": "food",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_040_drink",
+     "reading": "のみもの",
+     "en": "drink",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_043_coffee",
+     "reading": "コーヒー",
+     "en": "coffee",
+     "earliestFeasibleLesson": 38,
+     "deferToLesson": 38,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_044_milk",
+     "reading": "ぎゅうにゅう",
+     "en": "milk",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_047_fish_food",
+     "reading": "さかな",
+     "en": "fish",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_048_meat",
+     "reading": "にく",
+     "en": "meat",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_051_egg",
+     "reading": "たまご",
+     "en": "egg",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_050_vegetable",
+     "reading": "やさい",
+     "en": "vegetables",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_049_fruit",
+     "reading": "くだもの",
+     "en": "fruit",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_052_breakfast",
+     "reading": "あさごはん",
+     "en": "breakfast",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_053_lunch",
+     "reading": "ひるごはん",
+     "en": "lunch",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_054_dinner",
+     "reading": "ばんごはん",
+     "en": "dinner",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_040_delicious",
+     "reading": "おいしい",
+     "en": "delicious",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_041_tasteless",
+     "reading": "まずい",
+     "en": "bad-tasting",
+     "earliestFeasibleLesson": 12
+    }
+   ]
+  },
+  {
+   "cluster": "Daily verbs 1",
+   "proposedSlot": 30,
+   "items": [
+    {
+     "key": "n5_v_003_do",
+     "reading": "する",
+     "en": "to do",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_005_go",
+     "reading": "いく",
+     "en": "to go",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_004_come",
+     "reading": "くる",
+     "en": "to come",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_006_return_home",
+     "reading": "かえる",
+     "en": "to go home",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_016_eat",
+     "reading": "たべる",
+     "en": "to eat",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_017_drink",
+     "reading": "のむ",
+     "en": "to drink",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_007_see",
+     "reading": "みる",
+     "en": "to see",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_008_hear",
+     "reading": "きく",
+     "en": "to listen",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_009_read",
+     "reading": "よむ",
+     "en": "to read",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_010_write",
+     "reading": "かく",
+     "en": "to write",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_011_speak",
+     "reading": "はなす",
+     "en": "to speak",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_012_say",
+     "reading": "いう",
+     "en": "to say",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_001_be_animate",
+     "reading": "いる",
+     "en": "to exist",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_002_be_inanimate",
+     "reading": "ある",
+     "en": "to exist",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_058_understand",
+     "reading": "わかる",
+     "en": "to understand",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_059_be_able",
+     "reading": "できる",
+     "en": "to be able",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_018_wake_up",
+     "reading": "おきる",
+     "en": "to wake up",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_019_sleep",
+     "reading": "ねる",
+     "en": "to sleep",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_031_buy",
+     "reading": "かう",
+     "en": "to buy",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_053_meet",
+     "reading": "あう",
+     "en": "to meet",
+     "earliestFeasibleLesson": 1
+    }
+   ]
+  },
+  {
+   "cluster": "Time & days",
+   "proposedSlot": 33,
+   "items": [
+    {
+     "key": "n5_v_094_today",
+     "reading": "きょう",
+     "en": "today",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_095_tomorrow",
+     "reading": "あした",
+     "en": "tomorrow",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_096_yesterday",
+     "reading": "きのう",
+     "en": "yesterday",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_097_morning",
+     "reading": "あさ",
+     "en": "morning",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_098_noon",
+     "reading": "ひる",
+     "en": "noon",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_100_night",
+     "reading": "よる",
+     "en": "night",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_099_evening",
+     "reading": "ゆうがた",
+     "en": "evening",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_089_oclock",
+     "reading": "じ",
+     "en": "o'clock",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_087_minute_unit",
+     "reading": "ふん",
+     "en": "minute",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_086_half_past",
+     "reading": "はん",
+     "en": "half past",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_088_hour_unit",
+     "reading": "じかん",
+     "en": "hour",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_101_week",
+     "reading": "しゅう",
+     "en": "week",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_102_month",
+     "reading": "つき",
+     "en": "month",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_103_year",
+     "reading": "とし",
+     "en": "year",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_075_day_monday",
+     "reading": "げつようび",
+     "en": "Monday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_076_day_tuesday",
+     "reading": "かようび",
+     "en": "Tuesday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_077_day_wednesday",
+     "reading": "すいようび",
+     "en": "Wednesday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_078_day_thursday",
+     "reading": "もくようび",
+     "en": "Thursday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_079_day_friday",
+     "reading": "きんようび",
+     "en": "Friday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_080_day_saturday",
+     "reading": "どようび",
+     "en": "Saturday",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_081_day_sunday",
+     "reading": "にちようび",
+     "en": "Sunday",
+     "earliestFeasibleLesson": 14
+    }
+   ]
+  },
+  {
+   "cluster": "Places",
+   "proposedSlot": 36,
+   "items": [
+    {
+     "key": "n5_v_021_house",
+     "reading": "いえ",
+     "en": "house",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_022_school",
+     "reading": "がっこう",
+     "en": "school",
+     "earliestFeasibleLesson": 18
+    },
+    {
+     "key": "n5_v_025_station",
+     "reading": "えき",
+     "en": "station",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_029_shop",
+     "reading": "みせ",
+     "en": "shop",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_037_room",
+     "reading": "へや",
+     "en": "room",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_038_bathroom",
+     "reading": "トイレ",
+     "en": "bathroom",
+     "earliestFeasibleLesson": 46,
+     "deferToLesson": 46,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_030_restaurant",
+     "reading": "レストラン",
+     "en": "restaurant",
+     "earliestFeasibleLesson": 48,
+     "deferToLesson": 48,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_031_cafe",
+     "reading": "きっさてん",
+     "en": "cafe",
+     "earliestFeasibleLesson": 18
+    },
+    {
+     "key": "n5_v_026_library",
+     "reading": "としょかん",
+     "en": "library",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_023_university",
+     "reading": "だいがく",
+     "en": "university",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_024_hospital",
+     "reading": "びょういん",
+     "en": "hospital",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_028_bank",
+     "reading": "ぎんこう",
+     "en": "bank",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_027_post_office",
+     "reading": "ゆうびんきょく",
+     "en": "post office",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_032_hotel",
+     "reading": "ホテル",
+     "en": "hotel",
+     "earliestFeasibleLesson": 46,
+     "deferToLesson": 46,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_036_park",
+     "reading": "こうえん",
+     "en": "park",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_034_city",
+     "reading": "まち",
+     "en": "town",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_035_road",
+     "reading": "みち",
+     "en": "road",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_033_country",
+     "reading": "くに",
+     "en": "country",
+     "earliestFeasibleLesson": 5
+    }
+   ]
+  },
+  {
+   "cluster": "Counters + zero",
+   "proposedSlot": 41,
+   "note": "Lead ruling: counters are kanji-heavy + rendaku-laden — scheduled adjacent to kanji lesson 1 (numbers) with a counters grammar note. ゼロ deferred here (katakana reading; れい alternative rejected to keep audio valid).",
+   "items": [
+    {
+     "key": "n5_v_051_counter_generic",
+     "reading": "こ",
+     "en": "counter for small objects",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_052_counter_people",
+     "reading": "にん",
+     "en": "counter for people",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_053_counter_long",
+     "reading": "ほん",
+     "en": "counter for long objects",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_054_counter_flat",
+     "reading": "まい",
+     "en": "counter for flat objects",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_055_counter_animal",
+     "reading": "ひき",
+     "en": "counter for small animals",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_056_counter_machine",
+     "reading": "だい",
+     "en": "counter for machines",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_057_counter_floor",
+     "reading": "かい",
+     "en": "counter for floors",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_058_counter_times",
+     "reading": "かい",
+     "en": "counter for times",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_059_counter_age",
+     "reading": "さい",
+     "en": "counter for age",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_060_counter_book",
+     "reading": "さつ",
+     "en": "counter for books",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_074_number_0",
+     "reading": "ゼロ",
+     "en": "zero",
+     "earliestFeasibleLesson": 50,
+     "deferToLesson": 50,
+     "katakanaAnchor": true
+    }
+   ]
+  },
+  {
+   "cluster": "Family & people",
+   "proposedSlot": 43,
+   "items": [
+    {
+     "key": "n5_v_020_family",
+     "reading": "かぞく",
+     "en": "family",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_012_father_own",
+     "reading": "ちち",
+     "en": "father",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_013_mother_own",
+     "reading": "はは",
+     "en": "mother",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_014_father_polite",
+     "reading": "おとうさん",
+     "en": "father",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_015_mother_polite",
+     "reading": "おかあさん",
+     "en": "mother",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_016_older_brother",
+     "reading": "おにいさん",
+     "en": "older brother",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_017_older_sister",
+     "reading": "おねえさん",
+     "en": "older sister",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_018_younger_brother",
+     "reading": "おとうと",
+     "en": "younger brother",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_019_younger_sister",
+     "reading": "いもうと",
+     "en": "younger sister",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_001_person",
+     "reading": "ひと",
+     "en": "person",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_004_child",
+     "reading": "こども",
+     "en": "child",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_002_man",
+     "reading": "おとこのひと",
+     "en": "man",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_003_woman",
+     "reading": "おんなのひと",
+     "en": "woman",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_005_boy",
+     "reading": "おとこのこ",
+     "en": "boy",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_006_girl",
+     "reading": "おんなのこ",
+     "en": "girl",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_007_friend",
+     "reading": "ともだち",
+     "en": "friend",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_008_teacher",
+     "reading": "せんせい",
+     "en": "teacher",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_009_student",
+     "reading": "がくせい",
+     "en": "student",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_010_doctor",
+     "reading": "いしゃ",
+     "en": "doctor",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_011_name",
+     "reading": "なまえ",
+     "en": "name",
+     "earliestFeasibleLesson": 7
+    }
+   ]
+  },
+  {
+   "cluster": "Around town: transport & motion",
+   "proposedSlot": 47,
+   "items": [
+    {
+     "key": "n5_v_075_car",
+     "reading": "くるま",
+     "en": "car",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_077_train",
+     "reading": "でんしゃ",
+     "en": "train",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_078_bus",
+     "reading": "バス",
+     "en": "bus",
+     "earliestFeasibleLesson": 50,
+     "deferToLesson": 50,
+     "katakanaAnchor": true
+    },
+    {
+     "key": "n5_v_076_bicycle",
+     "reading": "じてんしゃ",
+     "en": "bicycle",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_079_airplane",
+     "reading": "ひこうき",
+     "en": "airplane",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_069_ride",
+     "reading": "のる",
+     "en": "to ride",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_070_get_off",
+     "reading": "おりる",
+     "en": "to get off",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_022_walk",
+     "reading": "あるく",
+     "en": "to walk",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_023_run",
+     "reading": "はしる",
+     "en": "to run",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_071_arrive",
+     "reading": "つく",
+     "en": "to arrive",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_072_cross",
+     "reading": "わたる",
+     "en": "to cross",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_073_turn",
+     "reading": "まがる",
+     "en": "to turn",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_052_wait",
+     "reading": "まつ",
+     "en": "to wait",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_024_swim",
+     "reading": "およぐ",
+     "en": "to swim",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_025_fly",
+     "reading": "とぶ",
+     "en": "to fly",
+     "earliestFeasibleLesson": 14
+    }
+   ]
+  },
+  {
+   "cluster": "Body & feelings",
+   "proposedSlot": 52,
+   "items": [
+    {
+     "key": "n5_v_085_head",
+     "reading": "あたま",
+     "en": "head",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_086_face",
+     "reading": "かお",
+     "en": "face",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_087_eye",
+     "reading": "め",
+     "en": "eye",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_088_ear",
+     "reading": "みみ",
+     "en": "ear",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_089_mouth",
+     "reading": "くち",
+     "en": "mouth",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_090_nose",
+     "reading": "はな",
+     "en": "nose",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_091_hand",
+     "reading": "て",
+     "en": "hand",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_092_foot",
+     "reading": "あし",
+     "en": "foot",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_093_body",
+     "reading": "からだ",
+     "en": "body",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_048_healthy",
+     "reading": "げんき",
+     "en": "energetic",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_044_liked",
+     "reading": "すき",
+     "en": "liked",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_045_disliked",
+     "reading": "きらい",
+     "en": "disliked",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_018_fun",
+     "reading": "たのしい",
+     "en": "fun",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_036_painful",
+     "reading": "いたい",
+     "en": "painful",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_054_ok",
+     "reading": "だいじょうぶ",
+     "en": "alright",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_078_laugh",
+     "reading": "わらう",
+     "en": "to laugh",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_077_cry",
+     "reading": "なく",
+     "en": "to cry",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_056_think",
+     "reading": "おもう",
+     "en": "to think",
+     "earliestFeasibleLesson": 7
+    }
+   ]
+  },
+  {
+   "cluster": "Weather & nature",
+   "proposedSlot": 56,
+   "items": [
+    {
+     "key": "n5_v_105_weather",
+     "reading": "てんき",
+     "en": "weather",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_106_rain",
+     "reading": "あめ",
+     "en": "rain",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_107_snow",
+     "reading": "ゆき",
+     "en": "snow",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_108_wind",
+     "reading": "かぜ",
+     "en": "wind",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_109_sky",
+     "reading": "そら",
+     "en": "sky",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_110_sun",
+     "reading": "たいよう",
+     "en": "sun",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_111_moon",
+     "reading": "つき",
+     "en": "moon",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_112_mountain",
+     "reading": "やま",
+     "en": "mountain",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_113_river",
+     "reading": "かわ",
+     "en": "river",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_114_sea",
+     "reading": "うみ",
+     "en": "sea",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_115_tree",
+     "reading": "き",
+     "en": "tree",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_116_flower",
+     "reading": "はな",
+     "en": "flower",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_011_hot_temp",
+     "reading": "あつい",
+     "en": "hot",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_012_cold_weather",
+     "reading": "さむい",
+     "en": "cold",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_014_warm",
+     "reading": "あたたかい",
+     "en": "warm",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_015_cool",
+     "reading": "すずしい",
+     "en": "cool",
+     "earliestFeasibleLesson": 12
+    }
+   ]
+  },
+  {
+   "cluster": "Adverbs & connectors",
+   "proposedSlot": 60,
+   "items": [
+    {
+     "key": "n5_v_001_very",
+     "reading": "とても",
+     "en": "very",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_003_a_little",
+     "reading": "すこし",
+     "en": "a little",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_004_a_bit",
+     "reading": "ちょっと",
+     "en": "a bit",
+     "earliestFeasibleLesson": 18
+    },
+    {
+     "key": "n5_v_005_lots",
+     "reading": "たくさん",
+     "en": "a lot",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_006_mostly",
+     "reading": "よく",
+     "en": "often",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_007_sometimes",
+     "reading": "ときどき",
+     "en": "sometimes",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_008_always",
+     "reading": "いつも",
+     "en": "always",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_009_often",
+     "reading": "たいてい",
+     "en": "usually",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_010_not_much",
+     "reading": "あまり",
+     "en": "not much",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_002_quite",
+     "reading": "なかなか",
+     "en": "quite",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_013_really",
+     "reading": "ほんとうに",
+     "en": "really",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_011_together",
+     "reading": "いっしょに",
+     "en": "together",
+     "earliestFeasibleLesson": 18
+    },
+    {
+     "key": "n5_v_012_slowly",
+     "reading": "ゆっくり",
+     "en": "slowly",
+     "earliestFeasibleLesson": 18
+    },
+    {
+     "key": "n5_v_014_quickly",
+     "reading": "すぐ",
+     "en": "right away",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_083_and_also",
+     "reading": "そして",
+     "en": "and",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_082_and_then",
+     "reading": "それから",
+     "en": "and then",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_084_but",
+     "reading": "でも",
+     "en": "but",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_085_so",
+     "reading": "だから",
+     "en": "so",
+     "earliestFeasibleLesson": 14
+    }
+   ]
+  },
+  {
+   "cluster": "Daily verbs 2: home & routine",
+   "proposedSlot": 64,
+   "items": [
+    {
+     "key": "n5_v_020_stand",
+     "reading": "たつ",
+     "en": "to stand up",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_021_sit",
+     "reading": "すわる",
+     "en": "to sit",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_042_open_tr",
+     "reading": "あける",
+     "en": "to open",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_043_close_tr",
+     "reading": "しめる",
+     "en": "to close",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_044_turn_on",
+     "reading": "つける",
+     "en": "to turn on",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_045_turn_off",
+     "reading": "けす",
+     "en": "to turn off",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_048_enter",
+     "reading": "はいる",
+     "en": "to enter",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_049_exit",
+     "reading": "でる",
+     "en": "to leave",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_046_put_in",
+     "reading": "いれる",
+     "en": "to put in",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_047_take_out",
+     "reading": "だす",
+     "en": "to take out",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_035_use",
+     "reading": "つかう",
+     "en": "to use",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_036_hold",
+     "reading": "もつ",
+     "en": "to hold",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_037_take",
+     "reading": "とる",
+     "en": "to take",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_034_make",
+     "reading": "つくる",
+     "en": "to make",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_065_wash",
+     "reading": "あらう",
+     "en": "to wash",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_062_wear_upper",
+     "reading": "きる",
+     "en": "to wear",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_063_wear_lower",
+     "reading": "はく",
+     "en": "to wear",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_064_take_off",
+     "reading": "ぬぐ",
+     "en": "to take off",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_050_start_tr",
+     "reading": "はじめる",
+     "en": "to start",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_051_end_intr",
+     "reading": "おわる",
+     "en": "to end",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_066_clean",
+     "reading": "そうじする",
+     "en": "to clean",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_067_laundry",
+     "reading": "せんたくする",
+     "en": "to do laundry",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_068_cook",
+     "reading": "りょうりする",
+     "en": "to cook",
+     "earliestFeasibleLesson": 17
+    }
+   ]
+  },
+  {
+   "cluster": "Everyday objects: home & tech",
+   "proposedSlot": 68,
+   "items": [
+    {
+     "key": "n5_v_055_book",
+     "reading": "ほん",
+     "en": "book",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_057_notebook",
+     "reading": "ノート",
+     "en": "notebook",
+     "earliestFeasibleLesson": 35
+    },
+    {
+     "key": "n5_v_058_pen",
+     "reading": "ペン",
+     "en": "pen",
+     "earliestFeasibleLesson": 52
+    },
+    {
+     "key": "n5_v_059_pencil",
+     "reading": "えんぴつ",
+     "en": "pencil",
+     "earliestFeasibleLesson": 16
+    },
+    {
+     "key": "n5_v_062_paper",
+     "reading": "かみ",
+     "en": "paper",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_056_newspaper",
+     "reading": "しんぶん",
+     "en": "newspaper",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_061_letter_mail",
+     "reading": "てがみ",
+     "en": "letter",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_063_picture",
+     "reading": "え",
+     "en": "picture",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_064_photo",
+     "reading": "しゃしん",
+     "en": "photo",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_065_clock",
+     "reading": "とけい",
+     "en": "clock",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_066_umbrella",
+     "reading": "かさ",
+     "en": "umbrella",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_067_bag",
+     "reading": "カバン",
+     "en": "bag",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_068_key",
+     "reading": "かぎ",
+     "en": "key",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_069_money",
+     "reading": "おかね",
+     "en": "money",
+     "earliestFeasibleLesson": 5
+    },
+    {
+     "key": "n5_v_070_chair",
+     "reading": "いす",
+     "en": "chair",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_071_table",
+     "reading": "つくえ",
+     "en": "desk",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_072_bed",
+     "reading": "ベッド",
+     "en": "bed",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_073_window",
+     "reading": "まど",
+     "en": "window",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_074_door",
+     "reading": "ドア",
+     "en": "door",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_080_telephone",
+     "reading": "でんわ",
+     "en": "telephone",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_082_television",
+     "reading": "テレビ",
+     "en": "television",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_083_radio",
+     "reading": "ラジオ",
+     "en": "radio",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_084_camera",
+     "reading": "カメラ",
+     "en": "camera",
+     "earliestFeasibleLesson": 46
+    },
+    {
+     "key": "n5_v_081_computer",
+     "reading": "コンピューター",
+     "en": "computer",
+     "earliestFeasibleLesson": 54
+    }
+   ]
+  },
+  {
+   "cluster": "School & study",
+   "proposedSlot": 72,
+   "items": [
+    {
+     "key": "n5_v_119_japanese_lang",
+     "reading": "にほんご",
+     "en": "Japanese",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_118_english_lang",
+     "reading": "えいご",
+     "en": "English",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_120_arabic_lang",
+     "reading": "アラビアご",
+     "en": "Arabic",
+     "earliestFeasibleLesson": 50
+    },
+    {
+     "key": "n5_v_117_language",
+     "reading": "ことば",
+     "en": "language",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_015_study",
+     "reading": "べんきょうする",
+     "en": "to study",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_013_teach",
+     "reading": "おしえる",
+     "en": "to teach",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_014_learn",
+     "reading": "ならう",
+     "en": "to learn",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_029_practice",
+     "reading": "れんしゅうする",
+     "en": "to practice",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_060_remember",
+     "reading": "おぼえる",
+     "en": "to remember",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_061_forget",
+     "reading": "わすれる",
+     "en": "to forget",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_057_know",
+     "reading": "しる",
+     "en": "to know",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_121_question",
+     "reading": "しつもん",
+     "en": "question",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_081_ask_question",
+     "reading": "しつもんする",
+     "en": "to ask a question",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_055_answer",
+     "reading": "こたえる",
+     "en": "to answer",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_080_explain",
+     "reading": "せつめいする",
+     "en": "to explain",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_122_homework",
+     "reading": "しゅくだい",
+     "en": "homework",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_123_test",
+     "reading": "テスト",
+     "en": "test",
+     "earliestFeasibleLesson": 31
+    },
+    {
+     "key": "n5_v_060_dictionary",
+     "reading": "じしょ",
+     "en": "dictionary",
+     "earliestFeasibleLesson": 17
+    }
+   ]
+  },
+  {
+   "cluster": "Daily verbs 3: work, play & exchange",
+   "proposedSlot": 76,
+   "items": [
+    {
+     "key": "n5_v_026_work",
+     "reading": "はたらく",
+     "en": "to work",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_027_rest",
+     "reading": "やすむ",
+     "en": "to rest",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_028_play",
+     "reading": "あそぶ",
+     "en": "to play",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_030_travel",
+     "reading": "りょこうする",
+     "en": "to travel",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_032_sell",
+     "reading": "うる",
+     "en": "to sell",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_033_pay",
+     "reading": "はらう",
+     "en": "to pay",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_038_give",
+     "reading": "あげる",
+     "en": "to give",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_039_receive",
+     "reading": "もらう",
+     "en": "to receive",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_040_lend",
+     "reading": "かす",
+     "en": "to lend",
+     "earliestFeasibleLesson": 3
+    },
+    {
+     "key": "n5_v_041_borrow",
+     "reading": "かりる",
+     "en": "to borrow",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_054_call",
+     "reading": "よぶ",
+     "en": "to call",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_079_watch_over",
+     "reading": "みせる",
+     "en": "to show",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_074_take_photo",
+     "reading": "とる",
+     "en": "to take a photo",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_075_sing",
+     "reading": "うたう",
+     "en": "to sing",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_076_dance",
+     "reading": "おどる",
+     "en": "to dance",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_082_need",
+     "reading": "いる",
+     "en": "to need",
+     "earliestFeasibleLesson": 9
+    }
+   ]
+  },
+  {
+   "cluster": "Adjectives 2: colors & qualities",
+   "proposedSlot": 80,
+   "items": [
+    {
+     "key": "n5_v_031_red",
+     "reading": "あかい",
+     "en": "red",
+     "earliestFeasibleLesson": 2
+    },
+    {
+     "key": "n5_v_032_blue",
+     "reading": "あおい",
+     "en": "blue",
+     "earliestFeasibleLesson": 1
+    },
+    {
+     "key": "n5_v_033_white",
+     "reading": "しろい",
+     "en": "white",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_034_black",
+     "reading": "くろい",
+     "en": "black",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_035_yellow",
+     "reading": "きいろい",
+     "en": "yellow",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_042_far",
+     "reading": "とおい",
+     "en": "far",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_043_near",
+     "reading": "ちかい",
+     "en": "near",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_037_heavy",
+     "reading": "おもい",
+     "en": "heavy",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_038_light_weight",
+     "reading": "かるい",
+     "en": "light",
+     "earliestFeasibleLesson": 9
+    },
+    {
+     "key": "n5_v_013_cold_touch",
+     "reading": "つめたい",
+     "en": "cold",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_039_busy",
+     "reading": "いそがしい",
+     "en": "busy",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_059_free_time",
+     "reading": "ひま",
+     "en": "free",
+     "earliestFeasibleLesson": 7
+    },
+    {
+     "key": "n5_v_051_quiet",
+     "reading": "しずか",
+     "en": "quiet",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_052_lively",
+     "reading": "にぎやか",
+     "en": "lively",
+     "earliestFeasibleLesson": 12
+    },
+    {
+     "key": "n5_v_046_skilled",
+     "reading": "じょうず",
+     "en": "skilled",
+     "earliestFeasibleLesson": 17
+    },
+    {
+     "key": "n5_v_047_unskilled",
+     "reading": "へた",
+     "en": "unskilled",
+     "earliestFeasibleLesson": 6
+    },
+    {
+     "key": "n5_v_050_kind_person",
+     "reading": "しんせつ",
+     "en": "kind",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_049_famous",
+     "reading": "ゆうめい",
+     "en": "famous",
+     "earliestFeasibleLesson": 8
+    },
+    {
+     "key": "n5_v_053_simple",
+     "reading": "かんたん",
+     "en": "easy",
+     "earliestFeasibleLesson": 10
+    },
+    {
+     "key": "n5_v_055_important",
+     "reading": "たいせつ",
+     "en": "important",
+     "earliestFeasibleLesson": 4
+    },
+    {
+     "key": "n5_v_056_convenient",
+     "reading": "べんり",
+     "en": "convenient",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_057_inconvenient",
+     "reading": "ふべん",
+     "en": "inconvenient",
+     "earliestFeasibleLesson": 14
+    },
+    {
+     "key": "n5_v_023_beautiful_i",
+     "reading": "うつくしい",
+     "en": "beautiful",
+     "earliestFeasibleLesson": 4
+    }
+   ]
+  }
+ ]
+}

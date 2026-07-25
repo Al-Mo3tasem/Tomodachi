@@ -1,0 +1,115 @@
+{
+  "_note": "Katakana track copy (16 lessons). AR revised per native-style review 2026-07-24 (same systemic fixes as hiragana file). Style rule: max 2 sentences, Arabic-speaker-specific over generic encouragement.",
+  "katakana:01": {
+    "romaji": ["a", "i", "u", "e", "o"],
+    "displayName_en": "Katakana ア Row — Vowels",
+    "displayName_ar": "الكاتاكانا — صف «ア» (أصوات العِلّة)",
+    "introCopy_en": "This is Japan's second script. Katakana spells the same sounds as hiragana but with sharper, more angular shapes, and it is used for foreign and loan words. Start with the vowels: ア, イ, ウ, エ, オ.",
+    "introCopy_ar": "هذا هو النظام الكتابي الثاني في اليابان. تُعبّر الكاتاكانا عن الأصوات نفسها التي تُعبّر عنها الهيراغانا، لكن بأشكالٍ أشدّ حِدّةً وأكثر زوايا، وتُستعمل للكلمات الأجنبية والدخيلة. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ."
+  },
+  "katakana:02": {
+    "romaji": ["ka", "ki", "ku", "ke", "ko"],
+    "displayName_en": "Katakana カ Row — K Sounds",
+    "displayName_ar": "الكاتاكانا — صف «カ» (أصوات الكاف)",
+    "introCopy_en": "ka, ki, ku, ke, ko. The same a-i-u-e-o order you already mastered in hiragana carries over exactly — only the shapes are new.",
+    "introCopy_ar": "ka، ki، ku، ke، ko. الترتيب نفسه a، i، u، e، o الذي أتقنته في الهيراغانا ينتقل هنا تمامًا — الأشكال وحدها هي الجديدة."
+  },
+  "katakana:03": {
+    "romaji": ["sa", "shi", "su", "se", "so"],
+    "displayName_en": "Katakana サ Row — S Sounds",
+    "displayName_ar": "الكاتاكانا — صف «サ» (أصوات السين)",
+    "introCopy_en": "sa, shi, su, se, so. Meet シ (shi) — keep an eye on it: it looks confusingly like ツ (tsu), which you will learn next. The strokes point differently.",
+    "introCopy_ar": "sa، shi، su، se، so. تعرّف إلى «シ» (shi) — وانتبه له جيدًا: فهو يشبه «ツ» (tsu) الذي ستتعلمه تاليًا، واتجاه الشَّرطات هو الفارق."
+  },
+  "katakana:04": {
+    "romaji": ["ta", "chi", "tsu", "te", "to"],
+    "displayName_en": "Katakana タ Row — T Sounds",
+    "displayName_ar": "الكاتاكانا — صف «タ» (أصوات التاء)",
+    "introCopy_en": "ta, chi, tsu, te, to. Here is ツ (tsu), the twin of シ (shi). The trick: シ's strokes come in from the side, ツ's come down from the top.",
+    "introCopy_ar": "ta، chi، tsu، te، to. وهذا «ツ» (tsu)، توأم «シ» (shi). الحيلة: شَرطات «シ» تأتي من الجانب، وشَرطات «ツ» تنزل من الأعلى."
+  },
+  "katakana:05": {
+    "romaji": ["na", "ni", "nu", "ne", "no"],
+    "displayName_en": "Katakana ナ Row — N Sounds",
+    "displayName_ar": "الكاتاكانا — صف «ナ» (أصوات النون)",
+    "introCopy_en": "na, ni, nu, ne, no. Notice how ノ (no) is a single clean stroke — it appears as a building block inside several other katakana.",
+    "introCopy_ar": "na، ni، nu، ne، no. لاحِظ أن «ノ» (no) خطٌّ واحد بسيط — وهو يتكرّر لبنةً داخل عدة حروف كاتاكانا أخرى."
+  },
+  "katakana:06": {
+    "romaji": ["ha", "hi", "fu", "he", "ho"],
+    "displayName_en": "Katakana ハ Row — H Sounds",
+    "displayName_ar": "الكاتاكانا — صف «ハ» (أصوات الهاء)",
+    "introCopy_en": "ha, hi, fu, he, ho. ヘ (he) is nearly identical to its hiragana へ — a rare case where the two scripts almost match.",
+    "introCopy_ar": "ha، hi، fu، he، ho. حرف «ヘ» (he) يكاد يطابق نظيره في الهيراغانا «へ» — وهي حالة نادرة يتشابه فيها النظامان تقريبًا."
+  },
+  "katakana:07": {
+    "romaji": ["ma", "mi", "mu", "me", "mo"],
+    "displayName_en": "Katakana マ Row — M Sounds",
+    "displayName_ar": "الكاتاكانا — صف «マ» (أصوات الميم)",
+    "introCopy_en": "ma, mi, mu, me, mo. You are halfway through the second script. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.",
+    "introCopy_ar": "ma، mi، mu، me، mo. قطعتَ نصف الطريق في النظام الثاني. وقريبًا ستقرأ كلماتٍ مثل «コーヒー» (قهوة) و«パン» (خبز) بنظرةٍ واحدة."
+  },
+  "katakana:08": {
+    "romaji": ["ya", "yu", "yo"],
+    "displayName_en": "Katakana ヤ Row — Y Sounds",
+    "displayName_ar": "الكاتاكانا — صف «ヤ» (أصوات الياء)",
+    "introCopy_en": "ya, yu, yo — three again, just like hiragana. These small forms will later combine to spell foreign sounds like ニュ (nyu) in words such as ニュース (news).",
+    "introCopy_ar": "ya، yu، yo — ثلاثة مجددًا، تمامًا كالهيراغانا. وستتحد هذه الأشكال الصغيرة لاحقًا لكتابة أصواتٍ أجنبية مثل «ニュ» (nyu) في كلماتٍ كـ«ニュース» (أخبار)."
+  },
+  "katakana:09": {
+    "romaji": ["ra", "ri", "ru", "re", "ro"],
+    "displayName_en": "Katakana ラ Row — R Sounds",
+    "displayName_ar": "الكاتاكانا — صف «ラ» (أصوات الراء)",
+    "introCopy_en": "ra, ri, ru, re, ro. This row is everywhere in loanwords — レストラン (restaurant), テレビ (television). The light Japanese r you learned still applies.",
+    "introCopy_ar": "ra، ri، ru، re، ro. هذا الصف حاضرٌ بكثرة في الكلمات الدخيلة — «レストラン» (مطعم)، «テレビ» (تلفاز). وتبقى الراء اليابانية الخفيفة التي تعلّمتها سارية."
+  },
+  "katakana:10": {
+    "romaji": ["wa", "wo", "n"],
+    "displayName_en": "ワ, ヲ and ン — And a Famous Trap",
+    "displayName_ar": "«ワ» و«ヲ» و«ン» — وفخٌّ مشهور",
+    "introCopy_en": "wa, wo, and n. ン (n) is famously easy to confuse with ソ (so): ン's stroke sweeps up from the bottom, ソ's drops from the top. Master this and you have finished the 46 basic katakana.",
+    "introCopy_ar": "wa، wo، n. حرف «ン» (n) يسهُل الخلط بينه وبين «ソ» (so): شَرطة «ン» تصعد من الأسفل، وشَرطة «ソ» تهبط من الأعلى. أتقِن هذا وتكون قد أنهيت حروف الكاتاكانا الأساسية الـ46."
+  },
+  "katakana:11": {
+    "romaji": ["ga", "gi", "gu", "ge", "go", "za", "ji", "zu", "ze", "zo"],
+    "displayName_en": "Katakana Dakuten I — G and Z",
+    "displayName_ar": "كاتاكانا الدَّاكوتِن ١ — صوتا g وz",
+    "introCopy_en": "The dakuten works exactly as in hiragana: カ → ガ (ka → ga), サ → ザ (sa → za). You already know the rule; here it is on the katakana shapes.",
+    "introCopy_ar": "يعمل الدَّاكوتِن هنا تمامًا كما في الهيراغانا: «カ» ← «ガ» (ka → ga)، «サ» ← «ザ» (sa → za). أنت تعرف القاعدة سلفًا؛ وها هي على أشكال الكاتاكانا."
+  },
+  "katakana:12": {
+    "romaji": ["da", "di", "du", "de", "do", "ba", "bi", "bu", "be", "bo"],
+    "displayName_en": "Katakana Dakuten II — D and B",
+    "displayName_ar": "كاتاكانا الدَّاكوتِن ٢ — أصوات الدال والباء",
+    "introCopy_en": "タ → ダ (ta → da), ハ → バ (ha → ba). The b sounds are especially common in loanwords: バス (bus), テーブル (table).",
+    "introCopy_ar": "«タ» ← «ダ» (ta → da)، «ハ» ← «バ» (ha → ba). وأصوات الباء شائعة بوجهٍ خاص في الكلمات الدخيلة: «バス» (حافلة)، «テーブル» (طاولة)."
+  },
+  "katakana:13": {
+    "romaji": ["pa", "pi", "pu", "pe", "po"],
+    "displayName_en": "Katakana Handakuten — P",
+    "displayName_ar": "كاتاكانا الهانداكوتِن — صوت p",
+    "introCopy_en": "The small circle gives p: パ, ピ, プ, ペ, ポ. This is one of katakana's most useful rows — foreign words lean on p heavily: パン (bread), ペン (pen), コップ (cup).",
+    "introCopy_ar": "الدائرة الصغيرة تُعطي صوت p: «パ» و«ピ» و«プ» و«ペ» و«ポ». وهذا من أنفع صفوف الكاتاكانا — إذ تعتمد الكلمات الأجنبية على صوت p كثيرًا: «パン» (خبز)، «ペン» (قلم)، «コップ» (كوب)."
+  },
+  "katakana:14": {
+    "romaji": ["kya", "kyu", "kyo", "sha", "shu", "sho", "cha", "chu", "cho"],
+    "displayName_en": "Katakana Yōon I — キャ, シャ, チャ",
+    "displayName_ar": "كاتاكانا اليُوؤُن ١ — «キャ» و«シャ» و«チャ»",
+    "introCopy_en": "Small ャ, ュ, ョ blend a consonant with a y-sound, exactly as in hiragana. In katakana these also help spell foreign syllables the old kana could not.",
+    "introCopy_ar": "الأحرف الصغيرة «ャ» و«ュ» و«ョ» تمزج صوتًا صامتًا بصوت الياء، تمامًا كما في الهيراغانا. وفي الكاتاكانا تؤدي دورًا إضافيًّا: كتابة مقاطع أجنبية عجزت عنها الكانا التقليدية."
+  },
+  "katakana:15": {
+    "romaji": ["nya", "nyu", "nyo", "hya", "hyu", "hyo", "mya", "myu", "myo", "rya", "ryu", "ryo"],
+    "displayName_en": "Katakana Yōon II — ニャ, ヒャ, ミャ, リャ",
+    "displayName_ar": "كاتاكانا اليُوؤُن ٢ — «ニャ» و«ヒャ» و«ミャ» و«リャ»",
+    "introCopy_en": "Four more blended rows: n, h, m, r. ニュ (nyu) and リュ (ryu) show up often in transliterated names and news vocabulary.",
+    "introCopy_ar": "أربعة صفوفٍ ممزوجة أخرى: n وh وm وr. ويكثر ظهور «ニュ» (nyu) و«リュ» (ryu) في الأسماء المنقولة ومفردات الأخبار."
+  },
+  "katakana:16": {
+    "romaji": ["gya", "gyu", "gyo", "ja", "ju", "jo", "bya", "byu", "byo", "pya", "pyu", "pyo"],
+    "displayName_en": "Katakana Yōon III — ギャ, ジャ, ビャ, ピャ",
+    "displayName_ar": "كاتاكانا اليُوؤُن ٣ — «ギャ» و«ジャ» و«ビャ» و«ピャ»",
+    "introCopy_en": "The final blended set with dakuten and handakuten: g, j, b, and p blends. Complete this and you can read every sound both Japanese scripts can produce — a major milestone.",
+    "introCopy_ar": "المجموعة الممزوجة الأخيرة مع الدَّاكوتِن والهانداكوتِن: g وj وb وp. أنجِزها وستقدر على قراءة كل صوتٍ يُنتجه النظامان اليابانيان معًا — إنجازٌ كبير."
+  }
+}

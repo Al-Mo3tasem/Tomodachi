@@ -1,0 +1,866 @@
+[
+ {
+  "lessonKey": "grammar:desu_copula",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 1,
+  "globalOrder": 301,
+  "displayName_en": "です — Polite Be",
+  "displayName_ar": "«です» — ربط مهذب",
+  "introCopy_en": "**What it does:** です politely closes a sentence with a noun or adjective. It often translates as “am,” “is,” or “are,” but its main job is to make the sentence complete and polite.",
+  "introCopy_ar": "**الفكرة:** «です» تختم جملة اسمية أو وصفية بنبرة مهذبة. ليست فعل «كان» حرفيًا دائمًا؛ أحيانًا دورها أن تجعل الجملة مكتملة ولطيفة. **متى تستخدمه:** تأتي بعد اسم أو صفة: طالب، جديد، هادئ.",
+  "itemKeys": [
+   "g_n5_016_desu_copula"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:wa_topic",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 2,
+  "globalOrder": 302,
+  "displayName_en": "は — the Topic Particle",
+  "displayName_ar": "«は» — جسيم الموضوع",
+  "introCopy_en": "**What it does:** は marks the topic: the thing the sentence is about. It is written は but pronounced *wa* when it works as a particle.",
+  "introCopy_ar": "**الفكرة:** الجسيم «は» يضع **موضوع الكلام** في أول الجملة: شيء نبدأ به، ثم نعلّق عليه. يكتب «は» لكنه ينطق *wa* عندما يكون جسيمًا. **متى تستخدمه:** فكّر فيها كترتيب عربي مألوف: **الموضوع → التعليق**.",
+  "itemKeys": [
+   "g_n5_001_wa_topic"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ka_question",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 3,
+  "globalOrder": 303,
+  "displayName_en": "か — Question Marker",
+  "displayName_ar": "«か» — علامة السؤال",
+  "introCopy_en": "**What it does:** か turns a polite sentence into a question. It sits at the end of the sentence, where English would change word order or add a question mark.",
+  "introCopy_ar": "**الفكرة:** «か» في آخر الجملة تجعلها سؤالًا، تمامًا مثل حرف الاستفهام «هل» في العربية لكنها تأتي في النهاية. **متى تستخدمه:** مع الجمل المهذبة، ضع «か» بعد «です» أو «ます».",
+  "itemKeys": [
+   "g_n5_013_ka_question"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:no_possessive",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 4,
+  "globalOrder": 304,
+  "displayName_en": "の — Possession and Noun Links",
+  "displayName_ar": "«の» — ربط الأسماء",
+  "introCopy_en": "**What it does:** の links nouns. It can show possession, category, material, origin, or a noun modifying another noun.",
+  "introCopy_ar": "**الفكرة:** «の» تربط اسمًا باسم: ملكية، نوع، أصل، أو وصف اسمي. هي تشبه حالة «الإضافة» (المضاف والمضاف إليه) في العربية لكن بترتيب معكوس. **متى تستخدمه:** الترتيب الياباني يكون: صاحب/نوع + の + الشيء.",
+  "itemKeys": [
+   "g_n5_008_no_possessive"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ga_subject",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 5,
+  "globalOrder": 305,
+  "displayName_en": "が — the Subject Marker",
+  "displayName_ar": "«が» — إبراز الفاعل",
+  "introCopy_en": "**What it does:** が marks the subject that carries the action, state, or description. It often answers “who?” or “what?” inside the sentence.",
+  "introCopy_ar": "**الفكرة:** «が» يضع سهمًا على الاسم الذي تتحرك حوله الجملة: من الموجود؟ من يحب؟ ما الشيء الجديد؟ لذلك يفيد كثيرًا مع الوجود، القدرة، والتفضيل. **متى تستخدمه:** إذا كانت الجملة كأنها تجيب عن «من؟",
+  "itemKeys": [
+   "g_n5_002_ga_subject"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:mo_also",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 6,
+  "globalOrder": 306,
+  "displayName_en": "も — Also and Too",
+  "displayName_ar": "«も» — أيضًا",
+  "introCopy_en": "**What it does:** も means “also,” “too,” or “as well.” It replaces は, が, or を when the noun shares the same role as something already mentioned. **When to use it:** Use も to add a parallel item.",
+  "introCopy_ar": "**الفكرة:** «も» تضيف عنصرًا موازيًا بمعنى «أيضًا». الجميل فيها أنها تأخذ مكان بعض الجسيمات، لا تأتي بعدها دائمًا. **متى تستخدمه:** إذا قلت «أنا أيضًا»، فالطبيعي 私も.",
+  "itemKeys": [
+   "g_n5_011_mo_also"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:masu_polite",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 7,
+  "globalOrder": 307,
+  "displayName_en": "ます — Polite Verb Ending",
+  "displayName_ar": "«ます» — نهاية الفعل المهذبة",
+  "introCopy_en": "**What it does:** ます is the polite non-past ending for verbs. “Non-past” covers present habits and future actions.",
+  "introCopy_ar": "**الفكرة:** «ます» تجعل الفعل مهذبًا في غير الماضي: عادة حالية أو فعل سيحدث لاحقًا. لذلك 行きます قد تعني «أذهب» أو «سأذهب» حسب السياق.",
+  "itemKeys": [
+   "g_n5_020_masu_polite"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:wo_object",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 8,
+  "globalOrder": 308,
+  "displayName_en": "を — the Object Particle",
+  "displayName_ar": "«を» — علامة المفعول",
+  "introCopy_en": "**What it does:** を marks the direct object: the thing receiving the action. It is written を but pronounced *o* as a particle.",
+  "introCopy_ar": "**الفكرة:** «を» توضع بعد الشيء الذي يقع عليه الفعل: الكتاب الذي تقرؤه، الماء الذي تشربه، أو الفيلم الذي تشاهده. تنطق *o* لا *wo* في هذا الاستعمال.",
+  "itemKeys": [
+   "g_n5_003_wo_object"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ni_target",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 9,
+  "globalOrder": 309,
+  "displayName_en": "に — Target, Time, Place",
+  "displayName_ar": "«に» — اتجاه وزمن وموضع",
+  "introCopy_en": "**What it does:** に points to a target. That target can be a destination, a time, a person receiving something, or the place where something exists.",
+  "introCopy_ar": "**الفكرة:** «に» تشبه سهمًا يصل إلى نقطة محددة: مكان نصل إليه، وقت محدد، شخص نرسل له شيئًا، أو مكان يوجد فيه شيء. **متى تستخدمه:** استخدمها مع «إلى المدرسة»، «في الساعة 7»، و«في البيت يوجد…».",
+  "itemKeys": [
+   "g_n5_004_ni_target"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:de_location",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 10,
+  "globalOrder": 310,
+  "displayName_en": "で — Action Place and Means",
+  "displayName_ar": "«で» — مكان الفعل والأداة",
+  "introCopy_en": "**What it does:** で marks where an action takes place, or the means used to do it. It is about activity, not passive existence.",
+  "introCopy_ar": "**الفكرة:** «で» تقول: هنا يحدث الفعل، أو بهذه الوسيلة يتم الفعل. هي قريبة من «في» للمكان العملي، و«بـ» للأداة أو الوسيلة. **متى تستخدمه:** قل «في المدرسة أدرس» بـ«で»، و«بالقطار أذهب» بـ«で».",
+  "itemKeys": [
+   "g_n5_005_de_location"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:he_direction",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 11,
+  "globalOrder": 311,
+  "displayName_en": "へ — Direction Particle",
+  "displayName_ar": "«へ» — اتجاه الحركة",
+  "introCopy_en": "**What it does:** へ marks the direction someone or something is moving toward. It is written へ but pronounced *e* as a particle.",
+  "introCopy_ar": "**الفكرة:** «へ» ترسم اتجاه الحركة: نحو مكان أو جهة. تكتب «へ» لكنها تنطق *e* عندما تأتي كجسيم. **متى تستخدمه:** إذا أردت إحساس «باتجاه…» فاستخدم «へ». أما «に» فيركز أكثر على نقطة الوصول نفسها.",
+  "itemKeys": [
+   "g_n5_006_he_direction"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:to_with_and",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 12,
+  "globalOrder": 312,
+  "displayName_en": "と — With and Complete And",
+  "displayName_ar": "«と» — مع وعطف كامل",
+  "introCopy_en": "**What it does:** と has two beginner uses: “with” a person, and “and” between listed nouns. For lists, it sounds complete: A and B, with no implied extras.",
+  "introCopy_ar": "**الفكرة:** «と» لها وجهان مهمان: «مع» شخص، و«و» بين أسماء محددة. عندما تعطف بها قائمة، يشعر السامع أن القائمة كاملة. **متى تستخدمه:** قل بها «مع صديقي» أو «الشاي والماء».",
+  "itemKeys": [
+   "g_n5_007_to_with_and"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:kara_from",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 13,
+  "globalOrder": 313,
+  "displayName_en": "から — From the Starting Point",
+  "displayName_ar": "«から» — من نقطة البداية",
+  "introCopy_en": "**What it does:** から marks where something starts: a place, time, person, or source. It is the “from” side of a range.",
+  "introCopy_ar": "**الفكرة:** «から» تحدد نقطة البداية: من مكان، من وقت، من شخص، أو من مصدر. هي طرف «من» في الجملة. **متى تستخدمه:** استخدمها مع الوقت والمكان: «من الساعة 9»، «من المدرسة».",
+  "itemKeys": [
+   "g_n5_009_kara_from"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:made_until",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 14,
+  "globalOrder": 314,
+  "displayName_en": "まで — Until the Endpoint",
+  "displayName_ar": "«まで» — إلى نقطة النهاية",
+  "introCopy_en": "**What it does:** まで marks the endpoint of a range: until a time, as far as a place, or up to a limit. **When to use it:** Use まで when you want to say how far something goes.",
+  "introCopy_ar": "**الفكرة:** «まで» تحدد النهاية: إلى وقت، إلى مكان، أو حتى حد معيّن. هي طرف «إلى/حتى» في الجملة. **متى تستخدمه:** استخدمها عندما يهم آخر مدى يصل إليه الفعل.",
+  "itemKeys": [
+   "g_n5_010_made_until"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ya_and_etc",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 15,
+  "globalOrder": 315,
+  "displayName_en": "や — Partial And",
+  "displayName_ar": "«や» — عطف مفتوح",
+  "introCopy_en": "**What it does:** や links nouns in a non-complete list. It means “A, B, and things like that.” **When to use it:** Use や when the examples are samples, not the full set.",
+  "introCopy_ar": "**الفكرة:** «や» تربط أمثلة من قائمة مفتوحة: «الشاي، الماء، وأشياء مثل ذلك». هي لا تدّعي أن القائمة انتهت. **متى تستخدمه:** إذا كانت القائمة كاملة، استخدم «と». إذا كنت تعطي نماذج فقط، استخدم «や».",
+  "itemKeys": [
+   "g_n5_012_ya_and_etc"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:arimasu_inanimate",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 16,
+  "globalOrder": 316,
+  "displayName_en": "あります — Inanimate Existence",
+  "displayName_ar": "«あります» — وجود الأشياء",
+  "introCopy_en": "**What it does:** あります says that an inanimate thing exists or that someone has something. It is used for objects, places, ideas, and events.",
+  "introCopy_ar": "**الفكرة:** «あります» تعني «يوجد» للأشياء غير الحية: كتاب، ماء، وقت، مكان، فكرة. ويمكن أن تعطي معنى «لدي» حسب السياق. **متى تستخدمه:** الشيء الموجود يأخذ «が»، والمكان غالبًا يأخذ «に».",
+  "itemKeys": [
+   "g_n5_039_arimasu_inanimate"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:imasu_animate",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 17,
+  "globalOrder": 317,
+  "displayName_en": "います — Animate Existence",
+  "displayName_ar": "«います» — وجود الأحياء",
+  "introCopy_en": "**What it does:** います says that a living being exists: people and animals. It can also express “have” for living beings. **When to use it:** Use が for who exists and に for where they are.",
+  "introCopy_ar": "**الفكرة:** «います» تعني «يوجد» للكائنات الحية: شخص، طفل، قطة، كلب. في العربية نقول «يوجد»، لكن اليابانية تفصل بين الحي وغير الحي. **متى تستخدمه:** الاسم الحي يأخذ «が»، والمكان يأخذ «に».",
+  "itemKeys": [
+   "g_n5_040_imasu_animate"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ne_confirm",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 18,
+  "globalOrder": 318,
+  "displayName_en": "ね — Shared Feeling",
+  "displayName_ar": "«ね» — طلب موافقة لطيف",
+  "introCopy_en": "**What it does:** ね adds a soft “right?” or “isn't it?” feeling. It invites the listener to agree or share the feeling.",
+  "introCopy_ar": "**الفكرة:** «ね» تجعل الجملة كأنك تقول: «أليس كذلك؟» أو «صح؟» بنبرة لطيفة. هي تفتح مساحة اتفاق مع السامع. **متى تستخدمه:** استخدمها مع شيء مشترك بينكما: الجو جميل، الدرس ممتع، المكان هادئ.",
+  "itemKeys": [
+   "g_n5_014_ne_confirm"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:yo_assert",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 19,
+  "globalOrder": 319,
+  "displayName_en": "よ — New Information",
+  "displayName_ar": "«よ» — تنبيه بمعلومة",
+  "introCopy_en": "**What it does:** よ adds a light “I'm telling you” force. It often marks information the listener may not know yet. **When to use it:** Use よ for warnings, helpful reminders, or adding confidence.",
+  "introCopy_ar": "**الفكرة:** «よ» تضيف إحساس «انتبه، هذه معلومة لك». ليست صراخًا، لكنها تجعل الجملة أوضح وأقوى. **متى تستخدمه:** استخدمها عندما تعطي تنبيهًا أو معلومة قد لا يعرفها السامع.",
+  "itemKeys": [
+   "g_n5_015_yo_assert"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:masen_neg",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 20,
+  "globalOrder": 320,
+  "displayName_en": "ません — Polite Negative Verbs",
+  "displayName_ar": "«ません» — نفي الفعل المهذب",
+  "introCopy_en": "**What it does:** ません is the polite negative non-past verb ending. It means “do not” or “will not.” **When to use it:** Replace ます with ません when denying a present habit or future action.",
+  "introCopy_ar": "**الفكرة:** «ません» تنفي الفعل المهذب في غير الماضي: لا أفعل، أو لن أفعل. السياق هو الذي يحدد الزمن العملي. **متى تستخدمه:** إذا كان الفعل ينتهي بـ«ます» في الإثبات، فنفيه المهذب هو «ません».",
+  "itemKeys": [
+   "g_n5_021_masen_neg"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:mashita_past",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 21,
+  "globalOrder": 321,
+  "displayName_en": "ました — Polite Past Verbs",
+  "displayName_ar": "«ました» — الفعل المهذب الماضي",
+  "introCopy_en": "**What it does:** ました is the polite past ending for verbs. It says the action happened or was completed. **When to use it:** Use it for finished actions: ate, went, studied, bought.",
+  "introCopy_ar": "**الفكرة:** «ました» تجعل الفعل المهذب في الماضي: ذهبت، أكلت، درست. هي علامة فعل، لا علامة اسم. **متى تستخدمه:** أي فعل حدث وانتهى يأخذ هذا الشكل في الأسلوب المهذب.",
+  "itemKeys": [
+   "g_n5_022_mashita_past"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:masendeshita",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 22,
+  "globalOrder": 322,
+  "displayName_en": "ませんでした — Polite Past Negative",
+  "displayName_ar": "«ませんでした» — نفي الماضي المهذب",
+  "introCopy_en": "**What it does:** ませんでした is the polite past negative ending for verbs. It means “did not do.” **When to use it:** Use it when an expected or possible action did not happen.",
+  "introCopy_ar": "**الفكرة:** «ませんでした» تعني أن فعلًا لم يحدث في الماضي: لم أذهب، لم آكل، لم أدرس. هي ببساطة «ません» وقد أُضيفت إليها «でした» لنقل النفي إلى الماضي. **متى تستخدمه:** استخدمها مع الأفعال فقط.",
+  "itemKeys": [
+   "g_n5_023_masendeshita"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:mashou",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 23,
+  "globalOrder": 323,
+  "displayName_en": "ましょう — Let's Do It",
+  "displayName_ar": "«ましょう» — لنفعل",
+  "introCopy_en": "**What it does:** ましょう makes a polite “let's…” suggestion. ましょうか can offer to do something or ask “shall we?” **When to use it:** Use it when inviting someone into an action: let’s go, let’s eat, shal…",
+  "introCopy_ar": "**الفكرة:** «ましょう» تقترح فعلًا مشتركًا بلطف: لنذهب، لنأكل، لندرس. ومع «か» تصبح عرضًا أو سؤالًا: هل أفعل؟ هل نفعل؟ **متى تستخدمه:** مناسب للدعوة والاقتراح، لا للأمر.",
+  "itemKeys": [
+   "g_n5_024_mashou"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:deshita_past",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 24,
+  "globalOrder": 324,
+  "displayName_en": "でした — Polite Past Be",
+  "displayName_ar": "«でした» — كان بصيغة مهذبة",
+  "introCopy_en": "**What it does:** でした is the polite past form of です. It means “was” or “were” for noun and na-adjective sentences.",
+  "introCopy_ar": "**الفكرة:** «でした» تجعل جملة الاسم أو صفة «な» في الماضي وبأسلوب مهذب: كان، كانت، كان الأمر كذلك. **متى تستخدمه:** استخدمها مع حالات انتهت أو تتحدث عنها في الماضي.",
+  "itemKeys": [
+   "g_n5_018_deshita_past"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ja_nai_neg",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 25,
+  "globalOrder": 325,
+  "displayName_en": "じゃない — Not Be",
+  "displayName_ar": "«じゃない» — نفي الربط",
+  "introCopy_en": "**What it does:** じゃない is the plain negative of だ, used with nouns and na-adjectives. In polite speech, じゃありません or ではありません is safer.",
+  "introCopy_ar": "**الفكرة:** «じゃない» تنفي جملة الاسم أو صفة «な»: ليس طالبًا، ليس هادئًا. هي عادية في النبرة، وليست صيغة رسمية. **متى تستخدمه:** استخدمها مع الأسماء وصفات «な».",
+  "itemKeys": [
+   "g_n5_019_ja_nai_neg"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:tai_want",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 26,
+  "globalOrder": 326,
+  "displayName_en": "たい — Want to Do",
+  "displayName_ar": "«たい» — أريد أن أفعل",
+  "introCopy_en": "**What it does:** たい attaches to the verb stem to say “want to do.” It behaves like an i-adjective after attaching.",
+  "introCopy_ar": "**الفكرة:** «たい» تلحق بجذع الفعل لتعني «أريد أن أفعل». بعد تركيبها تتصرف كأنها صفة «い»: لها نفي وماضٍ مثل الصفات. **متى تستخدمه:** استخدمها للتعبير عن رغبتك أنت، أو في سؤال مباشر للطرف الآخر.",
+  "itemKeys": [
+   "g_n5_030_tai_want"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:i_adj",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 27,
+  "globalOrder": 327,
+  "displayName_en": "い-Adjectives — Built-In Predicates",
+  "displayName_ar": "صفات «い» — وصف مكتمل",
+  "introCopy_en": "**What it does:** i-adjectives end in い and can stand as predicates by themselves in plain speech. In polite speech, add です after them.",
+  "introCopy_ar": "**الفكرة:** صفات «い» تنتهي دائمًا بـ«い» في صيغتها الأساسية، ولها قوة فعلية صغيرة: يمكن أن تختم الجملة وحدها في الأسلوب العادي.",
+  "itemKeys": [
+   "g_n5_033_i_adj"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:i_adj_neg",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 28,
+  "globalOrder": 328,
+  "displayName_en": "くない — Negative い-Adjectives",
+  "displayName_ar": "«くない» — نفي صفات «い»",
+  "introCopy_en": "**What it does:** To negate an i-adjective, drop the final い and add くない. Polite speech can add です after the negative form.",
+  "introCopy_ar": "**الفكرة:** لنفي صفة «い»، احذف «い» الأخيرة وأضف «くない»: 高い → 高くない. ثم يمكن إضافة «です» للتهذيب. **متى تستخدمه:** هذا هو الطريق الطبيعي لقول «ليس غاليًا» أو «ليس باردًا».",
+  "itemKeys": [
+   "g_n5_035_i_adj_neg"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:i_adj_past",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 29,
+  "globalOrder": 329,
+  "displayName_en": "かった — Past い-Adjectives",
+  "displayName_ar": "«かった» — ماضي صفات «い»",
+  "introCopy_en": "**What it does:** To make an i-adjective past, drop the final い and add かった. Polite speech can add です after it.",
+  "introCopy_ar": "**الفكرة:** ماضي صفة «い» لا يحتاج فعلًا منفصلًا. احذف «い» الأخيرة وأضف «かった»: 寒い → 寒かった. **متى تستخدمه:** استخدمه عندما تصف شيئًا في الماضي: كان باردًا، كان رخيصًا.",
+  "itemKeys": [
+   "g_n5_036_i_adj_past"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:na_adj",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 30,
+  "globalOrder": 330,
+  "displayName_en": "な-Adjectives — Noun-Like Adjectives",
+  "displayName_ar": "صفات «な» — وصف قريب من الاسم",
+  "introCopy_en": "**What it does:** na-adjectives behave more like nouns than i-adjectives. Before a noun, they take な; at the end of a plain sentence, they can take だ.",
+  "introCopy_ar": "**الفكرة:** صفات «な» قريبة من الأسماء في سلوكها. قبل الاسم تحتاج «な»، وفي نهاية الجملة العادية يمكن أن تأخذ «だ». **متى تستخدمه:** احفظ نوع الصفة مع الكلمة.",
+  "itemKeys": [
+   "g_n5_034_na_adj"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:na_adj_neg",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 31,
+  "globalOrder": 331,
+  "displayName_en": "じゃない — Negative な-Adjectives",
+  "displayName_ar": "نفي صفات «な»",
+  "introCopy_en": "**What it does:** na-adjectives negate like nouns: add じゃない in plain speech or じゃありません in polite speech. じゃないです, used in the examples below, is a common polite middle ground.",
+  "introCopy_ar": "**الفكرة:** صفات «な» تُنفى مثل الأسماء: 静かじゃない، 元気じゃない. في الأسلوب المهذب يمكن استخدام じゃありません. **متى تستخدمه:** إذا كانت الصفة من نوع «な»، لا تحوّلها إلى «くない». نوع الصفة هو الذي يحدد طريقة النفي.",
+  "itemKeys": [
+   "g_n5_037_na_adj_neg"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:na_adj_past",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 32,
+  "globalOrder": 332,
+  "displayName_en": "でした — Past な-Adjectives",
+  "displayName_ar": "ماضي صفات «な»",
+  "introCopy_en": "**What it does:** na-adjectives use でした for polite past, much like noun sentences. In plain speech, they use だった.",
+  "introCopy_ar": "**الفكرة:** صفات «な» في الماضي المهذب تأخذ «でした»، مثل الأسماء تقريبًا: 静かでした، 元気でした. وفي الأسلوب العادي تصبح «だった». **متى تستخدمه:** استخدمها لوصف حالة في الماضي.",
+  "itemKeys": [
+   "g_n5_038_na_adj_past"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:te_form",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 33,
+  "globalOrder": 333,
+  "displayName_en": "て Form — Verb Connector",
+  "displayName_ar": "صيغة «て» — ربط الأفعال",
+  "introCopy_en": "**What it does:** The te-form is a connector form for verbs. It lets a verb link to another action, request form, ongoing form, permission form, and more.",
+  "introCopy_ar": "**الفكرة:** صيغة «て» ليست زمنًا، بل محطة ربط. منها تبني الطلب، الاستمرار، الإذن، وربط فعل بعد فعل. **متى تستخدمه:** عندما ترى فعلًا منتهيًا بـ«て/で»، اسأل: ماذا جاء بعده؟",
+  "itemKeys": [
+   "g_n5_026_te_form"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:te_kudasai",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 34,
+  "globalOrder": 334,
+  "displayName_en": "てください — Polite Requests",
+  "displayName_ar": "«てください» — طلب مهذب",
+  "introCopy_en": "**What it does:** てください attaches to the te-form of a verb to make a polite request: “please do…” **When to use it:** Use it for clear requests and instructions.",
+  "introCopy_ar": "**الفكرة:** «てください» تركب على صيغة «て» لتطلب من شخص فعل شيء بلطف: افتح، اكتب، انتظر. هي طلب مباشر لكنه مهذب. **متى تستخدمه:** استخدمها في الطلبات والتعليمات الواضحة.",
+  "itemKeys": [
+   "g_n5_025_te_kudasai"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:te_iru",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 35,
+  "globalOrder": 335,
+  "displayName_en": "ている — Ongoing State",
+  "displayName_ar": "«ている» — فعل مستمر أو حالة",
+  "introCopy_en": "**What it does:** ている describes an action in progress or a state that resulted from an action.",
+  "introCopy_ar": "**الفكرة:** «ている» لها استعمالان مهمان: فعل يحدث الآن، أو حالة ناتجة عن فعل حدث. لذلك لا تترجمها آليًا كـ«يفعل الآن» فقط. **متى تستخدمه:** مع 読んでいます يكون الفعل جاريًا: أقرأ الآن.",
+  "itemKeys": [
+   "g_n5_027_te_iru"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:te_mo_ii",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 36,
+  "globalOrder": 336,
+  "displayName_en": "てもいい — Permission",
+  "displayName_ar": "«てもいい» — السماح",
+  "introCopy_en": "**What it does:** てもいい means “it is okay to do…” or “may I…?” It combines the te-form with も and いい. **When to use it:** Use it to ask for permission or say something is allowed.",
+  "introCopy_ar": "**الفكرة:** «てもいい» تعني أن الفعل مسموح أو لا مشكلة فيه. حرفيًا تشبه «حتى لو فعلت، فهو جيد»، لكن المعنى الطبيعي هو الإذن. **متى تستخدمه:** اسأل بها: هل يمكنني أن أفعل؟",
+  "itemKeys": [
+   "g_n5_028_te_mo_ii"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:te_wa_ikenai",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 37,
+  "globalOrder": 337,
+  "displayName_en": "てはいけない — Prohibition",
+  "displayName_ar": "«てはいけない» — المنع",
+  "introCopy_en": "**What it does:** てはいけない means “must not do…” or “it is not allowed to do…” It is the prohibition partner of てもいい. **When to use it:** Use it for rules, safety, and clear restrictions.",
+  "introCopy_ar": "**الفكرة:** «てはいけない» تعني أن الفعل ممنوع أو غير مسموح. هي صيغة قاعدة أو تحذير، وليست مجرد تفضيل شخصي. **متى تستخدمه:** استخدمها مع التعليمات: لا تدخل، لا تدخّن، لا تأكل هنا.",
+  "itemKeys": [
+   "g_n5_029_te_wa_ikenai"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:da_copula",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 38,
+  "globalOrder": 338,
+  "displayName_en": "だ — Plain Be",
+  "displayName_ar": "«だ» — ربط عادي",
+  "introCopy_en": "**What it does:** だ is the plain form that often matches です in casual speech. It closes noun and na-adjective sentences. **When to use it:** Use だ with close friends, notes, or plain-style grammar.",
+  "introCopy_ar": "**الفكرة:** «だ» هي النسخة العادية من «です» في جمل الأسماء وصفات «な». النبرة أقل رسمية وأكثر مباشرة. **متى تستخدمه:** يناسب الكلام العادي أو التدوين.",
+  "itemKeys": [
+   "g_n5_017_da_copula"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:nai_neg",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 39,
+  "globalOrder": 339,
+  "displayName_en": "ない — Plain Negative Verbs",
+  "displayName_ar": "«ない» — نفي الفعل العادي",
+  "introCopy_en": "**What it does:** ない is the plain negative form for verbs. It is the casual or dictionary-side counterpart of ません.",
+  "introCopy_ar": "**الفكرة:** «ない» هي نفي الفعل في الأسلوب العادي: لا أذهب، لا آكل. هي قريبة وظيفيًا من «ません» لكن نبرتها عادية وليست مهذبة. **متى تستخدمه:** تحتاجها في الكلام العادي وفي تراكيب كثيرة لاحقًا.",
+  "itemKeys": [
+   "g_n5_031_nai_neg"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ta_past",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 40,
+  "globalOrder": 340,
+  "displayName_en": "た — Plain Past Verbs",
+  "displayName_ar": "«た» — الماضي العادي",
+  "introCopy_en": "**What it does:** た is the plain past form for verbs. It says an action happened without the polite ました ending. **When to use it:** Use it in casual speech and before patterns that need plain past.",
+  "introCopy_ar": "**الفكرة:** «た» تجعل الفعل في الماضي العادي: أكلت، قرأت، ذهبت. هي النسخة الأقل رسمية من «ました». **متى تستخدمه:** ستحتاجها في الكلام العادي وتراكيب لاحقة.",
+  "itemKeys": [
+   "g_n5_032_ta_past"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:koto_ga_dekiru",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 41,
+  "globalOrder": 341,
+  "displayName_en": "ことができる — Can Do",
+  "displayName_ar": "«ことができる» — أستطيع",
+  "introCopy_en": "**What it does:** Verb dictionary form + ことができる means “can do” or “be able to do.” こと turns the action into a noun-like idea. **When to use it:** Use it for ability or possibility.",
+  "introCopy_ar": "**الفكرة:** «こと» تحوّل الفعل إلى مصدر (مثل إضافة «أن» في العربية)، ثم «ができる» تعني أن هذا الفعل ممكن أو في قدرتك. **متى تستخدمه:** قل 話すことができます = أستطيع التحدث.",
+  "itemKeys": [
+   "g_n5_053_koto_ga_dekiru"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:dochira_which",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 42,
+  "globalOrder": 342,
+  "displayName_en": "どちら — Which of Two",
+  "displayName_ar": "«どちら» — أيهما",
+  "introCopy_en": "**What it does:** どちら asks “which one?” usually between two options. どっち is the more casual version. **When to use it:** Use どちら when presenting two choices.",
+  "introCopy_ar": "**الفكرة:** «どちら» تسأل عن اختيار بين بديلين: أيهما؟ النسخة اليومية الأقصر هي «どっち». **متى تستخدمه:** اذكر الاختيارين بـ«と»، ثم اسأل بـ«どちらが…؟». وجود «が» طبيعي لأنه يطلب تحديد الطرف الذي يحمل الوصف.",
+  "itemKeys": [
+   "g_n5_043_dochira_which"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:yori_than",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 43,
+  "globalOrder": 343,
+  "displayName_en": "より — Than in Comparisons",
+  "displayName_ar": "«より» — المقارنة بـ«من»",
+  "introCopy_en": "**What it does:** より marks the comparison baseline, like “than.” In AはBより高い, A is tall compared with B. **When to use it:** Put より after the thing you are comparing against.",
+  "introCopy_ar": "**الفكرة:** «より» تحدد الطرف الذي نقارن به، مثل «من» في: أكبر من، أرخص من، أقرب من. الوصف يقع على الطرف الآخر. **متى تستخدمه:** في 東京は大阪より大きいです، طوكيو هي الموصوفة، وأوساكا هي مرجع المقارنة بعد «より».",
+  "itemKeys": [
+   "g_n5_041_yori_than"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ichiban_most",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 44,
+  "globalOrder": 344,
+  "displayName_en": "一番 — The Most",
+  "displayName_ar": "«一番» — الأكثر",
+  "introCopy_en": "**What it does:** 一番 marks the top item in a group: the most, the best, the number one. It usually appears before an adjective.",
+  "introCopy_ar": "**الفكرة:** «一番» تعني أن شيئًا في المركز الأول داخل مجموعة: الأكبر، الأفضل، الأعلى. تأتي غالبًا قبل الصفة. **متى تستخدمه:** استخدمها عندما لا تقارن جانبين فقط، بل تختار الأعلى داخل مجموعة.",
+  "itemKeys": [
+   "g_n5_042_ichiban_most"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:kara_because",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 45,
+  "globalOrder": 345,
+  "displayName_en": "から — Because",
+  "displayName_ar": "«から» — لأن",
+  "introCopy_en": "**What it does:** Clause + から gives a reason: “because…” It attaches after the reason clause. **When to use it:** Put the reason before から and the result after it.",
+  "introCopy_ar": "**الفكرة:** عندما تأتي «から» بعد جملة، تعطي معنى «لأن». الجملة قبلها هي السبب، وما بعدها هو النتيجة. **متى تستخدمه:** الترتيب الياباني طبيعي جدًا: السبب + から + النتيجة.",
+  "itemKeys": [
+   "g_n5_047_kara_because"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:dakara_so",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 46,
+  "globalOrder": 346,
+  "displayName_en": "だから — So and Therefore",
+  "displayName_ar": "«だから» — لذلك",
+  "introCopy_en": "**What it does:** だから starts a result sentence. It means “so,” “therefore,” or “that is why.” **When to use it:** Use it after giving a reason or situation.",
+  "introCopy_ar": "**الفكرة:** «だから» تبدأ جملة النتيجة: لذلك، لهذا السبب. أولًا تقول السبب أو الوضع، ثم تأتي النتيجة. **متى تستخدمه:** إذا فصلت السبب والنتيجة في جملتين، استخدم «だから» في بداية الثانية.",
+  "itemKeys": [
+   "g_n5_046_dakara_so"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:demo_but",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 47,
+  "globalOrder": 347,
+  "displayName_en": "でも — But at Sentence Start",
+  "displayName_ar": "«でも» — لكن في بداية الجملة",
+  "introCopy_en": "**What it does:** でも connects two sentences with a “but” or “however” meaning. It usually starts the second sentence. **When to use it:** Use it when the second sentence contrasts with the first.",
+  "introCopy_ar": "**الفكرة:** «でも» تربط جملتين بمعنى «لكن». غالبًا تبدأ الجملة الثانية وتغيّر الاتجاه بعد المعلومة الأولى. **متى تستخدمه:** استخدمها عندما تقول شيئًا ثم تعطي نتيجة أو موقفًا مخالفًا للتوقع.",
+  "itemKeys": [
+   "g_n5_044_demo_but"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:kedo_but",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 48,
+  "globalOrder": 348,
+  "displayName_en": "けど — But and Although",
+  "displayName_ar": "«けど» — لكن داخل الجملة",
+  "introCopy_en": "**What it does:** けど attaches to the end of a clause and means “but” or “although.” It creates contrast before the next idea.",
+  "introCopy_ar": "**الفكرة:** «けど» تأتي في نهاية جملة صغيرة لتعطي معنى «لكن» أو «مع أن». هي تربط التباين من داخل الجملة نفسها. **متى تستخدمه:** إذا أردت قول «هو صعب، لكنه ممتع»، ضع «けど» بعد الجزء الأول.",
+  "itemKeys": [
+   "g_n5_048_kedo_but"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:sorekara_then",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 49,
+  "globalOrder": 349,
+  "displayName_en": "それから — And Then",
+  "displayName_ar": "«それから» — ثم بعد ذلك",
+  "introCopy_en": "**What it does:** それから connects actions or sentences in sequence. It means “and then” or “after that.” **When to use it:** Use it to tell a short order of events.",
+  "introCopy_ar": "**الفكرة:** «それから» تنقل الكلام إلى الخطوة التالية: ثم، وبعد ذلك. هي مفيدة جدًا عندما تسرد يومك أو خطة قصيرة. **متى تستخدمه:** استخدمها بين جملتين كاملتين إذا أردت أن يكون الترتيب واضحًا.",
+  "itemKeys": [
+   "g_n5_045_sorekara_then"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:toki_when",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 50,
+  "globalOrder": 350,
+  "displayName_en": "時 — When Something Happens",
+  "displayName_ar": "«時» — عندما",
+  "introCopy_en": "**What it does:** 時 means “when” or “time.” A noun, adjective, or plain-form clause can come before it to describe the time.",
+  "introCopy_ar": "**الفكرة:** «時» تعني «وقت/عندما». ما قبلها يصف الزمن الذي نتكلم عنه: وقت الطفولة، وقت الفراغ، وقت الذهاب. **متى تستخدمه:** ضع قبل «時» وصفًا زمنيًا صغيرًا، ثم أكمل ما يحدث في ذلك الوقت.",
+  "itemKeys": [
+   "g_n5_049_toki_when"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:mae_ni_before",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 51,
+  "globalOrder": 351,
+  "displayName_en": "前に — Before Doing",
+  "displayName_ar": "«前に» — قبل أن",
+  "introCopy_en": "**What it does:** Verb dictionary form + 前に means “before doing…” Noun + の + 前に means “before…” a noun event or time. **When to use it:** Use it to place one action before another.",
+  "introCopy_ar": "**الفكرة:** «前に» تعني «قبل». إذا جاء قبلها فعل، يكون بصيغة القاموس: 寝る前に، قبل النوم. ومع الاسم نضيف «の»: 仕事の前に، قبل العمل.",
+  "itemKeys": [
+   "g_n5_050_mae_ni_before"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:ato_de_after",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 52,
+  "globalOrder": 352,
+  "displayName_en": "後で — After Doing",
+  "displayName_ar": "«後で» — بعد أن",
+  "introCopy_en": "**What it does:** Verb past plain form + 後で means “after doing…” Noun + の + 後で means “after…” a noun event. **When to use it:** Use it to put one action after another.",
+  "introCopy_ar": "**الفكرة:** «後で» تعني «بعد». مع الفعل، يأتي قبلها الماضي العادي: 食べた後で، بعد أن أكلت. **متى تستخدمه:** الفرق المهم مع «前に»: قبل = فعل قاموسي، بعد = فعل ماضي عادي.",
+  "itemKeys": [
+   "g_n5_051_ato_de_after"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:nagara_while",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 53,
+  "globalOrder": 353,
+  "displayName_en": "ながら — While Doing",
+  "displayName_ar": "«ながら» — أثناء الفعل",
+  "introCopy_en": "**What it does:** Verb stem + ながら means doing one action while doing another. The main action comes at the end of the sentence.",
+  "introCopy_ar": "**الفكرة:** «ながら» تعني أن الشخص نفسه يفعل شيئين في الوقت نفسه: يسمع ويدرس، يمشي ويتكلم. وتتصل بجذع الفعل، أي صيغة «ます» بعد حذف «ます»: 聞き + ながら.",
+  "itemKeys": [
+   "g_n5_052_nagara_while"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ },
+ {
+  "lessonKey": "grammar:deshou_probably",
+  "contentType": "grammar",
+  "track": "grammar",
+  "trackPosition": 54,
+  "globalOrder": 354,
+  "displayName_en": "でしょう — Probably and Soft Guess",
+  "displayName_ar": "«でしょう» — غالبًا",
+  "introCopy_en": "**What it does:** でしょう makes a polite guess or softens a statement. It often means “probably,” “I think,” or “right?” depending on tone.",
+  "introCopy_ar": "**الفكرة:** «でしょう» تجعل الجملة توقعًا مهذبًا بدل تقرير حاسم: غالبًا، على الأرجح، يبدو أن. ومقابلها في الكلام العادي «だろう». **متى تستخدمه:** استخدمها مع الطقس، التوقع، أو كلام تريد تخفيف حدّته.",
+  "itemKeys": [
+   "g_n5_054_deshou_probably"
+  ],
+  "estimated_minutes": 7,
+  "jlpt": "n5"
+ }
+]
