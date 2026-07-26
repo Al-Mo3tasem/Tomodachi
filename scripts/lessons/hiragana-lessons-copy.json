@@ -1,115 +1,251 @@
 {
-  "_note": "Hiragana track copy (16 lessons). AR revised per native-style review 2026-07-24: terminology (حرف كانا not مقطع، صامت not ساكن، g not الغاف), Arabic-comma romaji lists, calques removed, hiragana:14 factual fix (small ya attaches after i-column kana). Style rule going forward: max 2 sentences, spend the budget on Arabic-speaker-specific observations, not generic encouragement. Gender-address: masculine singular pending product decision (see review queue).",
+  "_note": "Hiragana track copy (16). AR = native-review v3 (2026-07-26, two independent MSA reviews merged). introCopy_ar_f = feminine variant, deliberately EMPTY (ship masculine; field reserved so filling later is cheap). Style: ≤2 sentences, no absolutes, direct over metaphor, spelled-out numbers.",
   "hiragana:01": {
-    "romaji": ["a", "i", "u", "e", "o"],
+    "romaji": [
+      "a",
+      "i",
+      "u",
+      "e",
+      "o"
+    ],
     "displayName_en": "The あ Row — Vowels",
     "displayName_ar": "صف «あ» — أصوات العِلّة",
     "introCopy_en": "Everything in Japanese begins here. These five vowels — a, i, u, e, o — are the seeds of every kana you will ever read. Learn their order well; it never changes.",
-    "introCopy_ar": "كل شيء في اليابانية يبدأ من هنا. حروف العِلّة الخمسة — a، i، u، e، o — هي بذور كل حرف كانا ستقرؤه لاحقًا. أتقِن ترتيبها جيدًا؛ فهو لا يتغيّر أبدًا."
+    "introCopy_ar": "تبدأ من هنا بتعلّم حروف العِلّة الخمسة: a، i، u، e، o. وهي أساس ترتيب صفوف الكانا، فاحفظ ترتيبها جيدًا؛ لأنه سيتكرر في الدروس التالية.",
+    "introCopy_ar_f": ""
   },
   "hiragana:02": {
-    "romaji": ["ka", "ki", "ku", "ke", "ko"],
+    "romaji": [
+      "ka",
+      "ki",
+      "ku",
+      "ke",
+      "ko"
+    ],
     "displayName_en": "The か Row — K Sounds",
     "displayName_ar": "صف «か» — أصوات الكاف",
     "introCopy_en": "Add a k to each vowel you just learned: ka, ki, ku, ke, ko. From now on, every row follows the same a-i-u-e-o pattern — so you already know half of each one.",
-    "introCopy_ar": "أضِف صوت الكاف إلى كل حرف عِلّة تعلّمته للتو: ka، ki، ku، ke، ko. ومن الآن فصاعدًا يسير كل صفٍّ على النمط نفسه a، i، u، e، o — أي أنك تعرف نصف كل صفٍّ قبل أن تبدأه."
+    "introCopy_ar": "في هذا الصف تقترن أصوات k بحروف العِلّة الخمسة: ka، ki، ku، ke، ko. ومن الآن ستلاحظ أن معظم الصفوف تتبع ترتيب a، i، u، e، o، مما يسهّل حفظها.",
+    "introCopy_ar_f": ""
   },
   "hiragana:03": {
-    "romaji": ["sa", "shi", "su", "se", "so"],
+    "romaji": [
+      "sa",
+      "shi",
+      "su",
+      "se",
+      "so"
+    ],
     "displayName_en": "The さ Row — S Sounds",
     "displayName_ar": "صف «さ» — أصوات السين",
     "introCopy_en": "The s row: sa, shi, su, se, so. Watch the second one — it is shi, not si. Small exceptions like this are worth noticing early.",
-    "introCopy_ar": "صف السين: sa، shi، su، se، so. انتبه إلى الثاني — يُنطق shi لا si؛ ومن المفيد ملاحظة هذه الاستثناءات الصغيرة مبكرًا."
+    "introCopy_ar": "صف السين: sa، shi، su، se، so. انتبه إلى الثاني — يُنطق shi لا si؛ ومن المفيد ملاحظة هذه الاستثناءات الصغيرة مبكرًا.",
+    "introCopy_ar_f": ""
   },
   "hiragana:04": {
-    "romaji": ["ta", "chi", "tsu", "te", "to"],
+    "romaji": [
+      "ta",
+      "chi",
+      "tsu",
+      "te",
+      "to"
+    ],
     "displayName_en": "The た Row — T Sounds",
     "displayName_ar": "صف «た» — أصوات التاء",
     "introCopy_en": "The t row has two surprises: chi (not ti) and tsu (not tu). Say them aloud a few times — the sounds matter more than the spelling.",
-    "introCopy_ar": "في صف التاء مفاجأتان: chi (لا ti) وtsu (لا tu). انطِقهما بصوتٍ عالٍ عدة مرات — فالصوت أهم من كتابته بالحروف اللاتينية."
+    "introCopy_ar": "في صف التاء مفاجأتان: chi (لا ti) وtsu (لا tu). انطِقهما بصوتٍ عالٍ عدة مرات — فالصوت أهم من كتابته بالحروف اللاتينية.",
+    "introCopy_ar_f": ""
   },
   "hiragana:05": {
-    "romaji": ["na", "ni", "nu", "ne", "no"],
+    "romaji": [
+      "na",
+      "ni",
+      "nu",
+      "ne",
+      "no"
+    ],
     "displayName_en": "The な Row — N Sounds",
     "displayName_ar": "صف «な» — أصوات النون",
     "introCopy_en": "The n row: na, ni, nu, ne, no. These are soft, rounded shapes — take a moment to notice how な and ぬ resemble each other.",
-    "introCopy_ar": "صف النون: na، ni، nu، ne، no. أشكالها ناعمة ومستديرة — تأمّل كيف يتشابه «な» و«ぬ»."
+    "introCopy_ar": "صف النون: na، ni، nu، ne، no. أشكالها ناعمة ومستديرة — تأمّل كيف يتشابه «な» و«ぬ».",
+    "introCopy_ar_f": ""
   },
   "hiragana:06": {
-    "romaji": ["ha", "hi", "fu", "he", "ho"],
+    "romaji": [
+      "ha",
+      "hi",
+      "fu",
+      "he",
+      "ho"
+    ],
     "displayName_en": "The は Row — H Sounds",
     "displayName_ar": "صف «は» — أصوات الهاء",
     "introCopy_en": "The h row: ha, hi, fu, he, ho. The third sound is a soft fu — halfway between an f and an h, made with a light puff of air, not your teeth.",
-    "introCopy_ar": "صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة لا من الأسنان."
+    "introCopy_ar": "صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة لا من الأسنان.",
+    "introCopy_ar_f": ""
   },
   "hiragana:07": {
-    "romaji": ["ma", "mi", "mu", "me", "mo"],
+    "romaji": [
+      "ma",
+      "mi",
+      "mu",
+      "me",
+      "mo"
+    ],
     "displayName_en": "The ま Row — M Sounds",
     "displayName_ar": "صف «ま» — أصوات الميم",
     "introCopy_en": "The m row: ma, mi, mu, me, mo. You are past the halfway mark of the basic kana now — the pattern should be feeling natural.",
-    "introCopy_ar": "صف الميم: ma، mi، mu، me، mo. لقد تجاوزت منتصف حروف الكانا الأساسية — ولا بد أن النمط صار مألوفًا لديك."
+    "introCopy_ar": "صف الميم: ma، mi، mu، me، mo. لقد تجاوزت منتصف حروف الكانا الأساسية — ولا بد أن النمط صار مألوفًا لديك.",
+    "introCopy_ar_f": ""
   },
   "hiragana:08": {
-    "romaji": ["ya", "yu", "yo"],
+    "romaji": [
+      "ya",
+      "yu",
+      "yo"
+    ],
     "displayName_en": "The や Row — Y Sounds",
     "displayName_ar": "صف «や» — أصوات الياء",
     "introCopy_en": "A short row: ya, yu, yo — only three. Japanese has no yi or ye sound, so this row skips them. These three will return later to form new sounds.",
-    "introCopy_ar": "صف قصير: ya، yu، yo — ثلاثة فقط. لا يوجد في اليابانية صوت yi أو ye، وستعود هذه الثلاثة لاحقًا لتكوين أصوات جديدة."
+    "introCopy_ar": "صف قصير: ya، yu، yo — ثلاثة فقط. لا يوجد في اليابانية صوت yi أو ye، وستعود هذه الثلاثة لاحقًا لتكوين أصوات جديدة.",
+    "introCopy_ar_f": ""
   },
   "hiragana:09": {
-    "romaji": ["ra", "ri", "ru", "re", "ro"],
+    "romaji": [
+      "ra",
+      "ri",
+      "ru",
+      "re",
+      "ro"
+    ],
     "displayName_en": "The ら Row — R Sounds",
     "displayName_ar": "صف «ら» — أصوات الراء",
     "introCopy_en": "The r row: ra, ri, ru, re, ro. The Japanese r is light — a quick tap of the tongue, somewhere between an r and an l. Keep it gentle.",
-    "introCopy_ar": "صف الراء: ra، ri، ru، re، ro. الراء اليابانية خفيفة — نقرة سريعة باللسان بين الراء واللام. أبقِها خفيفة ولا تُفخِّمها."
+    "introCopy_ar": "صف الراء: ra، ri، ru، re، ro. الراء اليابانية خفيفة — نقرة سريعة باللسان بين الراء واللام. أبقِها خفيفة ولا تُفخِّمها.",
+    "introCopy_ar_f": ""
   },
   "hiragana:10": {
-    "romaji": ["wa", "wo", "n"],
+    "romaji": [
+      "wa",
+      "wo",
+      "n"
+    ],
     "displayName_en": "わ, を and ん — The Last Three",
     "displayName_ar": "«わ» و«を» و«ん» — الثلاثة الأخيرة",
     "introCopy_en": "The final trio: wa, wo, and n. を is only ever used to mark the object of a sentence, and ん is the single consonant that can stand alone. That completes all 46 basic kana — a real milestone.",
-    "introCopy_ar": "الثلاثة الأخيرة: wa، wo، n. لا يُستعمل «を» إلا للدلالة على المفعول به في الجملة، و«ん» هو الصوت الصامت الوحيد الذي يقف بذاته. بهذا تكتمل حروف الكانا الأساسية الـ46 — إنجازٌ حقيقي."
+    "introCopy_ar": "الثلاثة الأخيرة: wa، wo، n. يُستخدم «を» غالبًا أداةً للمفعول به، أما «ん» فهو الصوت الساكن الوحيد الذي يمكن أن يشكّل مقطعًا بمفرده. بهذا تكتمل حروف الكانا الأساسية الستة والأربعون — إنجازٌ حقيقي.",
+    "introCopy_ar_f": ""
   },
   "hiragana:11": {
-    "romaji": ["ga", "gi", "gu", "ge", "go", "za", "ji", "zu", "ze", "zo"],
+    "romaji": [
+      "ga",
+      "gi",
+      "gu",
+      "ge",
+      "go",
+      "za",
+      "ji",
+      "zu",
+      "ze",
+      "zo"
+    ],
     "displayName_en": "Dakuten I — G and Z Sounds",
     "displayName_ar": "الدَّاكوتِن ١ — صوتا g وz",
     "introCopy_en": "Two small strokes (\") change a sound: か becomes が (ka → ga), さ becomes ざ (sa → za). You are not learning new shapes here — only new sounds on shapes you already know.",
-    "introCopy_ar": "شَرطتان صغيرتان (\") تغيّران الصوت: «か» تصير «が» (ka → ga)، و«さ» تصير «ざ» (sa → za). أنت لا تتعلّم أشكالًا جديدة هنا — بل أصواتًا جديدة على أشكالٍ تعرفها."
+    "introCopy_ar": "علامتان صغيرتان تشبهان علامتي الاقتباس تغيّران الصوت: «か» تصير «が» (ka → ga)، و«さ» تصير «ざ» (sa → za). أنت لا تتعلّم أشكالًا جديدة هنا، بل أصواتًا جديدة تضاف إلى أشكال تعرفها.",
+    "introCopy_ar_f": ""
   },
   "hiragana:12": {
-    "romaji": ["da", "di", "du", "de", "do", "ba", "bi", "bu", "be", "bo"],
+    "romaji": [
+      "da",
+      "di",
+      "du",
+      "de",
+      "do",
+      "ba",
+      "bi",
+      "bu",
+      "be",
+      "bo"
+    ],
     "displayName_en": "Dakuten II — D and B Sounds",
     "displayName_ar": "الدَّاكوتِن ٢ — أصوات الدال والباء",
     "introCopy_en": "The same two strokes turn た into だ (ta → da) and は into ば (ha → ba). Note that ぢ and づ sound almost identical to じ and ず — you will rarely meet them.",
-    "introCopy_ar": "الشَّرطتان ذاتهما تحوّلان «た» إلى «だ» (ta → da) و«は» إلى «ば» (ha → ba). ولاحِظ أن «ぢ» و«づ» تكادان تُنطقان مثل «じ» و«ず»، ونادرًا ما تصادفهما."
+    "introCopy_ar": "العلامتان أنفسُهما تحوّلان «た» إلى «だ» (ta → da) و«は» إلى «ば» (ha → ba). ولاحِظ أن «ぢ» و«づ» تكادان تُنطقان مثل «じ» و«ず»، ونادرًا ما تصادفهما.",
+    "introCopy_ar_f": ""
   },
   "hiragana:13": {
-    "romaji": ["pa", "pi", "pu", "pe", "po"],
+    "romaji": [
+      "pa",
+      "pi",
+      "pu",
+      "pe",
+      "po"
+    ],
     "displayName_en": "Handakuten — P Sounds",
-    "displayName_ar": "الهانداكوتِن — أصوات الباء المهموسة (p)",
+    "displayName_ar": "الهانداكوتِن — صوت p",
     "introCopy_en": "A small circle (°) on the は row makes the p sound: ぱ, ぴ, ぷ, ぺ, ぽ. Arabic has no native p, so give this one extra practice — keep the lips firm and let the air pop, without slipping into a b.",
-    "introCopy_ar": "دائرة صغيرة (°) على صف الهاء تُعطي صوت p: «ぱ» و«ぴ» و«ぷ» و«ぺ» و«ぽ». ولا نظير لهذا الصوت في العربية، فخصِّص له تدريبًا إضافيًّا — أطبِق الشفتين ثم أطلِق الهواء دفعةً واحدة، دون أن ينزلق الصوت إلى الباء."
+    "introCopy_ar": "تضيف دائرة صغيرة إلى صف الهاء صوت p: «ぱ» و«ぴ» و«ぷ» و«ぺ» و«ぽ». هذا الصوت غير موجود بوصفه صوتًا أصليًّا في العربية الفصحى، لذلك قد يحتاج إلى تدريب إضافي. أطبِق شفتيك ثم أطلِق الهواء دفعة واحدة، من دون أن يتحول الصوت إلى b.",
+    "introCopy_ar_f": ""
   },
   "hiragana:14": {
-    "romaji": ["kya", "kyu", "kyo", "sha", "shu", "sho", "cha", "chu", "cho"],
+    "romaji": [
+      "kya",
+      "kyu",
+      "kyo",
+      "sha",
+      "shu",
+      "sho",
+      "cha",
+      "chu",
+      "cho"
+    ],
     "displayName_en": "Yōon I — きゃ, しゃ, ちゃ",
     "displayName_ar": "اليُوؤُن ١ — «きゃ» و«しゃ» و«ちゃ»",
     "introCopy_en": "Now the small や, ゆ, よ return. Written half-size after a kana ending in the i sound, they blend into one syllable: き + small ゃ = kya. Here are the k, sh, and ch blends.",
-    "introCopy_ar": "الآن تعود «や» و«ゆ» و«よ» بحجمها الصغير. تُكتب بنصف الحجم بعد حرف كانا منتهٍ بصوت i، فيندمج الاثنان في مقطعٍ واحد: «き» + «ゃ» الصغيرة = kya. وهذه مزيجات أصوات k وsh وch."
+    "introCopy_ar": "تعود «や» و«ゆ» و«よ» هنا بحجم أصغر. توضع بعد حرف ينتهي بصوت i، فيندمج الحرفان في مقطع واحد: «き» + «ゃ» الصغيرة = kya. وتشمل هذه المجموعة تراكيب أصوات k وsh وch.",
+    "introCopy_ar_f": ""
   },
   "hiragana:15": {
-    "romaji": ["nya", "nyu", "nyo", "hya", "hyu", "hyo", "mya", "myu", "myo", "rya", "ryu", "ryo"],
+    "romaji": [
+      "nya",
+      "nyu",
+      "nyo",
+      "hya",
+      "hyu",
+      "hyo",
+      "mya",
+      "myu",
+      "myo",
+      "rya",
+      "ryu",
+      "ryo"
+    ],
     "displayName_en": "Yōon II — にゃ, ひゃ, みゃ, りゃ",
     "displayName_ar": "اليُوؤُن ٢ — «にゃ» و«ひゃ» و«みゃ» و«りゃ»",
     "introCopy_en": "The same blending rule across four more rows: n, h, m, and r. The pattern is completely regular now — read each as a single, smooth sound.",
-    "introCopy_ar": "قاعدة الدمج نفسها على أربعة صفوفٍ أخرى: n وh وm وr. صار النمط منتظمًا تمامًا — اقرأ كلًّا منها بوصفه صوتًا واحدًا سلسًا."
+    "introCopy_ar": "قاعدة الدمج نفسها على أربعة صفوفٍ أخرى: n وh وm وr. صار النمط منتظمًا تمامًا — اقرأ كلًّا منها بوصفه صوتًا واحدًا سلسًا.",
+    "introCopy_ar_f": ""
   },
   "hiragana:16": {
-    "romaji": ["gya", "gyu", "gyo", "ja", "ju", "jo", "bya", "byu", "byo", "pya", "pyu", "pyo"],
+    "romaji": [
+      "gya",
+      "gyu",
+      "gyo",
+      "ja",
+      "ju",
+      "jo",
+      "bya",
+      "byu",
+      "byo",
+      "pya",
+      "pyu",
+      "pyo"
+    ],
     "displayName_en": "Yōon III — ぎゃ, じゃ, びゃ, ぴゃ",
     "displayName_ar": "اليُوؤُن ٣ — «ぎゃ» و«じゃ» و«びゃ» و«ぴゃ»",
     "introCopy_en": "The last set combines yōon with dakuten and handakuten: g, j, b, and p blends. Finish these and you can read every sound hiragana can make.",
-    "introCopy_ar": "المجموعة الأخيرة تجمع اليُوؤُن مع الدَّاكوتِن والهانداكوتِن: مزيجات g وj وb وp. أنجِزها وستقدر على قراءة كل صوتٍ تُنتجه الهيراغانا."
+    "introCopy_ar": "تجمع هذه المجموعة الأخيرة اليُوؤُن مع الدَّاكوتِن والهانداكوتِن، فتكوّن تراكيب g وj وb وp. بإتقانها ستتمكن من قراءة جميع مقاطع الهيراغانا الأساسية والممزوجة التي درستها.",
+    "introCopy_ar_f": ""
   }
 }

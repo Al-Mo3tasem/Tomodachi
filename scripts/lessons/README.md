@@ -37,9 +37,18 @@ All generators are idempotent (doc-id = lessonKey) and dry-run without `--write`
 
 - Copy style: ≤2 sentences; spend the budget on Arabic-speaker-specific observations
   (e.g. the p-sound note), not generic encouragement. Terminology: حرف كانا (not مقطع
-  for a character), صامت (not ساكن) for consonant, Latin `g`/`p` for sounds Arabic
-  letters can't name. Romaji lists use Arabic commas: `a، i، u`.
-- Gender address: masculine singular for now — **open product decision** (see review queue).
+  for a character), صامت for consonant (ساكن only where the vowel-less sense is meant),
+  Latin `g`/`p` for sounds Arabic letters can't name. Romaji lists use Arabic commas:
+  `a، i، u`. Per native review v3 (2026-07-26): no absolute claims (كل شيء / أبدًا),
+  direct explanation over metaphor, spelled-out numbers (الستة والأربعين), describe
+  diacritic marks in words (علامتان تشبهان علامتي الاقتباس) — never bare `"` symbols.
+- **Gender address (lead ruling 2026-07-26): masculine singular SHIPS.** Every copy
+  entry carries `introCopy_ar_f` / `intro_ar_f` — the feminine variant — which is
+  deliberately EMPTY and flows through the generators into the lesson docs. Do NOT
+  neutralize the imperatives (they carry the warmth) and do NOT build a gender toggle
+  yet; the field exists so filling it later costs nothing structurally. Fill it only
+  after real feedback from women in the target market says the masculine default
+  registers as excluding.
 - Meta-screens (orientation, reading rules ー/っ, checkpoints) are app UI, NOT lesson
   docs (lead decision D-C); the stamp exempts ー/っ/small-vowel glyphs accordingly,
   and the L2.13 sequence layer must slot these screens by position with a "seen" flag.

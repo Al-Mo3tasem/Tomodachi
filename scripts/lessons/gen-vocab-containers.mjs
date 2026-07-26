@@ -32,6 +32,7 @@ for (let ci = 0; ci < spec.clusters.length; ci++) {
       displayName_en: lessons.length > 1 ? `${meta.name_en} · ${n}` : meta.name_en,
       displayName_ar: lessons.length > 1 ? `${meta.name_ar} · ${n}` : meta.name_ar,
       introCopy_en: meta.intro_en, introCopy_ar: meta.intro_ar,
+      introCopy_ar_f: meta.intro_ar_f ?? '',
       itemKeys: group.map(it => it.key),
       estimated_minutes: clamp(Math.round(group.length * 0.8) + 2, 4, 12), jlpt: 'n5'
     };

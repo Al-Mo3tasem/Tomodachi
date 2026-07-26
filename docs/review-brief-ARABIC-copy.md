@@ -22,13 +22,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** The あ Row — Vowels
 - **AR title:** صف «あ» — أصوات العِلّة
 - **EN intro:** Everything in Japanese begins here. These five vowels — a, i, u, e, o — are the seeds of every kana you will ever read. Learn their order well; it never changes.
-- **AR intro:** كل شيء في اليابانية يبدأ من هنا. حروف العِلّة الخمسة — a، i، u، e، o — هي بذور كل حرف كانا ستقرؤه لاحقًا. أتقِن ترتيبها جيدًا؛ فهو لا يتغيّر أبدًا.
+- **AR intro:** تبدأ من هنا بتعلّم حروف العِلّة الخمسة: a، i، u، e، o. وهي أساس ترتيب صفوف الكانا، فاحفظ ترتيبها جيدًا؛ لأنه سيتكرر في الدروس التالية.
 
 ### 2. `hiragana:02`
 - **EN title:** The か Row — K Sounds
 - **AR title:** صف «か» — أصوات الكاف
 - **EN intro:** Add a k to each vowel you just learned: ka, ki, ku, ke, ko. From now on, every row follows the same a-i-u-e-o pattern — so you already know half of each one.
-- **AR intro:** أضِف صوت الكاف إلى كل حرف عِلّة تعلّمته للتو: ka، ki، ku، ke، ko. ومن الآن فصاعدًا يسير كل صفٍّ على النمط نفسه a، i، u، e، o — أي أنك تعرف نصف كل صفٍّ قبل أن تبدأه.
+- **AR intro:** في هذا الصف تقترن أصوات k بحروف العِلّة الخمسة: ka، ki، ku، ke، ko. ومن الآن ستلاحظ أن معظم الصفوف تتبع ترتيب a، i، u، e، o، مما يسهّل حفظها.
 
 ### 3. `hiragana:03`
 - **EN title:** The さ Row — S Sounds
@@ -76,31 +76,31 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** わ, を and ん — The Last Three
 - **AR title:** «わ» و«を» و«ん» — الثلاثة الأخيرة
 - **EN intro:** The final trio: wa, wo, and n. を is only ever used to mark the object of a sentence, and ん is the single consonant that can stand alone. That completes all 46 basic kana — a real milestone.
-- **AR intro:** الثلاثة الأخيرة: wa، wo، n. لا يُستعمل «を» إلا للدلالة على المفعول به في الجملة، و«ん» هو الصوت الصامت الوحيد الذي يقف بذاته. بهذا تكتمل حروف الكانا الأساسية الـ46 — إنجازٌ حقيقي.
+- **AR intro:** الثلاثة الأخيرة: wa، wo، n. يُستخدم «を» غالبًا أداةً للمفعول به، أما «ん» فهو الصوت الساكن الوحيد الذي يمكن أن يشكّل مقطعًا بمفرده. بهذا تكتمل حروف الكانا الأساسية الستة والأربعون — إنجازٌ حقيقي.
 
 ### 11. `hiragana:11`
 - **EN title:** Dakuten I — G and Z Sounds
 - **AR title:** الدَّاكوتِن ١ — صوتا g وz
 - **EN intro:** Two small strokes (") change a sound: か becomes が (ka → ga), さ becomes ざ (sa → za). You are not learning new shapes here — only new sounds on shapes you already know.
-- **AR intro:** شَرطتان صغيرتان (") تغيّران الصوت: «か» تصير «が» (ka → ga)، و«さ» تصير «ざ» (sa → za). أنت لا تتعلّم أشكالًا جديدة هنا — بل أصواتًا جديدة على أشكالٍ تعرفها.
+- **AR intro:** علامتان صغيرتان تشبهان علامتي الاقتباس تغيّران الصوت: «か» تصير «が» (ka → ga)، و«さ» تصير «ざ» (sa → za). أنت لا تتعلّم أشكالًا جديدة هنا، بل أصواتًا جديدة تضاف إلى أشكال تعرفها.
 
 ### 12. `hiragana:12`
 - **EN title:** Dakuten II — D and B Sounds
 - **AR title:** الدَّاكوتِن ٢ — أصوات الدال والباء
 - **EN intro:** The same two strokes turn た into だ (ta → da) and は into ば (ha → ba). Note that ぢ and づ sound almost identical to じ and ず — you will rarely meet them.
-- **AR intro:** الشَّرطتان ذاتهما تحوّلان «た» إلى «だ» (ta → da) و«は» إلى «ば» (ha → ba). ولاحِظ أن «ぢ» و«づ» تكادان تُنطقان مثل «じ» و«ず»، ونادرًا ما تصادفهما.
+- **AR intro:** العلامتان أنفسُهما تحوّلان «た» إلى «だ» (ta → da) و«は» إلى «ば» (ha → ba). ولاحِظ أن «ぢ» و«づ» تكادان تُنطقان مثل «じ» و«ず»، ونادرًا ما تصادفهما.
 
 ### 13. `hiragana:13`
 - **EN title:** Handakuten — P Sounds
-- **AR title:** الهانداكوتِن — أصوات الباء المهموسة (p)
+- **AR title:** الهانداكوتِن — صوت p
 - **EN intro:** A small circle (°) on the は row makes the p sound: ぱ, ぴ, ぷ, ぺ, ぽ. Arabic has no native p, so give this one extra practice — keep the lips firm and let the air pop, without slipping into a b.
-- **AR intro:** دائرة صغيرة (°) على صف الهاء تُعطي صوت p: «ぱ» و«ぴ» و«ぷ» و«ぺ» و«ぽ». ولا نظير لهذا الصوت في العربية، فخصِّص له تدريبًا إضافيًّا — أطبِق الشفتين ثم أطلِق الهواء دفعةً واحدة، دون أن ينزلق الصوت إلى الباء.
+- **AR intro:** تضيف دائرة صغيرة إلى صف الهاء صوت p: «ぱ» و«ぴ» و«ぷ» و«ぺ» و«ぽ». هذا الصوت غير موجود بوصفه صوتًا أصليًّا في العربية الفصحى، لذلك قد يحتاج إلى تدريب إضافي. أطبِق شفتيك ثم أطلِق الهواء دفعة واحدة، من دون أن يتحول الصوت إلى b.
 
 ### 14. `hiragana:14`
 - **EN title:** Yōon I — きゃ, しゃ, ちゃ
 - **AR title:** اليُوؤُن ١ — «きゃ» و«しゃ» و«ちゃ»
 - **EN intro:** Now the small や, ゆ, よ return. Written half-size after a kana ending in the i sound, they blend into one syllable: き + small ゃ = kya. Here are the k, sh, and ch blends.
-- **AR intro:** الآن تعود «や» و«ゆ» و«よ» بحجمها الصغير. تُكتب بنصف الحجم بعد حرف كانا منتهٍ بصوت i، فيندمج الاثنان في مقطعٍ واحد: «き» + «ゃ» الصغيرة = kya. وهذه مزيجات أصوات k وsh وch.
+- **AR intro:** تعود «や» و«ゆ» و«よ» هنا بحجم أصغر. توضع بعد حرف ينتهي بصوت i، فيندمج الحرفان في مقطع واحد: «き» + «ゃ» الصغيرة = kya. وتشمل هذه المجموعة تراكيب أصوات k وsh وch.
 
 ### 15. `hiragana:15`
 - **EN title:** Yōon II — にゃ, ひゃ, みゃ, りゃ
@@ -112,7 +112,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Yōon III — ぎゃ, じゃ, びゃ, ぴゃ
 - **AR title:** اليُوؤُن ٣ — «ぎゃ» و«じゃ» و«びゃ» و«ぴゃ»
 - **EN intro:** The last set combines yōon with dakuten and handakuten: g, j, b, and p blends. Finish these and you can read every sound hiragana can make.
-- **AR intro:** المجموعة الأخيرة تجمع اليُوؤُن مع الدَّاكوتِن والهانداكوتِن: مزيجات g وj وb وp. أنجِزها وستقدر على قراءة كل صوتٍ تُنتجه الهيراغانا.
+- **AR intro:** تجمع هذه المجموعة الأخيرة اليُوؤُن مع الدَّاكوتِن والهانداكوتِن، فتكوّن تراكيب g وj وb وp. بإتقانها ستتمكن من قراءة جميع مقاطع الهيراغانا الأساسية والممزوجة التي درستها.
 
 ## 3b. Katakana track (16)
 
@@ -120,7 +120,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana ア Row — Vowels
 - **AR title:** الكاتاكانا — صف «ア» (أصوات العِلّة)
 - **EN intro:** This is Japan's second script. Katakana spells the same sounds as hiragana but with sharper, more angular shapes, and it is used for foreign and loan words. Start with the vowels: ア, イ, ウ, エ, オ.
-- **AR intro:** هذا هو النظام الكتابي الثاني في اليابان. تُعبّر الكاتاكانا عن الأصوات نفسها التي تُعبّر عنها الهيراغانا، لكن بأشكالٍ أشدّ حِدّةً وأكثر زوايا، وتُستعمل للكلمات الأجنبية والدخيلة. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.
+- **AR intro:** الكاتاكانا هي نظام الكتابة الثاني الذي ستتعلّمه في اليابانية. تمثّل الأصوات نفسها التي تمثّلها الهيراغانا، لكن حروفها تعتمد أكثر على الخطوط المستقيمة والزوايا، وتُستخدم غالبًا في الكلمات الأجنبية والدخيلة. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.
 
 ### 18. `katakana:02`
 - **EN title:** Katakana カ Row — K Sounds
@@ -132,19 +132,19 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana サ Row — S Sounds
 - **AR title:** الكاتاكانا — صف «サ» (أصوات السين)
 - **EN intro:** sa, shi, su, se, so. Meet シ (shi) — keep an eye on it: it looks confusingly like ツ (tsu), which you will learn next. The strokes point differently.
-- **AR intro:** sa، shi، su، se، so. تعرّف إلى «シ» (shi) — وانتبه له جيدًا: فهو يشبه «ツ» (tsu) الذي ستتعلمه تاليًا، واتجاه الشَّرطات هو الفارق.
+- **AR intro:** sa، shi، su، se، so. تعرّف إلى «シ» (shi) — وانتبه له جيدًا: فهو يشبه «ツ» (tsu) الذي ستتعلمه تاليًا، واتجاه الخطوط القصيرة هو الفارق.
 
 ### 20. `katakana:04`
 - **EN title:** Katakana タ Row — T Sounds
 - **AR title:** الكاتاكانا — صف «タ» (أصوات التاء)
 - **EN intro:** ta, chi, tsu, te, to. Here is ツ (tsu), the twin of シ (shi). The trick: シ's strokes come in from the side, ツ's come down from the top.
-- **AR intro:** ta، chi، tsu، te، to. وهذا «ツ» (tsu)، توأم «シ» (shi). الحيلة: شَرطات «シ» تأتي من الجانب، وشَرطات «ツ» تنزل من الأعلى.
+- **AR intro:** ta، chi، tsu، te، to. انتبه إلى «ツ» (tsu)، فهو يشبه «シ» (shi). لتفريقهما: تأتي الخطوط القصيرة في «シ» من الجانب، وفي «ツ» من الأعلى.
 
 ### 21. `katakana:05`
 - **EN title:** Katakana ナ Row — N Sounds
 - **AR title:** الكاتاكانا — صف «ナ» (أصوات النون)
 - **EN intro:** na, ni, nu, ne, no. Notice how ノ (no) is a single clean stroke — it appears as a building block inside several other katakana.
-- **AR intro:** na، ni، nu، ne، no. لاحِظ أن «ノ» (no) خطٌّ واحد بسيط — وهو يتكرّر لبنةً داخل عدة حروف كاتاكانا أخرى.
+- **AR intro:** na، ni، nu، ne، no. لاحِظ أن «ノ» (no) يتكوّن من خط واحد بسيط، وأن شكله يظهر جزءًا من رسم عدة حروف كاتاكانا أخرى.
 
 ### 22. `katakana:06`
 - **EN title:** Katakana ハ Row — H Sounds
@@ -156,7 +156,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana マ Row — M Sounds
 - **AR title:** الكاتاكانا — صف «マ» (أصوات الميم)
 - **EN intro:** ma, mi, mu, me, mo. You are halfway through the second script. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.
-- **AR intro:** ma، mi، mu، me، mo. قطعتَ نصف الطريق في النظام الثاني. وقريبًا ستقرأ كلماتٍ مثل «コーヒー» (قهوة) و«パン» (خبز) بنظرةٍ واحدة.
+- **AR intro:** ma، mi، mu، me، mo. بهذا تكون قد قطعت نصف الطريق في تعلّم الكاتاكانا. وقريبًا ستقرأ كلمات مثل «コーヒー» (قهوة) و«パン» (خبز) بسهولة.
 
 ### 24. `katakana:08`
 - **EN title:** Katakana ヤ Row — Y Sounds
@@ -172,15 +172,15 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 
 ### 26. `katakana:10`
 - **EN title:** ワ, ヲ and ン — And a Famous Trap
-- **AR title:** «ワ» و«ヲ» و«ン» — وفخٌّ مشهور
+- **AR title:** «ワ» و«ヲ» و«ン» — ولبسٌ شائع
 - **EN intro:** wa, wo, and n. ン (n) is famously easy to confuse with ソ (so): ン's stroke sweeps up from the bottom, ソ's drops from the top. Master this and you have finished the 46 basic katakana.
-- **AR intro:** wa، wo، n. حرف «ン» (n) يسهُل الخلط بينه وبين «ソ» (so): شَرطة «ン» تصعد من الأسفل، وشَرطة «ソ» تهبط من الأعلى. أتقِن هذا وتكون قد أنهيت حروف الكاتاكانا الأساسية الـ46.
+- **AR intro:** wa، wo، n. يسهُل الخلط بين «ン» (n) و«ソ» (so)؛ فالخط في «ン» يتجه صعودًا من الأسفل، وفي «ソ» هبوطًا من الأعلى. أتقن الفرق بينهما، وستكون قد أتممت حروف الكاتاكانا الأساسية الستة والأربعين.
 
 ### 27. `katakana:11`
 - **EN title:** Katakana Dakuten I — G and Z
 - **AR title:** كاتاكانا الدَّاكوتِن ١ — صوتا g وz
 - **EN intro:** The dakuten works exactly as in hiragana: カ → ガ (ka → ga), サ → ザ (sa → za). You already know the rule; here it is on the katakana shapes.
-- **AR intro:** يعمل الدَّاكوتِن هنا تمامًا كما في الهيراغانا: «カ» ← «ガ» (ka → ga)، «サ» ← «ザ» (sa → za). أنت تعرف القاعدة سلفًا؛ وها هي على أشكال الكاتاكانا.
+- **AR intro:** يعمل الدَّاكوتِن هنا كما يعمل في الهيراغانا: «カ» ← «ガ» (ka → ga)، و«サ» ← «ザ» (sa → za). أنت تعرف القاعدة بالفعل؛ والآن ستطبّقها على حروف الكاتاكانا.
 
 ### 28. `katakana:12`
 - **EN title:** Katakana Dakuten II — D and B
@@ -192,13 +192,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana Handakuten — P
 - **AR title:** كاتاكانا الهانداكوتِن — صوت p
 - **EN intro:** The small circle gives p: パ, ピ, プ, ペ, ポ. This is one of katakana's most useful rows — foreign words lean on p heavily: パン (bread), ペン (pen), コップ (cup).
-- **AR intro:** الدائرة الصغيرة تُعطي صوت p: «パ» و«ピ» و«プ» و«ペ» و«ポ». وهذا من أنفع صفوف الكاتاكانا — إذ تعتمد الكلمات الأجنبية على صوت p كثيرًا: «パン» (خبز)، «ペン» (قلم)، «コップ» (كوب).
+- **AR intro:** تضيف الدائرة الصغيرة صوت p إلى صف الهاء: «パ» و«ピ» و«プ» و«ペ» و«ポ». وهذا صوت شائع في الكلمات الأجنبية المكتوبة بالكاتاكانا، مثل «パン» (خبز)، و«ペン» (قلم)، و«コップ» (كوب).
 
 ### 30. `katakana:14`
 - **EN title:** Katakana Yōon I — キャ, シャ, チャ
 - **AR title:** كاتاكانا اليُوؤُن ١ — «キャ» و«シャ» و«チャ»
 - **EN intro:** Small ャ, ュ, ョ blend a consonant with a y-sound, exactly as in hiragana. In katakana these also help spell foreign syllables the old kana could not.
-- **AR intro:** الأحرف الصغيرة «ャ» و«ュ» و«ョ» تمزج صوتًا صامتًا بصوت الياء، تمامًا كما في الهيراغانا. وفي الكاتاكانا تؤدي دورًا إضافيًّا: كتابة مقاطع أجنبية عجزت عنها الكانا التقليدية.
+- **AR intro:** تُضاف «ャ» و«ュ» و«ョ» الصغيرة إلى بعض حروف الكاتاكانا لتكوين مقاطع ممزوجة، كما في الهيراغانا. وتساعد أيضًا على كتابة مقاطع أجنبية لا تمثّلها حروف الكانا الأساسية.
 
 ### 31. `katakana:15`
 - **EN title:** Katakana Yōon II — ニャ, ヒャ, ミャ, リャ
@@ -210,7 +210,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana Yōon III — ギャ, ジャ, ビャ, ピャ
 - **AR title:** كاتاكانا اليُوؤُن ٣ — «ギャ» و«ジャ» و«ビャ» و«ピャ»
 - **EN intro:** The final blended set with dakuten and handakuten: g, j, b, and p blends. Complete this and you can read every sound both Japanese scripts can produce — a major milestone.
-- **AR intro:** المجموعة الممزوجة الأخيرة مع الدَّاكوتِن والهانداكوتِن: g وj وb وp. أنجِزها وستقدر على قراءة كل صوتٍ يُنتجه النظامان اليابانيان معًا — إنجازٌ كبير.
+- **AR intro:** هذه آخر مجموعة من مقاطع اليُوؤُن المصحوبة بالدَّاكوتِن أو الهانداكوتِن، وتضم أصوات g وj وb وp. بإتقانها ستتمكن من قراءة جميع المقاطع الأساسية والممزوجة التي تناولتها في الهيراغانا والكاتاكانا.
 
 ## 3c. Vocab cluster intros (20)
 
@@ -230,13 +230,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Numbers
 - **AR title:** الأعداد
 - **EN intro:** Count from one to ten, then the big jumps: hundred, thousand, ten thousand. Numbers appear in prices, times, dates, and phone numbers — you will use them constantly.
-- **AR intro:** عُدّ من واحد إلى عشرة، ثم القفزات الكبرى: مئة وألف وعشرة آلاف. تظهر الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف — وستستعملها باستمرار.
+- **AR intro:** تعلّم العد من واحد إلى عشرة، ثم الأعداد الأكبر: مئة وألف وعشرة آلاف. ستحتاج إلى الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف، لذلك ستستخدمها كثيرًا.
 
 ### 36. `vocab:demonstratives`
 - **EN title:** This, That & Question Words
 - **AR title:** أسماء الإشارة وأدوات الاستفهام
 - **EN intro:** Point at the world: this, that, that-over-there — and ask about it: what, who, where, when. These little words turn single nouns into real questions and answers.
-- **AR intro:** أشِر إلى الأشياء: هذا، وذاك، وذلك الأبعد — واسأل عنها: ما، ومَن، وأين، ومتى. هذه الكلمات الصغيرة تحوّل الأسماء المفردة إلى أسئلةٍ وأجوبةٍ حقيقية.
+- **AR intro:** تعلّم كيف تشير إلى الأشياء القريبة والبعيدة: هذا، وذاك، وذلك؛ وكيف تسأل عنها باستخدام: ما، ومَن، وأين، ومتى. بهذه الكلمات تستطيع تكوين أسئلة وأجوبة بسيطة ومفيدة.
 
 ### 37. `vocab:adjectives`
 - **EN title:** Everyday Adjectives
@@ -248,13 +248,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Food & Drink
 - **AR title:** الطعام والشراب
 - **EN intro:** Meals, staples, and drinks — rice, water, tea, and more. These are what you will eat and drink in the first real sentences you build with 'eat' and 'drink'.
-- **AR intro:** الوجبات والأطعمة الأساسية والمشروبات: الأرز والماء والشاي وغيرها. وهي ما ستأكله وتشربه في أول جملٍ حقيقية تبنيها بفعلَي «يأكل» و«يشرب».
+- **AR intro:** تعرّف إلى الوجبات والأطعمة والمشروبات الأساسية، مثل الأرز والماء والشاي. ستستخدم هذه الكلمات في أولى جملك مع فعلَي «يأكل» و«يشرب».
 
 ### 39. `vocab:verbs`
 - **EN title:** Everyday Verbs
 - **AR title:** أفعال يومية
 - **EN intro:** The engine of every sentence: to go, to come, to eat, to drink, to do. For now, learn them as whole polite forms — the grammar behind them comes right after.
-- **AR intro:** محرّك كل جملة: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّمها الآن بصيغتها المهذّبة الكاملة — وستأتي القواعد التي وراءها مباشرةً بعدها.
+- **AR intro:** هذه الأفعال أساس كثير من الجمل: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّم صيغها المهذّبة الآن، ثم تعرّف إلى القواعد التي تنظّم استخدامها.
 
 ### 40. `vocab:time`
 - **EN title:** Time & Days
@@ -266,43 +266,43 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Places
 - **AR title:** الأماكن
 - **EN intro:** Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.
-- **AR intro:** البيت، والمدرسة، والمحطة، والمتجر. كلمات الأماكن هي بالضبط ما تتّصل به أدوات الدلالة على المكان التي ستتعلمها قريبًا — تعلّم الأسماء أولًا، ثم تأتي القواعد.
+- **AR intro:** تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.
 
 ### 42. `vocab:counters`
 - **EN title:** Counters
 - **AR title:** أدوات العدّ
 - **EN intro:** Japanese counts different things with different words: flat things, long things, small animals, machines. They are tricky — take them slowly, right after your numbers.
-- **AR intro:** تَعُدّ اليابانية الأشياء المختلفة بكلماتٍ مختلفة: المسطّحة، والطويلة، والحيوانات الصغيرة، والآلات. وهي بابٌ مُربِك بعض الشيء — تناوله بتأنٍّ، مباشرةً بعد الأعداد.
+- **AR intro:** تستخدم اليابانية أدوات عد مختلفة بحسب نوع الشيء المعدود، مثل الأشياء المسطحة والطويلة والحيوانات الصغيرة والآلات. قد يبدو هذا الباب مربكًا في البداية، فتعلّمه بهدوء بعد إتقان الأعداد.
 
 ### 43. `vocab:family`
 - **EN title:** Family & People
 - **AR title:** العائلة والناس
 - **EN intro:** Father, mother, older and younger siblings, friend. Family words in Japanese change depending on whether you mean your own family or someone else's — a distinction worth noticing.
-- **AR intro:** الأب، والأم، والإخوة الأكبر والأصغر، والصديق. تتغيّر كلمات العائلة في اليابانية بحسب ما إذا كنت تتحدث عن عائلتك أم عن عائلة غيرك — وهو تمييزٌ جديرٌ بالانتباه.
+- **AR intro:** الأب، والأم، والإخوة والأخوات الأكبر والأصغر سنًّا، والصديق. تختلف بعض ألفاظ العائلة في اليابانية بحسب حديثك عن عائلتك أو عن عائلة شخص آخر، فانتبه إلى هذا الفرق.
 
 ### 44. `vocab:transport`
 - **EN title:** Getting Around
 - **AR title:** التنقّل
 - **EN intro:** Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.
-- **AR intro:** القطارات والسيارات وأفعال الحركة المصاحبة لها. هنا تجتمع مفردات السفر وسؤال الطريق لأول مرة.
+- **AR intro:** تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.
 
 ### 45. `vocab:body`
 - **EN title:** Body & Feelings
 - **AR title:** الجسم والمشاعر
 - **EN intro:** Parts of the body and the feelings that go with them — tired, happy, painful. Useful the moment you need to say how you are.
-- **AR intro:** أعضاء الجسم والمشاعر المرتبطة بها: مُتعَب، وسعيد، ومُتألِّم. تنفعك في اللحظة التي تحتاج فيها إلى وصف حالك.
+- **AR intro:** تعلّم أسماء أعضاء الجسم وكلمات تصف حالتك، مثل: متعب، وسعيد، ومتألم. ستفيدك عندما تحتاج إلى التعبير عن شعورك أو وصف حالك.
 
 ### 46. `vocab:nature`
 - **EN title:** Weather & Nature
 - **AR title:** الطقس والطبيعة
 - **EN intro:** Sky, rain, snow, mountain, sun. Weather is the safest small talk in any language — and these words open it up in Japanese.
-- **AR intro:** السماء، والمطر، والثلج، والجبل، والشمس. الطقس أسلمُ موضوعٍ للحديث العابر في أي لغة — وهذه الكلمات تفتح لك بابه في اليابانية.
+- **AR intro:** السماء، والمطر، والثلج، والجبل، والشمس. الطقس من أسهل موضوعات الحديث العابر في أي لغة، وهذه الكلمات تساعدك على الحديث عنه باليابانية.
 
 ### 47. `vocab:adverbs`
 - **EN title:** Adverbs & Connectors
 - **AR title:** الظروف وأدوات الربط
 - **EN intro:** Very, a little, often, and the small words that link ideas: and, but, so. These add nuance and flow, turning stiff sentences into natural ones.
-- **AR intro:** «جِدًّا» و«قليلًا» و«غالبًا»، والكلمات الصغيرة التي تربط الأفكار: «الواو» و«لكن» و«لذلك». هذه تضيف الدقّة والانسياب، فتحوّل الجمل المتيبّسة إلى جملٍ طبيعية.
+- **AR intro:** تعلّم كلمات مثل «جِدًّا» و«قليلًا» و«غالبًا»، وأدوات تربط الأفكار مثل «الواو» و«لكن» و«لذلك». تضيف هذه الكلمات دقةً وسلاسةً إلى كلامك، وتجعل جملك أكثر طبيعية.
 
 ### 48. `vocab:home_verbs`
 - **EN title:** Home & Routine Verbs
@@ -320,19 +320,19 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** School & Study
 - **AR title:** المدرسة والدراسة
 - **EN intro:** Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.
-- **AR intro:** كلمات التعلّم: معلّم، وطالب، ودرس، واختبار، وواجب. وهي قريبةٌ منك بوجهٍ خاص، فأنت تدرس اليابانية في هذه اللحظة.
+- **AR intro:** تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.
 
 ### 51. `vocab:social_verbs`
 - **EN title:** Work, Play & Exchange Verbs
 - **AR title:** أفعال العمل واللعب والتبادل
 - **EN intro:** Verbs for what you do with others: to work, to play, to buy, to give, to meet. With these you can build sentences about a real, social day.
-- **AR intro:** أفعال ما تفعله مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تبني جملًا عن يومٍ اجتماعي حقيقي.
+- **AR intro:** تعرّف إلى أفعال تستخدمها في العمل واللعب والتعامل مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تستطيع وصف يوم اجتماعي عادي.
 
 ### 52. `vocab:colors`
 - **EN title:** Colors & More Adjectives
 - **AR title:** الألوان ومزيد من الصفات
 - **EN intro:** Colors and a second set of describing words. With these your descriptions gain real detail — the red car, the quiet room, the busy street.
-- **AR intro:** الألوان ومجموعةٌ ثانية من كلمات الوصف. بهذه تكتسب أوصافك تفصيلًا حقيقيًّا — السيارة الحمراء، الغرفة الهادئة، الشارع المزدحم.
+- **AR intro:** تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.
 
 > Note: the 54 grammar lessons reuse Arabic from an earlier, separately-reviewed content batch (the `body_ar` fields), so they are excluded here to keep this review focused on the newly-drafted Arabic above.
 

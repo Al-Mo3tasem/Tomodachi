@@ -32,6 +32,7 @@ for (const [lessonKey, def] of Object.entries(copy)) {
     globalOrder: goBase + (track === 'katakana' ? trackPosition : [1,2,3,4,5,6,7,8,9,10,12,14,16,17,19,21][trackPosition - 1]),
     displayName_en: def.displayName_en, displayName_ar: def.displayName_ar,
     introCopy_en: def.introCopy_en, introCopy_ar: def.introCopy_ar,
+    introCopy_ar_f: def.introCopy_ar_f ?? '',
     itemKeys, estimated_minutes: clamp(Math.round(itemKeys.length * 0.7) + 3, 4, 10), jlpt: 'pre-n5'
   };
   const res = validateLesson(c);

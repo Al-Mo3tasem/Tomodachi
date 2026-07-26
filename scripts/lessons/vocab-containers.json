@@ -9,6 +9,7 @@
   "displayName_ar": "التحيات",
   "introCopy_en": "Your first real words. These everyday greetings and polite phrases are what you will say — and hear — in the very first minute of any conversation.",
   "introCopy_ar": "أولى كلماتك الحقيقية. هذه التحيات والعبارات المهذّبة اليومية هي ما ستقوله — وتسمعه — في الدقيقة الأولى من أي محادثة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_035_hello",
    "n5_v_036_good_morning",
@@ -31,6 +32,7 @@
   "displayName_ar": "مزيد من التحيات",
   "introCopy_en": "A few more social phrases, including the ones said before and after meals and when coming and going from home — small courtesies that matter a great deal in Japan.",
   "introCopy_ar": "عباراتٌ اجتماعية إضافية، منها ما يُقال قبل الطعام وبعده وعند الدخول إلى البيت والخروج منه — مجاملاتٌ صغيرة لها وزنٌ كبير في اليابان.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_037_good_evening",
    "n5_v_040_thank_you",
@@ -54,7 +56,8 @@
   "displayName_en": "Numbers · 1",
   "displayName_ar": "الأعداد · 1",
   "introCopy_en": "Count from one to ten, then the big jumps: hundred, thousand, ten thousand. Numbers appear in prices, times, dates, and phone numbers — you will use them constantly.",
-  "introCopy_ar": "عُدّ من واحد إلى عشرة، ثم القفزات الكبرى: مئة وألف وعشرة آلاف. تظهر الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف — وستستعملها باستمرار.",
+  "introCopy_ar": "تعلّم العد من واحد إلى عشرة، ثم الأعداد الأكبر: مئة وألف وعشرة آلاف. ستحتاج إلى الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف، لذلك ستستخدمها كثيرًا.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_061_number_1",
    "n5_v_062_number_2",
@@ -79,7 +82,8 @@
   "displayName_en": "Numbers · 2",
   "displayName_ar": "الأعداد · 2",
   "introCopy_en": "Count from one to ten, then the big jumps: hundred, thousand, ten thousand. Numbers appear in prices, times, dates, and phone numbers — you will use them constantly.",
-  "introCopy_ar": "عُدّ من واحد إلى عشرة، ثم القفزات الكبرى: مئة وألف وعشرة آلاف. تظهر الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف — وستستعملها باستمرار.",
+  "introCopy_ar": "تعلّم العد من واحد إلى عشرة، ثم الأعداد الأكبر: مئة وألف وعشرة آلاف. ستحتاج إلى الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف، لذلك ستستخدمها كثيرًا.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_071_number_100",
    "n5_v_072_number_1000",
@@ -97,7 +101,8 @@
   "displayName_en": "This, That & Question Words · 1",
   "displayName_ar": "أسماء الإشارة وأدوات الاستفهام · 1",
   "introCopy_en": "Point at the world: this, that, that-over-there — and ask about it: what, who, where, when. These little words turn single nouns into real questions and answers.",
-  "introCopy_ar": "أشِر إلى الأشياء: هذا، وذاك، وذلك الأبعد — واسأل عنها: ما، ومَن، وأين، ومتى. هذه الكلمات الصغيرة تحوّل الأسماء المفردة إلى أسئلةٍ وأجوبةٍ حقيقية.",
+  "introCopy_ar": "تعلّم كيف تشير إلى الأشياء القريبة والبعيدة: هذا، وذاك، وذلك؛ وكيف تسأل عنها باستخدام: ما، ومَن، وأين، ومتى. بهذه الكلمات تستطيع تكوين أسئلة وأجوبة بسيطة ومفيدة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_015_this_thing",
    "n5_v_016_that_thing",
@@ -122,7 +127,8 @@
   "displayName_en": "This, That & Question Words · 2",
   "displayName_ar": "أسماء الإشارة وأدوات الاستفهام · 2",
   "introCopy_en": "Point at the world: this, that, that-over-there — and ask about it: what, who, where, when. These little words turn single nouns into real questions and answers.",
-  "introCopy_ar": "أشِر إلى الأشياء: هذا، وذاك، وذلك الأبعد — واسأل عنها: ما، ومَن، وأين، ومتى. هذه الكلمات الصغيرة تحوّل الأسماء المفردة إلى أسئلةٍ وأجوبةٍ حقيقية.",
+  "introCopy_ar": "تعلّم كيف تشير إلى الأشياء القريبة والبعيدة: هذا، وذاك، وذلك؛ وكيف تسأل عنها باستخدام: ما، ومَن، وأين، ومتى. بهذه الكلمات تستطيع تكوين أسئلة وأجوبة بسيطة ومفيدة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_025_over_there",
    "n5_v_026_where",
@@ -148,6 +154,7 @@
   "displayName_ar": "الصفات اليومية · 1",
   "introCopy_en": "Describe things: big and small, new and old, hot and cold, good and bad. With these you can finally say more than just an object's name.",
   "introCopy_ar": "صِف الأشياء: كبير وصغير، جديد وقديم، حارّ وبارد، جيّد وسيّئ. بهذه الصفات تستطيع أخيرًا أن تقول أكثر من مجرّد اسم الشيء.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_001_big",
    "n5_v_002_small",
@@ -173,6 +180,7 @@
   "displayName_ar": "الصفات اليومية · 2",
   "introCopy_en": "Describe things: big and small, new and old, hot and cold, good and bad. With these you can finally say more than just an object's name.",
   "introCopy_ar": "صِف الأشياء: كبير وصغير، جديد وقديم، حارّ وبارد، جيّد وسيّئ. بهذه الصفات تستطيع أخيرًا أن تقول أكثر من مجرّد اسم الشيء.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_009_early",
    "n5_v_010_late",
@@ -198,6 +206,7 @@
   "displayName_ar": "الصفات اليومية · 3",
   "introCopy_en": "Describe things: big and small, new and old, hot and cold, good and bad. With these you can finally say more than just an object's name.",
   "introCopy_ar": "صِف الأشياء: كبير وصغير، جديد وقديم، حارّ وبارد، جيّد وسيّئ. بهذه الصفات تستطيع أخيرًا أن تقول أكثر من مجرّد اسم الشيء.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_027_strong",
    "n5_v_028_weak",
@@ -216,7 +225,8 @@
   "displayName_en": "Food & Drink · 1",
   "displayName_ar": "الطعام والشراب · 1",
   "introCopy_en": "Meals, staples, and drinks — rice, water, tea, and more. These are what you will eat and drink in the first real sentences you build with 'eat' and 'drink'.",
-  "introCopy_ar": "الوجبات والأطعمة الأساسية والمشروبات: الأرز والماء والشاي وغيرها. وهي ما ستأكله وتشربه في أول جملٍ حقيقية تبنيها بفعلَي «يأكل» و«يشرب».",
+  "introCopy_ar": "تعرّف إلى الوجبات والأطعمة والمشروبات الأساسية، مثل الأرز والماء والشاي. ستستخدم هذه الكلمات في أولى جملك مع فعلَي «يأكل» و«يشرب».",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_041_water",
    "n5_v_042_tea",
@@ -241,7 +251,8 @@
   "displayName_en": "Food & Drink · 2",
   "displayName_ar": "الطعام والشراب · 2",
   "introCopy_en": "Meals, staples, and drinks — rice, water, tea, and more. These are what you will eat and drink in the first real sentences you build with 'eat' and 'drink'.",
-  "introCopy_ar": "الوجبات والأطعمة الأساسية والمشروبات: الأرز والماء والشاي وغيرها. وهي ما ستأكله وتشربه في أول جملٍ حقيقية تبنيها بفعلَي «يأكل» و«يشرب».",
+  "introCopy_ar": "تعرّف إلى الوجبات والأطعمة والمشروبات الأساسية، مثل الأرز والماء والشاي. ستستخدم هذه الكلمات في أولى جملك مع فعلَي «يأكل» و«يشرب».",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_049_fruit",
    "n5_v_052_breakfast",
@@ -262,7 +273,8 @@
   "displayName_en": "Everyday Verbs · 1",
   "displayName_ar": "أفعال يومية · 1",
   "introCopy_en": "The engine of every sentence: to go, to come, to eat, to drink, to do. For now, learn them as whole polite forms — the grammar behind them comes right after.",
-  "introCopy_ar": "محرّك كل جملة: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّمها الآن بصيغتها المهذّبة الكاملة — وستأتي القواعد التي وراءها مباشرةً بعدها.",
+  "introCopy_ar": "هذه الأفعال أساس كثير من الجمل: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّم صيغها المهذّبة الآن، ثم تعرّف إلى القواعد التي تنظّم استخدامها.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_003_do",
    "n5_v_005_go",
@@ -287,7 +299,8 @@
   "displayName_en": "Everyday Verbs · 2",
   "displayName_ar": "أفعال يومية · 2",
   "introCopy_en": "The engine of every sentence: to go, to come, to eat, to drink, to do. For now, learn them as whole polite forms — the grammar behind them comes right after.",
-  "introCopy_ar": "محرّك كل جملة: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّمها الآن بصيغتها المهذّبة الكاملة — وستأتي القواعد التي وراءها مباشرةً بعدها.",
+  "introCopy_ar": "هذه الأفعال أساس كثير من الجمل: يذهب، ويأتي، ويأكل، ويشرب، ويفعل. تعلّم صيغها المهذّبة الآن، ثم تعرّف إلى القواعد التي تنظّم استخدامها.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_011_speak",
    "n5_v_012_say",
@@ -313,6 +326,7 @@
   "displayName_ar": "الوقت والأيام · 1",
   "introCopy_en": "Today, tomorrow, yesterday, and the days of the week. Time words let you say when something happens — the backbone of planning and daily talk.",
   "introCopy_ar": "اليوم، غدًا، أمس، وأيام الأسبوع. كلمات الوقت تتيح لك قول متى يحدث الشيء — وهي العمود الفقري للتخطيط والحديث اليومي.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_094_today",
    "n5_v_095_tomorrow",
@@ -338,6 +352,7 @@
   "displayName_ar": "الوقت والأيام · 2",
   "introCopy_en": "Today, tomorrow, yesterday, and the days of the week. Time words let you say when something happens — the backbone of planning and daily talk.",
   "introCopy_ar": "اليوم، غدًا، أمس، وأيام الأسبوع. كلمات الوقت تتيح لك قول متى يحدث الشيء — وهي العمود الفقري للتخطيط والحديث اليومي.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_088_hour_unit",
    "n5_v_101_week",
@@ -363,6 +378,7 @@
   "displayName_ar": "الوقت والأيام · 3",
   "introCopy_en": "Today, tomorrow, yesterday, and the days of the week. Time words let you say when something happens — the backbone of planning and daily talk.",
   "introCopy_ar": "اليوم، غدًا، أمس، وأيام الأسبوع. كلمات الوقت تتيح لك قول متى يحدث الشيء — وهي العمود الفقري للتخطيط والحديث اليومي.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_081_day_sunday"
   ],
@@ -378,7 +394,8 @@
   "displayName_en": "Places · 1",
   "displayName_ar": "الأماكن · 1",
   "introCopy_en": "Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.",
-  "introCopy_ar": "البيت، والمدرسة، والمحطة، والمتجر. كلمات الأماكن هي بالضبط ما تتّصل به أدوات الدلالة على المكان التي ستتعلمها قريبًا — تعلّم الأسماء أولًا، ثم تأتي القواعد.",
+  "introCopy_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_021_house",
    "n5_v_022_school",
@@ -403,7 +420,8 @@
   "displayName_en": "Places · 2",
   "displayName_ar": "الأماكن · 2",
   "introCopy_en": "Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.",
-  "introCopy_ar": "البيت، والمدرسة، والمحطة، والمتجر. كلمات الأماكن هي بالضبط ما تتّصل به أدوات الدلالة على المكان التي ستتعلمها قريبًا — تعلّم الأسماء أولًا، ثم تأتي القواعد.",
+  "introCopy_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_027_post_office",
    "n5_v_036_park",
@@ -423,7 +441,8 @@
   "displayName_en": "Counters",
   "displayName_ar": "أدوات العدّ",
   "introCopy_en": "Japanese counts different things with different words: flat things, long things, small animals, machines. They are tricky — take them slowly, right after your numbers.",
-  "introCopy_ar": "تَعُدّ اليابانية الأشياء المختلفة بكلماتٍ مختلفة: المسطّحة، والطويلة، والحيوانات الصغيرة، والآلات. وهي بابٌ مُربِك بعض الشيء — تناوله بتأنٍّ، مباشرةً بعد الأعداد.",
+  "introCopy_ar": "تستخدم اليابانية أدوات عد مختلفة بحسب نوع الشيء المعدود، مثل الأشياء المسطحة والطويلة والحيوانات الصغيرة والآلات. قد يبدو هذا الباب مربكًا في البداية، فتعلّمه بهدوء بعد إتقان الأعداد.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_051_counter_generic",
    "n5_v_052_counter_people",
@@ -448,7 +467,8 @@
   "displayName_en": "Family & People · 1",
   "displayName_ar": "العائلة والناس · 1",
   "introCopy_en": "Father, mother, older and younger siblings, friend. Family words in Japanese change depending on whether you mean your own family or someone else's — a distinction worth noticing.",
-  "introCopy_ar": "الأب، والأم، والإخوة الأكبر والأصغر، والصديق. تتغيّر كلمات العائلة في اليابانية بحسب ما إذا كنت تتحدث عن عائلتك أم عن عائلة غيرك — وهو تمييزٌ جديرٌ بالانتباه.",
+  "introCopy_ar": "الأب، والأم، والإخوة والأخوات الأكبر والأصغر سنًّا، والصديق. تختلف بعض ألفاظ العائلة في اليابانية بحسب حديثك عن عائلتك أو عن عائلة شخص آخر، فانتبه إلى هذا الفرق.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_020_family",
    "n5_v_012_father_own",
@@ -473,7 +493,8 @@
   "displayName_en": "Family & People · 2",
   "displayName_ar": "العائلة والناس · 2",
   "introCopy_en": "Father, mother, older and younger siblings, friend. Family words in Japanese change depending on whether you mean your own family or someone else's — a distinction worth noticing.",
-  "introCopy_ar": "الأب، والأم، والإخوة الأكبر والأصغر، والصديق. تتغيّر كلمات العائلة في اليابانية بحسب ما إذا كنت تتحدث عن عائلتك أم عن عائلة غيرك — وهو تمييزٌ جديرٌ بالانتباه.",
+  "introCopy_ar": "الأب، والأم، والإخوة والأخوات الأكبر والأصغر سنًّا، والصديق. تختلف بعض ألفاظ العائلة في اليابانية بحسب حديثك عن عائلتك أو عن عائلة شخص آخر، فانتبه إلى هذا الفرق.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_004_child",
    "n5_v_002_man",
@@ -498,7 +519,8 @@
   "displayName_en": "Getting Around · 1",
   "displayName_ar": "التنقّل · 1",
   "introCopy_en": "Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.",
-  "introCopy_ar": "القطارات والسيارات وأفعال الحركة المصاحبة لها. هنا تجتمع مفردات السفر وسؤال الطريق لأول مرة.",
+  "introCopy_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_075_car",
    "n5_v_077_train",
@@ -523,7 +545,8 @@
   "displayName_en": "Getting Around · 2",
   "displayName_ar": "التنقّل · 2",
   "introCopy_en": "Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.",
-  "introCopy_ar": "القطارات والسيارات وأفعال الحركة المصاحبة لها. هنا تجتمع مفردات السفر وسؤال الطريق لأول مرة.",
+  "introCopy_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_073_turn",
    "n5_v_052_wait",
@@ -542,7 +565,8 @@
   "displayName_en": "Body & Feelings · 1",
   "displayName_ar": "الجسم والمشاعر · 1",
   "introCopy_en": "Parts of the body and the feelings that go with them — tired, happy, painful. Useful the moment you need to say how you are.",
-  "introCopy_ar": "أعضاء الجسم والمشاعر المرتبطة بها: مُتعَب، وسعيد، ومُتألِّم. تنفعك في اللحظة التي تحتاج فيها إلى وصف حالك.",
+  "introCopy_ar": "تعلّم أسماء أعضاء الجسم وكلمات تصف حالتك، مثل: متعب، وسعيد، ومتألم. ستفيدك عندما تحتاج إلى التعبير عن شعورك أو وصف حالك.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_085_head",
    "n5_v_086_face",
@@ -567,7 +591,8 @@
   "displayName_en": "Body & Feelings · 2",
   "displayName_ar": "الجسم والمشاعر · 2",
   "introCopy_en": "Parts of the body and the feelings that go with them — tired, happy, painful. Useful the moment you need to say how you are.",
-  "introCopy_ar": "أعضاء الجسم والمشاعر المرتبطة بها: مُتعَب، وسعيد، ومُتألِّم. تنفعك في اللحظة التي تحتاج فيها إلى وصف حالك.",
+  "introCopy_ar": "تعلّم أسماء أعضاء الجسم وكلمات تصف حالتك، مثل: متعب، وسعيد، ومتألم. ستفيدك عندما تحتاج إلى التعبير عن شعورك أو وصف حالك.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_044_liked",
    "n5_v_045_disliked",
@@ -590,7 +615,8 @@
   "displayName_en": "Weather & Nature · 1",
   "displayName_ar": "الطقس والطبيعة · 1",
   "introCopy_en": "Sky, rain, snow, mountain, sun. Weather is the safest small talk in any language — and these words open it up in Japanese.",
-  "introCopy_ar": "السماء، والمطر، والثلج، والجبل، والشمس. الطقس أسلمُ موضوعٍ للحديث العابر في أي لغة — وهذه الكلمات تفتح لك بابه في اليابانية.",
+  "introCopy_ar": "السماء، والمطر، والثلج، والجبل، والشمس. الطقس من أسهل موضوعات الحديث العابر في أي لغة، وهذه الكلمات تساعدك على الحديث عنه باليابانية.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_105_weather",
    "n5_v_106_rain",
@@ -615,7 +641,8 @@
   "displayName_en": "Weather & Nature · 2",
   "displayName_ar": "الطقس والطبيعة · 2",
   "introCopy_en": "Sky, rain, snow, mountain, sun. Weather is the safest small talk in any language — and these words open it up in Japanese.",
-  "introCopy_ar": "السماء، والمطر، والثلج، والجبل، والشمس. الطقس أسلمُ موضوعٍ للحديث العابر في أي لغة — وهذه الكلمات تفتح لك بابه في اليابانية.",
+  "introCopy_ar": "السماء، والمطر، والثلج، والجبل، والشمس. الطقس من أسهل موضوعات الحديث العابر في أي لغة، وهذه الكلمات تساعدك على الحديث عنه باليابانية.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_115_tree",
    "n5_v_116_flower",
@@ -636,7 +663,8 @@
   "displayName_en": "Adverbs & Connectors · 1",
   "displayName_ar": "الظروف وأدوات الربط · 1",
   "introCopy_en": "Very, a little, often, and the small words that link ideas: and, but, so. These add nuance and flow, turning stiff sentences into natural ones.",
-  "introCopy_ar": "«جِدًّا» و«قليلًا» و«غالبًا»، والكلمات الصغيرة التي تربط الأفكار: «الواو» و«لكن» و«لذلك». هذه تضيف الدقّة والانسياب، فتحوّل الجمل المتيبّسة إلى جملٍ طبيعية.",
+  "introCopy_ar": "تعلّم كلمات مثل «جِدًّا» و«قليلًا» و«غالبًا»، وأدوات تربط الأفكار مثل «الواو» و«لكن» و«لذلك». تضيف هذه الكلمات دقةً وسلاسةً إلى كلامك، وتجعل جملك أكثر طبيعية.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_001_very",
    "n5_v_003_a_little",
@@ -661,7 +689,8 @@
   "displayName_en": "Adverbs & Connectors · 2",
   "displayName_ar": "الظروف وأدوات الربط · 2",
   "introCopy_en": "Very, a little, often, and the small words that link ideas: and, but, so. These add nuance and flow, turning stiff sentences into natural ones.",
-  "introCopy_ar": "«جِدًّا» و«قليلًا» و«غالبًا»، والكلمات الصغيرة التي تربط الأفكار: «الواو» و«لكن» و«لذلك». هذه تضيف الدقّة والانسياب، فتحوّل الجمل المتيبّسة إلى جملٍ طبيعية.",
+  "introCopy_ar": "تعلّم كلمات مثل «جِدًّا» و«قليلًا» و«غالبًا»، وأدوات تربط الأفكار مثل «الواو» و«لكن» و«لذلك». تضيف هذه الكلمات دقةً وسلاسةً إلى كلامك، وتجعل جملك أكثر طبيعية.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_013_really",
    "n5_v_011_together",
@@ -685,6 +714,7 @@
   "displayName_ar": "أفعال البيت والروتين · 1",
   "introCopy_en": "The verbs of daily life at home: to study, to clean, to wash, to rest. Enough to describe your day from start to finish.",
   "introCopy_ar": "أفعال الحياة اليومية في البيت: يدرس، وينظّف، ويغسل، ويستريح. أفعالٌ تكفيك لتصف بها يومك من أوله إلى آخره.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_020_stand",
    "n5_v_021_sit",
@@ -710,6 +740,7 @@
   "displayName_ar": "أفعال البيت والروتين · 2",
   "introCopy_en": "The verbs of daily life at home: to study, to clean, to wash, to rest. Enough to describe your day from start to finish.",
   "introCopy_ar": "أفعال الحياة اليومية في البيت: يدرس، وينظّف، ويغسل، ويستريح. أفعالٌ تكفيك لتصف بها يومك من أوله إلى آخره.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_035_use",
    "n5_v_036_hold",
@@ -735,6 +766,7 @@
   "displayName_ar": "أفعال البيت والروتين · 3",
   "introCopy_en": "The verbs of daily life at home: to study, to clean, to wash, to rest. Enough to describe your day from start to finish.",
   "introCopy_ar": "أفعال الحياة اليومية في البيت: يدرس، وينظّف، ويغسل، ويستريح. أفعالٌ تكفيك لتصف بها يومك من أوله إلى آخره.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_066_clean",
    "n5_v_067_laundry",
@@ -753,6 +785,7 @@
   "displayName_ar": "أشياء يومية · 1",
   "introCopy_en": "The things around you at home and at work: books, pens, phones, tables. Concrete nouns that fill out your descriptions of any room.",
   "introCopy_ar": "الأشياء من حولك في البيت والعمل: الكتب، الأقلام، الهواتف، الطاولات. أسماءٌ محسوسة تُثري وصفك لأي غرفة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_055_book",
    "n5_v_057_notebook",
@@ -778,6 +811,7 @@
   "displayName_ar": "أشياء يومية · 2",
   "introCopy_en": "The things around you at home and at work: books, pens, phones, tables. Concrete nouns that fill out your descriptions of any room.",
   "introCopy_ar": "الأشياء من حولك في البيت والعمل: الكتب، الأقلام، الهواتف، الطاولات. أسماءٌ محسوسة تُثري وصفك لأي غرفة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_066_umbrella",
    "n5_v_067_bag",
@@ -803,6 +837,7 @@
   "displayName_ar": "أشياء يومية · 3",
   "introCopy_en": "The things around you at home and at work: books, pens, phones, tables. Concrete nouns that fill out your descriptions of any room.",
   "introCopy_ar": "الأشياء من حولك في البيت والعمل: الكتب، الأقلام، الهواتف، الطاولات. أسماءٌ محسوسة تُثري وصفك لأي غرفة.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_082_television",
    "n5_v_083_radio",
@@ -821,7 +856,8 @@
   "displayName_en": "School & Study · 1",
   "displayName_ar": "المدرسة والدراسة · 1",
   "introCopy_en": "Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.",
-  "introCopy_ar": "كلمات التعلّم: معلّم، وطالب، ودرس، واختبار، وواجب. وهي قريبةٌ منك بوجهٍ خاص، فأنت تدرس اليابانية في هذه اللحظة.",
+  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_119_japanese_lang",
    "n5_v_118_english_lang",
@@ -846,7 +882,8 @@
   "displayName_en": "School & Study · 2",
   "displayName_ar": "المدرسة والدراسة · 2",
   "introCopy_en": "Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.",
-  "introCopy_ar": "كلمات التعلّم: معلّم، وطالب، ودرس، واختبار، وواجب. وهي قريبةٌ منك بوجهٍ خاص، فأنت تدرس اليابانية في هذه اللحظة.",
+  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_057_know",
    "n5_v_121_question",
@@ -869,7 +906,8 @@
   "displayName_en": "Work, Play & Exchange Verbs · 1",
   "displayName_ar": "أفعال العمل واللعب والتبادل · 1",
   "introCopy_en": "Verbs for what you do with others: to work, to play, to buy, to give, to meet. With these you can build sentences about a real, social day.",
-  "introCopy_ar": "أفعال ما تفعله مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تبني جملًا عن يومٍ اجتماعي حقيقي.",
+  "introCopy_ar": "تعرّف إلى أفعال تستخدمها في العمل واللعب والتعامل مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تستطيع وصف يوم اجتماعي عادي.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_026_work",
    "n5_v_027_rest",
@@ -894,7 +932,8 @@
   "displayName_en": "Work, Play & Exchange Verbs · 2",
   "displayName_ar": "أفعال العمل واللعب والتبادل · 2",
   "introCopy_en": "Verbs for what you do with others: to work, to play, to buy, to give, to meet. With these you can build sentences about a real, social day.",
-  "introCopy_ar": "أفعال ما تفعله مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تبني جملًا عن يومٍ اجتماعي حقيقي.",
+  "introCopy_ar": "تعرّف إلى أفعال تستخدمها في العمل واللعب والتعامل مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تستطيع وصف يوم اجتماعي عادي.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_054_call",
    "n5_v_079_watch_over",
@@ -915,7 +954,8 @@
   "displayName_en": "Colors & More Adjectives · 1",
   "displayName_ar": "الألوان ومزيد من الصفات · 1",
   "introCopy_en": "Colors and a second set of describing words. With these your descriptions gain real detail — the red car, the quiet room, the busy street.",
-  "introCopy_ar": "الألوان ومجموعةٌ ثانية من كلمات الوصف. بهذه تكتسب أوصافك تفصيلًا حقيقيًّا — السيارة الحمراء، الغرفة الهادئة، الشارع المزدحم.",
+  "introCopy_ar": "تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_031_red",
    "n5_v_032_blue",
@@ -940,7 +980,8 @@
   "displayName_en": "Colors & More Adjectives · 2",
   "displayName_ar": "الألوان ومزيد من الصفات · 2",
   "introCopy_en": "Colors and a second set of describing words. With these your descriptions gain real detail — the red car, the quiet room, the busy street.",
-  "introCopy_ar": "الألوان ومجموعةٌ ثانية من كلمات الوصف. بهذه تكتسب أوصافك تفصيلًا حقيقيًّا — السيارة الحمراء، الغرفة الهادئة، الشارع المزدحم.",
+  "introCopy_ar": "تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_039_busy",
    "n5_v_059_free_time",
@@ -965,7 +1006,8 @@
   "displayName_en": "Colors & More Adjectives · 3",
   "displayName_ar": "الألوان ومزيد من الصفات · 3",
   "introCopy_en": "Colors and a second set of describing words. With these your descriptions gain real detail — the red car, the quiet room, the busy street.",
-  "introCopy_ar": "الألوان ومجموعةٌ ثانية من كلمات الوصف. بهذه تكتسب أوصافك تفصيلًا حقيقيًّا — السيارة الحمراء، الغرفة الهادئة، الشارع المزدحم.",
+  "introCopy_ar": "تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.",
+  "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_056_convenient",
    "n5_v_057_inconvenient",

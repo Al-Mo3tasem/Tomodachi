@@ -26,6 +26,7 @@ for (const [anchorLesson, items] of [...byLesson.entries()].sort((a, b) => a[0] 
     introCopy_en: 'Real words written in the katakana you just learned. Loanwords like these are everywhere in daily Japanese — signs, menus, and shops.',
     introCopy_ar: 'كلماتٌ حقيقية مكتوبة بالكاتاكانا التي تعلمتها للتو. الكلمات الدخيلة مثل هذه منتشرة في اليابانية اليومية — على اللافتات وقوائم الطعام والمتاجر.',
     itemKeys: items.map(it => it.key),
+    introCopy_ar_f: '',
     estimated_minutes: 5, jlpt: 'n5',
     _anchorsAfter: anchorLesson
   };

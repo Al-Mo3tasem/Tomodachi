@@ -41,7 +41,7 @@ ORDER.forEach((ord, i) => {
     displayName_en: it.title_en, displayName_ar: it.title_ar,
     introCopy_en: teaser(it.body_en) || `Grammar point ${pos}: ${it.title_en}.`,
     introCopy_ar: teaser(it.body_ar) || it.title_ar,
-    itemKeys: [it.key], estimated_minutes: 7, jlpt: 'n5'
+    itemKeys: [it.key], estimated_minutes: 7, jlpt: 'n5', introCopy_ar_f: ''
   };
   const res = validateLesson(c);
   if (!res.valid) { console.log(`✗ ${c.lessonKey} INVALID:\n${formatErrors(res)}`); bad++; return; }
