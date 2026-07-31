@@ -12,14 +12,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260726a';
+} from '../core/core.js?v=20260726b';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260726a';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260726a';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260726a';
-import { t } from '../i18n/index.js?v=20260726a';
+} from '../data/firebase.js?v=20260726b';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260726b';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260726b';
+import { t } from '../i18n/index.js?v=20260726b';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

@@ -13,8 +13,8 @@ const WRITE = process.argv.includes('--write');
 // A-hybrid v2 as stored ordinals (54, unique):
 const ORDER = [16, 1, 13, 8, 2, 11, 20, 3, 4, 5, 6, 7, 9, 10, 12, 39, 40, 14, 15,
   21, 22, 23, 24, 18, 19, 30, 33, 35, 36, 34, 37, 38, 26, 25, 27, 28, 29,
-  17, 31, 32, 53, 43, 41, 42, 47, 46, 44, 48, 45, 49, 50, 51, 52, 54];
-if (ORDER.length !== 54 || new Set(ORDER).size !== 54) { console.error('ORDER must be 54 unique ordinals'); process.exit(2); }
+  17, 55, 31, 32, 53, 43, 41, 42, 47, 46, 44, 48, 45, 49, 50, 51, 52, 54];
+if (ORDER.length !== 55 || new Set(ORDER).size !== 55) { console.error('ORDER must be 55 unique ordinals'); process.exit(2); }
 
 function teaser(s, max = 200) {
   if (!s) return null;
@@ -48,7 +48,7 @@ ORDER.forEach((ord, i) => {
   containers.push(c);
 });
 
-console.log(`grammar: ${containers.length}/54 valid (A-hybrid v2)`);
+console.log(`grammar: ${containers.length}/55 valid (A-hybrid v2 + dictionary form)`);
 console.log('first 12:', containers.slice(0, 12).map(c => c.displayName_en.split(' — ')[0]).join(' → '));
 writeFileSync('scripts/lessons/grammar-containers.json', JSON.stringify(containers, null, 1));
 if (WRITE && !bad) { for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }

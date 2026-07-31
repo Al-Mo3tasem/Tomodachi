@@ -664,5 +664,24 @@
   "locale": {
     "label_en": "EN",
     "label_ar": "العربية"
+  },
+  "lesson": {
+    "cta_title": "Lesson {{n}}: {{name}}",
+    "cta_sub": "{{done}} of {{total}} lessons complete · ~{{min}} min",
+    "cta_start": "Start",
+    "cta_continue": "Continue",
+    "cta_all_done": "Course complete!",
+    "cta_all_done_sub": "You finished all {{count}} lessons.",
+    "begin": "Begin",
+    "prev": "Back",
+    "next": "Next",
+    "to_quiz": "Quiz time",
+    "intro_meta": "{{count}} items · about {{min}} minutes",
+    "score": "You got {{correct}} of {{total}} right.",
+    "done_title": "Lesson complete!",
+    "back_home": "Dashboard",
+    "next_lesson": "Next lesson",
+    "load_failed": "Could not load the lesson. Please try again.",
+    "progress_save_failed": "Progress could not be saved — it will retry next time."
   }
 }

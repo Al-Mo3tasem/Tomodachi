@@ -5419,3 +5419,76 @@ input:focus-visible {
 }
 .cap-title { font: 600 1rem var(--font-sans); color: var(--text-primary); }
 .cap-benefit { font: 500 0.8125rem var(--font-sans); color: var(--text-secondary); }
+
+/* ============================================
+   L2.13 — Lesson screen (linear course player)
+   ============================================ */
+.container-narrow { max-width: 640px; }
+
+.lesson-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-inline-start: 4px solid var(--accent);
+}
+.lesson-cta-title { font-weight: 700; font-size: 1.0625rem; }
+.lesson-cta-sub { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 2px; }
+
+.lesson-topbar { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); }
+.btn-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-full);
+  border: 1px solid var(--border); background: var(--bg-elevated);
+  color: var(--text-secondary); font-size: 1rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.btn-icon:hover { background: var(--bg-subtle); color: var(--text-primary); }
+
+.lesson-progress {
+  flex: 1; height: 8px; border-radius: var(--radius-full);
+  background: var(--border); overflow: hidden;
+}
+.lesson-progress-fill {
+  height: 100%; width: 0; border-radius: var(--radius-full);
+  background: var(--accent); transition: width 0.35s ease;
+}
+
+.lesson-title { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: var(--space-5); }
+.lesson-count { color: var(--text-tertiary); font-size: 0.8125rem; font-weight: 600; margin-bottom: var(--space-3); }
+
+.lesson-intro-card { padding: var(--space-7); text-align: center; }
+.lesson-intro-copy { font-size: 1.0625rem; line-height: 1.7; margin-bottom: var(--space-4); }
+.lesson-intro-meta { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--space-5); }
+
+.lesson-card { padding: var(--space-6); text-align: center; margin-bottom: var(--space-5); }
+.lesson-card-big {
+  font-family: var(--font-jp); font-size: 5rem; line-height: 1.15;
+  color: var(--text-primary); cursor: pointer; margin-bottom: var(--space-3);
+}
+.lesson-card-big.is-word { font-size: 2.75rem; }
+.lesson-card-reading { color: var(--accent); font-weight: 700; font-size: 1.125rem; margin-bottom: var(--space-3); }
+.lesson-card-body { color: var(--text-secondary); line-height: 1.7; text-align: start; white-space: pre-line; }
+
+.lesson-example {
+  margin-top: var(--space-4); padding: var(--space-4);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  text-align: start; cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.lesson-example:hover { border-color: var(--accent); background: var(--bg-subtle); }
+.lesson-example-ja { font-family: var(--font-jp); font-size: 1.25rem; }
+.lesson-example-ro { color: var(--text-tertiary); font-size: 0.8125rem; margin-top: 2px; }
+.lesson-example-tr { color: var(--text-secondary); font-size: 0.9375rem; margin-top: 4px; }
+
+.lesson-nav { display: flex; justify-content: space-between; gap: var(--space-4); }
+.lesson-done-emoji { font-size: 3rem; margin-bottom: var(--space-3); }
+
+.choices-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);
+}
+.lesson-choice { min-height: 56px; font-size: 1rem; }
+@media (max-width: 480px) { .choices-grid { grid-template-columns: 1fr; } }
+
+/* lesson quiz feedback on choice buttons */
+.lesson-choice.correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 12%, var(--bg-elevated)); }
+.lesson-choice.wrong   { border-color: var(--danger);  background: color-mix(in srgb, var(--danger) 12%, var(--bg-elevated)); }

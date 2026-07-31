@@ -674,5 +674,24 @@
   "locale": {
     "label_en": "EN",
     "label_ar": "العربية"
+  },
+  "lesson": {
+    "cta_title": "الدرس {{n}}: {{name}}",
+    "cta_sub": "أنجزت {{done}} من {{total}} درسًا · نحو {{min}} دقائق",
+    "cta_start": "ابدأ",
+    "cta_continue": "تابع",
+    "cta_all_done": "أكملت المسار كاملًا!",
+    "cta_all_done_sub": "أنهيت الدروس كلها، وعددها {{count}}.",
+    "begin": "ابدأ",
+    "prev": "السابق",
+    "next": "التالي",
+    "to_quiz": "إلى الاختبار",
+    "intro_meta": "{{count}} عناصر · نحو {{min}} دقائق",
+    "score": "أجبت إجابة صحيحة عن {{correct}} من {{total}}.",
+    "done_title": "أكملت الدرس!",
+    "back_home": "اللوحة الرئيسية",
+    "next_lesson": "الدرس التالي",
+    "load_failed": "تعذّر تحميل الدرس. حاول مرة أخرى.",
+    "progress_save_failed": "تعذّر حفظ التقدّم الآن — وسيُحفظ في المحاولة التالية."
   }
 }

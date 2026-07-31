@@ -4,7 +4,7 @@
 // and one pinned SDK version.
 // ============================================
 
-import { getEnv, getFirebaseConfig } from '../config/firebase.js?v=20260726a';
+import { getEnv, getFirebaseConfig } from '../config/firebase.js?v=20260726b';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
@@ -28,7 +28,8 @@ import {
   serverTimestamp,
   updateDoc,
   addDoc,
-  limit
+  limit,
+  arrayUnion
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
 const env = getEnv();
@@ -69,5 +70,6 @@ export {
   serverTimestamp,
   updateDoc,
   addDoc,
-  limit
+  limit,
+  arrayUnion
 };

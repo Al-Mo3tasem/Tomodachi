@@ -15,7 +15,7 @@
 //     ~15s of idle time (primeSpeech / unprimeSpeech).
 // ============================================
 
-import { state } from '../core/core.js?v=20260726a';
+import { state } from '../core/core.js?v=20260726b';
 
 // ----- Speech (TTS) -----
 let jaVoice = null;

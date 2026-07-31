@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260726a">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260726a">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260726b">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260726b">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -96,7 +96,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260726a">
+  <link rel="stylesheet" href="css/style.css?v=20260726b">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -540,6 +540,16 @@
                   disabled>Duel</button>
         </div>
 
+        <!-- L2.13 linear course CTA (flag-gated: shown only when the lesson
+             path loads, i.e. content-v2 environments) -->
+        <div class="lesson-cta card" id="lesson-cta" hidden>
+          <div class="lesson-cta-text">
+            <div class="lesson-cta-title" id="lesson-cta-title">Lesson 1</div>
+            <div class="lesson-cta-sub" id="lesson-cta-sub"></div>
+          </div>
+          <button class="btn btn-primary" id="lesson-cta-btn" data-i18n="lesson.cta_start">Start</button>
+        </div>
+
         <div class="dashboard-grid">
           <!-- Profile Card -->
           <div class="card profile-card">
@@ -931,6 +941,64 @@
     </section>
 
     <!-- ========== MULTIPLAYER LOBBY (Duel + Co-op) ========== -->
+    <!-- ===== LESSON (L2.13 linear course player) ===== -->
+    <section id="screen-lesson" class="screen">
+      <div class="container container-narrow">
+        <div class="lesson-topbar">
+          <button class="btn-icon" id="lesson-btn-exit" aria-label="Exit lesson">✕</button>
+          <div class="lesson-progress"><div class="lesson-progress-fill" id="lesson-progress-fill"></div></div>
+        </div>
+        <h1 class="lesson-title" id="lesson-title"></h1>
+
+        <!-- intro -->
+        <div id="lesson-intro" hidden>
+          <div class="card lesson-intro-card">
+            <p class="lesson-intro-copy" id="lesson-intro-copy"></p>
+            <p class="lesson-intro-meta" id="lesson-intro-meta"></p>
+            <button class="btn btn-primary btn-lg" id="lesson-btn-begin" data-i18n="lesson.begin">Begin</button>
+          </div>
+        </div>
+
+        <!-- teach -->
+        <div id="lesson-teach" hidden>
+          <div class="lesson-count" id="lesson-teach-count"></div>
+          <div class="card lesson-card">
+            <div class="lesson-card-big" id="lesson-card-big" role="button" title="Play audio"></div>
+            <div class="lesson-card-reading" id="lesson-card-reading"></div>
+            <p class="lesson-card-body" id="lesson-card-body"></p>
+            <div id="lesson-card-examples"></div>
+          </div>
+          <div class="lesson-nav">
+            <button class="btn btn-secondary" id="lesson-btn-prev" data-i18n="lesson.prev">Back</button>
+            <button class="btn btn-primary" id="lesson-btn-next" data-i18n="lesson.next">Next</button>
+          </div>
+        </div>
+
+        <!-- quiz -->
+        <div id="lesson-quiz" hidden>
+          <div class="lesson-count" id="lesson-quiz-count"></div>
+          <div class="card lesson-card">
+            <div class="lesson-card-big" id="lesson-quiz-prompt"></div>
+            <div class="lesson-card-reading" id="lesson-quiz-sub"></div>
+          </div>
+          <div class="choices-grid" id="lesson-quiz-choices"></div>
+        </div>
+
+        <!-- done -->
+        <div id="lesson-done" hidden>
+          <div class="card lesson-intro-card">
+            <div class="lesson-done-emoji">🎉</div>
+            <h2 id="lesson-done-title"></h2>
+            <p class="lesson-intro-meta" id="lesson-score"></p>
+            <div class="lesson-nav">
+              <button class="btn btn-secondary" id="lesson-btn-done-home" data-i18n="lesson.back_home">Dashboard</button>
+              <button class="btn btn-primary" id="lesson-btn-done-next" data-i18n="lesson.next_lesson">Next lesson</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="screen-lobby" class="screen">
       <div class="container">
         <header class="page-header">
@@ -1177,7 +1245,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260726a"></script>
+  <script type="module" src="js/app.js?v=20260726b"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

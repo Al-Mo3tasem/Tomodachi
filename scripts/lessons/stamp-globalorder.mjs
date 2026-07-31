@@ -121,6 +121,7 @@ const SEQ = [
   G('te_wa_ikenai'),
   'vocab:school:1',
   G('da_copula'),             // opens the plain-form block
+  G('dictionary_form'),       // review-mandated: ない/た derive from this base form
   G('nai_neg'),
   'vocab:school:2',
   G('ta_past'),
