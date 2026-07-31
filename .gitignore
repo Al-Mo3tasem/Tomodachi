@@ -28,3 +28,7 @@ audio/
 # attempts; finals get reviewed then hosted (Firebase Storage / CDN). Don't let a
 # stray `git add .` stage ~1GB of PNGs — force-add specific finals if ever needed.
 /assets/generated/
+
+# Obsidian editor config (personal, any vault location)
+.obsidian/
+docs/.obsidian/
