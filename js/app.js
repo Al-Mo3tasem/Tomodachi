@@ -4,40 +4,40 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260726b';
-import { getFunctionUrl } from './config/functions.js?v=20260726b';
+import { APP_CONFIG } from './config/firebase.js?v=20260726c';
+import { getFunctionUrl } from './config/functions.js?v=20260726c';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260726b';
+} from './core/core.js?v=20260726c';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260726b';
+} from './data/firebase.js?v=20260726c';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260726b';
+} from './games/engine.js?v=20260726c';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260726b';
-import { isSpeechSupported } from './audio/audio.js?v=20260726b';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260726b';
-import { initLessonUi, renderLessonCta } from './ui/lesson.js?v=20260726b';
+} from './data/leaderboards.js?v=20260726c';
+import { isSpeechSupported } from './audio/audio.js?v=20260726c';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260726c';
+import { initLessonUi, renderLessonCta } from './ui/lesson.js?v=20260726c';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260726b';
+} from './games/duel.js?v=20260726c';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260726b';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260726b';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260726b';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260726b';
+} from './games/coop.js?v=20260726c';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260726c';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260726c';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260726c';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };

@@ -143,6 +143,18 @@ const SEQ = [
   G('deshou_probably')        // ends the path on a real teaching beat
 ];
 
+// Kanji track: 17 radical-family lessons weave in from just after で
+// (~position 40 — right after the numbers vocab the first kanji lesson
+// "upgrades"), one kanji lesson every 5 existing entries. Matches the
+// reviewed §2.4 intent (kanji enters ~#36-40, every 3-5 lessons) and keeps
+// the back half mixed instead of a pure-grammar tail.
+const KANJI_LESSONS = Array.from({ length: 17 }, (_, i) => `kanji:${String(i + 1).padStart(2, '0')}`);
+let kanjiAt = SEQ.indexOf(G('de_location')) + 1;
+for (const k of KANJI_LESSONS) {
+  if (kanjiAt >= SEQ.length) SEQ.push(k); else SEQ.splice(kanjiAt, 0, k);
+  kanjiAt += 6;
+}
+
 const { db, projectId } = initAdmin('dev');
 const snap = await db.collection('content_sets/lessons/items').get();
 const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));

@@ -17,9 +17,9 @@
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260726b';
-import { db, collection, getDocs } from './firebase.js?v=20260726b';
-import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260726b';
+import { getEnv } from '../config/firebase.js?v=20260726c';
+import { db, collection, getDocs } from './firebase.js?v=20260726c';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260726c';
 
 // Per-environment flag. Default OFF everywhere except localhost dev.
 export function contentV2Enabled() {

@@ -1,0 +1,354 @@
+{
+ "lessons": [
+  {
+   "n": 1,
+   "theme_en": "Numbers I",
+   "kanjiKeys": [
+    "k_n5_001_one",
+    "k_n5_002_two",
+    "k_n5_003_three",
+    "k_n5_004_four",
+    "k_n5_005_five",
+    "k_n5_006_six"
+   ],
+   "familyRationale": "Pure horizontal-stroke counting family (一二三) plus the first enclosure 四 and simple stroke-combos 五六 — kanji for numbers the learner already knows, so zero new vocabulary."
+  },
+  {
+   "n": 2,
+   "theme_en": "Numbers II",
+   "kanjiKeys": [
+    "k_n5_007_seven",
+    "k_n5_008_eight",
+    "k_n5_009_nine",
+    "k_n5_010_ten",
+    "k_n5_011_hundred",
+    "k_n5_012_thousand",
+    "k_n5_013_ten_thousand"
+   ],
+   "familyRationale": "Completes the number system with the simple-stroke set 七八九十 and the 十-built 千, plus 百 and 万 to finish counting to 10,000 (百's 白 component is revisited in Lesson 6)."
+  },
+  {
+   "n": 3,
+   "theme_en": "Position & size",
+   "kanjiKeys": [
+    "k_n5_020_above",
+    "k_n5_021_below",
+    "k_n5_034_person",
+    "k_n5_048_big",
+    "k_n5_028_heaven",
+    "k_n5_049_small",
+    "k_n5_051_few"
+   ],
+   "familyRationale": "Everything grows from Lesson 1's 一 and the new pictograph 人: 上/下 hang off 一, 大 is 人 with arms plus 一, 天 stacks 一 on 大, and 少 is 小 with one extra slash."
+  },
+  {
+   "n": 4,
+   "theme_en": "Mouth & body parts",
+   "kanjiKeys": [
+    "k_n5_045_mouth",
+    "k_n5_022_middle",
+    "k_n5_043_eye",
+    "k_n5_044_ear",
+    "k_n5_046_hand",
+    "k_n5_047_foot"
+   ],
+   "familyRationale": "The box radical 口 heads the lesson and immediately compounds into 中 (口 pierced by a line) and 足 (口 over walking legs), alongside the sibling frame pictographs 目耳手."
+  },
+  {
+   "n": 5,
+   "theme_en": "People & family",
+   "kanjiKeys": [
+    "k_n5_041_woman",
+    "k_n5_042_child",
+    "k_n5_032_mother",
+    "k_n5_031_father",
+    "k_n5_033_friend",
+    "k_n5_040_man"
+   ],
+   "familyRationale": "Human-figure pictographs taught as one household: 女 and 子 are core radicals reused later (安, 学), 母/父/友 are simple figure shapes, and 男 combines field 田 with the power shape 力 first glimpsed in 万 (田 returns in 電)."
+  },
+  {
+   "n": 6,
+   "theme_en": "Sun, moon & evening",
+   "kanjiKeys": [
+    "k_n5_016_day",
+    "k_n5_017_month",
+    "k_n5_073_white",
+    "k_n5_052_old",
+    "k_n5_035_name",
+    "k_n5_050_many",
+    "k_n5_079_outside"
+   ],
+   "familyRationale": "The 日 frame family (日→白, closing the loop on 百 from Lesson 2), 古 from taught 十+口, and the evening radical 夕 trio 名/多/外 built on the moon-sliver shape of 月."
+  },
+  {
+   "n": 7,
+   "theme_en": "Legs & seeing",
+   "kanjiKeys": [
+    "k_n5_094_cow",
+    "k_n5_026_origin",
+    "k_n5_036_previous",
+    "k_n5_057_see",
+    "k_n5_062_buy"
+   ],
+   "familyRationale": "The legs radical 儿 (already met inside 四 and 六) carries the whole lesson: 元 = 二+儿, 先 = the just-taught 牛 top + 儿, 見 = 目+儿, and 買's shell 貝 is 目 over splayed legs under a net."
+  },
+  {
+   "n": 8,
+   "theme_en": "Five elements (days of the week)",
+   "kanjiKeys": [
+    "k_n5_086_fire",
+    "k_n5_087_water",
+    "k_n5_088_tree",
+    "k_n5_089_gold",
+    "k_n5_090_earth"
+   ],
+   "familyRationale": "The five standalone element pictographs 火水木金土 — the weekday set — each introduced here as the head of its own downstream family (木→Lesson 9, 火→魚, 土→社/時, 日月 already known)."
+  },
+  {
+   "n": 9,
+   "theme_en": "Tree family",
+   "kanjiKeys": [
+    "k_n5_102_book",
+    "k_n5_069_rest",
+    "k_n5_039_school",
+    "k_n5_054_come",
+    "k_n5_075_east",
+    "k_n5_100_rice"
+   ],
+   "familyRationale": "Every kanji reuses Lesson 8's 木: 本 marks its root, 休 is a person leaning on it, 校 adds 交, 東 is the sun rising through it, and lookalikes 来/米 are drilled side by side to prevent confusion."
+  },
+  {
+   "n": 10,
+   "theme_en": "Nature & weather",
+   "kanjiKeys": [
+    "k_n5_024_mountain",
+    "k_n5_025_river",
+    "k_n5_091_rain",
+    "k_n5_092_electric",
+    "k_n5_027_spirit"
+   ],
+   "familyRationale": "Landscape pictographs 山/川 plus the rain radical 雨 compounding directly into 電 (雨 + the 田 seen in 男), with 気 joining as the swirling weather/steam shape."
+  },
+  {
+   "n": 11,
+   "theme_en": "Roofs & buildings",
+   "kanjiKeys": [
+    "k_n5_030_now",
+    "k_n5_084_meeting",
+    "k_n5_038_study",
+    "k_n5_071_cheap",
+    "k_n5_083_house",
+    "k_n5_070_tall",
+    "k_n5_082_shop"
+   ],
+   "familyRationale": "One lesson of things-under-a-roof: person-roof 𠆢 in 今/会, crown-roof in 学 (over taught 子), house-roof 宀 in 安/家 (over taught 女), lid-and-box 高, and cliff-shelter 广 in 店."
+  },
+  {
+   "n": 12,
+   "theme_en": "Growing things",
+   "kanjiKeys": [
+    "k_n5_037_life",
+    "k_n5_018_year",
+    "k_n5_098_flower",
+    "k_n5_099_tea",
+    "k_n5_029_private"
+   ],
+   "familyRationale": "Plant-stem shapes: 生 (sprout) and its visual sibling 年, the grass-crown 艹 pair 花/茶 (over taught 人 and 木), and 私 whose grain radical 禾 is 木 wearing a slanted top."
+  },
+  {
+   "n": 13,
+   "theme_en": "Motion verbs & vehicle",
+   "kanjiKeys": [
+    "k_n5_066_enter",
+    "k_n5_067_exit",
+    "k_n5_068_stand",
+    "k_n5_055_go",
+    "k_n5_093_car"
+   ],
+   "familyRationale": "Simple standalone action pictographs: 入 as the mirror of taught 人, 出 as two stacked 山 from Lesson 10, plus 立, 行, and the axle-grid 車 — and 立/車 are prerequisites for 新 and 駅 ahead."
+  },
+  {
+   "n": 14,
+   "theme_en": "Directions & country",
+   "kanjiKeys": [
+    "k_n5_076_west",
+    "k_n5_077_south",
+    "k_n5_078_north",
+    "k_n5_074_country",
+    "k_n5_080_road",
+    "k_n5_103_week"
+   ],
+   "familyRationale": "The compass set 西南北 (南 on taught 十, 北 as two back-to-back figures) with 国 reusing the 四-style enclosure, and the road radical 辶 pair 道/週 built on taught 目 and 口."
+  },
+  {
+   "n": 15,
+   "theme_en": "Communication",
+   "kanjiKeys": [
+    "k_n5_059_say",
+    "k_n5_065_talk",
+    "k_n5_064_read",
+    "k_n5_101_language",
+    "k_n5_019_what",
+    "k_n5_063_write",
+    "k_n5_058_hear"
+   ],
+   "familyRationale": "The speech radical 言 heads its compound trio 話/読/語 (語 reuses Lesson 1's 五 plus 口), joined by 何 (person + mouth asking), 書 (brush over taught 日), and 聞 (gate framing taught 耳)."
+  },
+  {
+   "n": 16,
+   "theme_en": "Animals & food",
+   "kanjiKeys": [
+    "k_n5_095_horse",
+    "k_n5_081_station",
+    "k_n5_096_fish",
+    "k_n5_097_bird",
+    "k_n5_060_eat",
+    "k_n5_061_drink"
+   ],
+   "familyRationale": "Animal pictographs with immediate reuse: 馬 compounds straight into 駅, 魚/鳥 share the four fire-dots 灬 from Lesson 8's 火, and the food radical 食 heads its own compound 飲."
+  },
+  {
+   "n": 17,
+   "theme_en": "Time, money & change",
+   "kanjiKeys": [
+    "k_n5_015_time",
+    "k_n5_023_half",
+    "k_n5_014_yen",
+    "k_n5_072_long",
+    "k_n5_053_new",
+    "k_n5_056_return",
+    "k_n5_085_company"
+   ],
+   "familyRationale": "Capstone of composites built entirely from mastered parts: 時 = 日+土+寸, 半 on 十, 円 reusing the Lesson-1 enclosure, 新 = 立+木+axe, 社 = altar+土, plus the last standalone pictographs 長 and 帰."
+  }
+ ],
+ "lessonCopy": [
+  {
+   "n": 1,
+   "displayName_en": "Kanji 1 — Numbers I",
+   "displayName_ar": "كانجي 1 — الأعداد الأولى",
+   "introCopy_en": "The numbers you've been saying for weeks — ichi, ni, san — are finally yours to write. And the first three are simply one, two, and three strokes, so kanji begins with an easy win.",
+   "introCopy_ar": "أسماء الأعداد اليابانية تعرفها منذ أسابيع، واليوم ستكتبها بيدك أخيرًا. خطٌّ واحد، ثم خطان، ثم ثلاثة خطوط: هكذا تُكتب «واحد» و«اثنان» و«ثلاثة»، فالبداية هنا يسيرة حقًا."
+  },
+  {
+   "n": 2,
+   "displayName_en": "Kanji 2 — Numbers II",
+   "displayName_ar": "كانجي 2 — تتمة الأعداد",
+   "introCopy_en": "Complete the number set: seven through ten, then hundred, thousand, and ten thousand. With these seven characters you can write prices, dates, and most numbers you'll meet in Japan.",
+   "introCopy_ar": "أكمل سلسلة الأعداد: من سبعة إلى عشرة، ثم مئة وألف وعشرة آلاف. بهذه الرموز السبعة تستطيع كتابة الأسعار والتواريخ ومعظم الأعداد التي تصادفها في اليابان."
+  },
+  {
+   "n": 3,
+   "displayName_en": "Kanji 3 — Position & size",
+   "displayName_ar": "كانجي 3 — الموضع والحجم",
+   "introCopy_en": "A short stroke above a line means above, and below it means below — these characters are pictures first, symbols second. Then watch a person 人 stretch out both arms to become big 大, with a line for heaven 天 drawn over their head.",
+   "introCopy_ar": "خط قصير فوق السطر يعني «فوق»، وخط تحته يعني «تحت»، فهذه الرموز صور في أصلها قبل أن تكون علامات كتابة. ولاحظ كيف يفرد الإنسان 人 ذراعيه فيصير رمز «كبير» 大، ثم يُرسم فوق رأسه خط يدل على «السماء» 天."
+  },
+  {
+   "n": 4,
+   "displayName_en": "Kanji 4 — Mouth & body parts",
+   "displayName_ar": "كانجي 4 — الفم وأعضاء الجسم",
+   "introCopy_en": "The mouth 口 is a wide-open mouth drawn as a simple box, and a line straight through its center makes middle 中. Around it gather the eye, ear, hand, and foot — a whole body in just a few strokes each.",
+   "introCopy_ar": "الفم 口 مربع بسيط يصوّر فمًا مفتوحًا، وإذا اخترقه خط من وسطه صار يعني «الوسط» 中. وتنضم إليه في هذا الدرس العين والأذن واليد والقدم، فتكتب أبرز أعضاء الجسم برسوم قليلة الخطوط."
+  },
+  {
+   "n": 5,
+   "displayName_en": "Kanji 5 — People & family",
+   "displayName_ar": "كانجي 5 — الناس والعائلة",
+   "introCopy_en": "Time to meet the family: woman, child, mother, father, friend, and man. Notice how woman 女 and mother 母 share a real family resemblance — the kinship is drawn right into the characters.",
+   "introCopy_ar": "تعرّف في هذا الدرس إلى العائلة: المرأة والطفل والأم والأب والصديق والرجل. ولاحظ الشبه الواضح بين رمز المرأة 女 ورمز الأم 母، فالقرابة هنا تظهر في الرسم أيضًا."
+  },
+  {
+   "n": 6,
+   "displayName_en": "Kanji 6 — Sun, moon & evening",
+   "displayName_ar": "كانجي 6 — الشمس والقمر والمساء",
+   "introCopy_en": "The sun 日 and moon 月 are two of the oldest pictures in writing, and one small ray turns the sun white 白. A crescent evening moon hides inside name 名 and outside 外, and doubled up 多 it means many.",
+   "introCopy_ar": "رمز الشمس 日 ورمز القمر 月 من أقدم الصور في الكتابة، وإذا أضفت شعاعًا صغيرًا فوق الشمس حصلت على «الأبيض» 白. أما هلال المساء 夕 فيظهر داخل «الاسم» 名 و«الخارج» 外، وإذا تكرر مرتين 多 صار المعنى «كثير»."
+  },
+  {
+   "n": 7,
+   "displayName_en": "Kanji 7 — Legs & seeing",
+   "displayName_ar": "كانجي 7 — الأرجل والرؤية",
+   "introCopy_en": "Start with a cow 牛 and a pair of tiny walking legs. Set the cow on legs to get before 先, and an eye on legs to get see 見 — every character here is stacked from shapes you can already spot.",
+   "introCopy_ar": "ابدأ برمز البقرة 牛 وبشكل «الرجلين الصغيرتين» الذي يظهر أسفل عدد من الرموز. ضع البقرة فوق الرجلين تحصل على «قبل» 先، وضع العين فوقهما تحصل على «يرى» 見، فرموز هذا الدرس كلها مبنية من أشكال تعرفها."
+  },
+  {
+   "n": 8,
+   "displayName_en": "Kanji 8 — Five elements (days of the week)",
+   "displayName_ar": "كانجي 8 — العناصر الخمسة (أيام الأسبوع)",
+   "introCopy_en": "Fire, water, tree, gold, and earth: the five classical elements, and the Japanese names of Tuesday through Saturday. Learn these five and the weekly calendar opens right up.",
+   "introCopy_ar": "النار والماء والشجرة والذهب والتراب: هذه هي العناصر الخمسة القديمة، وهي نفسها أسماء أيام الأسبوع في اليابانية من الثلاثاء إلى السبت. احفظ هذه الرموز الخمسة وستجد قراءة التقويم الياباني أيسر بكثير."
+  },
+  {
+   "n": 9,
+   "displayName_en": "Kanji 9 — Tree family",
+   "displayName_ar": "كانجي 9 — عائلة الشجرة",
+   "introCopy_en": "One tree 木 grows a whole family: a line at its root makes book 本, a person leaning against it makes rest 休, and the sun rising behind it makes east 東. Spot the tree and the rest follows.",
+   "introCopy_ar": "من رمز الشجرة 木 تتفرع مجموعة كاملة: خط صغير عند جذورها يعطيك «الكتاب» 本، وإنسان يستند إلى جذعها يعطيك «الراحة» 休، وشمس تشرق من خلفها تعطيك «الشرق» 東. تعلّم أن تلمح الشجرة داخل الرمز، وسيثبت الباقي في ذاكرتك بجهد أقل."
+  },
+  {
+   "n": 10,
+   "displayName_en": "Kanji 10 — Nature & weather",
+   "displayName_ar": "كانجي 10 — الطبيعة والطقس",
+   "introCopy_en": "Three peaks make a mountain 山 and three flowing streams make a river 川 — nature kanji stay close to what they draw. Add rain 雨, and when lightning strikes beneath it you get electricity 電.",
+   "introCopy_ar": "ثلاث قمم ترسم الجبل 山، وثلاثة جداول ترسم النهر 川، فرموز الطبيعة قريبة الشكل مما تدل عليه. أضف إليها المطر 雨، وحين يلمع البرق تحته يظهر رمز «الكهرباء» 電."
+  },
+  {
+   "n": 11,
+   "displayName_en": "Kanji 11 — Roofs & buildings",
+   "displayName_ar": "كانجي 11 — السقوف والمباني",
+   "introCopy_en": "Almost every character in this lesson wears a roof on top. A woman relaxing safely under hers means cheap 安, and the same shelter covers house 家 and shop 店 — spot the roof first and the rest of each character falls into place.",
+   "introCopy_ar": "يعلو معظم رموز هذا الدرس شكل يشبه السقف، فهذه مجموعة المباني. المرأة المطمئنة تحت سقفها ترمز إلى الأمان ورخص الثمن 安، والسقف نفسه يظلّل «البيت» 家 و«المتجر» 店، ومتى لمحته سهل عليك فهم بقية الرمز."
+  },
+  {
+   "n": 12,
+   "displayName_en": "Kanji 12 — Growing things",
+   "displayName_ar": "كانجي 12 — النمو والنبات",
+   "introCopy_en": "Life 生 is a young sprout pushing out of the ground, and the little grass crown on flower 花 and tea 茶 marks things that grow. Even year 年 and I 私 hide an old grain-plant shape inside.",
+   "introCopy_ar": "رمز الحياة 生 برعم يشق الأرض صاعدًا، والتاج العشبي الصغير فوق «الزهرة» 花 و«الشاي» 茶 علامة على ما ينبت وينمو. وحتى «السنة» 年 و«أنا» 私 يظهر في داخل كلٍّ منهما شكل سنبلة قديم."
+  },
+  {
+   "n": 13,
+   "displayName_en": "Kanji 13 — Motion verbs & vehicle",
+   "displayName_ar": "كانجي 13 — أفعال الحركة والعربة",
+   "introCopy_en": "Enter 入 points inward like an arrow through a doorway, and exit 出 steps outward — motion drawn at its simplest. Add stand, go, and a cart seen from above 車, and you're ready to move.",
+   "introCopy_ar": "رمز الدخول 入 يشبه سهمًا ينفذ إلى الداخل، ورمز الخروج 出 يشبه قدمًا تخطو إلى الخارج، فالحركة هنا مرسومة بأبسط صورها. أضف إليهما «يقف» و«يذهب» والعربة المرسومة من الأعلى 車، فتكتمل لديك أفعال التنقل الأساسية."
+  },
+  {
+   "n": 14,
+   "displayName_en": "Kanji 14 — Directions & country",
+   "displayName_ar": "كانجي 14 — الاتجاهات والبلاد",
+   "introCopy_en": "You met east back in the tree lesson — now add west, south, and north to complete your compass. Country 国 keeps its treasure safe inside closed borders, and the winding road radical of 道 walks straight into week 週.",
+   "introCopy_ar": "عرفت «الشرق» في درس الشجرة، فأضف إليه الغرب والجنوب والشمال لتكتمل لديك الجهات الأربع. أما رمز «البلاد» 国 فجوهرة محفوظة داخل حدود مغلقة، وشكل «الطريق» الملتوي في 道 يظهر هو نفسه داخل «الأسبوع» 週."
+  },
+  {
+   "n": 15,
+   "displayName_en": "Kanji 15 — Communication",
+   "displayName_ar": "كانجي 15 — التواصل",
+   "introCopy_en": "Words rising from a mouth give you say 言, and that same shape sits inside talk, read, and language. This is the lesson where kanji starts talking about talking.",
+   "introCopy_ar": "خطوط تتصاعد من فم تكوّن رمز «القول» 言، والشكل نفسه يستقر في يسار «يتحدث» 話 و«يقرأ» 読 و«اللغة» 語. احفظ هذا الجذر مرة واحدة، وستميّزه كلما ظهر أمامك في رموز الكلام."
+  },
+  {
+   "n": 16,
+   "displayName_en": "Kanji 16 — Animals & food",
+   "displayName_ar": "كانجي 16 — الحيوانات والطعام",
+   "introCopy_en": "A horse 馬 gallops right into station 駅, and eat 食 tucks itself inside drink 飲 — big kanji are smaller ones combined. Along the way you'll meet a fish with a four-spark tail and a bird with ruffled feathers.",
+   "introCopy_ar": "الحصان 馬 يركض حتى يدخل في رمز «المحطة» 駅، ورمز «الأكل» 食 يستقر داخل «الشرب» 飲، فالرموز الكبيرة مركّبة من رموز أصغر تعرفها. وستقابل في الطريق سمكة ذيلُها أربع شرارات وطائرًا منفوش الريش."
+  },
+  {
+   "n": 17,
+   "displayName_en": "Kanji 17 — Time, money & change",
+   "displayName_ar": "كانجي 17 — الوقت والمال والتغيير",
+   "introCopy_en": "The final stretch: time, half, and the yen 円 you'll pay with, plus long, new, return, and company. Finish these seven and you've written your way through the whole N5 kanji set — congratulations.",
+   "introCopy_ar": "هذا هو الدرس الأخير: «الوقت» و«النصف» و«الين» 円 الذي ستدفع به، ومعها «طويل» و«جديد» و«يعود» و«الشركة». وبإتمام هذا الدرس تكون قد كتبت بيدك رموز المستوى N5 كلها، فهنيئًا لك بما أنجزت."
+  }
+ ],
+ "designIssues": [
+  "Acknowledged exception (not amended): 百 in Lesson 2 precedes its 白 component (Lesson 6). Forced by the numbers-first constraint; moving 百 to Lesson 6 would make that lesson 8 kanji and break the number-system theme. The design already flags and revisits it.",
+  "Minor: Lesson 13 'Motion verbs & vehicle' is thematically rather than visually coherent — 入, 立, 行, 車 share no visual component; acceptable since all are simple standalone pictographs with no ordering dependency.",
+  "Cosmetic rationale inaccuracy: Lesson 5 says 男 'introduces power 力', but 力 already appears among 万's radicals in Lesson 2.",
+  "Note: 国 (Lesson 14) contains 玉/王, which is never taught as a standalone kanji in this 103-key set; it is introduced as a new component, which is standard practice.",
+  "Mechanical verification passed: all 103 keys placed exactly once (0 missing, 0 duplicated, 0 extraneous); sizes 6,7,7,6,6,7,5,5,6,5,7,5,5,6,7,6,7 all within 5-7; Lesson 1 numbers-only without 木; all other component-before-compound orderings verified correct both within and across lessons."
+ ]
+}

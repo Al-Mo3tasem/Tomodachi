@@ -11,10 +11,10 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260726b';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260726b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260726b';
-import { t, getLocale } from '../i18n/index.js?v=20260726b';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260726c';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260726c';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260726c';
+import { t, getLocale } from '../i18n/index.js?v=20260726c';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -124,6 +124,16 @@ function buildQuiz() {
       const distractors = shuffle(pool.filter(m => m !== answer)).slice(0, 3);
       qs.push({ prompt: it.reading, say: it.reading, choices: shuffle([answer, ...distractors]), answer });
     });
+  } else if (lesson.contentType === 'kanji') {
+    // kanji has no single romaji — it is a MEANING quiz (lead decision):
+    // show the character, pick its meaning; audio = a kana reading.
+    const meaningOf = (it) => pick(it.en_meanings?.[0], it.ar_meanings?.[0]);
+    const pool = items.map(meaningOf);
+    items.forEach(it => {
+      const answer = meaningOf(it);
+      const distractors = shuffle(pool.filter(m => m !== answer)).slice(0, 3);
+      qs.push({ prompt: it.kanji, say: (it.kunyomi?.[0] || it.onyomi?.[0] || null), choices: shuffle([answer, ...distractors]), answer });
+    });
   } else {
     // kana: glyph → pick the romaji
     const pool = items.map(it => it.romaji);
@@ -191,6 +201,23 @@ function renderTeach() {
       div.addEventListener('click', () => speak(e.ja));
       exWrap.appendChild(div);
     });
+  } else if (type === 'kanji') {
+    big.hidden = false;
+    big.textContent = it.kanji;
+    big.classList.remove('is-word');
+    read.textContent = pick(it.en_meanings, it.ar_meanings)?.join(getLocale() === 'ar' ? '، ' : ', ') || '';
+    const mn = pick(it.mnemonic?.en, it.mnemonic?.ar);
+    body.textContent = mn ? `${mn.meaning_story}\n\n${mn.reading_story}` : '';
+    // readings card (informational, tap to hear)
+    const div = document.createElement('div');
+    div.className = 'lesson-example';
+    const on = document.createElement('div'); on.className = 'lesson-example-ja';
+    on.textContent = `音 ${(it.onyomi || []).join('・') || '—'}　訓 ${(it.kunyomi || []).join('・') || '—'}`;
+    div.appendChild(on);
+    const say = it.kunyomi?.[0] || it.onyomi?.[0];
+    if (say) div.addEventListener('click', () => speak(say));
+    exWrap.appendChild(div);
+    if (say) speak(say);
   } else if (type === 'vocab') {
     big.hidden = false;
     big.textContent = it.reading;
@@ -285,5 +312,9 @@ export function initLessonUi() {
   });
   $('lesson-btn-done-home')?.addEventListener('click', exitLesson);
   $('lesson-btn-done-next')?.addEventListener('click', () => { openNextLesson(); });
-  $('lesson-card-big')?.addEventListener('click', () => { if (L) { const it = L.items[L.i]; speak(it.glyph || it.reading); } });
+  $('lesson-card-big')?.addEventListener('click', () => {
+    if (!L) return;
+    const it = L.items[L.i];
+    speak(it.glyph || it.reading || it.kunyomi?.[0] || it.onyomi?.[0] || it.kanji);
+  });
 }
