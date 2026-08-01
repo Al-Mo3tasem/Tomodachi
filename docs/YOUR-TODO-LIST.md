@@ -78,7 +78,7 @@ deliberately flip the flag later.
 1. Open https://console.firebase.google.com/project/tomodachi-prod/settings/serviceaccounts/adminsdk
 2. Click **Generate new private key** → confirm → a JSON file downloads.
 3. Move/rename that file to EXACTLY:
-   `D:MO3 LAPMyProjectsTomodachiscriptssecretsservice-account.prod.json`
+   `D:/MO3 LAP/MyProjects/Tomodachi/scripts/secrets/service-account.prod.json`
    (the secrets folder is gitignored — it can never be committed).
 4. Do NOT open/paste its contents anywhere — just place the file.
 
