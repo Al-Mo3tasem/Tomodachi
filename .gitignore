@@ -32,3 +32,6 @@ audio/
 # Obsidian editor config (personal, any vault location)
 .obsidian/
 docs/.obsidian/
+
+# Claude Code personal settings (machine-local permissions)
+.claude/settings.local.json

@@ -1,5 +1,5 @@
 {
-  "_note": "Cluster framing copy (20). AR = native-review v3 (2026-07-26, two MSA reviews merged; 14 rewrites). intro_ar_f = feminine variant, EMPTY by design.",
+  "_note": "Cluster framing copy (20). AR = native-review v4 (2026-08-01 human reviewer: school causality fix + opening variety per note 3). intro_ar_f EMPTY by design.",
   "clusters": [
     {
       "slug": "greetings",
@@ -70,7 +70,7 @@
       "name_en": "Places",
       "name_ar": "الأماكن",
       "intro_en": "Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.",
-      "intro_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
+      "intro_ar": "البيت والمدرسة والمحطة والمتجر — أسماء أماكن شائعة ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
       "intro_ar_f": ""
     },
     {
@@ -94,7 +94,7 @@
       "name_en": "Getting Around",
       "name_ar": "التنقّل",
       "intro_en": "Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.",
-      "intro_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
+      "intro_ar": "القطارات والسيارات وغيرها من وسائل التنقّل، مع أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
       "intro_ar_f": ""
     },
     {
@@ -142,7 +142,7 @@
       "name_en": "School & Study",
       "name_ar": "المدرسة والدراسة",
       "intro_en": "Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.",
-      "intro_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
+      "intro_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة؛ فأنت نفسك الآن طالبٌ يتعلّم اليابانية.",
       "intro_ar_f": ""
     },
     {

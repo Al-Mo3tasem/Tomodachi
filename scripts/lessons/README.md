@@ -47,9 +47,7 @@ All generators are idempotent (doc-id = lessonKey), PRESERVE the woven globalOrd
   entry carries `introCopy_ar_f` / `intro_ar_f` — the feminine variant — which is
   deliberately EMPTY and flows through the generators into the lesson docs. Do NOT
   neutralize the imperatives (they carry the warmth) and do NOT build a gender toggle
-  yet; the field exists so filling it later costs nothing structurally. Fill it only
-  after real feedback from women in the target market says the masculine default
-  registers as excluding.
+  yet; the field exists so filling it later costs nothing structurally. **DECIDED 2026-08-01: target-market women confirmed the masculine default reads fine — ship as-is; the field stays as future-proofing only.**
 - Meta-screens (orientation, reading rules ー/っ, checkpoints) are app UI, NOT lesson
   docs (lead decision D-C); the stamp exempts ー/っ/small-vowel glyphs accordingly,
   and the L2.13 sequence layer must slot these screens by position with a "seen" flag.

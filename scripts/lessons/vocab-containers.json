@@ -394,7 +394,7 @@
   "displayName_en": "Places · 1",
   "displayName_ar": "الأماكن · 1",
   "introCopy_en": "Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.",
-  "introCopy_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
+  "introCopy_ar": "البيت والمدرسة والمحطة والمتجر — أسماء أماكن شائعة ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_021_house",
@@ -418,7 +418,7 @@
   "displayName_en": "Places · 2",
   "displayName_ar": "الأماكن · 2",
   "introCopy_en": "Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.",
-  "introCopy_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
+  "introCopy_ar": "البيت والمدرسة والمحطة والمتجر — أسماء أماكن شائعة ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_024_hospital",
@@ -519,7 +519,7 @@
   "displayName_en": "Getting Around · 1",
   "displayName_ar": "التنقّل · 1",
   "introCopy_en": "Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.",
-  "introCopy_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
+  "introCopy_ar": "القطارات والسيارات وغيرها من وسائل التنقّل، مع أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_075_car",
@@ -542,7 +542,7 @@
   "displayName_en": "Getting Around · 2",
   "displayName_ar": "التنقّل · 2",
   "introCopy_en": "Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.",
-  "introCopy_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
+  "introCopy_ar": "القطارات والسيارات وغيرها من وسائل التنقّل، مع أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_023_run",
@@ -856,7 +856,7 @@
   "displayName_en": "School & Study · 1",
   "displayName_ar": "المدرسة والدراسة · 1",
   "introCopy_en": "Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.",
-  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
+  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة؛ فأنت نفسك الآن طالبٌ يتعلّم اليابانية.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_119_japanese_lang",
@@ -881,7 +881,7 @@
   "displayName_en": "School & Study · 2",
   "displayName_ar": "المدرسة والدراسة · 2",
   "introCopy_en": "Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.",
-  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
+  "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة؛ فأنت نفسك الآن طالبٌ يتعلّم اليابانية.",
   "introCopy_ar_f": "",
   "itemKeys": [
    "n5_v_061_forget",

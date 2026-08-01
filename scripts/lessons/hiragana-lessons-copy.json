@@ -1,5 +1,5 @@
 {
-  "_note": "Hiragana track copy (16). AR = native-review v3 (2026-07-26, two independent MSA reviews merged). introCopy_ar_f = feminine variant, deliberately EMPTY (ship masculine; field reserved so filling later is cheap). Style: ≤2 sentences, no absolutes, direct over metaphor, spelled-out numbers.",
+  "_note": "Hiragana track copy (16). AR = native-review v4 (2026-08-01 human-reviewed; 2026-07-26, two independent MSA reviews merged). introCopy_ar_f = feminine variant, deliberately EMPTY (ship masculine; field reserved so filling later is cheap). Style: ≤2 sentences, no absolutes, direct over metaphor, spelled-out numbers.",
   "hiragana:01": {
     "romaji": [
       "a",
@@ -81,7 +81,7 @@
     "displayName_en": "The は Row — H Sounds",
     "displayName_ar": "صف «は» — أصوات الهاء",
     "introCopy_en": "The h row: ha, hi, fu, he, ho. The third sound is a soft fu — halfway between an f and an h, made with a light puff of air, not your teeth.",
-    "introCopy_ar": "صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة لا من الأسنان.",
+    "introCopy_ar": "صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة من بين الشفتين، لا من الأسنان كما في الفاء العربية.",
     "introCopy_ar_f": ""
   },
   "hiragana:07": {

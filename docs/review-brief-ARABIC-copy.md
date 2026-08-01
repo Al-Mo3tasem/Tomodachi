@@ -52,7 +52,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** The は Row — H Sounds
 - **AR title:** صف «は» — أصوات الهاء
 - **EN intro:** The h row: ha, hi, fu, he, ho. The third sound is a soft fu — halfway between an f and an h, made with a light puff of air, not your teeth.
-- **AR intro:** صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة لا من الأسنان.
+- **AR intro:** صف الهاء: ha، hi، fu، he، ho. الصوت الثالث خفيف: fu — بين الفاء والهاء، يخرج بنفخة هواء لطيفة من بين الشفتين، لا من الأسنان كما في الفاء العربية.
 
 ### 7. `hiragana:07`
 - **EN title:** The ま Row — M Sounds
@@ -120,7 +120,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana ア Row — Vowels
 - **AR title:** الكاتاكانا — صف «ア» (أصوات العِلّة)
 - **EN intro:** This is Japan's second script. Katakana spells the same sounds as hiragana but with sharper, more angular shapes, and it is used for foreign and loan words. Start with the vowels: ア, イ, ウ, エ, オ.
-- **AR intro:** الكاتاكانا هي نظام الكتابة الثاني الذي ستتعلّمه في اليابانية. تمثّل الأصوات نفسها التي تمثّلها الهيراغانا، لكن حروفها تعتمد أكثر على الخطوط المستقيمة والزوايا، وتُستخدم غالبًا في الكلمات الأجنبية والدخيلة. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.
+- **AR intro:** الكاتاكانا نظامُ الكتابة الثاني الذي ستتعلّمه: تمثّل أصوات الهيراغانا نفسها، لكن حروفها أكثر اعتمادًا على الخطوط المستقيمة والزوايا، وتُستخدم غالبًا في الكلمات الأجنبية. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.
 
 ### 18. `katakana:02`
 - **EN title:** Katakana カ Row — K Sounds
@@ -138,13 +138,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana タ Row — T Sounds
 - **AR title:** الكاتاكانا — صف «タ» (أصوات التاء)
 - **EN intro:** ta, chi, tsu, te, to. Here is ツ (tsu), the twin of シ (shi). The trick: シ's strokes come in from the side, ツ's come down from the top.
-- **AR intro:** ta، chi، tsu، te، to. انتبه إلى «ツ» (tsu)، فهو يشبه «シ» (shi). لتفريقهما: تأتي الخطوط القصيرة في «シ» من الجانب، وفي «ツ» من الأعلى.
+- **AR intro:** ta، chi، tsu، te، to. انتبه إلى «ツ» (tsu)، فهو يشبه «シ» (shi). وللتمييز بينهما: تأتي الخطوط القصيرة في «シ» من الجانب، وفي «ツ» من الأعلى.
 
 ### 21. `katakana:05`
 - **EN title:** Katakana ナ Row — N Sounds
 - **AR title:** الكاتاكانا — صف «ナ» (أصوات النون)
 - **EN intro:** na, ni, nu, ne, no. Notice how ノ (no) is a single clean stroke — it appears as a building block inside several other katakana.
-- **AR intro:** na، ni، nu، ne، no. لاحِظ أن «ノ» (no) يتكوّن من خط واحد بسيط، وأن شكله يظهر جزءًا من رسم عدة حروف كاتاكانا أخرى.
+- **AR intro:** na، ni، nu، ne، no. لاحِظ أن «ノ» (no) يتكوّن من خط واحد بسيط، وأن شكله يظهر ضمن رسم عدة حروف كاتاكانا أخرى.
 
 ### 22. `katakana:06`
 - **EN title:** Katakana ハ Row — H Sounds
@@ -155,8 +155,8 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 ### 23. `katakana:07`
 - **EN title:** Katakana マ Row — M Sounds
 - **AR title:** الكاتاكانا — صف «マ» (أصوات الميم)
-- **EN intro:** ma, mi, mu, me, mo. You are halfway through the second script. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.
-- **AR intro:** ma، mi، mu، me، mo. بهذا تكون قد قطعت نصف الطريق في تعلّم الكاتاكانا. وقريبًا ستقرأ كلمات مثل «コーヒー» (قهوة) و«パン» (خبز) بسهولة.
+- **EN intro:** ma, mi, mu, me, mo. Seven of the ten basic rows are behind you. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.
+- **AR intro:** ma، mi، mu، me، mo. سبعة من الصفوف الأساسية العشرة صارت وراءك. وقريبًا ستقرأ كلمات مثل «コーヒー» (قهوة) و«パン» (خبز) بسهولة.
 
 ### 24. `katakana:08`
 - **EN title:** Katakana ヤ Row — Y Sounds
@@ -180,13 +180,13 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Katakana Dakuten I — G and Z
 - **AR title:** كاتاكانا الدَّاكوتِن ١ — صوتا g وz
 - **EN intro:** The dakuten works exactly as in hiragana: カ → ガ (ka → ga), サ → ザ (sa → za). You already know the rule; here it is on the katakana shapes.
-- **AR intro:** يعمل الدَّاكوتِن هنا كما يعمل في الهيراغانا: «カ» ← «ガ» (ka → ga)، و«サ» ← «ザ» (sa → za). أنت تعرف القاعدة بالفعل؛ والآن ستطبّقها على حروف الكاتاكانا.
+- **AR intro:** يعمل الدَّاكوتِن هنا كما يعمل في الهيراغانا: «カ» تصير «ガ» (ka → ga)، و«サ» تصير «ザ» (sa → za). أنت تعرف القاعدة بالفعل؛ والآن ستطبّقها على حروف الكاتاكانا.
 
 ### 28. `katakana:12`
 - **EN title:** Katakana Dakuten II — D and B
 - **AR title:** كاتاكانا الدَّاكوتِن ٢ — أصوات الدال والباء
 - **EN intro:** タ → ダ (ta → da), ハ → バ (ha → ba). The b sounds are especially common in loanwords: バス (bus), テーブル (table).
-- **AR intro:** «タ» ← «ダ» (ta → da)، «ハ» ← «バ» (ha → ba). وأصوات الباء شائعة بوجهٍ خاص في الكلمات الدخيلة: «バス» (حافلة)، «テーブル» (طاولة).
+- **AR intro:** «タ» تصير «ダ» (ta → da)، و«ハ» تصير «バ» (ha → ba). وأصوات الباء شائعة بوجهٍ خاص في الكلمات الدخيلة: «バス» (حافلة)، «テーブル» (طاولة).
 
 ### 29. `katakana:13`
 - **EN title:** Katakana Handakuten — P
@@ -266,7 +266,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Places
 - **AR title:** الأماكن
 - **EN intro:** Home, school, station, shop. Place words are exactly what the location particles you are about to learn attach to — learn the nouns first, the grammar lands next.
-- **AR intro:** تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.
+- **AR intro:** البيت والمدرسة والمحطة والمتجر — أسماء أماكن شائعة ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.
 
 ### 42. `vocab:counters`
 - **EN title:** Counters
@@ -284,7 +284,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** Getting Around
 - **AR title:** التنقّل
 - **EN intro:** Trains, cars, and the verbs of movement that go with them. This is where travel vocabulary and asking for directions first come together.
-- **AR intro:** تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.
+- **AR intro:** القطارات والسيارات وغيرها من وسائل التنقّل، مع أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.
 
 ### 45. `vocab:body`
 - **EN title:** Body & Feelings
@@ -320,7 +320,7 @@ You are a **native Modern Standard Arabic (MSA / الفصحى) editor** and a Ja
 - **EN title:** School & Study
 - **AR title:** المدرسة والدراسة
 - **EN intro:** Words for learning: teacher, student, lesson, test, homework. Especially close to home for you, since you are studying Japanese right now.
-- **AR intro:** تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.
+- **AR intro:** تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة؛ فأنت نفسك الآن طالبٌ يتعلّم اليابانية.
 
 ### 51. `vocab:social_verbs`
 - **EN title:** Work, Play & Exchange Verbs

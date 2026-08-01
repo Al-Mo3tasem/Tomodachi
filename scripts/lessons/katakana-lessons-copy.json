@@ -1,5 +1,5 @@
 {
-  "_note": "Katakana track copy (16). AR = native-review v3 (2026-07-26, two MSA reviews merged). introCopy_ar_f = feminine variant, EMPTY by design.",
+  "_note": "Katakana track copy (16). AR = native-review v4 (2026-08-01, human native reviewer: 6 fixes + arrow→verb bidi fix generalized to :12 + halfway-claim corrected to 7-of-10 rows). introCopy_ar_f EMPTY by design.",
   "katakana:01": {
     "romaji": [
       "a",
@@ -11,7 +11,7 @@
     "displayName_en": "Katakana ア Row — Vowels",
     "displayName_ar": "الكاتاكانا — صف «ア» (أصوات العِلّة)",
     "introCopy_en": "This is Japan's second script. Katakana spells the same sounds as hiragana but with sharper, more angular shapes, and it is used for foreign and loan words. Start with the vowels: ア, イ, ウ, エ, オ.",
-    "introCopy_ar": "الكاتاكانا هي نظام الكتابة الثاني الذي ستتعلّمه في اليابانية. تمثّل الأصوات نفسها التي تمثّلها الهيراغانا، لكن حروفها تعتمد أكثر على الخطوط المستقيمة والزوايا، وتُستخدم غالبًا في الكلمات الأجنبية والدخيلة. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.",
+    "introCopy_ar": "الكاتاكانا نظامُ الكتابة الثاني الذي ستتعلّمه: تمثّل أصوات الهيراغانا نفسها، لكن حروفها أكثر اعتمادًا على الخطوط المستقيمة والزوايا، وتُستخدم غالبًا في الكلمات الأجنبية. ابدأ بحروف العِلّة: ア، イ، ウ، エ، オ.",
     "introCopy_ar_f": ""
   },
   "katakana:02": {
@@ -53,7 +53,7 @@
     "displayName_en": "Katakana タ Row — T Sounds",
     "displayName_ar": "الكاتاكانا — صف «タ» (أصوات التاء)",
     "introCopy_en": "ta, chi, tsu, te, to. Here is ツ (tsu), the twin of シ (shi). The trick: シ's strokes come in from the side, ツ's come down from the top.",
-    "introCopy_ar": "ta، chi، tsu، te، to. انتبه إلى «ツ» (tsu)، فهو يشبه «シ» (shi). لتفريقهما: تأتي الخطوط القصيرة في «シ» من الجانب، وفي «ツ» من الأعلى.",
+    "introCopy_ar": "ta، chi، tsu، te، to. انتبه إلى «ツ» (tsu)، فهو يشبه «シ» (shi). وللتمييز بينهما: تأتي الخطوط القصيرة في «シ» من الجانب، وفي «ツ» من الأعلى.",
     "introCopy_ar_f": ""
   },
   "katakana:05": {
@@ -67,7 +67,7 @@
     "displayName_en": "Katakana ナ Row — N Sounds",
     "displayName_ar": "الكاتاكانا — صف «ナ» (أصوات النون)",
     "introCopy_en": "na, ni, nu, ne, no. Notice how ノ (no) is a single clean stroke — it appears as a building block inside several other katakana.",
-    "introCopy_ar": "na، ni، nu، ne، no. لاحِظ أن «ノ» (no) يتكوّن من خط واحد بسيط، وأن شكله يظهر جزءًا من رسم عدة حروف كاتاكانا أخرى.",
+    "introCopy_ar": "na، ni، nu، ne، no. لاحِظ أن «ノ» (no) يتكوّن من خط واحد بسيط، وأن شكله يظهر ضمن رسم عدة حروف كاتاكانا أخرى.",
     "introCopy_ar_f": ""
   },
   "katakana:06": {
@@ -94,8 +94,8 @@
     ],
     "displayName_en": "Katakana マ Row — M Sounds",
     "displayName_ar": "الكاتاكانا — صف «マ» (أصوات الميم)",
-    "introCopy_en": "ma, mi, mu, me, mo. You are halfway through the second script. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.",
-    "introCopy_ar": "ma، mi، mu، me، mo. بهذا تكون قد قطعت نصف الطريق في تعلّم الكاتاكانا. وقريبًا ستقرأ كلمات مثل «コーヒー» (قهوة) و«パン» (خبز) بسهولة.",
+    "introCopy_en": "ma, mi, mu, me, mo. Seven of the ten basic rows are behind you. Soon you will read words like コーヒー (coffee) and パン (bread) at a glance.",
+    "introCopy_ar": "ma، mi، mu، me، mo. سبعة من الصفوف الأساسية العشرة صارت وراءك. وقريبًا ستقرأ كلمات مثل «コーヒー» (قهوة) و«パン» (خبز) بسهولة.",
     "introCopy_ar_f": ""
   },
   "katakana:08": {
@@ -152,7 +152,7 @@
     "displayName_en": "Katakana Dakuten I — G and Z",
     "displayName_ar": "كاتاكانا الدَّاكوتِن ١ — صوتا g وz",
     "introCopy_en": "The dakuten works exactly as in hiragana: カ → ガ (ka → ga), サ → ザ (sa → za). You already know the rule; here it is on the katakana shapes.",
-    "introCopy_ar": "يعمل الدَّاكوتِن هنا كما يعمل في الهيراغانا: «カ» ← «ガ» (ka → ga)، و«サ» ← «ザ» (sa → za). أنت تعرف القاعدة بالفعل؛ والآن ستطبّقها على حروف الكاتاكانا.",
+    "introCopy_ar": "يعمل الدَّاكوتِن هنا كما يعمل في الهيراغانا: «カ» تصير «ガ» (ka → ga)، و«サ» تصير «ザ» (sa → za). أنت تعرف القاعدة بالفعل؛ والآن ستطبّقها على حروف الكاتاكانا.",
     "introCopy_ar_f": ""
   },
   "katakana:12": {
@@ -171,7 +171,7 @@
     "displayName_en": "Katakana Dakuten II — D and B",
     "displayName_ar": "كاتاكانا الدَّاكوتِن ٢ — أصوات الدال والباء",
     "introCopy_en": "タ → ダ (ta → da), ハ → バ (ha → ba). The b sounds are especially common in loanwords: バス (bus), テーブル (table).",
-    "introCopy_ar": "«タ» ← «ダ» (ta → da)، «ハ» ← «バ» (ha → ba). وأصوات الباء شائعة بوجهٍ خاص في الكلمات الدخيلة: «バス» (حافلة)، «テーブル» (طاولة).",
+    "introCopy_ar": "«タ» تصير «ダ» (ta → da)، و«ハ» تصير «バ» (ha → ba). وأصوات الباء شائعة بوجهٍ خاص في الكلمات الدخيلة: «バス» (حافلة)، «テーブル» (طاولة).",
     "introCopy_ar_f": ""
   },
   "katakana:13": {
