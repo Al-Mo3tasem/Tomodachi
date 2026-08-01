@@ -12,11 +12,11 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801b';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801b';
-import { cacheGet, cachePut } from '../data/content.js?v=20260801b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260801b';
-import { t, getLocale } from '../i18n/index.js?v=20260801b';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801c';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801c';
+import { cacheGet, cachePut } from '../data/content.js?v=20260801c';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260801c';
+import { t, getLocale } from '../i18n/index.js?v=20260801c';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -98,6 +98,15 @@ export async function renderLessonCta() {
 export async function openNextLesson() {
   const nxt = nextLesson();
   if (!nxt) return;
+  // Meta screens (orientation / reading rules / checkpoints) interleave by
+  // position; show the first unseen one due at this point, then the lesson.
+  const meta = pendingMeta(nxt.globalOrder);
+  if (meta) {
+    pendingLessonAfterMeta = nxt;
+    renderMetaScreen(meta);
+    $('meta-continue').dataset.metaId = meta.id;
+    return;
+  }
   await openLesson(nxt);
 }
 
@@ -330,6 +339,72 @@ async function completeLesson() {
   }
 }
 
+// ----- meta screens (D-C decision: UI constructs, NOT content docs) -----
+// Positioned by "due before globalOrder N", tracked via users/{uid}.seenMeta.
+// orientation → before lesson 1; reading rules → before the numbers cluster
+// (きゅう/じゅう long vowels); checkpoints → every 10 lessons.
+
+function metaScreens() {
+  const out = [
+    { id: 'orientation', before: 1, icon: '🧭', title: 'meta.orientation_title', bodies: ['meta.orientation_1', 'meta.orientation_2', 'meta.orientation_3', 'meta.orientation_4'] },
+    { id: 'reading_rules', before: 26, icon: '🔎', title: 'meta.rules_title', bodies: ['meta.rules_1', 'meta.rules_2'] },
+  ];
+  const total = lessons ? lessons.length : 151;
+  for (let n = 10; n < total; n += 10) out.push({ id: `checkpoint_${n}`, before: n + 1, icon: '🏁', checkpoint: n });
+  return out;
+}
+
+function seenMetaSet() {
+  return new Set(state.userData?.seenMeta || []);
+}
+
+// The first unseen meta screen due at or before the given lesson position.
+function pendingMeta(beforeOrder) {
+  const seen = seenMetaSet();
+  return metaScreens()
+    .filter(m => m.before <= beforeOrder && !seen.has(m.id))
+    .sort((a, b) => a.before - b.before)[0] || null;
+}
+
+let pendingLessonAfterMeta = null;
+
+function renderMetaScreen(m) {
+  $('meta-icon').textContent = m.icon;
+  const bodyWrap = $('meta-body');
+  bodyWrap.innerHTML = '';
+  if (m.checkpoint) {
+    $('meta-title').textContent = t('meta.checkpoint_title');
+    // dynamic stats from completed lessons
+    const done = completedSet();
+    let kana = 0, words = 0;
+    (lessons || []).forEach(l => {
+      if (!done.has(l.lessonKey)) return;
+      if (l.contentType === 'hiragana' || l.contentType === 'katakana') kana += l.itemKeys.length;
+      if (l.contentType === 'vocab') words += l.itemKeys.length;
+    });
+    const p = document.createElement('p');
+    p.textContent = t('meta.checkpoint_body', { lessons: done.size, kana, words });
+    bodyWrap.appendChild(p);
+  } else {
+    $('meta-title').textContent = t(m.title);
+    for (const key of m.bodies) {
+      const p = document.createElement('p');
+      p.textContent = t(key);
+      bodyWrap.appendChild(p);
+    }
+  }
+  showScreen('screen-meta');
+}
+
+async function markMetaSeen(id) {
+  const seen = seenMetaSet();
+  if (seen.has(id) || !state.user) return;
+  state.userData = { ...state.userData, seenMeta: [...seen, id] };   // optimistic
+  try {
+    await updateDoc(doc(db, 'users', state.user.uid), { seenMeta: arrayUnion(id) });
+  } catch (err) { console.error('[meta] seen write failed:', err); }
+}
+
 // ----- lesson browser (all lessons: done ✓ / current ▶ / locked) -----
 
 const TYPE_ICON = { hiragana: 'あ', katakana: 'ア', vocab: '💬', grammar: '文', kanji: '漢' };
@@ -391,6 +466,13 @@ export function initLessonUi() {
   applyLessonA11y();
   $('lesson-cta-btn')?.addEventListener('click', openNextLesson);
   $('lesson-cta-browse')?.addEventListener('click', openLessonBrowser);
+  $('meta-continue')?.addEventListener('click', async (e) => {
+    const id = e.currentTarget.dataset.metaId;
+    if (id) await markMetaSeen(id);
+    pendingLessonAfterMeta = null;
+    // Re-enter the flow: more pending metas show in sequence; else the lesson.
+    openNextLesson();
+  });
   $('lessons-list-back')?.addEventListener('click', () => { showScreen('screen-dashboard'); renderLessonCta(); });
   $('lesson-btn-exit')?.addEventListener('click', exitLesson);
   $('lesson-btn-begin')?.addEventListener('click', () => { if (L) setPhase('teach'); });

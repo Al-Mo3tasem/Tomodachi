@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260801b">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260801b">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260801c">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260801c">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -96,7 +96,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260801b">
+  <link rel="stylesheet" href="css/style.css?v=20260801c">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -944,6 +944,18 @@
     </section>
 
     <!-- ========== MULTIPLAYER LOBBY (Duel + Co-op) ========== -->
+    <!-- ===== META SCREEN (orientation / reading rules / checkpoints) ===== -->
+    <section id="screen-meta" class="screen">
+      <div class="container container-narrow">
+        <div class="card lesson-intro-card">
+          <div class="lesson-done-emoji" id="meta-icon">🧭</div>
+          <h2 id="meta-title"></h2>
+          <div class="meta-body" id="meta-body"></div>
+          <button class="btn btn-primary btn-lg" id="meta-continue" data-i18n="meta.continue">Continue</button>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== LESSON BROWSER (all lessons, review completed) ===== -->
     <section id="screen-lessons-list" class="screen">
       <div class="container container-narrow">
@@ -1260,7 +1272,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260801b"></script>
+  <script type="module" src="js/app.js?v=20260801c"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

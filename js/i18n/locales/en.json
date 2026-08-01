@@ -692,5 +692,18 @@
     "browse_all": "All lessons",
     "list_title": "All lessons",
     "locked_toast": "Complete the previous lessons to unlock this one."
+  },
+  "meta": {
+    "continue": "Continue",
+    "orientation_title": "Before your first lesson",
+    "orientation_1": "Japanese is written left to right, like English — and unlike Arabic. Give your eyes a moment to adjust each session.",
+    "orientation_2": "There are no spaces between words. At first that looks impossible; within a few lessons your eyes will find the word edges on their own.",
+    "orientation_3": "You will meet three writing systems: hiragana for Japanese words, katakana for foreign words, and kanji for meanings. This course introduces them one at a time, in that order.",
+    "orientation_4": "Japanese is built from syllables — ka, mi, to — not single letters. Each symbol you learn is one complete sound.",
+    "rules_title": "Two reading rules",
+    "rules_1": "Long vowels: some sounds are held twice as long, written with an extra vowel (おう) or a dash in katakana (ー). You already do this in Arabic — it is exactly the madd in قال.",
+    "rules_2": "The small っ doubles the consonant after it, like the shadda in شدّة. きって (kitte) has that tiny pause — say it like the doubled letter in مرّة.",
+    "checkpoint_title": "Milestone!",
+    "checkpoint_body": "You have completed {{lessons}} lessons — {{kana}} kana and {{words}} words are now yours. Keep going: the next stretch builds directly on what you just learned."
   }
 }

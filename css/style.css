@@ -5533,3 +5533,8 @@ input:focus-visible {
 .lessons-row-num { flex-shrink: 0; min-width: 28px; color: var(--text-tertiary); font-size: 0.8125rem; font-weight: 700; }
 .lessons-row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lessons-row-state { flex-shrink: 0; font-size: 0.875rem; }
+
+/* Meta screens (orientation / reading rules / checkpoints) */
+#screen-meta .lesson-intro-card { margin-top: var(--space-7); }
+.meta-body { text-align: start; margin-bottom: var(--space-5); }
+.meta-body p { line-height: 1.75; color: var(--text-secondary); margin-bottom: var(--space-3); }
