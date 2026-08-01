@@ -5538,3 +5538,14 @@ input:focus-visible {
 #screen-meta .lesson-intro-card { margin-top: var(--space-7); }
 .meta-body { text-align: start; margin-bottom: var(--space-5); }
 .meta-body p { line-height: 1.75; color: var(--text-secondary); margin-bottom: var(--space-3); }
+
+/* D4-A: per-track course progress rows */
+.course-progress { margin-top: var(--space-5); display: flex; flex-direction: column; gap: 9px; }
+.cp-row { display: flex; align-items: center; gap: var(--space-3); }
+.cp-row:first-child .cp-fill { background: var(--accent); }
+.cp-label { flex-shrink: 0; width: 74px; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+.cp-bar { flex: 1; height: 8px; border-radius: var(--radius-full); background: var(--border); overflow: hidden; }
+.cp-fill { display: block; height: 100%; border-radius: var(--radius-full); background: color-mix(in srgb, var(--accent) 72%, var(--warning)); transition: width 0.4s ease; }
+.cp-count { flex-shrink: 0; min-width: 64px; text-align: end; font-size: 0.75rem; font-weight: 700; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+.cp-row.is-complete .cp-count { color: var(--success); }
+.cp-row.is-complete .cp-fill { background: var(--success); }

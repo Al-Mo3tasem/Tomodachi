@@ -705,5 +705,13 @@
     "rules_2": "The small っ doubles the consonant after it, like the shadda in شدّة. きって (kitte) has that tiny pause — say it like the doubled letter in مرّة.",
     "checkpoint_title": "Milestone!",
     "checkpoint_body": "You have completed {{lessons}} lessons — {{kana}} kana and {{words}} words are now yours. Keep going: the next stretch builds directly on what you just learned."
+  },
+  "progress": {
+    "course": "Course",
+    "hiragana": "Hiragana",
+    "katakana": "Katakana",
+    "words": "Words",
+    "kanji": "Kanji",
+    "lesson_n": "Lesson {{n}} of {{total}}"
   }
 }

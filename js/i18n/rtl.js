@@ -9,7 +9,7 @@
 // page direction.
 // ============================================
 
-import { I18N_CONFIG } from '../config/i18n.js?v=20260801c';
+import { I18N_CONFIG } from '../config/i18n.js?v=20260802a';
 
 /**
  * Set <html dir> based on whether `locale` is in I18N_CONFIG.rtlLocales.

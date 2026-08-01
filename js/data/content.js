@@ -17,10 +17,10 @@
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260801c';
-import { getLocale } from '../i18n/index.js?v=20260801c';
-import { db, collection, getDocs } from './firebase.js?v=20260801c';
-import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260801c';
+import { getEnv } from '../config/firebase.js?v=20260802a';
+import { getLocale } from '../i18n/index.js?v=20260802a';
+import { db, collection, getDocs } from './firebase.js?v=20260802a';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260802a';
 
 // Per-environment flag. Default OFF everywhere except localhost dev.
 export function contentV2Enabled() {

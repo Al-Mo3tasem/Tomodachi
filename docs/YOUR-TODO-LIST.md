@@ -26,66 +26,25 @@ Nothing here blocks my work — I continue regardless.
 
 ---
 
-## 🟡 Still open — two things, BOTH doable today
+## 🟡 Still open — ONE thing: schedule the go-live
 
-### A. D4 — pick the mastery/progress display (reply with one word: A, B, or C)
+Everything else is done (2026-08-02):
+- ✅ D4: you picked **A** → per-track progress rows are LIVE on dev
+  (Course + Hiragana/Katakana/Words/Kanji bars; legacy mastery bar retired
+  in v2 environments).
+- ✅ D6-B1: prod read-rule published (your console action).
+- ✅ D6-B2: prod admin key placed + verified (locked to tomodachi-prod).
+- ✅ Prod SEEDED: 1,302 content docs copied dev→prod, all counts verified.
+  Invisible to users — the flag is still off.
 
-The dashboard progress stat must change before real users see the course.
-Pick a style:
-
-**Option A — Per-track rows (my recommendation, premium/Duolingo-style):**
-```
-Course           ▓▓▓░░░░░░░  Lesson 41 of 151
-Hiragana         ▓▓▓▓▓▓▓▓▓▓  104/104 ✓
-Katakana         ▓▓▓░░░░░░░   30/104
-Words            ▓░░░░░░░░░   45/680
-Kanji            ▓░░░░░░░░░    6/103
-```
-Richest, motivating, matches your premium-UX preference. ~Half a day to build.
-
-**Option B — Course bar only (simplest, honest):**
-```
-Your course      ▓▓▓░░░░░░░  Lesson 41 of 151 · 27%
-```
-One number, always true, ~an hour to build.
-
-**Option C — Keep today's single "mastery %" but scoped to kana only.**
-Least change, least informative.
-
-**Your step:** reply "D4: A" (or B / C). I build it same day.
-
-### B. D6 prep — two console tasks, safe to do NOW (invisible to users)
-
-Both are preparation only; nothing changes for prod users until we
-deliberately flip the flag later.
-
-**B1. Publish the read-rule on PROD (3 minutes):**
-1. Open https://console.firebase.google.com/project/tomodachi-prod/firestore/rules
-   (make sure the project selector says **tomodachi-prod**).
-2. In the rules editor, find the block:
-   `match /content_sets/{setId} { … }`
-3. Directly AFTER its closing `}`, paste:
-```
-    match /content_sets/{contentType}/items/{itemKey} {
-      allow read: if request.auth != null;
-      allow write: if false;
-    }
-```
-4. Click **Publish**. (Additive read-permission on data that does not exist
-   on prod yet — zero user impact.)
-
-**B2. Generate the prod admin key (3 minutes):**
-1. Open https://console.firebase.google.com/project/tomodachi-prod/settings/serviceaccounts/adminsdk
-2. Click **Generate new private key** → confirm → a JSON file downloads.
-3. Move/rename that file to EXACTLY:
-   `D:/MO3 LAP/MyProjects/Tomodachi/scripts/secrets/service-account.prod.json`
-   (the secrets folder is gitignored — it can never be committed).
-4. Do NOT open/paste its contents anywhere — just place the file.
-
-**Your step after both:** reply "prod prep done". I then verify the key
-works read-only, seed the verified content dev→prod (still invisible), and
-we schedule the actual flag-flip together.
+### The only remaining step: flip the switch together
+When you say **"go live"**, I will:
+1. Change the flag so prod loads the v2 content + course
+   (one-line change + deploy).
+2. E2E on the live site with a test account (picker, lesson 1, progress).
+3. Watch the first sessions with you.
+Pick a moment when you have ~30 minutes to watch it land.
 
 ---
 
-*Everything else is mine and in motion. — Claude*
+*— Claude*

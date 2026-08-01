@@ -12,11 +12,11 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801c';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801c';
-import { cacheGet, cachePut } from '../data/content.js?v=20260801c';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260801c';
-import { t, getLocale } from '../i18n/index.js?v=20260801c';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260802a';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260802a';
+import { cacheGet, cachePut } from '../data/content.js?v=20260802a';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260802a';
+import { t, getLocale } from '../i18n/index.js?v=20260802a';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -91,6 +91,7 @@ export async function renderLessonCta() {
   btn.hidden = false;
   btn.textContent = done === 0 ? t('lesson.cta_start') : t('lesson.cta_continue');
   cta.hidden = false;
+  renderCourseProgress();   // D4-A per-track rows share every refresh path
 }
 
 // ----- lesson runtime -----
@@ -337,6 +338,61 @@ async function completeLesson() {
       toast(t('lesson.progress_save_failed'), 'warning');
     }
   }
+}
+
+// ----- course progress (D4 Option A: per-track rows, lead-picked 2026-08-01) -----
+// Item counts are COURSE-derived (items taught by completed lessons over items
+// in all lessons) so the numbers are always coherent with the path itself.
+
+const PROGRESS_TRACKS = [
+  { key: 'course' },
+  { key: 'hiragana', types: ['hiragana'] },
+  { key: 'katakana', types: ['katakana'] },
+  { key: 'words', types: ['vocab'] },
+  { key: 'kanji', types: ['kanji'] },
+];
+
+export function renderCourseProgress() {
+  const wrap = $('course-progress');
+  if (!wrap || !lessons || !lessons.length) return;
+  const done = completedSet();
+  wrap.innerHTML = '';
+  for (const tr of PROGRESS_TRACKS) {
+    let doneN, totalN;
+    if (tr.key === 'course') {
+      doneN = done.size; totalN = lessons.length;
+    } else {
+      doneN = 0; totalN = 0;
+      for (const l of lessons) {
+        if (!tr.types.includes(l.contentType)) continue;
+        totalN += l.itemKeys.length;
+        if (done.has(l.lessonKey)) doneN += l.itemKeys.length;
+      }
+    }
+    const pct = totalN ? Math.round((doneN / totalN) * 100) : 0;
+    const row = document.createElement('div');
+    row.className = 'cp-row' + (doneN >= totalN && totalN ? ' is-complete' : '');
+    const label = document.createElement('span');
+    label.className = 'cp-label';
+    label.textContent = t(`progress.${tr.key}`);
+    const bar = document.createElement('span');
+    bar.className = 'cp-bar';
+    const fill = document.createElement('span');
+    fill.className = 'cp-fill';
+    fill.style.width = pct + '%';
+    bar.appendChild(fill);
+    const count = document.createElement('span');
+    count.className = 'cp-count';
+    count.textContent = (doneN >= totalN && totalN) ? `${doneN}/${totalN} ✓`
+      : tr.key === 'course' ? t('progress.lesson_n', { n: done.size + 1, total: totalN })
+      : `${doneN}/${totalN}`;
+    row.append(label, bar, count);
+    wrap.appendChild(row);
+  }
+  wrap.hidden = false;
+  // v2 progress replaces the legacy single mastery bar
+  const legacy = document.querySelector('.mastery-bar-wrap');
+  if (legacy) legacy.hidden = true;
 }
 
 // ----- meta screens (D-C decision: UI constructs, NOT content docs) -----
