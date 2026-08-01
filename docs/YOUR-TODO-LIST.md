@@ -26,30 +26,65 @@ Nothing here blocks my work — I continue regardless.
 
 ---
 
-## 🟡 Still open — only two things, both for later
+## 🟡 Still open — two things, BOTH doable today
 
-### A. D4 — mastery display decision (needed just before prod)
-The dashboard "mastery %" must change before real users see the full course
-(today it would divide by ~900 items). When we near launch I'll bring you a
-per-track mockup ("Hiragana 104/104 · Katakana 12/104 · …") — you pick a style.
-**Nothing to do now.**
+### A. D4 — pick the mastery/progress display (reply with one word: A, B, or C)
 
-### B. D6 — prod go-live sequence (when we agree the course is ready)
-1. Publish the items read-rule on **prod**:
-   https://console.firebase.google.com/project/tomodachi-prod/firestore/rules —
-   add next to the existing `content_sets/{setId}` block:
-   ```
-   match /content_sets/{contentType}/items/{itemKey} {
-     allow read: if request.auth != null;
-     allow write: if false;
-   }
-   ```
-   → Publish.
-2. Generate a prod admin key: Firebase console → tomodachi-prod → Project
-   settings → Service accounts → **Generate new private key** → save the file as
-   `scripts/secrets/service-account.prod.json` (gitignored folder).
-3. Tell me **"seed prod content"** — I copy the verified corpus dev→prod,
-   decide D4 with you, flip the flag env-by-env, and e2e on prod.
+The dashboard progress stat must change before real users see the course.
+Pick a style:
+
+**Option A — Per-track rows (my recommendation, premium/Duolingo-style):**
+```
+Course           ▓▓▓░░░░░░░  Lesson 41 of 151
+Hiragana         ▓▓▓▓▓▓▓▓▓▓  104/104 ✓
+Katakana         ▓▓▓░░░░░░░   30/104
+Words            ▓░░░░░░░░░   45/680
+Kanji            ▓░░░░░░░░░    6/103
+```
+Richest, motivating, matches your premium-UX preference. ~Half a day to build.
+
+**Option B — Course bar only (simplest, honest):**
+```
+Your course      ▓▓▓░░░░░░░  Lesson 41 of 151 · 27%
+```
+One number, always true, ~an hour to build.
+
+**Option C — Keep today's single "mastery %" but scoped to kana only.**
+Least change, least informative.
+
+**Your step:** reply "D4: A" (or B / C). I build it same day.
+
+### B. D6 prep — two console tasks, safe to do NOW (invisible to users)
+
+Both are preparation only; nothing changes for prod users until we
+deliberately flip the flag later.
+
+**B1. Publish the read-rule on PROD (3 minutes):**
+1. Open https://console.firebase.google.com/project/tomodachi-prod/firestore/rules
+   (make sure the project selector says **tomodachi-prod**).
+2. In the rules editor, find the block:
+   `match /content_sets/{setId} { … }`
+3. Directly AFTER its closing `}`, paste:
+```
+    match /content_sets/{contentType}/items/{itemKey} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+```
+4. Click **Publish**. (Additive read-permission on data that does not exist
+   on prod yet — zero user impact.)
+
+**B2. Generate the prod admin key (3 minutes):**
+1. Open https://console.firebase.google.com/project/tomodachi-prod/settings/serviceaccounts/adminsdk
+2. Click **Generate new private key** → confirm → a JSON file downloads.
+3. Move/rename that file to EXACTLY:
+   `D:MO3 LAPMyProjectsTomodachiscriptssecretsservice-account.prod.json`
+   (the secrets folder is gitignored — it can never be committed).
+4. Do NOT open/paste its contents anywhere — just place the file.
+
+**Your step after both:** reply "prod prep done". I then verify the key
+works read-only, seed the verified content dev→prod (still invisible), and
+we schedule the actual flag-flip together.
 
 ---
 
