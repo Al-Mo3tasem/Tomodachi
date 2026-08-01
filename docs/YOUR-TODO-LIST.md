@@ -48,20 +48,11 @@ regenerate anything affected. Dev only — prod untouched.
 
 ---
 
-## 4. 🔑 Rotate the Azure keys — 10 minutes, security hygiene (OLD, still open)
+## 4. ✅ ~~Rotate the Azure keys~~ — CLOSED 2026-08-01
 
-**What:** the Azure keys you pasted into our chat weeks ago are still live and
-exposed in the conversation transcript. Nothing bad has happened, but they
-should be rotated on principle.
-
-**Steps:**
-1. Go to https://portal.azure.com → **Azure AI services** (or "Cognitive
-   Services") → open each resource you used (Speech/TTS + the image one).
-2. Left menu → **Keys and Endpoint** → click **Regenerate Key 1**. Repeat per
-   resource.
-3. Paste the new keys into `scripts/secrets/.env` (or wherever the TTS pipeline
-   reads them — NOT into chat this time 🙂). The audio pipeline is idle, so
-   nothing breaks meanwhile.
+Resolved better than rotation: all Azure resources were deleted ~30 days ago,
+which kills every key issued for them. Nothing to do — unless the pasted .env
+also contained a non-Azure secret, in which case reset that one at its provider.
 
 ---
 
