@@ -16,7 +16,7 @@
 // only after user grants analytics_storage.
 // ============================================
 
-import { getEnv } from './firebase.js?v=20260801a';
+import { getEnv } from './firebase.js?v=20260801b';
 
 const measurementIds = {
   dev:     '', // localhost — keep blank so dev sessions don't pollute prod analytics

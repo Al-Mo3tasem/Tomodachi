@@ -688,6 +688,9 @@
     "minutes_one": "about {{count}} minute",
     "minutes_other": "about {{count}} minutes",
     "exit_aria": "Exit lesson",
-    "audio_title": "Play audio"
+    "audio_title": "Play audio",
+    "browse_all": "All lessons",
+    "list_title": "All lessons",
+    "locked_toast": "Complete the previous lessons to unlock this one."
   }
 }

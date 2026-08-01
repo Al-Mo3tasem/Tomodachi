@@ -702,6 +702,9 @@
     "minutes_many": "نحو {{count}} دقيقة",
     "minutes_other": "نحو {{count}} دقيقة",
     "exit_aria": "الخروج من الدرس",
-    "audio_title": "تشغيل الصوت"
+    "audio_title": "تشغيل الصوت",
+    "browse_all": "كل الدروس",
+    "list_title": "كل الدروس",
+    "locked_toast": "أكمِل الدروس السابقة لفتح هذا الدرس."
   }
 }

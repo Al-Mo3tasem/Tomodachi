@@ -12,10 +12,11 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801a';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801a';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260801a';
-import { t, getLocale } from '../i18n/index.js?v=20260801a';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801b';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801b';
+import { cacheGet, cachePut } from '../data/content.js?v=20260801b';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260801b';
+import { t, getLocale } from '../i18n/index.js?v=20260801b';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -27,13 +28,15 @@ let L = null;              // active lesson runtime
 
 export async function loadLessons() {
   if (lessons) return lessons;
+  const cached = cacheGet('lessons-catalog');
+  if (cached && cached.length) { lessons = cached; return cached; }
   const snap = await getDocs(collection(db, 'content_sets', 'lessons', 'items'));
   const list = [];
   snap.forEach(d => list.push(d.data()));
   list.sort((a, b) => a.globalOrder - b.globalOrder);
   // Never cache an empty catalog (unseeded env) — retry next call instead of
   // wrongly celebrating "course complete" forever.
-  if (list.length) lessons = list;
+  if (list.length) { lessons = list; cachePut('lessons-catalog', list); }
   return list;
 }
 
@@ -95,17 +98,29 @@ export async function renderLessonCta() {
 export async function openNextLesson() {
   const nxt = nextLesson();
   if (!nxt) return;
+  await openLesson(nxt);
+}
+
+// Open a specific lesson (the next one, or a completed one for review).
+export async function openLesson(lesson) {
   unlockAudio();
   try {
-    const items = await fetchItems(nxt);
+    const items = await fetchItems(lesson);
     if (!items.length) { toast(t('lesson.load_failed'), 'error'); return; }
-    L = { lesson: nxt, items, phase: 'intro', i: 0, quiz: [], qi: 0, correct: 0, locked: false };
+    L = { lesson, items, phase: 'intro', i: 0, quiz: [], qi: 0, correct: 0, locked: false };
     showScreen('screen-lesson');
     render();
   } catch (err) {
     console.error('[lesson] open failed:', err);
     toast(t('lesson.load_failed'), 'error');
   }
+}
+
+// Mid-lesson locale switch: re-render the active phase so dynamic content
+// (titles, copy, buttons) follows the new locale instead of half-translating.
+export function onLessonLocaleChange() {
+  applyLessonA11y();
+  if (L) render();
 }
 
 export function exitLesson() {
@@ -315,6 +330,56 @@ async function completeLesson() {
   }
 }
 
+// ----- lesson browser (all lessons: done ✓ / current ▶ / locked) -----
+
+const TYPE_ICON = { hiragana: 'あ', katakana: 'ア', vocab: '💬', grammar: '文', kanji: '漢' };
+
+export async function openLessonBrowser() {
+  try { await loadLessons(); } catch (_e) { toast(t('lesson.load_failed'), 'error'); return; }
+  if (!lessons || !lessons.length) return;
+  renderLessonBrowser();
+  showScreen('screen-lessons-list');
+}
+
+function renderLessonBrowser() {
+  const wrap = $('lessons-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const done = completedSet();
+  const current = nextLesson();
+  const frag = document.createDocumentFragment();
+  for (const l of lessons) {
+    const isDone = done.has(l.lessonKey);
+    const isCurrent = current && current.lessonKey === l.lessonKey;
+    const row = document.createElement('button');
+    row.className = 'lessons-row' + (isDone ? ' is-done' : isCurrent ? ' is-current' : ' is-locked');
+    row.type = 'button';
+    const icon = document.createElement('span');
+    icon.className = 'lessons-row-type';
+    icon.textContent = TYPE_ICON[l.contentType] || '·';
+    const num = document.createElement('span');
+    num.className = 'lessons-row-num';
+    num.textContent = l.globalOrder;
+    const name = document.createElement('span');
+    name.className = 'lessons-row-name';
+    name.textContent = pick(l.displayName_en, l.displayName_ar);
+    const st = document.createElement('span');
+    st.className = 'lessons-row-state';
+    st.textContent = isDone ? '✓' : isCurrent ? '▶' : '🔒';
+    row.append(icon, num, name, st);
+    row.addEventListener('click', () => {
+      if (isDone || isCurrent) openLesson(l);
+      else toast(t('lesson.locked_toast'), 'info');
+    });
+    frag.appendChild(row);
+  }
+  wrap.appendChild(frag);
+  $('lessons-list-progress').textContent = t('lesson.cta_sub', {
+    done: done.size, total: lessons.length,
+    minutes: t('lesson.minutes', { count: current ? current.estimated_minutes : 0 })
+  });
+}
+
 // ----- wiring -----
 
 export function applyLessonA11y() {
@@ -325,6 +390,8 @@ export function applyLessonA11y() {
 export function initLessonUi() {
   applyLessonA11y();
   $('lesson-cta-btn')?.addEventListener('click', openNextLesson);
+  $('lesson-cta-browse')?.addEventListener('click', openLessonBrowser);
+  $('lessons-list-back')?.addEventListener('click', () => { showScreen('screen-dashboard'); renderLessonCta(); });
   $('lesson-btn-exit')?.addEventListener('click', exitLesson);
   $('lesson-btn-begin')?.addEventListener('click', () => { if (L) setPhase('teach'); });
   $('lesson-btn-prev')?.addEventListener('click', () => { if (L && L.i > 0) { L.i--; render(); } });

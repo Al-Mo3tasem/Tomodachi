@@ -5507,3 +5507,29 @@ input:focus-visible {
   unicode-bidi: isolate;
   text-align: right;
 }
+
+/* Lesson browser */
+.lesson-cta-actions { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.btn-link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: var(--text-tertiary); font-size: 0.78125rem; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.btn-link:hover { color: var(--accent); }
+#lessons-list { display: flex; flex-direction: column; gap: 6px; padding-bottom: var(--space-7); }
+.lessons-row {
+  display: flex; align-items: center; gap: var(--space-3);
+  width: 100%; padding: 10px var(--space-4); text-align: start;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-md); cursor: pointer;
+  font-size: 0.9375rem; color: var(--text-primary);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+.lessons-row:hover { border-color: var(--accent); transform: translateY(-1px); }
+.lessons-row.is-locked { opacity: 0.55; cursor: default; }
+.lessons-row.is-locked:hover { border-color: var(--border); transform: none; }
+.lessons-row.is-current { border-color: var(--accent); border-inline-start-width: 3px; }
+.lessons-row-type { flex-shrink: 0; width: 26px; text-align: center; color: var(--text-tertiary); font-family: var(--font-jp); }
+.lessons-row-num { flex-shrink: 0; min-width: 28px; color: var(--text-tertiary); font-size: 0.8125rem; font-weight: 700; }
+.lessons-row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lessons-row-state { flex-shrink: 0; font-size: 0.875rem; }
