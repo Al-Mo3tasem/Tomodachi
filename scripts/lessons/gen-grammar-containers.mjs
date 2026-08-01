@@ -51,6 +51,12 @@ ORDER.forEach((ord, i) => {
 console.log(`grammar: ${containers.length}/55 valid (A-hybrid v2 + dictionary form)`);
 console.log('first 12:', containers.slice(0, 12).map(c => c.displayName_en.split(' — ')[0]).join(' → '));
 writeFileSync('scripts/lessons/grammar-containers.json', JSON.stringify(containers, null, 1));
-if (WRITE && !bad) { for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
+if (WRITE && !bad) {
+  // Preserve the woven globalOrder on regeneration: only stamp-globalorder
+  // may change order; a re-run generator must not clobber it with
+  // provisional values.
+  const _cur = new Map((await db.collection('content_sets/lessons/items').get()).docs.map(d => [d.data().lessonKey, d.data().globalOrder]));
+  containers.forEach(c => { const g = _cur.get(c.lessonKey); if (g) c.globalOrder = g; });
+  for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
 else if (!WRITE) console.log('  (dry run)');
 process.exit(bad ? 1 : 0);

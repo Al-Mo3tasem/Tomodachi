@@ -138,24 +138,25 @@ export function buildKanaSets(itemsByType) {
 // set-name i18n is a flagged follow-up (legacy set names were locale-neutral
 // Japanese like あ行; category names have no such neutral form).
 export const VOCAB_CATEGORY_ORDER = [
-  ['expressions', 'Expressions'],
-  ['time',        'Time'],
-  ['days',        'Days'],
-  ['counters',    'Counters'],
-  ['people',      'People'],
-  ['family',      'Family'],
-  ['food',        'Food & Drink'],
-  ['places',      'Places'],
-  ['body',        'Body'],
-  ['weather',     'Weather'],
-  ['nature',      'Nature'],
-  ['verbs',       'Verbs'],
-  ['adjectives',  'Adjectives'],
-  ['adverbs',     'Adverbs'],
-  ['nouns',       'Nouns']
+  ['expressions', 'Expressions', 'تعابير'],
+  ['time',        'Time', 'الوقت'],
+  ['days',        'Days', 'الأيام'],
+  ['counters',    'Counters', 'أدوات العدّ'],
+  ['people',      'People', 'الناس'],
+  ['family',      'Family', 'العائلة'],
+  ['food',        'Food & Drink', 'الطعام والشراب'],
+  ['places',      'Places', 'الأماكن'],
+  ['body',        'Body', 'الجسم'],
+  ['weather',     'Weather', 'الطقس'],
+  ['nature',      'Nature', 'الطبيعة'],
+  ['verbs',       'Verbs', 'أفعال'],
+  ['adjectives',  'Adjectives', 'صفات'],
+  ['adverbs',     'Adverbs', 'ظروف'],
+  ['nouns',       'Nouns', 'أسماء']
 ];
 const VOCAB_CAT_INDEX = new Map(VOCAB_CATEGORY_ORDER.map(([c], i) => [c, i]));
-const VOCAB_CAT_LABEL = new Map(VOCAB_CATEGORY_ORDER);
+const VOCAB_CAT_LABEL = new Map(VOCAB_CATEGORY_ORDER.map(([c, en]) => [c, en]));
+const VOCAB_CAT_LABEL_AR = new Map(VOCAB_CATEGORY_ORDER.map(([c, , ar]) => [c, ar]));
 
 // Group vocab items into sets shaped like kana sets. The displayed "char" is
 // the KANA READING (たべもの), not the kanji surface form (食べ物): kanji is
@@ -164,7 +165,7 @@ const VOCAB_CAT_LABEL = new Map(VOCAB_CATEGORY_ORDER);
 // unambiguous kana correctly where kanji can misread. This also dissolves
 // kanji homographs (人 = ひと vs にん become distinct cards). De-dupe is by
 // the displayed kana form. Easiest first within a set (difficulty order).
-export function groupVocabItems(items) {
+export function groupVocabItems(items, useAr = false) {
   const byCat = new Map();
   const seen = new Set();
   for (const it of items) {
@@ -189,7 +190,7 @@ export function groupVocabItems(items) {
     const ci = VOCAB_CAT_INDEX.has(cat) ? VOCAB_CAT_INDEX.get(cat) : 98;
     sets.push({
       id: `vocab_${cat}`,
-      name: VOCAB_CAT_LABEL.get(cat) || cat,
+      name: (useAr ? VOCAB_CAT_LABEL_AR.get(cat) : VOCAB_CAT_LABEL.get(cat)) || cat,
       order: 200 + ci,
       type: 'vocab',
       characters

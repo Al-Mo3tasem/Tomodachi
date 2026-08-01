@@ -13,7 +13,7 @@
 // directory.
 // ============================================
 
-import { getEnv } from './firebase.js?v=20260726c';
+import { getEnv } from './firebase.js?v=20260801a';
 
 const baseUrls = {
   dev: 'http://localhost:5001/tomodachi-dev/us-central1',

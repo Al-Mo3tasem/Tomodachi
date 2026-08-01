@@ -1,6 +1,6 @@
 # Lesson-authoring pipeline (L2)
 
-Source of truth for the 133 lesson containers on `content_sets/lessons/items/*`.
+Source of truth for the 151 lesson containers on `content_sets/lessons/items/*`.
 Committed here (not `scripts/tmp/`) because the authored copy — especially the
 Arabic — is product content, not scratch. Requires `scripts/secrets/service-account.dev.json`.
 
@@ -15,8 +15,9 @@ Arabic — is product content, not scratch. Requires `scripts/secrets/service-ac
 | `gen-kana-containers.mjs <track>` | Hiragana/katakana containers. |
 | `gen-vocab-containers.mjs` | 42 cluster lessons (≤10 items each; anchors excluded). |
 | `gen-anchor-lessons.mjs` | 5 katakana-loanword mini-lessons. |
-| `gen-grammar-containers.mjs` | 54 grammar lessons, A-hybrid v2 order (ORDER array = the sub-sequence). |
-| `stamp-globalorder.mjs` | THE woven 133-lesson path (explicit SEQ). Verifies set-equality, kana-glyph dependencies, and grammar prerequisites before writing. |
+| `gen-grammar-containers.mjs` | 55 grammar lessons, A-hybrid v2 + dictionary form (ORDER array = the sub-sequence). |
+| `gen-kanji-containers.mjs` | 17 kanji lessons from kanji-lessons-design.json (radical families; coverage-gated). |
+| `stamp-globalorder.mjs` | THE woven 151-lesson path (explicit SEQ + kanji splice). Verifies set-equality, itemKey existence, kana-glyph dependencies, and grammar prerequisites before writing; refuses on any failure. |
 | `gen-review-briefs.mjs` | Regenerates `docs/review-brief-ARABIC-copy.md` + `docs/review-brief-CURRICULUM-order.md`. |
 | `gen-native-sample.mjs` | D-B sampling pack for a native Arabic reviewer (+ `native-sample-map.json` answer key). |
 
@@ -31,7 +32,7 @@ node scripts/lessons/gen-grammar-containers.mjs --write
 node scripts/lessons/stamp-globalorder.mjs --write   # refuses to stamp if any check fails
 ```
 
-All generators are idempotent (doc-id = lessonKey) and dry-run without `--write`.
+All generators are idempotent (doc-id = lessonKey), PRESERVE the woven globalOrder on re-runs (only the stamp reorders), and dry-run without `--write`. Vocab chunking is balanced (never a 1-item lesson); vocab/anchor/kanji writes are gated on itemKey existence + coverage.
 
 ## Standing rules
 

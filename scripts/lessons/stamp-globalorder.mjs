@@ -149,7 +149,9 @@ const SEQ = [
 // reviewed §2.4 intent (kanji enters ~#36-40, every 3-5 lessons) and keeps
 // the back half mixed instead of a pure-grammar tail.
 const KANJI_LESSONS = Array.from({ length: 17 }, (_, i) => `kanji:${String(i + 1).padStart(2, '0')}`);
-let kanjiAt = SEQ.indexOf(G('de_location')) + 1;
+const kanjiAnchor = SEQ.indexOf(G('de_location'));
+if (kanjiAnchor === -1) { console.error('kanji splice anchor de_location missing from SEQ'); process.exit(1); }
+let kanjiAt = kanjiAnchor + 1;
 for (const k of KANJI_LESSONS) {
   if (kanjiAt >= SEQ.length) SEQ.push(k); else SEQ.splice(kanjiAt, 0, k);
   kanjiAt += 6;
@@ -188,6 +190,20 @@ for (const t of ['hiragana', 'katakana']) {
 // conventions covered by the reading-rules UI screen (D-C decision), not by kana lessons
 ['っ', 'ー', 'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'ッ', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ'].forEach(ch => glyphRank.set(ch, 0));
 
+// ---- 2b. itemKey EXISTENCE assertion for EVERY lesson (no silent masking:
+// a renamed/deleted item must fail the run, not contribute zero glyphs) ----
+const keySets = {};
+for (const t of ['hiragana', 'katakana', 'vocab', 'grammar', 'kanji']) {
+  keySets[t] = new Set((await db.collection(`content_sets/${t}/items`).get()).docs.map(d => d.id));
+}
+let danglingKeys = 0;
+for (const d of docs) {
+  const pool = keySets[d.contentType];
+  if (!pool) continue;
+  for (const k of d.itemKeys) if (!pool.has(k)) { console.log(`  ✗ ${d.lessonKey}: itemKey "${k}" missing from content_sets/${d.contentType}/items`); danglingKeys++; }
+}
+console.log(`dangling itemKeys: ${danglingKeys}`);
+
 const vocabReading = new Map((await db.collection('content_sets/vocab/items').get()).docs.map(d => [d.id, d.data().reading]));
 let glyphViolations = 0;
 for (const d of docs.filter(x => x.contentType === 'vocab')) {
@@ -216,7 +232,7 @@ asserts += beforeK('vocab:demonstratives:1', G('no_possessive'));
 asserts += beforeK('hiragana:16', 'vocab:numbers:1');   // じゅう needs yōon III
 console.log(`grammar/order assertions failed: ${asserts}`);
 
-if (missing.length || extra.length || glyphViolations || asserts) { console.log('\nNOT SAFE — fix before stamping.'); process.exit(1); }
+if (missing.length || extra.length || glyphViolations || asserts || danglingKeys) { console.log('\nNOT SAFE — fix before stamping.'); process.exit(1); }
 
 if (WRITE) {
   let n = 0;

@@ -497,7 +497,8 @@
       "accuracy": "Accuracy",
       "best_streak": "Best Streak",
       "round": "Round"
-    }
+    },
+    "survival_kana_only": "Survival Rush is kana-only for now — select some kana characters."
   },
   "lobby": {
     "title": "Lobby",
@@ -667,7 +668,7 @@
   },
   "lesson": {
     "cta_title": "Lesson {{n}}: {{name}}",
-    "cta_sub": "{{done}} of {{total}} lessons complete · ~{{min}} min",
+    "cta_sub": "{{done}} of {{total}} lessons complete · {{minutes}}",
     "cta_start": "Start",
     "cta_continue": "Continue",
     "cta_all_done": "Course complete!",
@@ -676,12 +677,17 @@
     "prev": "Back",
     "next": "Next",
     "to_quiz": "Quiz time",
-    "intro_meta": "{{count}} items · about {{min}} minutes",
+    "intro_meta": "{{count}} items · {{minutes}}",
     "score": "You got {{correct}} of {{total}} right.",
     "done_title": "Lesson complete!",
     "back_home": "Dashboard",
     "next_lesson": "Next lesson",
     "load_failed": "Could not load the lesson. Please try again.",
-    "progress_save_failed": "Progress could not be saved — it will retry next time."
+    "progress_save_failed": "Progress could not be saved — it will retry next time.",
+    "progress_count": "{{i}} / {{n}}",
+    "minutes_one": "about {{count}} minute",
+    "minutes_other": "about {{count}} minutes",
+    "exit_aria": "Exit lesson",
+    "audio_title": "Play audio"
   }
 }

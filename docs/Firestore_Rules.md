@@ -116,6 +116,12 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
 
+    // ----- Content sets (v2 per-item docs; deployed to dev 2026-07-24) -----
+    match /content_sets/{contentType}/items/{itemKey} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
     // ----- Content sets -----
     // Read-only for the app. Seed / edit these from the Firebase console.
     match /content_sets/{setId} {

@@ -3,7 +3,8 @@
 // The linear course player: dashboard "Continue Lesson N" CTA → intro card →
 // teach items → quick quiz → completion + unlock of the next lesson.
 //
-// Data: content_sets/lessons/items (133 woven containers, globalOrder 1..N),
+// Data: content_sets/lessons/items (the woven course, globalOrder 1..N —
+// 151 lessons across hiragana/katakana/vocab/grammar/kanji as of 2026-08),
 // items resolved per contentType from content_sets/{type}/items/{key}.
 // Progress: users/{uid}.completedLessons (arrayUnion) — works under the
 // deployed dev rules (owner may update own user doc); moves to the
@@ -11,10 +12,10 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260726c';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260726c';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260726c';
-import { t, getLocale } from '../i18n/index.js?v=20260726c';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260801a';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260801a';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260801a';
+import { t, getLocale } from '../i18n/index.js?v=20260801a';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -27,10 +28,13 @@ let L = null;              // active lesson runtime
 export async function loadLessons() {
   if (lessons) return lessons;
   const snap = await getDocs(collection(db, 'content_sets', 'lessons', 'items'));
-  lessons = [];
-  snap.forEach(d => lessons.push(d.data()));
-  lessons.sort((a, b) => a.globalOrder - b.globalOrder);
-  return lessons;
+  const list = [];
+  snap.forEach(d => list.push(d.data()));
+  list.sort((a, b) => a.globalOrder - b.globalOrder);
+  // Never cache an empty catalog (unseeded env) — retry next call instead of
+  // wrongly celebrating "course complete" forever.
+  if (list.length) lessons = list;
+  return list;
 }
 
 function completedSet() {
@@ -44,10 +48,13 @@ export function nextLesson() {
 }
 
 async function fetchItems(lesson) {
-  const out = [];
-  for (const key of lesson.itemKeys) {
-    const snap = await getDoc(doc(db, 'content_sets', lesson.contentType, 'items', key));
-    if (snap.exists()) out.push(snap.data());
+  // Parallel fetch; preserve the lesson's authored item order.
+  const snaps = await Promise.all(lesson.itemKeys.map(key =>
+    getDoc(doc(db, 'content_sets', lesson.contentType, 'items', key))
+  ));
+  const out = snaps.filter(s => s.exists()).map(s => s.data());
+  if (out.length !== lesson.itemKeys.length) {
+    console.warn(`[lesson] ${lesson.lessonKey}: ${lesson.itemKeys.length - out.length} item(s) missing on server`);
   }
   return out;
 }
@@ -57,13 +64,15 @@ async function fetchItems(lesson) {
 export async function renderLessonCta() {
   const cta = $('lesson-cta');
   if (!cta) return;
+  let catalog;
   try {
-    await loadLessons();
+    catalog = await loadLessons();
   } catch (err) {
     console.error('[lesson] load failed:', err);
     cta.hidden = true;
     return;
   }
+  if (!catalog.length) { cta.hidden = true; return; }   // unseeded env
   const nxt = nextLesson();
   const done = completedSet().size;
   if (!nxt) {   // whole path complete
@@ -74,7 +83,7 @@ export async function renderLessonCta() {
     return;
   }
   $('lesson-cta-title').textContent = t('lesson.cta_title', { n: nxt.globalOrder, name: pick(nxt.displayName_en, nxt.displayName_ar) });
-  $('lesson-cta-sub').textContent = t('lesson.cta_sub', { done, total: lessons.length, min: nxt.estimated_minutes });
+  $('lesson-cta-sub').textContent = t('lesson.cta_sub', { done, total: lessons.length, minutes: t('lesson.minutes', { count: nxt.estimated_minutes }) });
   const btn = $('lesson-cta-btn');
   btn.hidden = false;
   btn.textContent = done === 0 ? t('lesson.cta_start') : t('lesson.cta_continue');
@@ -117,8 +126,9 @@ function buildQuiz() {
       qs.push({ prompt: e.ja, sub: e.romaji, say: e.ja, choices: shuffle(pool.slice(0, 4)), answer: pick(e.en, e.ar) });
     });
   } else if (lesson.contentType === 'vocab') {
-    // reading shown+spoken → pick the meaning
-    const pool = items.map(it => pick(it.en?.primary, it.ar?.primary));
+    // reading shown+spoken → pick the meaning. Distractor pool is DEDUPED so
+    // two items sharing a meaning string never yield twin choice buttons.
+    const pool = [...new Set(items.map(it => pick(it.en?.primary, it.ar?.primary)))];
     items.forEach(it => {
       const answer = pick(it.en?.primary, it.ar?.primary);
       const distractors = shuffle(pool.filter(m => m !== answer)).slice(0, 3);
@@ -128,7 +138,7 @@ function buildQuiz() {
     // kanji has no single romaji — it is a MEANING quiz (lead decision):
     // show the character, pick its meaning; audio = a kana reading.
     const meaningOf = (it) => pick(it.en_meanings?.[0], it.ar_meanings?.[0]);
-    const pool = items.map(meaningOf);
+    const pool = [...new Set(items.map(meaningOf))];
     items.forEach(it => {
       const answer = meaningOf(it);
       const distractors = shuffle(pool.filter(m => m !== answer)).slice(0, 3);
@@ -168,7 +178,7 @@ function render() {
 
   if (L.phase === 'intro') {
     $('lesson-intro-copy').textContent = pick(lesson.introCopy_en, lesson.introCopy_ar);
-    $('lesson-intro-meta').textContent = t('lesson.intro_meta', { count: items.length, min: lesson.estimated_minutes });
+    $('lesson-intro-meta').textContent = t('lesson.intro_meta', { count: items.length, minutes: t('lesson.minutes', { count: lesson.estimated_minutes }) });
   } else if (L.phase === 'teach') {
     renderTeach();
   } else if (L.phase === 'quiz') {
@@ -176,6 +186,8 @@ function render() {
   } else if (L.phase === 'done') {
     $('lesson-score').textContent = t('lesson.score', { correct: L.correct, total: L.quiz.length });
     $('lesson-done-title').textContent = t('lesson.done_title');
+    const nextBtn = $('lesson-btn-done-next');
+    if (nextBtn) nextBtn.hidden = !nextLesson();   // final lesson: no dead button
   }
 }
 
@@ -243,7 +255,7 @@ function renderTeach() {
     speak(it.glyph);
   }
 
-  $('lesson-teach-count').textContent = `${L.i + 1} / ${L.items.length}`;
+  $('lesson-teach-count').textContent = t('lesson.progress_count', { i: L.i + 1, n: L.items.length });
   $('lesson-btn-prev').disabled = (L.i === 0);
   $('lesson-btn-next').textContent = (L.i === L.items.length - 1) ? t('lesson.to_quiz') : t('lesson.next');
 }
@@ -251,7 +263,7 @@ function renderTeach() {
 function renderQuiz() {
   const q = L.quiz[L.qi];
   L.locked = false;
-  $('lesson-quiz-count').textContent = `${L.qi + 1} / ${L.quiz.length}`;
+  $('lesson-quiz-count').textContent = t('lesson.progress_count', { i: L.qi + 1, n: L.quiz.length });
   const promptEl = $('lesson-quiz-prompt');
   promptEl.textContent = q.prompt;
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
@@ -269,7 +281,8 @@ function renderQuiz() {
 }
 
 function answer(btn, ok, q) {
-  if (L.locked) return;
+  if (!L || L.locked) return;
+  const run = L;   // identity guard: a stale timer must not touch a reopened lesson
   L.locked = true;
   btn.classList.add(ok ? 'correct' : 'wrong');
   if (!ok) {
@@ -279,6 +292,7 @@ function answer(btn, ok, q) {
     L.correct++;
   }
   setTimeout(() => {
+    if (L !== run) return;   // exited (or reopened) during the feedback pause
     L.qi++;
     if (L.qi >= L.quiz.length) { completeLesson(); } else { render(); }
   }, ok ? 550 : 1400);
@@ -289,9 +303,11 @@ async function completeLesson() {
   const key = L.lesson.lessonKey;
   const done = completedSet();
   if (!done.has(key) && state.user) {
+    // Optimistic: local state first so "Next lesson" can never reopen the
+    // just-completed lesson while the network write is in flight.
+    state.userData = { ...state.userData, completedLessons: [...done, key] };
     try {
       await updateDoc(doc(db, 'users', state.user.uid), { completedLessons: arrayUnion(key) });
-      state.userData = { ...state.userData, completedLessons: [...done, key] };
     } catch (err) {
       console.error('[lesson] progress write failed:', err);
       toast(t('lesson.progress_save_failed'), 'warning');
@@ -301,12 +317,19 @@ async function completeLesson() {
 
 // ----- wiring -----
 
+export function applyLessonA11y() {
+  $('lesson-btn-exit')?.setAttribute('aria-label', t('lesson.exit_aria'));
+  $('lesson-card-big')?.setAttribute('title', t('lesson.audio_title'));
+}
+
 export function initLessonUi() {
+  applyLessonA11y();
   $('lesson-cta-btn')?.addEventListener('click', openNextLesson);
   $('lesson-btn-exit')?.addEventListener('click', exitLesson);
-  $('lesson-btn-begin')?.addEventListener('click', () => { setPhase('teach'); });
-  $('lesson-btn-prev')?.addEventListener('click', () => { if (L.i > 0) { L.i--; render(); } });
+  $('lesson-btn-begin')?.addEventListener('click', () => { if (L) setPhase('teach'); });
+  $('lesson-btn-prev')?.addEventListener('click', () => { if (L && L.i > 0) { L.i--; render(); } });
   $('lesson-btn-next')?.addEventListener('click', () => {
+    if (!L) return;
     if (L.i < L.items.length - 1) { L.i++; render(); }
     else { buildQuiz(); L.qi = 0; L.correct = 0; setPhase('quiz'); }
   });

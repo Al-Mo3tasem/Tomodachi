@@ -15,6 +15,7 @@ const byLesson = new Map();
 for (const it of deferred) { const L = it.deferToLesson; if (!byLesson.has(L)) byLesson.set(L, []); byLesson.get(L).push(it); }
 
 const { db, projectId } = initAdmin('dev');
+const devVocabKeys = new Set((await db.collection('content_sets/vocab/items').get()).docs.map(d => d.id));
 const containers = []; let bad = 0; let n = 1;
 for (const [anchorLesson, items] of [...byLesson.entries()].sort((a, b) => a[0] - b[0])) {
   const c = {
@@ -30,6 +31,8 @@ for (const [anchorLesson, items] of [...byLesson.entries()].sort((a, b) => a[0] 
     estimated_minutes: 5, jlpt: 'n5',
     _anchorsAfter: anchorLesson
   };
+  const dangling = items.filter(it => !devVocabKeys.has(it.key));
+  if (dangling.length) { console.log(`✗ ${c.lessonKey}: keys not on dev: ${dangling.map(d => d.key).join(',')}`); bad++; continue; }
   const { _anchorsAfter, ...doc } = c;
   const res = validateLesson(doc);
   if (!res.valid) { console.log(`✗ ${doc.lessonKey}:\n${formatErrors(res)}`); bad++; continue; }
@@ -37,6 +40,12 @@ for (const [anchorLesson, items] of [...byLesson.entries()].sort((a, b) => a[0] 
   containers.push(doc); n++;
 }
 
-if (WRITE && !bad) { for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
+if (WRITE && !bad) {
+  // Preserve the woven globalOrder on regeneration: only stamp-globalorder
+  // may change order; a re-run generator must not clobber it with
+  // provisional values.
+  const _cur = new Map((await db.collection('content_sets/lessons/items').get()).docs.map(d => [d.data().lessonKey, d.data().globalOrder]));
+  containers.forEach(c => { const g = _cur.get(c.lessonKey); if (g) c.globalOrder = g; });
+  for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
 else if (!WRITE) console.log('  (dry run)');
 process.exit(bad ? 1 : 0);

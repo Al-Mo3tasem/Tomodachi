@@ -65,12 +65,9 @@
    "n5_v_064_number_4",
    "n5_v_065_number_5",
    "n5_v_066_number_6",
-   "n5_v_067_number_7",
-   "n5_v_068_number_8",
-   "n5_v_069_number_9",
-   "n5_v_070_number_10"
+   "n5_v_067_number_7"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -85,11 +82,14 @@
   "introCopy_ar": "تعلّم العد من واحد إلى عشرة، ثم الأعداد الأكبر: مئة وألف وعشرة آلاف. ستحتاج إلى الأعداد في الأسعار والأوقات والتواريخ وأرقام الهواتف، لذلك ستستخدمها كثيرًا.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_068_number_8",
+   "n5_v_069_number_9",
+   "n5_v_070_number_10",
    "n5_v_071_number_100",
    "n5_v_072_number_1000",
    "n5_v_073_number_10000"
   ],
-  "estimated_minutes": 4,
+  "estimated_minutes": 7,
   "jlpt": "n5"
  },
  {
@@ -163,11 +163,9 @@
    "n5_v_005_new",
    "n5_v_006_old",
    "n5_v_016_good",
-   "n5_v_017_bad",
-   "n5_v_007_long",
-   "n5_v_008_short"
+   "n5_v_017_bad"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -182,18 +180,16 @@
   "introCopy_ar": "صِف الأشياء: كبير وصغير، جديد وقديم، حارّ وبارد، جيّد وسيّئ. بهذه الصفات تستطيع أخيرًا أن تقول أكثر من مجرّد اسم الشيء.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_007_long",
+   "n5_v_008_short",
    "n5_v_009_early",
    "n5_v_010_late",
    "n5_v_025_many",
    "n5_v_026_few",
    "n5_v_021_difficult",
-   "n5_v_022_kind_or_easy",
-   "n5_v_019_interesting",
-   "n5_v_020_boring",
-   "n5_v_024_cute",
-   "n5_v_058_pretty_clean"
+   "n5_v_022_kind_or_easy"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -208,12 +204,16 @@
   "introCopy_ar": "صِف الأشياء: كبير وصغير، جديد وقديم، حارّ وبارد، جيّد وسيّئ. بهذه الصفات تستطيع أخيرًا أن تقول أكثر من مجرّد اسم الشيء.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_019_interesting",
+   "n5_v_020_boring",
+   "n5_v_024_cute",
+   "n5_v_058_pretty_clean",
    "n5_v_027_strong",
    "n5_v_028_weak",
    "n5_v_029_bright",
    "n5_v_030_dark"
   ],
-  "estimated_minutes": 5,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -235,11 +235,9 @@
    "n5_v_040_drink",
    "n5_v_044_milk",
    "n5_v_047_fish_food",
-   "n5_v_048_meat",
-   "n5_v_051_egg",
-   "n5_v_050_vegetable"
+   "n5_v_048_meat"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -254,6 +252,8 @@
   "introCopy_ar": "تعرّف إلى الوجبات والأطعمة والمشروبات الأساسية، مثل الأرز والماء والشاي. ستستخدم هذه الكلمات في أولى جملك مع فعلَي «يأكل» و«يشرب».",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_051_egg",
+   "n5_v_050_vegetable",
    "n5_v_049_fruit",
    "n5_v_052_breakfast",
    "n5_v_053_lunch",
@@ -261,7 +261,7 @@
    "n5_v_040_delicious",
    "n5_v_041_tasteless"
   ],
-  "estimated_minutes": 7,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -334,12 +334,9 @@
    "n5_v_097_morning",
    "n5_v_098_noon",
    "n5_v_100_night",
-   "n5_v_099_evening",
-   "n5_v_089_oclock",
-   "n5_v_087_minute_unit",
-   "n5_v_086_half_past"
+   "n5_v_099_evening"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -354,18 +351,15 @@
   "introCopy_ar": "اليوم، غدًا، أمس، وأيام الأسبوع. كلمات الوقت تتيح لك قول متى يحدث الشيء — وهي العمود الفقري للتخطيط والحديث اليومي.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_089_oclock",
+   "n5_v_087_minute_unit",
+   "n5_v_086_half_past",
    "n5_v_088_hour_unit",
    "n5_v_101_week",
    "n5_v_102_month",
-   "n5_v_103_year",
-   "n5_v_075_day_monday",
-   "n5_v_076_day_tuesday",
-   "n5_v_077_day_wednesday",
-   "n5_v_078_day_thursday",
-   "n5_v_079_day_friday",
-   "n5_v_080_day_saturday"
+   "n5_v_103_year"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -380,9 +374,15 @@
   "introCopy_ar": "اليوم، غدًا، أمس، وأيام الأسبوع. كلمات الوقت تتيح لك قول متى يحدث الشيء — وهي العمود الفقري للتخطيط والحديث اليومي.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_075_day_monday",
+   "n5_v_076_day_tuesday",
+   "n5_v_077_day_wednesday",
+   "n5_v_078_day_thursday",
+   "n5_v_079_day_friday",
+   "n5_v_080_day_saturday",
    "n5_v_081_day_sunday"
   ],
-  "estimated_minutes": 4,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -404,11 +404,9 @@
    "n5_v_037_room",
    "n5_v_031_cafe",
    "n5_v_026_library",
-   "n5_v_023_university",
-   "n5_v_024_hospital",
-   "n5_v_028_bank"
+   "n5_v_023_university"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -423,13 +421,15 @@
   "introCopy_ar": "تعرّف إلى أسماء أماكن شائعة، مثل البيت والمدرسة والمحطة والمتجر. ستحتاج إليها قريبًا عند تعلّم أدوات المكان؛ ابدأ بالأسماء، ثم استخدمها في القواعد.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_024_hospital",
+   "n5_v_028_bank",
    "n5_v_027_post_office",
    "n5_v_036_park",
    "n5_v_034_city",
    "n5_v_035_road",
    "n5_v_033_country"
   ],
-  "estimated_minutes": 6,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -528,12 +528,9 @@
    "n5_v_079_airplane",
    "n5_v_069_ride",
    "n5_v_070_get_off",
-   "n5_v_022_walk",
-   "n5_v_023_run",
-   "n5_v_071_arrive",
-   "n5_v_072_cross"
+   "n5_v_022_walk"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -548,12 +545,15 @@
   "introCopy_ar": "تعرّف إلى وسائل التنقّل، مثل القطارات والسيارات، وإلى أفعال الحركة المرتبطة بها. هنا تبدأ باستخدام مفردات السفر والسؤال عن الطريق.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_023_run",
+   "n5_v_071_arrive",
+   "n5_v_072_cross",
    "n5_v_073_turn",
    "n5_v_052_wait",
    "n5_v_024_swim",
    "n5_v_025_fly"
   ],
-  "estimated_minutes": 5,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -576,10 +576,9 @@
    "n5_v_090_nose",
    "n5_v_091_hand",
    "n5_v_092_foot",
-   "n5_v_093_body",
-   "n5_v_048_healthy"
+   "n5_v_093_body"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -594,6 +593,7 @@
   "introCopy_ar": "تعلّم أسماء أعضاء الجسم وكلمات تصف حالتك، مثل: متعب، وسعيد، ومتألم. ستفيدك عندما تحتاج إلى التعبير عن شعورك أو وصف حالك.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_048_healthy",
    "n5_v_044_liked",
    "n5_v_045_disliked",
    "n5_v_018_fun",
@@ -603,7 +603,7 @@
    "n5_v_077_cry",
    "n5_v_056_think"
   ],
-  "estimated_minutes": 8,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -625,11 +625,9 @@
    "n5_v_109_sky",
    "n5_v_110_sun",
    "n5_v_111_moon",
-   "n5_v_112_mountain",
-   "n5_v_113_river",
-   "n5_v_114_sea"
+   "n5_v_112_mountain"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -644,6 +642,8 @@
   "introCopy_ar": "السماء، والمطر، والثلج، والجبل، والشمس. الطقس من أسهل موضوعات الحديث العابر في أي لغة، وهذه الكلمات تساعدك على الحديث عنه باليابانية.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_113_river",
+   "n5_v_114_sea",
    "n5_v_115_tree",
    "n5_v_116_flower",
    "n5_v_011_hot_temp",
@@ -651,7 +651,7 @@
    "n5_v_014_warm",
    "n5_v_015_cool"
   ],
-  "estimated_minutes": 7,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -674,10 +674,9 @@
    "n5_v_007_sometimes",
    "n5_v_008_always",
    "n5_v_009_often",
-   "n5_v_010_not_much",
-   "n5_v_002_quite"
+   "n5_v_010_not_much"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -692,6 +691,7 @@
   "introCopy_ar": "تعلّم كلمات مثل «جِدًّا» و«قليلًا» و«غالبًا»، وأدوات تربط الأفكار مثل «الواو» و«لكن» و«لذلك». تضيف هذه الكلمات دقةً وسلاسةً إلى كلامك، وتجعل جملك أكثر طبيعية.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_002_quite",
    "n5_v_013_really",
    "n5_v_011_together",
    "n5_v_012_slowly",
@@ -701,7 +701,7 @@
    "n5_v_084_but",
    "n5_v_085_so"
   ],
-  "estimated_minutes": 8,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -723,11 +723,9 @@
    "n5_v_044_turn_on",
    "n5_v_045_turn_off",
    "n5_v_048_enter",
-   "n5_v_049_exit",
-   "n5_v_046_put_in",
-   "n5_v_047_take_out"
+   "n5_v_049_exit"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -742,18 +740,16 @@
   "introCopy_ar": "أفعال الحياة اليومية في البيت: يدرس، وينظّف، ويغسل، ويستريح. أفعالٌ تكفيك لتصف بها يومك من أوله إلى آخره.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_046_put_in",
+   "n5_v_047_take_out",
    "n5_v_035_use",
    "n5_v_036_hold",
    "n5_v_037_take",
    "n5_v_034_make",
    "n5_v_065_wash",
-   "n5_v_062_wear_upper",
-   "n5_v_063_wear_lower",
-   "n5_v_064_take_off",
-   "n5_v_050_start_tr",
-   "n5_v_051_end_intr"
+   "n5_v_062_wear_upper"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -768,11 +764,15 @@
   "introCopy_ar": "أفعال الحياة اليومية في البيت: يدرس، وينظّف، ويغسل، ويستريح. أفعالٌ تكفيك لتصف بها يومك من أوله إلى آخره.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_063_wear_lower",
+   "n5_v_064_take_off",
+   "n5_v_050_start_tr",
+   "n5_v_051_end_intr",
    "n5_v_066_clean",
    "n5_v_067_laundry",
    "n5_v_068_cook"
   ],
-  "estimated_minutes": 4,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -794,11 +794,9 @@
    "n5_v_062_paper",
    "n5_v_056_newspaper",
    "n5_v_061_letter_mail",
-   "n5_v_063_picture",
-   "n5_v_064_photo",
-   "n5_v_065_clock"
+   "n5_v_063_picture"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -813,18 +811,16 @@
   "introCopy_ar": "الأشياء من حولك في البيت والعمل: الكتب، الأقلام، الهواتف، الطاولات. أسماءٌ محسوسة تُثري وصفك لأي غرفة.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_064_photo",
+   "n5_v_065_clock",
    "n5_v_066_umbrella",
    "n5_v_067_bag",
    "n5_v_068_key",
    "n5_v_069_money",
    "n5_v_070_chair",
-   "n5_v_071_table",
-   "n5_v_072_bed",
-   "n5_v_073_window",
-   "n5_v_074_door",
-   "n5_v_080_telephone"
+   "n5_v_071_table"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -839,12 +835,16 @@
   "introCopy_ar": "الأشياء من حولك في البيت والعمل: الكتب، الأقلام، الهواتف، الطاولات. أسماءٌ محسوسة تُثري وصفك لأي غرفة.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_072_bed",
+   "n5_v_073_window",
+   "n5_v_074_door",
+   "n5_v_080_telephone",
    "n5_v_082_television",
    "n5_v_083_radio",
    "n5_v_084_camera",
    "n5_v_081_computer"
   ],
-  "estimated_minutes": 5,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -867,10 +867,9 @@
    "n5_v_013_teach",
    "n5_v_014_learn",
    "n5_v_029_practice",
-   "n5_v_060_remember",
-   "n5_v_061_forget"
+   "n5_v_060_remember"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -885,6 +884,7 @@
   "introCopy_ar": "تعرّف إلى مفردات الدراسة الأساسية: معلّم، وطالب، ودرس، واختبار، وواجب. ستبدو لك هذه الكلمات مألوفة، فأنت تتعلّم اليابانية الآن.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_061_forget",
    "n5_v_057_know",
    "n5_v_121_question",
    "n5_v_081_ask_question",
@@ -894,7 +894,7 @@
    "n5_v_123_test",
    "n5_v_060_dictionary"
   ],
-  "estimated_minutes": 8,
+  "estimated_minutes": 9,
   "jlpt": "n5"
  },
  {
@@ -916,11 +916,9 @@
    "n5_v_032_sell",
    "n5_v_033_pay",
    "n5_v_038_give",
-   "n5_v_039_receive",
-   "n5_v_040_lend",
-   "n5_v_041_borrow"
+   "n5_v_039_receive"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -935,6 +933,8 @@
   "introCopy_ar": "تعرّف إلى أفعال تستخدمها في العمل واللعب والتعامل مع الآخرين: يعمل، ويلعب، ويشتري، ويعطي، ويلتقي. بها تستطيع وصف يوم اجتماعي عادي.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_040_lend",
+   "n5_v_041_borrow",
    "n5_v_054_call",
    "n5_v_079_watch_over",
    "n5_v_074_take_photo",
@@ -942,7 +942,7 @@
    "n5_v_076_dance",
    "n5_v_082_need"
   ],
-  "estimated_minutes": 7,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -964,11 +964,9 @@
    "n5_v_035_yellow",
    "n5_v_042_far",
    "n5_v_043_near",
-   "n5_v_037_heavy",
-   "n5_v_038_light_weight",
-   "n5_v_013_cold_touch"
+   "n5_v_037_heavy"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -983,18 +981,16 @@
   "introCopy_ar": "تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_038_light_weight",
+   "n5_v_013_cold_touch",
    "n5_v_039_busy",
    "n5_v_059_free_time",
    "n5_v_051_quiet",
    "n5_v_052_lively",
    "n5_v_046_skilled",
-   "n5_v_047_unskilled",
-   "n5_v_050_kind_person",
-   "n5_v_049_famous",
-   "n5_v_053_simple",
-   "n5_v_055_important"
+   "n5_v_047_unskilled"
   ],
-  "estimated_minutes": 10,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  },
  {
@@ -1009,11 +1005,15 @@
   "introCopy_ar": "تعلّم أسماء الألوان ومجموعة جديدة من الصفات لتصف الأشياء بمزيد من الدقة، مثل: السيارة الحمراء، والغرفة الهادئة، والشارع المزدحم.",
   "introCopy_ar_f": "",
   "itemKeys": [
+   "n5_v_050_kind_person",
+   "n5_v_049_famous",
+   "n5_v_053_simple",
+   "n5_v_055_important",
    "n5_v_056_convenient",
    "n5_v_057_inconvenient",
    "n5_v_023_beautiful_i"
   ],
-  "estimated_minutes": 4,
+  "estimated_minutes": 8,
   "jlpt": "n5"
  }
 ]

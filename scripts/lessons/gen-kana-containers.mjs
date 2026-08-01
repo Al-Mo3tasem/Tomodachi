@@ -41,10 +41,17 @@ for (const [lessonKey, def] of Object.entries(copy)) {
 }
 
 const all = containers.flatMap(c => c.itemKeys);
+const covOk = new Set(all).size === snap.size && all.length === new Set(all).size;
+if (!covOk) { console.log(`COVERAGE FAILURE (${new Set(all).size}/${snap.size}, dupes ${all.length - new Set(all).size}) — refusing to write`); bad++; }
 console.log(`${track}: ${containers.length}/${Object.keys(copy).length - 1} valid | coverage ${new Set(all).size}/${snap.size} | dupes ${all.length - new Set(all).size}`);
 writeFileSync(`scripts/lessons/${track}-containers.json`, JSON.stringify(containers, null, 1));
 
 if (WRITE && !bad) {
+  // Preserve the woven globalOrder on regeneration: only stamp-globalorder
+  // may change order; a re-run generator must not clobber it with
+  // provisional values.
+  const _cur = new Map((await db.collection('content_sets/lessons/items').get()).docs.map(d => [d.data().lessonKey, d.data().globalOrder]));
+  containers.forEach(c => { const g = _cur.get(c.lessonKey); if (g) c.globalOrder = g; });
   for (const c of containers) await writeItem(db, 'lesson', c);
   console.log(`  ✓ wrote ${containers.length} → ${projectId}`);
 } else if (!WRITE) console.log('  (dry run)');

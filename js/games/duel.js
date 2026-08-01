@@ -14,14 +14,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260726c';
+} from '../core/core.js?v=20260801a';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260726c';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260726c';
-import { acceptCoop, isInCoop } from './coop.js?v=20260726c';
-import { t } from '../i18n/index.js?v=20260726c';
+} from '../data/firebase.js?v=20260801a';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260801a';
+import { acceptCoop, isInCoop } from './coop.js?v=20260801a';
+import { t } from '../i18n/index.js?v=20260801a';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -965,7 +965,19 @@ function romajiMatches(input, romaji) {
   // input side already strips them (see engine.js answerMatches).
   const r = String(romaji).trim().toLowerCase().replace(/\s+/g, '');
   if (a === r) return true;
-  return (ROMAJI_ALT[r] || []).includes(a);
+  if ((ROMAJI_ALT[r] || []).includes(a)) return true;
+  return canonRomaji(a) === canonRomaji(r);
+}
+
+// Kunrei/variant → Hepburn canonicalization (mirrors engine.js canonRomaji).
+function canonRomaji(s) {
+  return String(s)
+    .replace(/sya/g, 'sha').replace(/syu/g, 'shu').replace(/syo/g, 'sho')
+    .replace(/tya/g, 'cha').replace(/tyu/g, 'chu').replace(/tyo/g, 'cho')
+    .replace(/zya/g, 'ja').replace(/zyu/g, 'ju').replace(/zyo/g, 'jo')
+    .replace(/jya/g, 'ja').replace(/jyu/g, 'ju').replace(/jyo/g, 'jo')
+    .replace(/si/g, 'shi').replace(/ti/g, 'chi').replace(/tu/g, 'tsu')
+    .replace(/hu/g, 'fu').replace(/zi/g, 'ji');
 }
 
 function otherId(data) {

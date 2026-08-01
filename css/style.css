@@ -5492,3 +5492,18 @@ input:focus-visible {
 /* lesson quiz feedback on choice buttons */
 .lesson-choice.correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 12%, var(--bg-elevated)); }
 .lesson-choice.wrong   { border-color: var(--danger);  background: color-mix(in srgb, var(--danger) 12%, var(--bg-elevated)); }
+
+/* Standard [hidden] guard: author display rules (e.g. .btn, .lesson-cta) must
+   never override the hidden attribute. Chromium's UA enforces this already;
+   Firefox/Safari need it explicit. */
+[hidden] { display: none !important; }
+
+/* RTL: Japanese/romaji runs inside lesson cards are LTR text — isolating them
+   keeps trailing punctuation, the ・ separators, and the 音/訓 dashes in the
+   right place while the card itself stays right-aligned. */
+[dir="rtl"] .lesson-example-ja,
+[dir="rtl"] .lesson-example-ro {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+}

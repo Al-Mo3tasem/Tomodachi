@@ -17,9 +17,10 @@
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260726c';
-import { db, collection, getDocs } from './firebase.js?v=20260726c';
-import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260726c';
+import { getEnv } from '../config/firebase.js?v=20260801a';
+import { getLocale } from '../i18n/index.js?v=20260801a';
+import { db, collection, getDocs } from './firebase.js?v=20260801a';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260801a';
 
 // Per-environment flag. Default OFF everywhere except localhost dev.
 export function contentV2Enabled() {
@@ -59,7 +60,7 @@ export async function loadV2ContentSets() {
     const snap = await getDocs(collection(db, 'content_sets', 'vocab', 'items'));
     const items = [];
     snap.forEach(d => items.push(d.data()));
-    const vocabSets = groupVocabItems(items);
+    const vocabSets = groupVocabItems(items, getLocale() === 'ar');
     if (vocabSets.length) out.push(...vocabSets);
     else console.warn('[content-v2] vocab produced no sets; continuing kana-only');
   } catch (err) {

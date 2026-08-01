@@ -42,6 +42,12 @@ console.log(`kanji: ${containers.length} lessons | coverage ${new Set(all).size}
 if (new Set(all).size !== devKeys.size || dupes) { console.log('COVERAGE FAILURE — not writing'); bad++; }
 writeFileSync('scripts/lessons/kanji-containers.json', JSON.stringify(containers, null, 1));
 
-if (WRITE && !bad) { for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
+if (WRITE && !bad) {
+  // Preserve the woven globalOrder on regeneration: only stamp-globalorder
+  // may change order; a re-run generator must not clobber it with
+  // provisional values.
+  const _cur = new Map((await db.collection('content_sets/lessons/items').get()).docs.map(d => [d.data().lessonKey, d.data().globalOrder]));
+  containers.forEach(c => { const g = _cur.get(c.lessonKey); if (g) c.globalOrder = g; });
+  for (const c of containers) await writeItem(db, 'lesson', c); console.log(`  ✓ wrote ${containers.length} → ${projectId}`); }
 else if (!WRITE) console.log('  (dry run)');
 process.exit(bad ? 1 : 0);

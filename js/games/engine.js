@@ -14,16 +14,16 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260726c';
+} from '../core/core.js?v=20260801a';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260726c';
+} from '../data/firebase.js?v=20260801a';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260726c';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260726c';
-import { t } from '../i18n/index.js?v=20260726c';
+} from '../audio/audio.js?v=20260801a';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260801a';
+import { t } from '../i18n/index.js?v=20260801a';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -62,7 +62,17 @@ export function startGame(type) {
     return false;
   }
 
-  const chars = buildCharPool();
+  let chars = buildCharPool();
+  if (type === 'survival') {
+    // Survival's ramping per-question timer and the 46-bracket leaderboard
+    // are tuned for single kana; whole vocab words are untypeable at speed
+    // and would distort the shared board. Kana-only until per-kind boards.
+    chars = chars.filter(c => c.kind !== 'vocab');
+    if (chars.length === 0) {
+      toast(t('game.survival_kana_only'), 'warning');
+      return false;
+    }
+  }
   if (chars.length === 0) {
     toast(t('game.select_chars_first'), 'warning');
     return false;
@@ -424,6 +434,11 @@ function revealCard() {
   if (charEl) {
     charEl.textContent = g.current.char;
     charEl.classList.remove('listen-prompt');
+    // Keep word-scaling on reveal too — a revealed vocab word at kana size
+    // would wrap into a vertical stack.
+    const len = String(g.current.char).length;
+    charEl.classList.toggle('is-word', len > 1);
+    charEl.classList.toggle('is-long-word', len > 5);
   }
 }
 
@@ -501,6 +516,18 @@ function updateSpeakButton() {
 // ANSWER HANDLING
 // ============================================
 
+// Canonicalize kunrei-shiki / variant romanization to Hepburn so alternates
+// compose inside whole words too (tukue→tsukue, zyusu→jusu). Longest first.
+function canonRomaji(s) {
+  return String(s)
+    .replace(/sya/g, 'sha').replace(/syu/g, 'shu').replace(/syo/g, 'sho')
+    .replace(/tya/g, 'cha').replace(/tyu/g, 'chu').replace(/tyo/g, 'cho')
+    .replace(/zya/g, 'ja').replace(/zyu/g, 'ju').replace(/zyo/g, 'jo')
+    .replace(/jya/g, 'ja').replace(/jyu/g, 'ju').replace(/jyo/g, 'jo')
+    .replace(/si/g, 'shi').replace(/ti/g, 'chi').replace(/tu/g, 'tsu')
+    .replace(/hu/g, 'fu').replace(/zi/g, 'ji');
+}
+
 function answerMatches(input, romaji) {
   const a = String(input).trim().toLowerCase().replace(/\s+/g, '');
   // Strip whitespace from the TARGET too: vocab romaji can contain spaces
@@ -508,7 +535,9 @@ function answerMatches(input, romaji) {
   // target would otherwise be unanswerable in typing mode.
   const r = String(romaji).trim().toLowerCase().replace(/\s+/g, '');
   if (a === r) return true;
-  return (ROMAJI_ALT[r] || []).includes(a);
+  if ((ROMAJI_ALT[r] || []).includes(a)) return true;
+  // kunrei/variant spellings accepted inside whole words too
+  return canonRomaji(a) === canonRomaji(r);
 }
 
 function checkAnswer(value) {

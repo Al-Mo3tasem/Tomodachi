@@ -507,7 +507,8 @@
       "accuracy": "الدقة",
       "best_streak": "أفضل سلسلة",
       "round": "الجولة"
-    }
+    },
+    "survival_kana_only": "سباق البقاء مخصص لحروف الكانا حاليًا — اختر بعض حروف الكانا أولًا."
   },
   "lobby": {
     "title": "ردهة الانتظار",
@@ -677,7 +678,7 @@
   },
   "lesson": {
     "cta_title": "الدرس {{n}}: {{name}}",
-    "cta_sub": "أنجزت {{done}} من {{total}} درسًا · نحو {{min}} دقائق",
+    "cta_sub": "أنجزت {{done}} من {{total}} درسًا · {{minutes}}",
     "cta_start": "ابدأ",
     "cta_continue": "تابع",
     "cta_all_done": "أكملت المسار كاملًا!",
@@ -686,12 +687,21 @@
     "prev": "السابق",
     "next": "التالي",
     "to_quiz": "إلى الاختبار",
-    "intro_meta": "{{count}} عناصر · نحو {{min}} دقائق",
+    "intro_meta": "عدد العناصر: {{count}} · {{minutes}}",
     "score": "أجبت إجابة صحيحة عن {{correct}} من {{total}}.",
     "done_title": "أكملت الدرس!",
     "back_home": "اللوحة الرئيسية",
     "next_lesson": "الدرس التالي",
     "load_failed": "تعذّر تحميل الدرس. حاول مرة أخرى.",
-    "progress_save_failed": "تعذّر حفظ التقدّم الآن — وسيُحفظ في المحاولة التالية."
+    "progress_save_failed": "تعذّر حفظ التقدّم الآن — وسيُحفظ في المحاولة التالية.",
+    "progress_count": "{{i}} من {{n}}",
+    "minutes_zero": "أقل من دقيقة",
+    "minutes_one": "نحو دقيقة واحدة",
+    "minutes_two": "نحو دقيقتين",
+    "minutes_few": "نحو {{count}} دقائق",
+    "minutes_many": "نحو {{count}} دقيقة",
+    "minutes_other": "نحو {{count}} دقيقة",
+    "exit_aria": "الخروج من الدرس",
+    "audio_title": "تشغيل الصوت"
   }
 }
