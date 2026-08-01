@@ -1542,6 +1542,10 @@ async function resetProgress() {
       updatedAt: serverTimestamp()
     });
 
+    // Lesson-path progress is part of "my progress" too (L2.13).
+    await setDoc(doc(db, 'users', state.user.uid), { completedLessons: [] }, { merge: true });
+    state.userData = { ...state.userData, completedLessons: [] };
+
     const q = query(
       collection(db, 'game_sessions'),
       where('playerIds', 'array-contains', state.user.uid)
