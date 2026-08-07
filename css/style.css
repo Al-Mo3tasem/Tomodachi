@@ -5549,3 +5549,6 @@ input:focus-visible {
 .cp-count { flex-shrink: 0; min-width: 64px; text-align: end; font-size: 0.75rem; font-weight: 700; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
 .cp-row.is-complete .cp-count { color: var(--success); }
 .cp-row.is-complete .cp-fill { background: var(--success); }
+
+/* SRS review card: green accent to distinguish from the course CTA */
+.review-cta { border-inline-start-color: var(--success); }

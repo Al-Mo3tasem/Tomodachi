@@ -12,11 +12,12 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260802b';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260802b';
-import { cacheGet, cachePut } from '../data/content.js?v=20260802b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260802b';
-import { t, getLocale } from '../i18n/index.js?v=20260802b';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260807a';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260807a';
+import { cacheGet, cachePut } from '../data/content.js?v=20260807a';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260807a';
+import { t, getLocale } from '../i18n/index.js?v=20260807a';
+import { scheduleLessonSrs } from './review.js?v=20260807a';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -331,6 +332,7 @@ async function completeLesson() {
     // Optimistic: local state first so "Next lesson" can never reopen the
     // just-completed lesson while the network write is in flight.
     state.userData = { ...state.userData, completedLessons: [...done, key] };
+    scheduleLessonSrs(L.lesson, L.items);   // SRS: learned items enter the review queue
     try {
       await updateDoc(doc(db, 'users', state.user.uid), { completedLessons: arrayUnion(key) });
     } catch (err) {

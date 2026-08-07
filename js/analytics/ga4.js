@@ -16,7 +16,7 @@
 // function in this module no-ops cleanly.
 // ============================================
 
-import { getMeasurementId } from '../config/analytics.js?v=20260802b';
+import { getMeasurementId } from '../config/analytics.js?v=20260807a';
 
 let _initialized = false;
 

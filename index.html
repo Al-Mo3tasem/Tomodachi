@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260802b">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260802b">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260807a">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260807a">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -96,7 +96,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260802b">
+  <link rel="stylesheet" href="css/style.css?v=20260807a">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -553,6 +553,15 @@
           </div>
         </div>
 
+        <!-- SRS review queue (shows only when items are due) -->
+        <div class="lesson-cta card review-cta" id="review-cta" hidden>
+          <div class="lesson-cta-text">
+            <div class="lesson-cta-title" data-i18n="review.title">Review</div>
+            <div class="lesson-cta-sub" id="review-cta-sub"></div>
+          </div>
+          <button class="btn btn-secondary" id="review-cta-btn" data-i18n="review.start">Review now</button>
+        </div>
+
         <div class="dashboard-grid">
           <!-- Profile Card -->
           <div class="card profile-card">
@@ -947,6 +956,30 @@
     </section>
 
     <!-- ========== MULTIPLAYER LOBBY (Duel + Co-op) ========== -->
+    <!-- ===== SRS REVIEW SESSION ===== -->
+    <section id="screen-review" class="screen">
+      <div class="container container-narrow">
+        <div class="lesson-topbar">
+          <button class="btn-icon" id="review-btn-exit" aria-label="Exit review">✕</button>
+          <div class="lesson-count" id="review-count" style="margin:0"></div>
+        </div>
+        <div id="review-quiz">
+          <div class="card lesson-card">
+            <div class="lesson-card-big" id="review-prompt"></div>
+          </div>
+          <div class="choices-grid" id="review-choices"></div>
+        </div>
+        <div id="review-done" hidden>
+          <div class="card lesson-intro-card">
+            <div class="lesson-done-emoji">🧠</div>
+            <h2 data-i18n="review.done_title">Review complete!</h2>
+            <p class="lesson-intro-meta" id="review-score"></p>
+            <button class="btn btn-primary" id="review-btn-done" data-i18n="review.back">Dashboard</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== META SCREEN (orientation / reading rules / checkpoints) ===== -->
     <section id="screen-meta" class="screen">
       <div class="container container-narrow">
@@ -1275,7 +1308,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260802b"></script>
+  <script type="module" src="js/app.js?v=20260807a"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

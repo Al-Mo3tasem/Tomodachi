@@ -13,9 +13,9 @@
 // initial page weight light.
 // ============================================
 
-import { getSentryDsn } from '../config/sentry.js?v=20260802b';
-import { getEnv } from '../config/firebase.js?v=20260802b';
-import { APP_CONFIG } from '../config/firebase.js?v=20260802b';
+import { getSentryDsn } from '../config/sentry.js?v=20260807a';
+import { getEnv } from '../config/firebase.js?v=20260807a';
+import { APP_CONFIG } from '../config/firebase.js?v=20260807a';
 
 let _sentry = null;
 let _initialized = false;
