@@ -14,14 +14,14 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260802a';
+} from '../core/core.js?v=20260802b';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260802a';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260802a';
-import { acceptCoop, isInCoop } from './coop.js?v=20260802a';
-import { t } from '../i18n/index.js?v=20260802a';
+} from '../data/firebase.js?v=20260802b';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260802b';
+import { acceptCoop, isInCoop } from './coop.js?v=20260802b';
+import { t } from '../i18n/index.js?v=20260802b';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

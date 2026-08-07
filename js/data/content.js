@@ -5,26 +5,27 @@
 // This is the content→game bridge for the L2 reachability gap; see
 // docs/L2-content-reachability-PROPOSAL.md.
 //
-// FLAG: enabled ONLY when getEnv() === 'dev' (i.e. localhost). The deployed
-// site resolves to 'staging'/'prod' and keeps the legacy top-level read — one
-// static bundle serves every environment, so the flag, not the deploy, gates
-// behaviour. Turning it on for prod is a deliberate later change gated on the
-// §4.16 rules being live in prod + a mastery/distractor follow-up.
+// FLAG: ON everywhere since GO-LIVE 2026-08-02 (lead's call). Prerequisites
+// that were met before flipping: §4.16 read rules published on dev AND prod;
+// prod seeded with the verified 1,302-doc corpus; distractor kind-scoping,
+// survival kana-guard, and the D4-A progress display all shipped.
+// KILL-SWITCH: return getEnv() === 'dev' and redeploy with a cache bump —
+// prod falls back to the legacy loader instantly.
 //
 // REQUIRES the §4.16 Firestore rule (authenticated read of
-// content_sets/{type}/items). Until that rule is deployed, getDocs throws
+// content_sets/{type}/items). If the rule is ever missing, getDocs throws
 // permission-denied; loadV2ContentSets swallows it and returns [] so the
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260802a';
-import { getLocale } from '../i18n/index.js?v=20260802a';
-import { db, collection, getDocs } from './firebase.js?v=20260802a';
-import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260802a';
+import { getEnv } from '../config/firebase.js?v=20260802b';
+import { getLocale } from '../i18n/index.js?v=20260802b';
+import { db, collection, getDocs } from './firebase.js?v=20260802b';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260802b';
 
-// Per-environment flag. Default OFF everywhere except localhost dev.
+// GO-LIVE 2026-08-02: v2 content + the 151-lesson course, all environments.
 export function contentV2Enabled() {
-  return getEnv() === 'dev';
+  return true;
 }
 
 // ----- Session cache -----

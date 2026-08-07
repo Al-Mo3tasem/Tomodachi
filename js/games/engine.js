@@ -14,16 +14,16 @@
 
 import {
   state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260802a';
+} from '../core/core.js?v=20260802b';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260802a';
+} from '../data/firebase.js?v=20260802b';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260802a';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260802a';
-import { t } from '../i18n/index.js?v=20260802a';
+} from '../audio/audio.js?v=20260802b';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260802b';
+import { t } from '../i18n/index.js?v=20260802b';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
