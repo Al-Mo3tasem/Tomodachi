@@ -15,7 +15,11 @@
 //     ~15s of idle time (primeSpeech / unprimeSpeech).
 // ============================================
 
-import { state } from '../core/core.js?v=20260906a';
+import { state } from '../core/core.js?v=20260906b';
+import { nativeTts, onNativeEvent } from '../native/shell.js?v=20260906b';
+
+// App shell going to the background: never keep talking over another app.
+onNativeEvent('appState', ({ isActive }) => { if (!isActive) stopSpeech(); });
 
 // ----- Speech (TTS) -----
 let jaVoice = null;
@@ -118,12 +122,10 @@ export function unprimeSpeech() {
 export function speak(text) {
   if (!text) return;
   // Native shell: use the platform TTS (AVSpeechSynthesizer / Android TTS)
-  // through the bridge — Web Speech is unreliable inside WKWebView (empty
-  // voice lists, ja-JP regressions). Web build: window.Native is undefined.
-  if (window.Native?.isNative && window.Native.tts) {
-    window.Native.tts.speak(text);
-    return;
-  }
+  // through the adapter — Web Speech is unreliable inside WKWebView (empty
+  // voice lists, ja-JP regressions). Web build: adapter returns null.
+  const tts = nativeTts();
+  if (tts) { tts.speak(text); return; }
   if (!speechSupported) return;
   try {
     const synth = window.speechSynthesis;
@@ -142,7 +144,8 @@ export function speak(text) {
 }
 
 export function stopSpeech() {
-  if (window.Native?.isNative && window.Native.tts) { window.Native.tts.stop(); return; }
+  const tts = nativeTts();
+  if (tts) { tts.stop(); return; }
   if (speechSupported) {
     try { window.speechSynthesis.cancel(); } catch { /* ignore */ }
   }
