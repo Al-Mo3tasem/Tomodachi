@@ -1,17 +1,54 @@
 // ============================================
-// Tomodachi — native shell wiring (Capacitor)
-// The ONLY place the web app talks to window.Native (see native/bridge.js).
-// Everything here is a no-op on the web build: window.Native is undefined.
+// Tomodachi — native shell adapter (Capacitor)
+// The ONLY web module that references window.Native (enforced by
+// scripts/dev/lint-gates.mjs). Everything else imports the small adapters
+// below; on the web build they all resolve to "not native" no-ops.
 //
-// Batch 0 scope (foundation):
+// Batch 0/1 scope (foundation):
 //   • Android hardware/predictive back → sensible SPA behaviour
-//   • app going to background → stop speech
-// The screen-stack batch of the redesign replaces the back policy below.
+//   • app lifecycle events fan-out (audio stops speech on background)
+//   • splash hide + native TTS adapters
+// The screen-stack batch of the redesign replaces the back policy below;
+// the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { showScreen, currentScreen } from '../core/core.js?v=20260906a';
-import { stopSpeech } from '../audio/audio.js?v=20260906a';
+import { showScreen, currentScreen } from '../core/core.js?v=20260906b';
 
+const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
+
+/** True inside the Capacitor shell (bridge loaded and reports a native platform). */
+export function isNative() {
+  const n = N();
+  return !!(n && n.isNative);
+}
+
+/** 'ios' | 'android' | 'web' */
+export function nativePlatform() {
+  const n = N();
+  return n && n.isNative ? n.platform : 'web';
+}
+
+/** Native text-to-speech adapter, or null on the web. */
+export function nativeTts() {
+  const n = N();
+  return n && n.isNative && n.tts ? n.tts : null;
+}
+
+/** Hide the launch splash (no-op on the web). */
+export function nativeSplashHide() {
+  const n = N();
+  if (n && n.isNative && n.splash) n.splash.hide();
+}
+
+// ----- lifecycle event bus (registrations are safe before the bridge loads) -----
+const listeners = { appState: [], back: [] };
+
+/** @param {'appState'} event  @param {(payload:any)=>void} fn */
+export function onNativeEvent(event, fn) {
+  if (listeners[event]) listeners[event].push(fn);
+}
+
+// ----- back-button policy v0 -----
 // Screens where "back" means "leave the app".
 const ROOT_SCREENS = new Set(['screen-landing', 'screen-auth', 'screen-dashboard']);
 // Screens with their own exit control (keeps their state machines clean).
@@ -24,9 +61,9 @@ const EXIT_BUTTON = {
 const GAME_SCREENS = new Set(['screen-game', 'screen-duel', 'screen-coop']);
 
 function handleBack() {
-  const N = window.Native;
+  const n = N();
   const cur = currentScreen();
-  if (!cur || ROOT_SCREENS.has(cur)) { N.app.exit(); return; }
+  if (!cur || ROOT_SCREENS.has(cur)) { n.app.exit(); return; }
   if (GAME_SCREENS.has(cur)) return;
   const exitId = EXIT_BUTTON[cur];
   const btn = exitId && document.getElementById(exitId);
@@ -35,14 +72,14 @@ function handleBack() {
 }
 
 function wire() {
-  const N = window.Native;
-  if (!N || !N.isNative) return;
-  document.documentElement.classList.add('is-native', `is-${N.platform}`);
-  N.app.onBack(handleBack);
-  N.app.onState(({ isActive }) => { if (!isActive) stopSpeech(); });
+  const n = N();
+  if (!n || !n.isNative) return;
+  document.documentElement.classList.add('is-native', `is-${n.platform}`);
+  n.app.onBack(handleBack);
+  n.app.onState((payload) => { for (const fn of listeners.appState) { try { fn(payload); } catch (_e) { /* listener error must not break the shell */ } } });
 }
 
 export function initNativeShell() {
-  if (window.Native) wire();
+  if (N()) wire();
   else document.addEventListener('native-ready', wire, { once: true });
 }

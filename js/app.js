@@ -4,42 +4,43 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906a';
-import { getFunctionUrl } from './config/functions.js?v=20260906a';
+import { APP_CONFIG } from './config/firebase.js?v=20260906b';
+import { getFunctionUrl } from './config/functions.js?v=20260906b';
 import {
   state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906a';
+} from './core/core.js?v=20260906b';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906a';
+} from './data/firebase.js?v=20260906b';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906a';
+} from './games/engine.js?v=20260906b';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906a';
-import { isSpeechSupported } from './audio/audio.js?v=20260906a';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906a';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange } from './ui/lesson.js?v=20260906a';
-import { initReviewUi, renderReviewCta } from './ui/review.js?v=20260906a';
-import { initNativeShell } from './native/shell.js?v=20260906a';
+} from './data/leaderboards.js?v=20260906b';
+import { isSpeechSupported } from './audio/audio.js?v=20260906b';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906b';
+import { initLessonUi, renderLessonCta, onLessonLocaleChange } from './ui/lesson.js?v=20260906b';
+import { initReviewUi, renderReviewCta } from './ui/review.js?v=20260906b';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906b';
+import { shellVersion } from './config/features.js?v=20260906b';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906a';
+} from './games/duel.js?v=20260906b';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906a';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906a';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906a';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906a';
+} from './games/coop.js?v=20260906b';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906b';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906b';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906b';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -1755,6 +1756,10 @@ function bindLocaleToggles() {
 }
 
 async function init() {
+  // Feature-flagged shell: re-assert what the pre-paint <head> script set,
+  // from the single source of truth (js/config/features.js). Until the v2
+  // CSS/JS lands this changes nothing visible.
+  document.documentElement.dataset.shell = shellVersion();
   setTheme(state.theme, false); // apply only — never persist a boot-time fallback
   // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
   // single source of truth (persists, syncs settings checkbox + aria-pressed).
@@ -1820,7 +1825,7 @@ async function init() {
   onAuthStateChanged(auth, async (user) => {
     // Native shell: the splash stays up (launchAutoHide:false) until auth
     // state is known, so users never see a white flash or a wrong screen.
-    window.Native?.splash.hide();
+    nativeSplashHide();
     // L1.20: handleRegister sets _registrationInFlight while it's mid-
     // sequence. Skip the post-auth UI flow (and the ensureUserProfile
     // self-heal inside it) during registration so they don't race the

@@ -11,7 +11,14 @@
     "native:sync": "npm run build:www && npx cap sync",
     "android:debug": "npm run native:sync && cd android && gradlew.bat assembleDebug",
     "android:open": "npx cap open android",
-    "android:apk": "node scripts/native/collect-apk.mjs"
+    "android:apk": "node scripts/native/collect-apk.mjs",
+    "dev": "http-server -p 8744 -c-1",
+    "test": "npm run lint:css && npm run lint:gates && npm run test:unit",
+    "test:unit": "node --test \"tests/unit/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "lint:css": "node scripts/dev/lint-css.mjs",
+    "lint:gates": "node scripts/dev/lint-gates.mjs"
   },
   "repository": {
     "type": "git",
@@ -41,7 +48,11 @@
     "@capacitor/splash-screen": "^8.0.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@capacitor/assets": "^3.0.5",
-    "esbuild": "^0.28.2"
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@playwright/test": "^1.63.0",
+    "esbuild": "^0.28.2",
+    "http-server": "^14.1.1"
   }
 }

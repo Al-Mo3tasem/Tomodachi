@@ -12,7 +12,7 @@ await build({
   bundle: true,
   format: 'iife',
   target: ['es2020', 'chrome100', 'safari15'],
-  outfile: join(ROOT, 'www', 'native-bridge.js'),
+  outfile: join(process.env.WWW_OUT || join(ROOT, 'www'), 'native-bridge.js'),
   minify: true,
   sourcemap: false,
   logLevel: 'info',

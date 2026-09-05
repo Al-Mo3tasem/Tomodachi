@@ -1,0 +1,471 @@
+# Tomodachi app — build plan (redesign + native shell)
+
+Generated 2026-09-06 from the locked decisions in `APP-DESIGN-DECISIONS.md` (6 reader/research agents → architect → adversarial critic). Machine copy: `app-build-plan.json`. Batch 0 is shipped (`d562c95`).
+
+## Principles
+- Contract first: docs/APP-DESIGN-DECISIONS.md is the spec; every batch names the pick numbers it closes; every opted-in extra that is not built is written into a deferred-extras register the lead signs, so nothing silently drops.
+- Batch 0 names are frozen: window.Native (haptics tap/snap/tick/ok/no/warn, tts, app, keyboard, prefs, notify, share, splash), native/bridge.js, scripts/native/build-www.mjs, www/native-env.js (window.__TOMODACHI_ENV__ + window.__TOMODACHI_NATIVE__), capacitor.config.json, appId com.bytepluslife.tomodachi, js/native/shell.js as the ONLY web module that references window.Native. New facades (haptics.js, prefs.js, tts.js, platform.js) import adapters from shell.js; a grep gate fails the batch if `window.Native` appears anywhere else in js/.
+- Prod is never broken and never shows half-built UI: all v2 shell code is inert unless html[data-shell="v2"]; that attribute is set by the pre-paint <head> script and re-asserted by js/config/features.js; on the prod hostname the ?ff_ URL override is IGNORED (only a DevTools-set localStorage key enables it), so a shared link can never expose v2 to a real user. Data-layer changes (activity writes, presence heartbeat, friends array, anonymous auth) are NOT shell-scoped: each ships only after its Firestore rules are live in prod, is gated by isEnabled('nativeShell') and wrapped in try/catch so permission-denied never breaks lesson/game completion.
+- One live DOM per id: v2 versions of existing screens (dashboard, settings) live in <template> elements and are stamped into the DOM at boot in place of the v1 section when the flag is on. v1 and v2 markup never coexist in the live document, so every id app.js/lesson.js/review.js/engine.js/duel.js/coop.js queries resolves exactly once; a node --test id-contract asserts the id list on both shells.
+- Test harness before any UI change: Playwright + node --test + v1 baseline screenshots (EN/AR x light/dark x 390x844 + 412x915), a glass-budget counter and lint-css exist (batch 1) before batch 2 touches a pixel; every later batch re-runs prod-shell-unchanged with the flag off.
+- Foundation before surfaces: harness+flag (B1) -> tokens/glass/safe-areas (B2) -> router/dock/topbar (B3) -> facades (B4) -> primitives (B5) -> screens (B6-B11) -> native plumbing (B12) -> try-first (B13) -> flip + cleanup (B14). No screen work starts until B2+B3 pass on the notch + gesture-bar fixture AND on the batch-0 APK.
+- Glass lives only on the navigation layer: backdrop-filter is allowed on exactly four selectors (#dock, .topbar.is-collapsed, .hud-chip, .sheet-head) and only inside css/app/glass.css; the status chip is tonal (opaque), never glass; Android profile <=2 mounted, iOS <=3, 0 under Reduce glass. Glass elements change only by state toggle (class), never by continuous scroll-linked animation; Android drops saturate() and sheen.
+- Stop the append-only cascade buildless: cascade layers via `@layer legacy, tokens, base, components, screens, overrides;` declared once at the top of css/style.css; each new file self-wraps in its `@layer name { }` block and is loaded by its own <link> (parallel fetch, no @import waterfall, no bundler on the web); legacy style.css is wrapped in `@layer legacy { }` and its 0.01ms !important reduced-motion nuke is deleted (an !important in the lowest layer would beat every higher layer). Duplicates are deleted as they migrate, never re-declared.
+- Arabic-first is binding: logical properties only in css/app/** (lint fails on left|right|translateX|margin-left|padding-right outside an allowlist), <bdi lang="ja"> on every JP/romaji token, digits through fmtNumber() only, zero letter-spacing and no CSS opacity on Arabic text over glass (lint), dock labels >=13px/600, IBM Plex Sans Arabic served from assets/fonts (already in repo). Every new EN/AR string batch is reviewed against CONTENT_GUIDELINES for translationese before merge — AR is the moat.
+- Numbers are ink: one .num-hero per card (Space Grotesk tabular 600, 28-40px, --text-primary), .num-eyebrow + .num-caption; rose only on Reviews-due when overdue; accent colour removed from every digit selector in one override.
+- One primitive per pattern: navigate()/back() for screens, openSheet()/confirmDestructive() for overlays, statusChip()/toast() for messaging, haptic() for feedback, fmtNumber() for digits, getPref()/setPref() for storage. After a pattern's migration batch a grep gate forbids showScreen(), confirm(), localStorage and backdrop-filter outside its module.
+- Organised files, not a bigger monolith: app.js (1858 lines) is split by the end (auth.js, consent.js, landing.js, me.js, home.js) with a hard target of <=600 lines; index.html screen chrome comes from <template>s; CSS is 16 linked files with one concern each; build tooling lives under scripts/ (scripts/native/* for the shell, scripts/dev/* for lint/sprite/subset).
+- Mechanical work goes to Codex with Claude review (PROJECT_RULES §17): CSS block moves (byte-equivalence checked), icon-sprite dedupe, <template> extraction, toLocaleString/showScreen call-site replacement, AR string batches. Judgment work (router, sheets, auth migration, presence, rules, anything touching money/data) stays with Claude.
+- Every batch ends with: unit + Playwright e2e on dev (EN+AR x light+dark x 390x844, 412x915 for shell specs), glass-budget count, axe contrast, lint-css, prod-shell-unchanged (flag off), `git rev-parse --show-toplevel` == the Tomodachi clone, `git push origin main:staging` preview for the lead, lead approval, then `git push origin main` with the ?v= cache-buster bumped on every changed import/link, Progress Log entry written immediately.
+
+## Flag strategy
+
+Per-env feature flag with a pre-paint attribute, a hardened override, template stamping, and staging-first previews. (1) js/config/features.js (the slot PROJECT_RULES §5.2 reserves) exports FEATURES = { nativeShell: { dev: true, staging: true, prod: false }, gamificationTiles: {all false}, friendCodes: {all false}, smartNotifications: {all false} } and isEnabled(name). Resolution order for nativeShell: window.__TOMODACHI_NATIVE__ === true (www/native-env.js, written by scripts/native/build-www.mjs) -> always true; else localStorage 'FF_NATIVE_SHELL' === 'true'|'false' (explicit string parse per §5.4); else URL ?ff_native_shell=true|false, honoured ONLY when getEnv() !== 'prod' (it is then persisted to localStorage so a tester keeps the shell on that device; =false clears it); else FEATURES[name][getEnv()]. On prod the URL param is ignored and logged once, so a forwarded link can never switch a real user to the unfinished shell; the lead previews v2 on prod data by setting the localStorage key in DevTools. (2) The existing pre-paint <head> script (the one that sets data-theme) is extended with five lines that set html[data-shell] from the same three inputs (native marker, localStorage key, hostname 'localhost'/'127.0.0.1'/'.pages.dev' => on, else off) so there is no v1->v2 layout flash; js/app.js init() re-asserts document.documentElement.dataset.shell = isEnabled('nativeShell') ? 'v2' : 'v1' as its first statement, before setTheme/initI18n; a unit test evaluates the inline script and features.js against the same fake windows and asserts they agree. (3) All v2 CSS is scoped under html[data-shell="v2"] inside its @layer block; every new JS module exports init*() that returns early when the flag is off; v2 versions of existing screens live in <template id="tpl-v2-screen-*"> and are stamped over the v1 <section> at boot only when v2 is on (no duplicate ids, no hidden second copy). Legacy paths (.nav, .dashboard-grid, showScreen fadeIn) stay untouched until the cleanup batch. (4) Prod-visible changes that ship to everyone before the flip are limited to an explicit list (batch 2: viewport-fit=cover, safe-area padding, blur removal on non-nav overlays, overlays display:none at rest, static .app::before, 100dvh, duplicate-rule deletions, the digit-selector splice fix, the @layer wrap) and are verified by prod-shell-unchanged.spec with masks on exactly those regions; everything else waits behind the flag. (5) Data-layer changes are never flag-scoped by CSS, so each has its own gate: activity writes / presence heartbeat / friends array / anonymous clauses land in Firestore rules (dev -> staging -> prod by the lead with the numbered checklist and Rules Playground sims) BEFORE the client code is pushed to main, and the client calls are wrapped in isEnabled() + try/catch. (6) Preview path per batch: commit on main locally (after `git rev-parse --show-toplevel` confirms the Tomodachi clone), `git push origin main:staging` (Cloudflare Pages deploys https://tomodachi-staging.pages.dev/ where the flag is on by env and getEnv() resolves to tomodachi-staging), lead reviews on a phone (EN+AR), then `git push origin main` (GitHub Pages prod, flag off). Debug APKs are built with `node scripts/native/build-www.mjs --env=staging` so testers hit staging data; release builds use the default prod. (7) Flip: batch 14 starts with one commit setting FEATURES.nativeShell.prod = true + cache-buster bump after the lead's staging sign-off; a second, separately approved commit deletes the v1 chrome and the html[data-shell] scoping and ignores the FF_NATIVE_SHELL key. Rollback at any point before cleanup = prod:false, one line, cache-buster bump; after cleanup rollback = git revert of the cleanup commit (kept as a single commit for that reason).
+
+## Code structure
+
+| Path | Purpose |
+|---|---|
+| `package.json (repo root, shipped in batch 0)` | Private, type=module. Existing scripts build:www / build:bridge / native:sync / android:debug / android:apk stay. Adds devDeps @playwright/test, @axe-core/playwright, http-server, subset-font (or fonttools via python), firebase@9.22.0 + i18next@26.3.0 + i18next-browser-languagedetector@8.2.1 (native bundle only, batch 12), lucide (sprite source); adds dep @capacitor/status-bar (batch 12). New scripts: dev (http-server -p 8744), test:unit (node --test tests/unit), test:e2e (playwright test), lint:css, lint:gates (grep gates), build:sprite, build:fonts. |
+| `capacitor.config.json (shipped)` | appId com.bytepluslife.tomodachi, webDir www, Keyboard resize 'body' (kept as shipped; re-evaluated in batch 8 typed mode), SplashScreen launchAutoHide false. Batch 12 adds StatusBar overlaysWebView + style per theme via the bridge, not via config. The `server` live-reload block is never committed. |
+| `native/bridge.js (shipped; extended, never renamed)` | The only file importing @capacitor/*. window.Native facade as shipped. Batch 12 adds Native.statusBar.setStyle('light'|'dark') (@capacitor/status-bar) and Native.app.onUrl is wired to a deep-link stub; the `native-ready` event stays the handshake. |
+| `js/native/shell.js (shipped; grows into the single Native adapter)` | Batch 3: hardware back delegates to nav.back() (exit only when nav.canGoBack() is false on a root tab). Batch 4+: exports thin adapters used by the facades — nativeHaptic(kind), nativePrefs, nativeTts, nativeShare, onAppState(cb), onKeyboard(cb), setStatusBar(theme), hideSplash() — each a no-op when window.Native is absent. Grep gate: `window.Native` appears only here. |
+| `scripts/native/build-www.mjs (shipped; extended)` | Keeps the allowlist copy + native-env.js + bridge bundle. Batch 1: the viewport patch only appends viewport-fit=cover if missing (idempotent with the web viewport) and a unit test runs the build into a temp dir. Batch 12: --bundle flag runs esbuild over js/app.js with an onResolve plugin that strips ?v= suffixes and maps the gstatic/jsdelivr CDN URLs to npm packages, inlines locale JSON, strips the Google Fonts <link> and asserts zero external hosts remain; policy pages and css/landing.css stay in www/ (privacy.html is an App Store requirement and links landing.css). |
+| `scripts/dev/lint-css.mjs` | Fails on: physical properties outside an allowlist in css/app/**, backdrop-filter outside css/app/glass.css, literal ms/cubic-bezier/hex outside tokens.css, :hover transform/shadow outside @media (hover:hover), undefined var(--x) (cross-checked against tokens.css), unlayered rules in css/app/** (file must start with @layer), `opacity:` on selectors matching .dock-label/.topbar-title/.hud-chip text under :lang(ar) (contract: no opacity on Arabic text over glass). |
+| `scripts/dev/build-sprite.mjs` | Generates the inline <svg><symbol id=ic-*> block (outline 1.8 + -filled pairs) from the lucide package for: home, route, repeat, users, user, settings, sun, moon, flame, swords, handshake, headphones, eye, keyboard, volume, x, arrow-back (mirror), check, lock, play, trophy, clock, crown, share, bell, type, hash, sparkles, book-open, refresh. Idempotent; output pasted next to #tomo-logo by Codex. |
+| `scripts/native/subset-fonts.mjs (batch 12)` | Subsets Cairo 800 (Arabic + Latin digits), Space Grotesk 500/600 (Latin), Inter 400-700 (Latin), Fraunces 400/600 (Latin), Zen Maru Gothic 700/900 (kana ranges 3040-30FF + FF66-FF9F) into assets/fonts/*.woff2 and writes a glyph-coverage report against the exported content (every kana/romaji glyph must be covered; kanji/words fall back to the system CJK face via `lang=ja`). IBM Plex Sans Arabic 400-700 already present (assets/fonts, 192 KB). |
+| `js/config/features.js` | FEATURES per env + isEnabled(name) with the hardened override order (native marker -> localStorage -> URL param on non-prod only -> env default). Batch 1. |
+| `js/core/platform.js` | isNative() (reads window.__TOMODACHI_NATIVE__ via shell.js), platform() from html.is-ios/.is-android classes batch 0 already sets, applyPlatformAttrs(): html[data-platform], html[data-glass=full|reduced] (pref, else deviceMemory<=4, else a 300ms rAF first-frame benchmark < 50fps), html[data-text-size], html[data-digits]. |
+| `js/core/prefs.js` | Synchronous facade over localStorage (getPref/setPref/removePref with explicit string parsing) plus, on native only, a write-through to Native.prefs and a boot-time restore into localStorage when it is empty (WKWebView purge safety). No async hydrate; the pre-paint script keeps reading localStorage. Replaces every direct localStorage read/write in core.js state, app.js, leaderboards.js, sentry.js and the i18n detector. |
+| `js/core/nav.js` | Router: registerScreen(id, {tab, immersive, title, onBack, onEnter, onLeave}), navigate(id, {tab, replace, reset}), back(), setTab(), currentTab(), canGoBack(); per-tab stacks with scroll restoration; document.startViewTransition wrapper (push from inline-end, pop reverse, tab crossfade; reads html[dir] to flip translateX; honours prefers-reduced-motion and data-glass=reduced); dispatches 'nav:change'; wraps core.showScreen()/currentScreen(); history.pushState with state-only entries (URL unchanged, so refresh on GitHub Pages sub-path never 404s) + popstate -> back(); ignores back() while a <dialog> is open. |
+| `js/core/format.js` | fmtNumber/fmtCount/fmtDate/fmtTime via Intl with -u-nu-arab|latn from getPref('digits') (AR default latn per CONTENT_GUIDELINES 13.1); registered as i18next interpolation.format; wrapBdi(text, 'ja'); replaces core.formatTime and every toLocaleString. |
+| `js/core/haptics.js` | haptic('tap'|'snap'|'tick'|'ok'|'no'|'warn') — the bridge's vocabulary verbatim — no-op on web, shell.js adapter on native, respects getPref('haptics'). |
+| `js/ui/dock.js` | initDock(): renders #dock from <template id=tpl-dock>, .dock-tab[data-tab] -> setTab(), outline->filled swap, #dock-shelf setShelf(html|null), chrome-shrink as a class toggle on scroll direction (html[data-chrome=compact], labels fade via opacity/transform inside the dock — the blurred element itself never animates height per frame), hidden on body[data-immersive] and body[data-kb]. |
+| `js/ui/topbar.js` | mountTopbar(screenEl, {title, back, actions}); observeScroll() hysteresis (72/24px, rAF) lifted from the landing inline script; .is-collapsed toggles .glass; resets on nav:change; root tabs show no back button. |
+| `js/ui/sheet.js` | openSheet({title, content, detents, onClose, dismissable}) / closeSheet() from <template id=tpl-sheet> into #sheet-root; drag-to-dismiss, scrim, Escape, focus trap; confirmDestructive({title, body, confirmLabel}) on <dialog id=dlg-confirm> -> Promise<boolean> (replaces the 4 confirm() calls). |
+| `js/ui/status.js` | statusChip(text, {icon, kind, duration}) — tonal opaque top chip under --safe-top, aria-live polite; toast(message, type, {duration, action}) at the bottom above the dock; CHIP_KINDS triage table of every existing toast() call site. |
+| `js/ui/skeleton.js` | mountSkeleton(host, tplId, n)/clearSkeleton(host); renderEmptyState(host, {image, titleKey, ctaKey, onCta}) with assets/brand/empty-*.webp (already in repo). |
+| `js/ui/quiz-tiles.js` | renderChoiceTiles(host, choices, {onPick, kana}) from <template id=tpl-choice-tile>; showFeedbackSheet({correct, item, onContinue}) for lessons/review; inline flash stays in engine.js. |
+| `js/ui/hud.js` | mountHudChip(shellEl, {onExit, modeLabel}) + updateHud({score, lives, time, round}) from <template id=tpl-hud-chip>; used by engine.js, duel.js, coop.js. |
+| `js/ui/results.js` | showResultsSheet({mode, score, stats, tier, actions}) with tiered celebration (stagger + countUp via fmtNumber; confetti only on perfect); pause/stall as medium-detent sheets. |
+| `js/ui/home.js` | Home tab: hero (keeps lesson-cta-*/review-cta-* ids), 4 tiles, friends strip, Today|Course pill, 60s per-tab cache (kills the goHome() refetch storm). |
+| `js/ui/course.js / js/ui/practice.js / js/ui/me.js / js/ui/friends.js` | Root-tab screens per the contract (picks 7, 21, 19, 18). me.js absorbs openSettings/showSettings/settingsBack/saveProfileSettings/renderAvatarPicker from app.js. |
+| `js/ui/onboarding.js` | Try-first (pick 16): #screen-onboarding with Start lesson 1 + 'Create account' / 'I have an account' links; anonymous start; account sheet after lesson 1; uid-preserving link. |
+| `js/ui/pull-refresh.js` | Touch-only pull-to-refresh (80px threshold) for leaderboard + friends. |
+| `js/data/friends.js` | loadFriends(uid), watchPresence(uids) (documentId in, chunks of 10), heartbeat(60s foregrounded), setInGame(flag); wraps the single-friend prototype first (batch 6), real friend graph in batch 11. |
+| `js/data/users.js` | writeActivity(kind): updateDoc(users/{uid}, {[`activity.${date}.${kind}`]: increment(1)}) — allowed by the current own-doc users rule; gated by isEnabled + try/catch. |
+| `js/data/firebase.js` | Batch 1: native branch `isNativeShell() ? initializeAuth(app, {persistence: indexedDBLocalPersistence}) : getAuth(app)` so WKWebView users are not logged out on restart; batch 13 adds signInAnonymously, EmailAuthProvider, linkWithCredential, sendPasswordResetEmail exports. |
+| `js/auth/auth.js, js/ui/consent.js, js/ui/landing.js (batch 14)` | app.js split: auth (register/login/anonymous/link/logout/reset), consent banner + privacy choices, landing-only code (waitlist, install prompt, hero counter — web-only, skipped when isNative()). |
+| `js/audio/tts.js + js/audio/sfx.js (batch 12)` | Split of audio.js: tts.js keeps speak/stopSpeech/primeSpeech/isSpeechSupported and adds providers [bundledMp3 (assets/generated audio copied into www/ by the build, web keeps fetching lazily), nativeTts (shell.js adapter, ja voice check), webSpeech]; sfx.js = playSound/unlockAudio + haptic pairing. |
+| `css/style.css (legacy)` | First line: `@layer legacy, tokens, base, components, screens, overrides;`; whole file wrapped in `@layer legacy { }`; the 0.01ms !important reduced-motion nuke (1851-1856), duplicate [hidden]/focus/scrollbar blocks and superseded blocks deleted as they migrate; landing/policy/mock/consent ranges moved to css/landing.css. |
+| `css/landing.css` | Landing + policy + phone-mock + consent CSS (style.css ~2527-3778, 4469-4719, 4826-4837, 4855-4892, 4946-5078, 5091-5420) inside `@layer legacy { }`, linked by index.html and the three policy pages; included in www/ (policy pages ship in the app). |
+| `css/app/{tokens,fonts,base,glass,shell}.css` | tokens (layer tokens: the token sheet, [data-theme=oled], [data-platform=android], [data-glass=reduced]); fonts (@font-face local files, font-display swap, unicode-range); base (layer base: reset, dvh, :lang(ar) typography under v2, reduced-motion allowlist, hover guards, view-transition names); glass (layer components: the .glass recipe — the ONLY file with backdrop-filter); shell (layer components: #dock, .topbar, .app-scroll padding, body[data-immersive]/[data-kb]). |
+| `css/app/components/{surfaces,controls,overlays,feedback}.css` | Layer components, one concern per file: surfaces = buttons/cards/tiles/numbers; controls = segmented/forms/toggles/icons; overlays = sheet/dialog/status-chip/toast; feedback = skeleton/empty-state/presence/hud. |
+| `css/app/screens/{home,learn,play,social,me}.css` | Layer screens, scoped by html[data-shell="v2"] until cleanup: home; learn = lesson/review/course; play = select/game/duel/coop/practice; social = friends/leaderboard; me = me/onboarding. |
+| `index.html` | 16 stylesheet <link>s in layer order (style, landing, tokens, fonts, base, glass, shell, 4 components, 5 screens), each with ?v=; pre-paint script sets data-theme + data-shell; icon sprite next to #tomo-logo; <template>s: tpl-dock, tpl-sheet, tpl-choice-tile, tpl-hud-chip, tpl-stat-tile, tpl-friend-card/row, tpl-history-item, tpl-lesson-row, tpl-setting-row, tpl-skel-*, tpl-v2-screen-dashboard, tpl-v2-screen-settings; new root sections #screen-course/#screen-practice/#screen-friends/#screen-me/#screen-onboarding. |
+| `tests/unit/*.test.mjs (node --test)` | features resolution (incl. prod URL refusal + inline-script parity), getEnv() native override, nav stack semantics, format digits (never mixed), id-contract (every $('...') in js/ resolves in index.html + stamped templates, both shells), build-www (temp-dir build: native-env content, bridge injection, viewport-fit, no stale ?v=), lint-css self-tests. |
+| `tests/e2e/*.spec.mjs + playwright.config.mjs` | Projects en-light/en-dark/ar-light/ar-dark on iPhone 14 (390x844) and Pixel 7 (412x915); fixture injects --safe-area-inset-top:47px/-bottom:34px; specs: prod-shell-unchanged (v1 baseline diff, flag off), shell, glass-budget, contrast (axe), numbers, primitives, home, lesson-quiz, game, course, practice, me, friends (two contexts), onboarding. Base URL http://localhost:8744 (dev Firebase project, two seeded dev accounts). |
+| `docs/NATIVE-BUILD.md, docs/Firestore_Rules.md, docs/APP-BUILD-PLAN.md` | Numbered lead checklists: API-key referrer restrictions, anonymous provider enable per env, rules deploy dev->staging->prod with Playground sims, APK sideload, Codemagic/TestFlight; this plan saved as docs/APP-BUILD-PLAN.md with the deferred-extras register. |
+
+## Batches
+
+### Batch 0 — Capacitor scaffold — SHIPPED (d562c95), leftovers moved to batch 1  _(0 days (done))_
+
+**Goal:** Record what exists so later batches build on it unchanged: root package.json (type=module), capacitor.config.json (com.bytepluslife.tomodachi, Keyboard resize body, splash launchAutoHide false), native/bridge.js -> www/native-bridge.js exposing window.Native, scripts/native/build-www.mjs (allowlist copy incl. policy pages, www/native-env.js forcing __TOMODACHI_ENV__ default prod + __TOMODACHI_NATIVE__, viewport-fit=cover patch, bridge injection), js/native/shell.js (back policy v0, background -> stopSpeech, html.is-native/.is-ios/.is-android), firebase.js getEnv() override + isNativeShell(), audio.js native TTS path, app.js splash hide on auth, android/ (minSdk 24, target 36) + ios/ projects, icons/splash, dist/Tomodachi-debug-20260906.apk.
+
+**Tasks**
+- [shipped] Everything above; do not rename. Differences from the architect's draft that are now settled: window.Native (not __tomo), scripts/native/ (not tools/), capacitor.config.json (not .ts), www/native-env.js (not js/config/env.js), Keyboard resize 'body' (not 'native'), no @capacitor/status-bar or safe-area plugin (Capacitor 8.5.1 core injects --safe-area-inset-* itself via SystemBars).
+- [open -> batch 1] APK never launch-tested on a device; Firebase Auth persistence in the WebView not set; API-key HTTP-referrer restrictions for capacitor://localhost not verified; no tests/ or Playwright exist.
+
+**Files:** `package.json`, `capacitor.config.json`, `native/bridge.js`, `scripts/native/build-www.mjs`, `scripts/native/build-bridge.mjs`, `scripts/native/collect-apk.mjs`, `js/native/shell.js`, `js/config/firebase.js`, `js/audio/audio.js`, `js/app.js`, `android/`, `ios/`, `docs/NATIVE-BUILD.md`
+
+**Verify**
+- Already verified: APK builds (7.2 MB), www/ contains native-env.js (prod) + native-bridge.js + viewport-fit=cover.
+- Carried into batch 1: device launch test, sign-in persistence across restart, safe-area variables non-zero on a gesture-nav device.
+
+### Batch 1 — Harness, v1 baselines, flag scaffold, native auth persistence (zero visual change)  _(1.5 days)_
+
+**Goal:** Before any pixel moves: Playwright + node --test exist with v1 baseline screenshots, a glass-budget counter, lint-css and grep gates; the nativeShell flag resolves safely on every host; the APK keeps users signed in across restarts and has been launch-tested.
+
+**Tasks**
+- Test harness: devDeps @playwright/test, @axe-core/playwright, http-server; npm scripts dev (http-server -p 8744), test:unit, test:e2e, lint:css, lint:gates; playwright.config.mjs with the 4 locale/theme projects x 2 devices and the 47/34px safe-area fixture; tests/e2e/prod-shell-unchanged.spec.mjs records v1 baselines (landing, auth, dashboard, select, game, settings, leaderboard, lessons-list, lesson, review, duel lobby) EN+AR x light+dark; tests/e2e/glass-budget.spec.mjs records today's counts (dashboard 1, game 3, duel 5); tests/e2e/contrast.spec.mjs axe baseline; tests/unit/id-contract.test.mjs (every $('...')/getElementById id in js/ resolves in index.html).
+- js/config/features.js + the five-line extension of the pre-paint <head> script (data-shell from native marker / localStorage FF_NATIVE_SHELL / hostname) + first statement of init() re-asserting dataset.shell; tests/unit/features.test.mjs covers all override cases incl. ?ff_native_shell=true being ignored on a prod hostname and inline-script parity.
+- js/data/firebase.js: `isNativeShell() ? initializeAuth(app, {persistence: indexedDBLocalPersistence}) : getAuth(app)`; scripts/native/build-www.mjs viewport patch made idempotent (append viewport-fit=cover only if absent); tests/unit/build-www.test.mjs builds into a temp dir and asserts native-env.js content per --env, bridge injection, viewport-fit, no stale ?v= stamps; tests/unit/env.test.mjs for getEnv().
+- scripts/dev/lint-css.mjs + `npm run lint:gates` (grep: window.Native only in js/native/shell.js; later batches add showScreen/confirm/localStorage/backdrop-filter gates as their modules land).
+- Lead checklist (numbered, docs/NATIVE-BUILD.md): Google Cloud -> Credentials -> web API key of tomodachi-staging and tomodachi-prod -> HTTP referrers add capacitor://localhost/*, http://localhost/*, https://localhost/*; sideload dist APK (staging flavour: `node scripts/native/build-www.mjs --env=staging`) on a gesture-nav Android; sign in, kill the app, reopen -> still signed in; play one Zen round; read getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom') via chrome://inspect; note Android System WebView version.
+
+**Files:** `package.json`, `playwright.config.mjs`, `tests/e2e/prod-shell-unchanged.spec.mjs`, `tests/e2e/glass-budget.spec.mjs`, `tests/e2e/contrast.spec.mjs`, `tests/unit/{id-contract,features,env,build-www}.test.mjs`, `js/config/features.js`, `js/app.js (init first line)`, `index.html (pre-paint script)`, `js/data/firebase.js`, `scripts/native/build-www.mjs`, `scripts/dev/lint-css.mjs`, `docs/NATIVE-BUILD.md`
+
+**Verify**
+- `npm run test:unit` and `npm run test:e2e` green; prod-shell-unchanged passes trivially against its own baselines; glass-budget and axe baselines committed.
+- http://localhost:8744/?ff_native_shell=true sets html[data-shell=v2] with no visible change (no v2 CSS yet) and persists across reload; ?ff_native_shell=false clears it; unit test proves a prod hostname ignores the param.
+- APK: sign in -> force-stop -> reopen shows the dashboard without re-login (indexedDB persistence); no `requests-from-capacitor://localhost-are-blocked` error after the referrer change; --safe-area-inset-bottom non-zero on the gesture-bar device; WebView version >= 111 recorded.
+- Web prod unchanged: `git push origin main:staging` preview identical to prod; the batch touches no CSS.
+
+### Batch 2 — Foundation CSS: cascade layers, tokens, glass recipe, safe areas, prod-visible fixes  _(2 days)_
+
+**Goal:** The token sheet and glass ladder exist; safe areas work on notch + gesture bar; blur is stripped from every non-nav surface and overlays no longer sit mounted at rest; the legacy stylesheet is layered; the only prod-visible changes are the contract-required fixes on the mask list.
+
+**Tasks**
+- Layering: prepend `@layer legacy, tokens, base, components, screens, overrides;` to css/style.css and wrap the file in `@layer legacy { }`; delete the 0.01ms !important reduced-motion nuke (1851-1856) and re-author it in base.css as an allowlist (120ms opacity fades kept, transforms/loops killed); delete duplicate [hidden]/focus-visible/scrollbar blocks (one copy stays in legacy); fix the spliced digit selector at 4417-4419 (digits get --font-digits + tabular-nums, not Fraunces). Codex task: move landing/policy/mock/consent ranges into css/landing.css inside `@layer legacy { }` with a byte-equivalence check; index.html + privacy/terms/cookies.html link it.
+- css/app/tokens.css (full token sheet below incl. [data-theme=oled] palette, [data-platform=android] and [data-glass=reduced] values; move the R3 :root block from style.css 4391-4396 here; define --bg-subtle), css/app/base.css (reset, dvh, color-scheme, reduced-motion allowlist, hover:hover/pointer:fine guards, view-transition names; `html[data-shell=v2]:lang(ar)` body 17px/1.75/0 tracking + tracked-label resets), css/app/glass.css (.glass recipe + static grain tile data URI + @supports ladder + reduced/android values; the only backdrop-filter file), css/app/shell.css stub; index.html <link>s in layer order, each with ?v=. Every file self-wraps its @layer block (never also @import layer()).
+- Prod-visible fixes (everyone, on the mask list): web viewport gains viewport-fit=cover (maximum-scale/user-scalable kept as today — changing zoom policy is a separate lead decision); --safe-top/--safe-bottom/--safe-inline-* tokens; .nav padding-top var(--safe-top); .select-footer, #toast-container, #consent-banner, #loading-overlay, results/pause/duel/invite overlays get safe insets; .game-shell/.duel-shell/.coop-shell min-height calc(100dvh - var(--topbar-h)); body min-height 100dvh; remove backdrop-filter from .results-overlay, .pause-overlay (both), .duel-overlay, .invite-overlay, .consent-modal-backdrop, .landing-footer, .policy-nav, style.css 931/2207/4787 sites (v1 .nav and .landing-nav.is-scrolled keep theirs until cleanup); overlays become display:none unless .active with a 200ms opacity keyframe on entry; .app::before drift animation removed (static tile).
+- js/core/platform.js applyPlatformAttrs() (data-platform from html.is-ios/.is-android, data-glass from pref/deviceMemory/benchmark) called from init() after the shell attribute; css/app/fonts.css @font-face for the IBM Plex Sans Arabic files already in assets/fonts (other families stay on Google Fonts until batch 12); --font-ar switched to Plex under html[data-shell=v2] only.
+- lint-css wired to css/app/**; tests/e2e/shell.spec.mjs safe-area assertions; glass-budget spec re-baselined.
+
+**Files:** `css/style.css`, `css/landing.css`, `css/app/tokens.css`, `css/app/fonts.css`, `css/app/base.css`, `css/app/glass.css`, `css/app/shell.css`, `index.html (links, viewport)`, `privacy.html`, `terms.html`, `cookies.html`, `js/core/platform.js`, `js/app.js (applyPlatformAttrs)`, `scripts/dev/lint-css.mjs`, `tests/e2e/shell.spec.mjs`, `tests/e2e/glass-budget.spec.mjs`
+
+**Verify**
+- Glass budget flag on and off: dashboard 1 (v1 nav), select 1, game 1, duel 1, coop 1, lesson 0, results-open 1; `npm run lint:css` zero findings in css/app/**.
+- Safe-area e2e with the 47/34px fixture: .nav content starts below 47px; .select-footer/#toast-container/#consent-banner bottoms >= 34px above the edge on 390x844 EN and AR; same on the APK (adb screenshot).
+- prod-shell-unchanged: flag-off screenshots differ from baseline only inside the masked safe-area/overlay regions (threshold 0.1%); the policy pages render identically with landing.css linked.
+- Cascade proof: a temporary `@layer base { .btn-primary { background: lime } }` wins over legacy without !important (removed before merge); reduced-motion emulation keeps 120ms fades and kills transforms.
+- axe: no new violations; dark-mode 13px --text-tertiary usages flagged and moved to --text-caption (>= 4.5:1).
+
+### Batch 3 — Router, dock, collapsing top bar (v2 only)  _(2 days)_
+
+**Goal:** Under the flag: 5-tab floating glass dock (Home · Course · Practice · Friends · Me / الرئيسية · المسار · تدريب · الأصدقاء · حسابي), editorial collapsing title per screen, a real screen stack with view transitions, Android back through nav.js, immersive game/lesson screens.
+
+**Tasks**
+- js/core/nav.js: registerScreen() for all 13 screens (game/lesson/review/meta/lobby/duel/coop immersive), navigate()/back()/setTab()/currentTab()/canGoBack(), per-tab stacks + scroll restoration, view transitions (RTL-aware via html[dir]), nav:change event, state-only pushState + popstate; js/native/shell.js back handler becomes `if (!nav.back()) Native.app.exit()` (only on root tabs); back() ignored while a <dialog> or non-dismissable sheet is open.
+- Replace direct showScreen() calls (app.js 494/495/1198/1277/1342/1367/1370/1847, lesson.js 122/139/454/474/534, review.js 107/197, engine.js 133, duel.js 489/733/994, coop.js 441/658/842, leaderboards.js 158) with navigate()/back(); openSettings/settingsBack keep pauseGame/resumeGame semantics via nav stack state; onBack guards for engine.requestExit, duel.exitDuel, coop.exitCoop, lesson.exitLesson, review.exitReview (still confirm() until batch 5).
+- js/ui/dock.js + <template id=tpl-dock> + shell.css: #dock role=tablist, 5 tabs with <use href=#ic-*> outline/filled pairs (sprite from scripts/dev/build-sprite.mjs, inlined next to #tomo-logo), dock.* i18n keys EN+AR, #dock-shelf, chrome-shrink class toggle, immersive hide; temporary tab -> screen map (course -> screen-lessons-list, practice -> screen-select, friends -> screen-dashboard#friend-bar, me -> screen-settings) until the root screens exist.
+- js/ui/topbar.js: mountTopbar() on every app screen replacing .back-btn/.page-header/.lesson-topbar/.duel-topbar in place under v2 (v1 elements hidden by CSS, ids preserved); observeScroll() hysteresis; .is-collapsed adds .glass; the old <nav class=nav> is display:none under v2 (its locale/theme/logout controls reachable via the temporary Me = screen-settings).
+- tests/unit/nav.test.mjs (pure stack logic) + shell.spec extended (dock tabs, immersive, collapse, back stack, RTL order, AR label >= 13px/600); naming check: a 5-person first-click test on the staging preview (EN + AR): 'review yesterday's words' -> Practice, 'continue the path' -> Course, pass >= 4/5 each; labels are i18n keys so a rename is a JSON change.
+
+**Files:** `js/core/nav.js`, `js/native/shell.js`, `js/ui/dock.js`, `js/ui/topbar.js`, `js/app.js`, `js/ui/lesson.js`, `js/ui/review.js`, `js/games/engine.js`, `js/games/duel.js`, `js/games/coop.js`, `js/data/leaderboards.js`, `index.html (tpl-dock, sprite, topbars)`, `js/i18n/locales/en.json`, `js/i18n/locales/ar.json`, `css/app/shell.css`, `css/app/components/controls.css (icons)`, `scripts/dev/build-sprite.mjs`, `tests/unit/nav.test.mjs`, `tests/e2e/shell.spec.mjs`
+
+**Verify**
+- e2e (flag on, EN+AR x light+dark, 390x844 + fixture): dock visible on dashboard/settings/leaderboard, hidden on game/lesson/review/duel; aria-selected matches; tab switch without reload; back() from settings resumes a paused Zen game (isActive() true, timer continues).
+- Glass budget: home 2 (dock + collapsed topbar), settings 2, game 0; Android profile <= 2.
+- RTL: dock order mirrored by dir only (DOM unchanged), .dock-label >= 13px/600, back arrow mirrored (ic-mirror), swords/x not mirrored; view-transition push slides from inline-end in both directions.
+- Android back on a rebuilt staging APK (targetSdk 36, gesture nav): Settings -> previous screen; Home -> app goes to background (not killed); Survival game -> confirm prompt; predictive-back gesture fires the listener.
+- Naming first-click test recorded in the Progress Log; prod-shell-unchanged green with the flag off; id-contract green.
+- grep gate: showScreen() only in core.js + nav.js.
+
+### Batch 4 — Facades: prefs, haptics, digits/format, bdi pass, platform attrs (mechanical)  _(1.5 days)_
+
+**Goal:** Every cross-cutting primitive the screens need is in place and every call site migrated: sync prefs facade with native write-through, haptic vocabulary, one number formatter honouring the digits setting, JP tokens isolated, text-size/digits attributes.
+
+**Tasks**
+- js/core/prefs.js (getPref/setPref/removePref over localStorage; native write-through + boot restore via shell.js adapter) and migration of core.js state (audio, practice, input, duration, wincon, duelinput, coopinput, theme), app.js toggles + consent, leaderboards.js last-bracket, sentry.js consent, i18n detector (custom detector reading getPref('lang')); persist #toggle-notify; grep gate: localStorage only in prefs.js and the pre-paint script.
+- js/core/haptics.js haptic(kind) with the bridge vocabulary; calls beside every playSound() in engine.js (answer/timeout/loseLife/celebrate), lesson.js answer/complete, review.js answer/finish, duel.js/coop.js answer/results, dock tab press, segmented/toggle presses; pref 'haptics' default on.
+- js/core/format.js fmtNumber/fmtCount/fmtDate/fmtTime + i18next interpolation.format; Codex replaces toLocaleString at app.js 933/935/995/1010/1017, engine.js 682/692-694/1038, coop.js 863, leaderboards.js 146/228/242/253, lesson.js 284/292/388-390, review.js 141 and core.formatTime callers; wrapBdi() applied to lesson.js 235-269 big/reading/examples, engine.js card/choices, review.js prompts, duel/coop prompts.
+- platform.js: html[data-text-size] (--text-scale) and html[data-digits] from prefs; tests/unit/format.test.mjs (EN '1,240', AR default '1,240', digits=arab '١٬٢٤٠', time strings never mixed).
+
+**Files:** `js/core/prefs.js`, `js/core/haptics.js`, `js/core/format.js`, `js/core/platform.js`, `js/core/core.js`, `js/native/shell.js (adapters)`, `js/app.js`, `js/data/leaderboards.js`, `js/analytics/sentry.js`, `js/i18n/index.js`, `js/ui/lesson.js`, `js/ui/review.js`, `js/games/{engine,duel,coop}.js`, `tests/unit/format.test.mjs`, `tests/e2e/numbers.spec.mjs`
+
+**Verify**
+- Reload keeps theme/audio/practice choices on web; on the APK `adb shell run-as com.bytepluslife.tomodachi cat shared_prefs/CapacitorStorage.xml` shows the mirrored keys and clearing WebView storage restores them at boot.
+- numbers.spec: no element mixes Arabic-Indic and Latin digits on any screen in either setting; every JP token is inside <bdi lang=ja> (count equals JP text nodes on lesson/game/review).
+- Haptics: APK answer tile -> light impact (bridge debug log); web haptic() no-op without console noise.
+- grep gates green (localStorage, window.Native); prod-shell-unchanged green; unit suite green.
+
+### Batch 5 — Primitives: sheets + destructive dialog, status chip/toast, quiz tiles + feedback sheet, buttons, segmented, numbers, skeletons  _(2 days)_
+
+**Goal:** Every reusable component the screens need exists with the researched numbers (pick 6, 8, 9, 11, 17, 22).
+
+**Tasks**
+- js/ui/sheet.js + tpl-sheet + #sheet-root + overlays.css (grabber 36x5, .sheet-head.glass, opaque body, detents 50dvh/90dvh, --dur-sheet enter/exit, scrim, drag-to-dismiss, focus trap, safe-bottom padding); confirmDestructive() on <dialog id=dlg-confirm>; replace confirm() at engine.js 161/167, duel.js 788, coop.js 181 with awaited confirmDestructive (requestExit async; pauseGame() before awaiting; second back press ignored while open); grep gate: no confirm(.
+- js/ui/status.js + overlays.css: #status-chip tonal (opaque, never glass) under --safe-top, aria-live; #toast-container moved to the bottom above the dock with translateY keyframes; toast(message, type, {duration, action}); triage of every toast() call site (app.js 814/1158/1285/1730-1733, engine.js 61/72/77, duel.js 150-161/828, coop.js 73-84/729, lesson.js, review.js): events -> statusChip, errors/undo -> toast.
+- js/ui/quiz-tiles.js + tpl-choice-tile + surfaces.css: .quiz-tile (>= 64px, 2x2 minmax(0,1fr) always — delete the <=480 1-col override at style.css 5490, gap 12px, 2px/3px border, 4px press edge, tonal correct/wrong with hex fallbacks before color-mix, kana variant 32px --font-kana, <bdi lang=ja>); renderChoiceTiles() used by lesson.js 298, review.js 146, engine.js 469 (hotkey hints hidden on pointer:coarse); showFeedbackSheet() three-beat sequence.
+- surfaces.css/controls.css: .btn-primary soft-elevated (inset top highlight, :active translateY(1px), shine only under hover:hover), heights 44/52/56, AR CTA zero tracking; .segmented.is-pill sliding indicator via inset-inline-start custom property (never style.left) on #seg-practice/#seg-input/#seg-duration/#seg-wincon/.lb-tab/#lb-modes; .num-hero/.num-eyebrow/.num-caption; one override removing accent colour from .stat-value/.results-score/.lb-score/.duel-p-score/.dr-score/.history-score/.hud-score; countUp(el, to).
+- js/ui/skeleton.js + tpl-skel-row|card|tile|friend + feedback.css (1.6s shimmer, static under reduced motion) mounted before first paint in #lb-list/#lb-preview/#history-list/#lessons-list/#course-progress; renderEmptyState() with assets/brand/empty-*.webp; RTL-safe .toggle (inset-inline-start) and consent-banner translate fix.
+
+**Files:** `js/ui/sheet.js`, `js/ui/status.js`, `js/ui/quiz-tiles.js`, `js/ui/skeleton.js`, `js/core/core.js (toast signature)`, `js/games/{engine,duel,coop}.js`, `js/ui/lesson.js`, `js/ui/review.js`, `js/app.js`, `index.html (tpl-sheet, tpl-choice-tile, tpl-skel-*, #sheet-root, #status-chip, dlg-confirm, toast container)`, `css/app/components/{surfaces,controls,overlays,feedback}.css`, `tests/e2e/primitives.spec.mjs`
+
+**Verify**
+- Sheet: renders above #dock and below #toast-container (elementFromPoint), drag > 120px dismisses, Escape/scrim close, focus returns; Survival exit shows <dialog> and vetoes back() on cancel; grep confirm( = 0.
+- Quiz tiles: lesson quiz and Zen multiple-choice 2x2 at 390px, every tile >= 64px, pressed transform 4px during pointerdown, kana in <bdi lang=ja>, AR letter-spacing 0.
+- Status/toast: friend-online shows the tonal #status-chip inside the safe area and no toast; a forced Firestore error shows a bottom toast >= dock top + 12px; no translateX in css/app.
+- Glass budget with a sheet open on Home: iOS 3, Android 2 (sheet head drops glass); axe: role=dialog/aria-modal, labelled dlg-confirm, aria-live chip; .num-caption dark contrast >= 4.5:1.
+- prod-shell-unchanged green (toast container move is v2-scoped); primitives.spec green EN+AR.
+
+### Batch 6 — Home: hero + 4 tiles, friends strip, Today|Course, rings + heatmap data  _(2 days)_
+
+**Goal:** Pick 4 + 7 (data): the dashboard becomes Home — greeting title, 1 hero + 4 icon tiles with ink numbers, horizontal online-friends strip, Today|Course pill, per-track rings, activity data source.
+
+**Tasks**
+- <template id=tpl-v2-screen-dashboard> stamped over #screen-dashboard at boot under v2: topbar greeting (renderUserIdentity writes #dash-welcome-line only — no streak/XP), #home-switch pill, .home-hero merging #lesson-cta/#review-cta (ids lesson-cta-title/sub/btn/browse, review-cta-sub/btn preserved), .bento with 4 <button class=tile> from tpl-stat-tile, #friends-strip. Tile set for launch (lead decision recorded): Reviews due · Course progress · Practice best · Friends online — no Streak/XP tiles until gamification data exists (FEATURES.gamificationTiles swaps them in later).
+- js/ui/home.js renderHome()/renderTiles() (reviews-due rose only when overdue, 'All caught up' at 0), 60s per-tab cache so tab switches do not refetch loadDashboard/loadHistory; goHome() refetch conditional on cache age.
+- Friends strip: js/data/friends.js wraps the single-friend prototype (state.friend/state.friendPresence) as loadFriends()/watchPresence(uids) scoped by documentId in (replaces the whole-collection presence listener at app.js 737); renderFriendsStrip() from tpl-friend-card (56px avatar in 72px card, scroll-snap, presence dot, in-game swords, offline hidden, 'All friends' ghost card); tap -> openFriendSheet(uid) (Duel/Co-op call sendChallenge/sendCoopChallenge with an explicit uid param added at duel.js 145-163 / coop.js 67-86).
+- Course view: renderTrackRings() (SVG rings per PROGRESS_TRACKS, .num-hero centre) replacing .cp-row bars from lesson.js 357-398; ring tap -> openLessonBrowser({types}) (lesson.js 470 gains a filter + track pill on #screen-lessons-list); renderHeatmap() from users/{uid}.activity.
+- js/data/users.js writeActivity(kind) called from lesson.js completeLesson, review.js finishSession, engine.js endGame — gated by isEnabled('nativeShell') + try/catch (own-doc users update is already allowed by the current rules; docs/Firestore_Rules.md documents the field).
+- Stats grid (#stat-*), #lb-preview, #history-list markup moved into the Me container (styled in batch 10), ids kept; history rows via tpl-history-item with Lucide mode icons (textContent only); css/app/screens/home.css + surfaces.css bento rules; skeletons for tiles/strip.
+
+**Files:** `index.html (tpl-v2-screen-dashboard, tpl-stat-tile, tpl-friend-card, tpl-history-item, tpl-track-ring)`, `js/ui/home.js`, `js/data/friends.js`, `js/data/users.js`, `js/ui/lesson.js`, `js/ui/review.js (dueCount export)`, `js/app.js`, `js/games/{duel,coop,engine}.js`, `css/app/screens/home.css`, `css/app/components/surfaces.css`, `docs/Firestore_Rules.md`, `js/i18n/locales/{en,ar}.json`, `tests/e2e/home.spec.mjs`
+
+**Verify**
+- Home e2e: exactly 1 .home-hero and 4 .tile, each with one <svg class=ic>, one .num-hero (Space Grotesk, 28-40px, --text-primary) and one .num-caption; no streak/XP in the topbar; pill indicator moves in 200ms; rings view toggles.
+- Friends strip with two dev contexts: online user shown with green dot, tap opens the sheet, Duel invite received as a status chip; offline absent; strip starts at inline-start in RTL (scroll-snap first-card position, no scrollLeft math).
+- Rings: Hiragana ring opens the browser filtered to hiragana rows; heatmap 7 x N; today's cell increments after lesson 1 on dev (activity field in console).
+- DEBUG_QUOTA: Home re-entry within 60s = 0 new reads; 10 tab switches < 5 reads; presence listener touches only friend docs.
+- id-contract on the stamped template; glass budget Home 2; axe tiles are buttons with composed names; prod-shell-unchanged green.
+
+### Batch 7 — Lesson and review surfaces + introduction lesson pages  _(1.5 days)_
+
+**Goal:** Picks 5, 6 (lessons/review) and the lead's intro-lesson requirement: paper teach card, 2x2 tiles + feedback sheet, results sheet, orientation extended with 'how the course is organised' and re-openable from Me › Help.
+
+**Tasks**
+- #screen-lesson: mountTopbar (close + .lesson-progress in the bar, --dur-progress), .lesson-card teach card (paper, --card-pad-hero, --font-kana for kana, --font-jp for words/kanji, <bdi lang=ja>), quiz via renderChoiceTiles + showFeedbackSheet (haptic at verdict), done state via showResultsSheet({tier: perfect ? 'perfect' : 'normal'}).
+- #screen-review: same tiles + sheet; #review-count via fmtCount; finishSession -> showResultsSheet with the 7-day forecast line (computeForecast(srsEntries) added to review.js, reused by Practice); session caps surfaced.
+- Orientation meta: new pages meta.orientation_5..7 EN/AR (rows -> scripts -> words -> kanji, what a 'row' is, the path) authored with CONTENT_GUIDELINES and AR-reviewed; openMeta('orientation') exported for Me › Help; lessons-list child screen registered under the course tab.
+- css/app/screens/learn.css; delete superseded .lesson-* blocks from style.css; tests/e2e/lesson-quiz.spec.mjs.
+
+**Files:** `index.html (#screen-lesson/#screen-review v2 chrome, tpl-countdown)`, `js/ui/lesson.js`, `js/ui/review.js`, `js/ui/quiz-tiles.js`, `js/ui/results.js (lesson/review variant)`, `js/i18n/locales/{en,ar}.json (meta.orientation_5-7, results.*)`, `css/app/screens/learn.css`, `css/style.css (deletions)`, `tests/e2e/lesson-quiz.spec.mjs`
+
+**Verify**
+- Lesson e2e (EN+AR x light+dark): complete lesson 1; feedback sheet within 300ms of tap; progress bar 300ms; kana computed font Zen Maru Gothic; every JP token in <bdi lang=ja>.
+- Review e2e: 3 due items complete, results sheet shows due-count/forecast, cap respected.
+- Orientation: pages 5-7 render EN and AR, AR reviewed for translationese (documented), reachable from the meta menu; reduced-motion: sheets crossfade only.
+- axe on lesson/results sheets; .is-correct/.is-wrong text >= 4.5:1 both themes; AR screenshot review of the feedback sheet (no clipped Cairo/Plex glyphs).
+
+### Batch 8 — Game surfaces: one glass HUD chip, inline flash, results/pause/stall sheets, celebrations, keyboard-safe typed mode  _(2 days)_
+
+**Goal:** Pick 20 + 10 + 6 (timed games): Zen/Survival/Duel/Co-op get one .hud-chip.glass over an opaque answer area, the inline flash stays, results/pause/stall become sheets with tiered celebration, typed mode survives the keyboard.
+
+**Tasks**
+- js/ui/hud.js mountHudChip()/updateHud() from tpl-hud-chip; engine.js renderHud() writes into updateHud(); .game-timer opaque under the chip; duel.js/coop.js HUDs -> two 48px avatars at the chip ends, .num-hero 24px scores, round dots, logical placement (fixes .duel-player-opp row-reverse); coop literals through fmtNumber.
+- Inline flash kept (G3 brush sweep, 120ms tint + haptic + 220ms advance) with durations from tokens; .game-card G1 kept (rotate only under hover:hover); .choice-btn -> .quiz-tile; typed .answer-input: body[data-kb] (set by shell.js from Native.keyboard) hides the dock and keeps the input above the keyboard with Keyboard resize 'body' as shipped; decide 'native' only if a device test shows the input covered.
+- js/ui/results.js showResultsSheet() replaces #results-overlay/#duel-results/#coop-results (one .num-hero 44px, .rstat mini tiles, stagger 40ms x <= 6, countUp tickers, confetti only on perfect, 'ok' haptic once); pause and stall as medium-detent sheets (stall non-dismissable); actions ordered per outcome (loser sees Rematch first); tiers wired to engine.js 939-947.
+- css/app/screens/play.css + feedback.css (hud); delete the 3x .game-card, 4x .toast and .results-card redefinitions from style.css; tests/e2e/game.spec.mjs.
+
+**Files:** `index.html (#screen-game/#screen-duel/#screen-coop v2 chrome, tpl-hud-chip)`, `js/ui/hud.js`, `js/ui/results.js`, `js/games/{engine,duel,coop}.js`, `js/native/shell.js (keyboard -> body[data-kb])`, `js/i18n/locales/{en,ar}.json (hud.*, results.*)`, `css/app/screens/play.css`, `css/app/components/feedback.css`, `css/style.css (deletions)`, `tests/e2e/game.spec.mjs`
+
+**Verify**
+- Zen 60s run: exactly one .hud-chip.glass mounted (total glass 1, dock hidden), answer area has no backdrop-filter, timer opaque; Survival exit -> confirmDestructive; results numbers tabular (width unchanged 9 -> 10); perfect run confetti, non-perfect none.
+- Duel two-context e2e: self at inline-start in LTR and RTL, scores update, Rematch sends a new invite; closing one context shows the stall sheet then the cancel notice within 30s.
+- APK: typed mode keyboard open never covers the input (screenshot); haptics on verdicts; HUD chip >= 55fps median on a 4 GB Android (remote perf trace); reduced-motion: tickers set final values instantly, confetti suppressed.
+- Glass budget game/duel/coop = 1; axe on results sheets; prod-shell-unchanged green.
+
+### Batch 9 — Course and Practice tabs, setup screen with dock shelf  _(1.5 days)_
+
+**Goal:** Picks 7 and 21: Course = rings + heatmap + filtered lesson browser + Continue hero; Practice = due count + 7-day forecast + session caps + last-session summary + Zen/Survival tiles; #screen-select uses the dock shelf for Start.
+
+**Tasks**
+- #screen-course + js/ui/course.js: promotes the ring/heatmap renderers from Home's Course view; lesson rows via tpl-lesson-row (check/play/lock icons, locked rows aria-disabled), track filter pill, Continue hero; nav.js registers screen-lessons-list/lesson as course children.
+- #screen-practice + js/ui/practice.js: due-count hero (.num-hero, rose when overdue), computeForecast() bars, session-cap row, last-session summary, Zen/Survival tiles (goToSelect semantics moved from .mode-btn) + Survival leaderboard entry.
+- #screen-select v2: stacked selectors with sliding pills, .select-footer replaced by setShelf(Start CTA) in #dock-shelf; leaderboard screen registered under Practice with skeleton rows.
+- css/app/screens/play.css (select/practice) + learn.css (course); i18n course.*/practice.* EN + AR (Codex batch, Claude AR review); tests/e2e/{course,practice}.spec.mjs.
+
+**Files:** `index.html (#screen-course, #screen-practice, tpl-lesson-row, select v2)`, `js/ui/course.js`, `js/ui/practice.js`, `js/ui/dock.js (setShelf)`, `js/core/nav.js (screen table)`, `js/ui/lesson.js`, `js/ui/review.js`, `js/app.js (goToSelect)`, `js/i18n/locales/{en,ar}.json`, `css/app/screens/{learn,play}.css`, `tests/e2e/{course,practice}.spec.mjs`
+
+**Verify**
+- Course: rings + heatmap render; filter pill limits rows; locked rows not clickable; current row has the play icon; Continue opens the next lesson.
+- Practice: due count matches review.js on a seeded dev account; 7 forecast bars; Zen tile -> #screen-select where Start lives in #dock-shelf and is fully visible above the 34px fixture at 390x844.
+- Glass budget course/practice/select = 2; axe pass; AR screenshots reviewed; lint zero physical properties; prod-shell-unchanged green.
+
+### Batch 10 — Me tab: profile hero + grouped rows, theme system/OLED, text size, digits, reduce glass, Help › Introduction, privacy choices, pull-to-refresh  _(2 days)_
+
+**Goal:** Pick 19 + 13 + extras (OLED, text size, digits, reduce-glass, pull-to-refresh) + the intro lesson entry point; settings code leaves app.js.
+
+**Tasks**
+- <template id=tpl-v2-screen-settings> stamped as #screen-me: profile hero (avatar picker, display name, username) + grouped rows from tpl-setting-row: Appearance (theme system/light/dark/oled radio, reduce glass, text size S/M/L, digits ٠١٢/012), Play (audio, haptics, notifications), Language (locale toggles moved from .nav), Progress (#stat-*, #lb-preview, #history-list), Help (Introduction lesson -> openMeta('orientation'), version), Privacy (consent toggles as a sheet, 'privacy choices' wording), Account (logout, danger zone via confirmDestructive + type-RESET); js/ui/me.js absorbs openSettings/showSettings/settingsBack/saveProfileSettings/renderAvatarPicker.
+- Theme plumbing: [data-theme=oled] palette; core.js setTheme() accepts 'system' with a live matchMedia listener; shell.js setStatusBar(theme) (no-op until batch 12 adds the plugin); meta theme-color pair; html font-size calc(16px * var(--text-scale)) with an audit of fixed px that must scale (dock label, hud chip, lesson-card-big -> rem); digits change re-renders via the onLocaleChange-style hook.
+- js/ui/pull-refresh.js (touch-only, 80px, spinner in topbar) on leaderboard now, friends in batch 11; css/app/screens/me.css; i18n me.* EN + AR; tests/e2e/me.spec.mjs.
+
+**Files:** `index.html (tpl-v2-screen-settings, tpl-setting-row)`, `js/ui/me.js`, `js/ui/pull-refresh.js`, `js/core/core.js`, `js/core/platform.js`, `js/native/shell.js`, `js/app.js (settings code removed)`, `js/ui/lesson.js (openMeta export)`, `js/data/leaderboards.js (refresh hook)`, `css/app/tokens.css (oled)`, `css/app/screens/me.css`, `js/i18n/locales/{en,ar}.json`, `tests/e2e/me.spec.mjs`
+
+**Verify**
+- OLED sets html[data-theme=oled] and body background #000; 'system' follows an emulated prefers-color-scheme change without reload; text size L -> html 18px and dock label still >= 13px; digits ٠١٢ re-renders Home tiles and results in Arabic-Indic with zero mixed elements; Reduce glass -> 0 backdrop-filters.
+- Help › Introduction opens the orientation pages EN/AR and back() returns to Me; privacy sheet mirrors the consent state used by GA4/Sentry.
+- Pull-to-refresh: 100px touch drag triggers exactly one re-fetch (DEBUG_QUOTA delta); mouse drag does nothing.
+- app.js shrinks by the settings block (line count recorded); glass budget me = 2; axe radio groups/switches labelled; prod-shell-unchanged green.
+
+### Batch 11 — Friends tab, challenge/vs flow, invite sheet, presence made WebView-safe  _(2 days)_
+
+**Goal:** Pick 18 end-to-end: presence list with one-tap Duel/Co-op, friend + challenge sheets with pending/expiry, invite as a sheet, vs HUD polish, post-match summary, empty state with invite CTA.
+
+**Tasks**
+- #screen-friends + js/ui/friends.js: online strip + grouped rows Playing now / Online / Everyone else (tpl-friend-row), pull-to-refresh, 3 skeleton rows, empty state with empty-no-friends.webp + 'Invite a friend' (web: copy link; native: Native.share via shell.js) + 'I have a code' stub behind FEATURES.friendCodes.
+- js/data/friends.js: source = users/{uid}.friends (seeded for the two dev accounts), watchPresence chunks, heartbeat 60s while foregrounded (visibilitychange + onAppState), online < 2 min, setInGame from engine/duel/coop, pagehide + background -> offline replacing the beforeunload write (app.js 729-734); rules: presence read scoped to friends + friends array write rules — deployed dev -> staging -> prod by the lead BEFORE this batch is pushed to main.
+- Sheets: openFriendSheet(uid), openChallengeSheet(uid) (Mode pill, Content chips incl. 'Same as my current lesson', Length 10/20/30 -> winCondition/rounds, pending ring + mm:ss countdown in #status-chip, Cancel, TTL 120s -> cancelChallenge()); incoming invite (duel.js 106-133) -> openSheet Accept/Decline; one outstanding challenge per pair (duel.js 145-163 guard).
+- Vs screen polish on the batch-8 HUD chip (round dots, answered micro-chip, 2px crimson ring, reconnecting text + 30s auto-forfeit reusing the cancel notice); post-match results variant (64px avatars, crown, Fraunces result word, one .num-hero a-b score, <= 3 rows, Rematch first for the loser, 'Review missed items' -> scheduleLessonSrs).
+- css/app/screens/social.css + feedback.css (presence); i18n friends.*/challenge.* EN + AR; tests/e2e/friends.spec.mjs (two contexts).
+
+**Files:** `index.html (#screen-friends, tpl-friend-row, tpl-challenge-sheet, invite overlay removed under v2)`, `js/ui/friends.js`, `js/data/friends.js`, `js/games/{duel,coop}.js`, `js/ui/results.js`, `js/ui/home.js`, `js/app.js (initPresence/renderFriend retired under v2)`, `docs/Firestore_Rules.md`, `css/app/screens/social.css`, `css/app/components/feedback.css`, `js/i18n/locales/{en,ar}.json`, `tests/e2e/friends.spec.mjs`
+
+**Verify**
+- Two-context e2e: A sees B under Online within 5s; swords icon opens the challenge sheet; pending ring + chip countdown; B accepts; both land on #screen-duel; same a-b score on both; Rematch from the loser; B hidden -> grey within 2 min and removed from the strip.
+- Expiry with ?ff_challenge_ttl=5 (non-prod only): challenge cancels itself with the neutral notice; one pending doc per pair in the emulator.
+- Empty state: friends=[] shows Tomo + one CTA; APK CTA opens the OS share sheet.
+- RTL: inline-start avatar / inline-end action, swords not mirrored, names in <bdi>, countdown digits follow the setting; presence quota <= friends.length reads per change.
+- Rules Playground sims recorded (friend read allowed, stranger denied) before staging/prod; glass budget friends 2, challenge sheet iOS 3 / Android 2; axe pass.
+
+### Batch 12 — Native plumbing: status bar, lifecycle, keyboard, bundled fonts, TTS providers, offline bundle, WebView gate  _(2 days (offline bundle splits into 12b if it overruns))_
+
+**Goal:** The APK behaves like a store app: status bar follows the theme, background pauses games and drops presence, keyboard never hides the CTA, Arabic/kana fonts and Japanese audio work offline, cold start without network never white-screens.
+
+**Tasks**
+- bridge.js gains Native.statusBar.setStyle (@capacitor/status-bar added to package.json) and the splash hide gets a 3s timeout fallback in app.js; shell.js adapters: onAppState -> presence offline/online + engine.pauseGame() + stopSpeech, keyboard show/hide -> body[data-kb] + --kb-h, setStatusBar per theme (incl. OLED), deep-link appUrlOpen stub routing /i/<code> to the Friends invite sheet (assetlinks/AASA documented, not published).
+- Fonts: scripts/native/subset-fonts.mjs writes Cairo 800, Space Grotesk 500/600, Inter 400-700, Fraunces 400/600, Zen Maru kana subsets into assets/fonts/ + LICENSES.txt; fonts.css @font-face for all; --font-jp = 'Noto Sans JP', 'Hiragino Sans', 'Noto Sans CJK JP', sans-serif (system CJK on native via lang=ja); web keeps a Google Fonts <link> for Noto Sans JP only; build-www strips it from www/.
+- js/audio/tts.js + sfx.js split: providers [bundledMp3 (build copies assets/generated audio into www/ with a manifest; web fetches lazily), nativeTts via shell.js (ja voice check; iOS category playback), webSpeech]; isSpeechSupported() reports real capability; Chrome keep-alive only on web.
+- Offline bundle: build-www --bundle runs esbuild over js/app.js with the ?v=-stripping + CDN-to-npm onResolve plugin (firebase@9.22.0, i18next, detector installed as devDeps), inlines locale JSON, asserts zero external hosts; fallback if the bundle overruns the timebox: an offline gate in www/index.html (navigator.onLine + a retry screen before module imports) and the bundle moves to its own batch. WebView gate: if the UA's Chrome major < 111, show the 'update Android System WebView' screen with a Play link.
+- Web-only gating behind isNative(): PWA install prompt (app.js 420-459), waitlist + Brevo (394-418, 624-703), cookie banner (505-608) replaced by Me › Privacy on native, landing inline scripts skipped; smart notifications: Me › Play › Notifications row requests permission and schedules at most one daily 'reviews due' local notification (bridge notify.*) behind FEATURES.smartNotifications — off unless the lead opts in now.
+
+**Files:** `native/bridge.js`, `package.json`, `js/native/shell.js`, `js/app.js`, `js/audio/tts.js`, `js/audio/sfx.js`, `js/audio/audio.js (removed)`, `scripts/native/build-www.mjs`, `scripts/native/subset-fonts.mjs`, `assets/fonts/*`, `css/app/fonts.css`, `css/app/tokens.css (--font-jp)`, `index.html (offline gate, font link)`, `docs/NATIVE-BUILD.md`, `tests/unit/build-www.test.mjs`
+
+**Verify**
+- Staging APK in airplane mode after install: cold start renders (onboarding/auth) with IBM Plex Sans Arabic in AR and zero network requests logged; airplane off: sign in works.
+- Lifecycle: backgrounding during Zen pauses the timer and sets presence offline within 5s; returning resumes; status bar icons flip with theme and OLED; keyboard open in typed mode keeps the input visible and hides the dock.
+- TTS: Android Listen mode plays bundled mp3 or native TTS; isSpeechSupported() false hides the Listen segment only when all providers fail; glyph-coverage report shows no missing kana/romaji glyph.
+- Build guard: `node scripts/native/build-www.mjs --env=prod --bundle` fails if any fonts.googleapis/gstatic/jsdelivr URL remains; www/ size reported (< 6 MB excluding audio); unit build test green; web stays buildless (index.html untouched by the bundle step).
+- Predictive/hardware back on Android 16 still routes through nav.js; WebView-gate screen renders under a spoofed old UA.
+
+### Batch 13 — Try-first onboarding with anonymous -> account migration + rules  _(2 days)_
+
+**Goal:** Pick 16: on native, an unauthenticated user starts lesson 1 immediately; a small 'Create account' / 'I have an account' link sits on the first screen; after lesson 1 an account sheet links the anonymous uid to email without losing progress; anonymous users never appear in social surfaces.
+
+**Tasks**
+- Lead checklist first: enable the Anonymous provider in Firebase Auth for tomodachi-dev, -staging, -prod (numbered steps); docs/Firestore_Rules.md gains anonymous clauses (own users/stats/srs only; no presence/leaderboard/duel writes; `request.auth.token.firebase.sign_in_provider != 'anonymous'` guards) deployed dev -> staging -> prod with Playground sims BEFORE the client lands on main.
+- #screen-onboarding + js/ui/onboarding.js shown on native when unauthenticated (web keeps the landing): Tomo + Start lesson 1 + the two links; startAnonymous() -> signInAnonymously; ensureUserProfile() anon-aware (no username reservation, displayName t('onboarding.learner'), users.anonymous:true, no presence write, no leaderboard submit, no welcome chip); account sheet after lesson 1; linkAnonymousToEmail() via EmailAuthProvider.credential + linkWithCredential keeping the uid, then the existing usernames/{lower} reservation + users/stats merge under the _registrationInFlight guard; 'Forgot password' via sendPasswordResetEmail; anon logout/reset behind confirmDestructive('you will lose progress'); Android back from onboarding exits the app.
+- Social exclusion: friends strip/list, leaderboards and challenge targets filter users.anonymous; css/app/screens/me.css (onboarding); i18n onboarding.* EN + AR; tests/e2e/onboarding.spec.mjs (dev, anonymous enabled).
+
+**Files:** `js/ui/onboarding.js`, `js/data/firebase.js`, `js/app.js (ensureUserProfile, enterAppAsUser)`, `js/ui/friends.js`, `js/data/leaderboards.js`, `js/core/nav.js`, `index.html (#screen-onboarding)`, `css/app/screens/me.css`, `docs/Firestore_Rules.md`, `js/i18n/locales/{en,ar}.json`, `tests/e2e/onboarding.spec.mjs`
+
+**Verify**
+- Staging APK: Start lesson 1 -> anonymous uid in tomodachi-staging Auth; lesson completes; account sheet links email; uid unchanged; usernames/{lower} exists; users.anonymous false; SRS entries preserved.
+- Anon account never appears in another user's Friends list, strip or leaderboard; a presence write from an anon session is denied (Playground + live).
+- Web unchanged: landing still the unauthenticated default on GitHub Pages (flag irrelevant — onboarding is native-only).
+- Rules deploy recorded per env with sims; axe on onboarding; AR copy reviewed.
+
+### Batch 14 — Prod flip, v1 deletion, app.js split, docs  _(2 days (+ the lead's soak and approvals))_
+
+**Goal:** The lead flips prod after the staging soak; the v1 chrome and scoping are deleted in one revertable commit; app.js is split into organised modules; docs reflect the shipped structure.
+
+**Tasks**
+- Commit A (lead-approved after the staging soak of every tab EN/AR): FEATURES.nativeShell.prod = true + cache-buster bump; prod smoke (sign in, lesson, Zen round, Friends, Me) recorded with screenshots; prod-shell-unchanged retired and a v2 baseline recorded.
+- Commit B (separately approved, single commit for git revert): delete <nav class=nav>, .dashboard-grid/.profile-card/.friend-bar markup, centered overlays, style.css blocks superseded by css/app/** (list produced by a coverage script that reports selectors with zero matches on every screen), drop html[data-shell] scoping and the FF_NATIVE_SHELL override, remove the hiraquest-* migration shim from core.js.
+- app.js split: js/auth/auth.js (register/login/anon/link/logout/reset), js/ui/consent.js, js/ui/landing.js (web-only), remaining orchestration <= 600 lines; grep gates finalised (showScreen/confirm/localStorage/backdrop-filter/window.Native); docs: Progress Log + Learning Log (@layer cascade, view transitions, Capacitor env override, anonymous -> account migration), README/PROJECT_RULES §7.1, docs/APP-BUILD-PLAN.md deferred-extras register signed by the lead (progressive blur iOS-only, OTA, widget, friend codes, gamification tiles, shareable milestone cards, mercy streaks, script toggle, confusable-kana drills, dictionary sheet, Live Activities, Rive).
+
+**Files:** `js/config/features.js`, `index.html`, `css/style.css`, `css/app/**`, `js/app.js`, `js/auth/auth.js`, `js/ui/consent.js`, `js/ui/landing.js`, `js/core/core.js`, `scripts/dev/css-coverage.mjs`, `docs/Tomodachi_Progress_Log.md`, `docs/Learning_Log.md`, `docs/PROJECT_RULES.md`, `docs/APP-BUILD-PLAN.md`, `README.md`, `tests/e2e/*`
+
+**Verify**
+- Full e2e suite green on dev (both viewports, 4 projects) before A and after B; prod smoke recorded after A; `git revert` of B restores v1 in a dry run on staging.
+- Glass final: every screen <= 2 Android, <= 3 iOS, 0 under Reduce glass; axe zero violations; lint zero physical properties; grep gates green; app.js <= 600 lines; no selector in style.css with zero matches remains.
+- Release APK (prod flavour) built from the same commit; lead signs the deferred-extras register.
+
+## Token sheet
+
+| Token | Value | Note |
+|---|---|---|
+| `--dur-instant` | `80ms` | state tint on select |
+| `--dur-press-down` | `100ms` | tile/CTA depress |
+| `--dur-press` | `140ms` | contract §6 press; release pairs with --ease-spring-soft |
+| `--dur-fast` | `200ms` | colour/opacity state changes, presence dot crossfade |
+| `--dur-sheet` | `200ms` | contract §6 feedback sheet slide-up |
+| `--dur-base` | `240ms` | stagger item duration |
+| `--dur-progress` | `300ms` | contract §6 progress/timer fill, ring fill |
+| `--dur-screen` | `320ms` | view-transition push/pop |
+| `--dur-spring-soft` | `400ms` | damping 0.8 settle (sheet detent, tile mount, shelf reveal) |
+| `--dur-spring-pop` | `340ms` | celebration tickers only |
+| `--dur-ticker` | `400ms` | count-up; 200ms for tile updates |
+| `--dur-celebrate` | `600ms` | milestone stagger tail |
+| `--dur-confetti` | `1200ms` | perfect-only, non-blocking |
+| `--dur-skeleton` | `1600ms` | shimmer loop; static under reduced motion |
+| `--dur-reduced` | `120ms` | allowlisted opacity fades under reduced motion; everything else 0ms (legacy 0.01ms !important nuke deleted in batch 2) |
+| `--ease-out` | `cubic-bezier(0.2, 0, 0, 1)` | default for spatial moves |
+| `--ease-out-quint` | `cubic-bezier(0.22, 1, 0.36, 1)` | Apple-style ease-out (pick 15); stagger items, topbar collapse |
+| `--ease-decel` | `cubic-bezier(0.05, 0.7, 0.1, 1)` | sheet enter |
+| `--ease-accel` | `cubic-bezier(0.3, 0, 0.8, 0.15)` | sheet exit |
+| `--ease-effects` | `cubic-bezier(0.2, 0, 0, 1)` | colour/opacity only |
+| `--ease-spring-soft` | `linear(0, 0.066, 0.21, 0.38, 0.542, 0.681, 0.792, 0.875, 0.933, 0.971, 0.995, 1.008, 1.014, 1.015, 1.014, 1.012, 1.009, 1.007, 1)` | damping 0.8, <=1.5% overshoot; replaces --transition-spring |
+| `--ease-spring-pop` | `linear(0, 0.115, 0.36, 0.621, 0.837, 0.984, 1.065, 1.093, 1.089, 1.068, 1.043, 1.021, 1.005, 0.996, 0.992, 0.991, 0.993, 0.995, 1)` | ~9% overshoot; tickers only |
+| `--ease-spring-fallback` | `cubic-bezier(0.38, 1.21, 0.22, 1)` | @supports not (animation-timing-function: linear(0,1)) — older WebView |
+| `--press-scale` | `0.97` | cards/icons :active; tiles use the edge |
+| `--press-scale-icon` | `0.92` | duotone pressed content icons (pick 14) |
+| `--press-edge` | `4px` | box-shadow 0 4px 0 0 var(--edge-color) on .quiz-tile and .btn-primary.is-edge |
+| `--press-translate` | `4px` | :active translateY on edge elements |
+| `--tile-border` | `2px` | 3px when selected (--tile-border-selected) |
+| `--stagger-step` | `40ms` | cap 6 items (--stagger-max), offset --stagger-offset-y 8px |
+| `--gutter` | `20px` | only horizontal page margin; --gutter-min 16px under 360px |
+| `--card-pad` | `16px` | --card-pad-hero 20px for hero + teach card |
+| `--card-gap` | `12px` | card-to-card and bento gap |
+| `--section-gap` | `24px` | label-to-value 4px |
+| `--tile-min-h` | `64px` | quiz tile; list 56px; --tile-gap 12px; --tile-pad-inline 16px; --tile-kana-size 32px |
+| `--tap-min` | `44px` | --tap-min-android 48px; --tap-gap-min 8px |
+| `--cta-h` | `52px` | --btn-primary-h-social 56px; --cta-pad-inline 24px; --cta-tracking 0.05em EN only (0 under :lang(ar)) |
+| `--radius-tile` | `16px` | existing --radius-sm/md/lg/xl 8/12/20/28 unchanged; --radius-pill 9999px |
+| `--progress-h` | `12px` | 8px inside the HUD chip |
+| `--hud-chip-h` | `40px` | one glass chip (pick 20); 44px hit area via padding |
+| `--status-chip-h` | `36px` | top event chip (pick 22); tonal fill --chip-fill = --bg-elevated, never glass |
+| `--dock-h` | `64px` | --dock-icon 24px; --dock-label-size 13px / --dock-label-weight 600; compact state changes label opacity/transform only |
+| `--dock-inset-x` | `16px` | floating dock side inset |
+| `--dock-inset-bottom` | `max(12px, var(--safe-bottom))` | clears the home indicator / gesture bar |
+| `--dock-radius` | `28px` | = --radius-xl |
+| `--topbar-h` | `56px` | --topbar-title-h 44px in flow; --topbar-h-collapsed 48px |
+| `--content-pad-bottom` | `calc(var(--dock-h) + var(--dock-inset-bottom) + 16px)` | padding-block-end on .app-scroll / every screen container |
+| `--safe-top` | `var(--safe-area-inset-top, env(safe-area-inset-top, 0px))` | Capacitor 8.5 injects --safe-area-inset-* on Android; iOS via env(); requires viewport-fit=cover |
+| `--safe-bottom` | `var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))` | --safe-inline-start/--safe-inline-end mapped from left/right per html[dir] |
+| `--kb-h` | `0px` | keyboard height set by shell.js from Native.keyboard; body[data-kb] hides the dock |
+| `--sheet-radius` | `28px` | --sheet-pad 20px; --sheet-grabber 36px x 5px; --sheet-max-h-medium 50dvh; --sheet-max-h-large 90dvh; --sheet-scrim rgba(0,0,0,.32) |
+| `--glass-fill` | `rgba(252,250,245,.74) light / rgba(24,20,17,.72) dark` | .82/.84 under [data-platform=android]; --glass-fill-opaque 96% tint for reduced/unsupported |
+| `--glass-blur` | `20px` | 12px under [data-platform=android] |
+| `--glass-sat` | `160%` | 100% (none) under [data-platform=android]; no sheen on Android |
+| `--glass-hairline` | `rgba(60,35,20,.12) light / rgba(255,255,255,.08) dark` | 1px border on every .glass |
+| `--glass-grain` | `url(data:image/png;base64,...) 128px tile` | static grain on .glass::before at opacity .06; never an SVG filter |
+| `--z-content` | `0` | z scale replaces hardcoded 50-9999 |
+| `--z-topbar` | `100` | sticky/collapsed title |
+| `--z-dock` | `200` | dock + shelf |
+| `--z-chip` | `300` | status chip |
+| `--z-sheet` | `400` | scrim + sheet |
+| `--z-dialog` | `500` | destructive <dialog> |
+| `--z-toast` | `600` | bottom toasts |
+| `--z-loading` | `900` | boot overlay / offline gate |
+| `--num-hero-size` | `2rem (32px); clamp(28px, 7.5vw, 36px) under 360px` | --num-hero-size-results 2.75rem; -mini 20px; -hud 24px |
+| `--num-hero-weight` | `600` | Space Grotesk SemiBold; never 800 |
+| `--num-hero-tracking` | `-0.02em` | -0.03em at 44px; 0 under :lang(ar) |
+| `--num-hero-min-w` | `4ch` | no reflow 99 -> 100 |
+| `--num-eyebrow-size` | `0.6875rem (11px)` | 600 caps + 0.06em EN; 12px sentence-case zero tracking AR; --text-secondary |
+| `--num-caption-size` | `0.8125rem (13px)` | 500, line-height 1.3, --text-caption |
+| `--text-caption` | `#6E6660 light / #A89E94 dark` | new token: --text-tertiary fails 4.5:1 at 13px |
+| `--num-attention` | `var(--danger)` | rose hero only on Reviews-due when overdue |
+| `--font-ar` | `'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif` | bundled (assets/fonts, present since batch 0); applied under html[data-shell=v2] until the flip |
+| `--font-display-ar` | `'Cairo', 'IBM Plex Sans Arabic', sans-serif` | weight 800 display under :lang(ar) |
+| `--font-digits` | `'Space Grotesk', 'Inter', sans-serif` | moved from style.css 4393; [data-digits=arab] falls back to --font-ar for hero numbers |
+| `--font-kana` | `'Zen Maru Gothic', 'Noto Sans JP', 'Hiragino Sans', sans-serif` | kana glyphs; kana-range subset bundled in batch 12 |
+| `--font-jp` | `'Noto Sans JP', 'Hiragino Sans', 'Noto Sans CJK JP', sans-serif` | words/kanji; system CJK on native via lang=ja (no CJK font bundled) |
+| `--text-scale` | `1` | html font-size calc(16px * var(--text-scale)); S .9 / M 1 / L 1.125 |
+| `--ar-body-size` | `17px` | :lang(ar) body 17px / 1.75 / 0 tracking (v2-scoped until flip) |
+| `--bg-subtle` | `var(--bg-inset)` | was undefined (style.css 5445, 5478) |
+| `--avatar-strip` | `56px` | card 72px; row 40px; hud 48px; post-match 64px; pending/vs hero 96px |
+| `--presence-dot` | `12px` | 8px on 32-40px; 16px on 96px; 2px surface ring; 200ms crossfade |
+| `--challenge-ttl-live` | `120s` | JS constant in js/config/game.js, mirrored for the ring animation; --challenge-ttl-async 7d |
+| `--disconnect-forfeit` | `30s` | reconnect window before the neutral cancel notice |
+
+## Risks
+- Duplicate ids: keeping v1 markup while adding v2 markup with the same load-bearing ids (lesson-cta-*, review-cta-*, stat-*, toggle-*) makes getElementById return the v1 node and v2 renders empty. Mitigation: v2 screens are <template>s stamped over the v1 section at boot; id-contract test runs on both shells.
+- Cascade inversion by !important: once style.css is wrapped in @layer legacy, its !important rules beat every higher layer — the 0.01ms reduced-motion nuke would kill sheets/press/view transitions for reduce-motion users. Mitigation: delete it in batch 2 and re-author the allowlist in base.css; [hidden] !important stays (desired everywhere).
+- @import waterfall: `@import url() layer()` chains add a serialized round trip per level and esbuild double-wraps layers when a file both self-declares and is imported with layer(). Mitigation: one mechanism only — <link> per self-layered file (parallel fetch), 16 files max, the @layer order statement at the top of style.css.
+- Prod override leak: a shareable ?ff_native_shell=true link would show half-built UI on prod data. Mitigation: URL param ignored on the prod hostname; localStorage-only override for the lead; unit-tested.
+- Data changes are not shell-gated: activity writes, heartbeat presence, friends array reads/writes and anonymous sign-in run for everyone once on main; a rules mismatch surfaces as permission-denied inside lesson completion. Mitigation: rules first (dev -> staging -> prod with sims), client calls behind isEnabled() + try/catch, verify DEBUG_QUOTA deltas.
+- Anonymous auth widens access: every collection is readable by `request.auth != null`; an anonymous principal is one. Mitigation: sign_in_provider clauses in rules before batch 13, no presence/leaderboard/duel writes for anon, social surfaces filter users.anonymous.
+- WebView auth loss: getAuth() in WKWebView can log users out on restart. Mitigation: initializeAuth + indexedDBLocalPersistence on native (batch 1), verified by force-stop/reopen on device; API-key referrer restrictions for capacitor://localhost checked in the same batch.
+- Glass regression: game 3 / duel 5 backdrop-filters today because overlays sit mounted at opacity:0; removing blur is not enough — display:none at rest. Continuous scroll-linked animation on a blurred dock re-rasterizes every frame on Android. Mitigation: overlays display:none, chrome-shrink as a class toggle animating only inner opacity/transform, Android drops saturate/sheen, glass-budget spec gates every batch.
+- Safe-area unknowns: Playwright cannot emulate env(); the CSS fixture simulates 47/34px, only devices prove it. Mitigation: the batch-0 APK is rebuilt per batch (staging flavour) and checked on a gesture-nav Android; iOS proof waits for Codemagic.
+- Old WebViews: @layer needs Chrome 99+, color-mix/:has 111+ (style.css 458/1509/1969/3984/4013/5034/5035/5222); minSdk 24 devices with a stale Android System WebView would render broken cascades. Mitigation: hex fallbacks declared before color-mix, WebView-version gate screen (batch 12), APK smoke on the oldest available device.
+- Native offline bundle is a second code path: rewriting gstatic/jsdelivr imports to npm and stripping ?v= suffixes via an esbuild plugin can drift from the buildless web. Mitigation: web index.html never sees the bundle; build test asserts zero external hosts; fallback is an offline gate screen and the bundle moves to batch 12b.
+- Fonts: bundling Noto Sans JP is 1.5-4 MB per weight; subsetting to content glyphs risks tofu for new content. Mitigation: no CJK font bundled — system CJK via lang=ja on native; only kana (Zen Maru subset) + Latin/Arabic families bundled with a glyph-coverage report.
+- Keyboard vs dock: Keyboard resize 'body' (as shipped) keeps 100dvh = visible area, so the fixed dock would float above the keyboard. Mitigation: body[data-kb] hides the dock and the CTA moves above --kb-h; 'native' resize reconsidered only if a device test shows the input covered.
+- Predictive back on Android 16 (targetSdk 36): the backButton listener must still fire and never kill a duel. Mitigation: device check in batch 3 verify; nav.js owns the policy; in-game back routes to confirmDestructive.
+- Single-friend prototype: initPresence listens to the whole presence collection and takes any non-self doc; with more than two accounts the strip shows strangers and reads grow with every user. Mitigation: batch 6 scopes the query to friend uids; batch 11 replaces the source; dev/staging keep two seeded accounts until then.
+- No XP/streak data exists: tiles cannot show real numbers without the gamification Cloud Functions. Mitigation: launch tile set is Reviews due · Course progress · Practice best · Friends online (lead decision recorded); Streak/XP behind FEATURES.gamificationTiles.
+- AR translationese: ~150 new strings (dock, tiles, sheets, Me rows, challenge flow, onboarding, orientation pages). Mitigation: Codex drafts with cultural context, Claude reviews against CONTENT_GUIDELINES, the lead's native-speaker friends spot-check the staging preview before the flip.
+- Codex reorders or drops CSS while moving blocks. Mitigation: byte-equivalence check (moved + remaining == original), screenshot diff with the flag on and off, Claude review of every Codex diff.
+- Scope and timeline: 14 batches (~26 working days) plus lead approvals, rules deploys and device checks; the lead's standard is 'no rushing'. Mitigation: each batch is independently shippable behind the flag; the deferred-extras register keeps progressive blur, OTA, widget, friend codes, milestone cards, mercy streaks, script toggle, confusable drills, dictionary sheet, Live Activities and Rive out of scope until signed in.
+- Git safety: the parent D:\ is the personal sync repo and every push to main is a prod deploy. Mitigation: `git rev-parse --show-toplevel` before any git write, commits only from the Tomodachi clone, staging-first via `git push origin main:staging`, cache-buster bumped on every changed <link>/import, never `git add -A` above the project.
+
+## Acceptance (definition of done)
+- All 23 picks in docs/APP-DESIGN-DECISIONS.md are implemented, and every opted-in extra not built is listed in the deferred-extras register in docs/APP-BUILD-PLAN.md with the lead's signature; the introduction lesson (rows -> scripts -> words -> kanji) is reachable from Me › Help in EN and AR; the Course/Practice naming passed the first-click test (>= 4/5 EN and AR) and the result is in the Progress Log.
+- Batch-0 names intact: window.Native, native/bridge.js, scripts/native/build-www.mjs, www/native-env.js, capacitor.config.json, com.bytepluslife.tomodachi; `window.Native` referenced only in js/native/shell.js (grep gate).
+- Glass: backdrop-filter exists only in css/app/glass.css on exactly four selectors (#dock, .topbar.is-collapsed, .hud-chip, .sheet-head); the status chip is tonal; glass-budget spec <= 2 on the Android profile and <= 3 on iOS for every screen and open-sheet state, 0 under html[data-glass=reduced]; .app::before is static; no scroll-linked animation touches a glass element.
+- Safe areas: on a gesture-nav Android device and the 47/34px fixture no interactive element sits under the status bar or in the home-indicator zone on any screen (dock, topbar, HUD chip, sheets, toasts, select shelf); viewport-fit=cover on web and www; no 100vh in css/app/**.
+- Arabic-first: lint-css passes (logical properties only, no opacity on Arabic text over glass); every JP/romaji token is inside <bdi lang="ja">; :lang(ar) body 17px/1.75/0 tracking in IBM Plex Sans Arabic served from assets/fonts; dock labels >= 13px/600; digits never mixed on any screen in either setting (numbers.spec); only allowlisted glyphs mirror; every new AR string batch has a recorded review.
+- Numbers: every card/tile shows one .num-hero (Space Grotesk 600 tabular, 28-40px, --text-primary) with .num-eyebrow and .num-caption; the only coloured hero is Reviews-due when overdue; no --accent digits remain.
+- Motion: all durations/eases in css/app/** come from tokens (lint); press 140ms edge on tiles, 200ms sheets, 300ms progress, springs <= 1.5% overshoot except tickers; hover-only effects under (hover:hover); reduced motion collapses to 120ms fades with sheets usable; the legacy 0.01ms !important nuke is gone.
+- Shell: 5-tab dock (Home · Course · Practice · Friends · Me / الرئيسية · المسار · تدريب · الأصدقاء · حسابي) with outline->filled icons, conditional shelf, chrome-shrink; collapsing title on every screen; nav.js stack with view transitions, browser back and Android hardware/predictive back; grep gates: no showScreen()/confirm()/localStorage/backdrop-filter outside their primitive modules.
+- Surfaces: Home = 1 hero + 4 icon tiles + friends strip + Today|Course; lessons/review use 2x2 >= 64px tiles + feedback sheet; timed games keep the inline flash with one glass HUD chip and an opaque answer area; results/pause/invite/stall are sheets, destructive flows are <dialog>; skeletons on every async list and Tomo empty states with one CTA.
+- Native: a staging debug APK built by `node scripts/native/build-www.mjs --env=staging` + `npm run android:debug` boots without network (no white screen), resolves to tomodachi-staging (never dev), keeps users signed in across restarts, hides the splash after auth or 3s, honours haptics, status-bar theme, app-state presence/pause, keyboard-safe layouts, try-first anonymous start with uid-preserving account linking, and bundled/native Japanese audio; a prod-flavour release build comes from the same commit.
+- Quality gates per batch and at the end: node --test suite green; Playwright e2e green on dev for en-light/en-dark/ar-light/ar-dark on 390x844 and 412x915; axe zero violations and >= 4.5:1 on body/caption text in light, dark and OLED; DEBUG_QUOTA shows Home re-entry <= 5 reads within the cache TTL and presence reads bounded by friends.length; the flag-off prod shell is pixel-stable (masked regions only) until the flip.
+- Process: every batch previewed on https://tomodachi-staging.pages.dev/ and on the rebuilt APK, approved by the lead before `git push origin main`; `git rev-parse --show-toplevel` checked before every git write; cache-busters bumped; Progress Log entry per batch; Learning Log entries for @layer cascade, view transitions, Capacitor env override, anonymous -> account migration; Firestore rules for activity/presence/friends/anonymous applied dev -> staging -> prod by the lead with recorded Playground sims before the dependent client code reached main.
+- Cleanup: after the flip, one revertable commit deletes the v1 chrome (nav, dashboard-grid, friend-bar, centered overlays, zero-match CSS blocks, hiraquest migration shim), removes html[data-shell] scoping and the FF override; app.js <= 600 lines with auth/consent/landing/me/home in their own modules; css/style.css reduced to app-only legacy rules inside @layer legacy, css/landing.css web + policy pages; PROJECT_RULES §7.1 reflects the shipped structure.

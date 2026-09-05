@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906a">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260906a">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906b">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260906b">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -91,12 +91,20 @@
           (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
       } catch (e) { /* storage unavailable — keep the markup default */ }
+      /* shell:start — mirrors js/config/features.js (native marker, FF_NATIVE_SHELL, hostname) */
+      try {
+        var native = window.__TOMODACHI_NATIVE__ === true;
+        var ff = localStorage.getItem('FF_NATIVE_SHELL');
+        var h = location.hostname, devHost = (h === 'localhost' || h === '127.0.0.1' || /\.pages\.dev$/.test(h) || h === 'staging.tomodachi.com');
+        document.documentElement.setAttribute('data-shell', (native || ff === 'true' || (ff !== 'false' && devHost)) ? 'v2' : 'v1');
+      } catch (e) { document.documentElement.setAttribute('data-shell', 'v1'); }
+      /* shell:end */
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260906a">
+  <link rel="stylesheet" href="css/style.css?v=20260906b">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -1308,7 +1316,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260906a"></script>
+  <script type="module" src="js/app.js?v=20260906b"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

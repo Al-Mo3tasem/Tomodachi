@@ -31,6 +31,16 @@ node scripts/native/collect-apk.mjs   # → dist/Tomodachi-debug-YYYYMMDD.apk
 ```
 Debug APK path: `android/app/build/outputs/apk/debug/app-debug.apk`.
 
+### Guard rails (batch 1) — run before every push
+```
+npm test                 # lint:css (logical properties in css/app) + lint:gates (window.Native only in js/native/shell.js) + unit tests
+npm run test:e2e         # Playwright: 2 phones × EN/AR × light/dark — v1 baselines, glass budget, axe baseline (needs the dev QA account + network)
+npm run test:e2e:update  # re-record baselines ONLY for a batch that deliberately changes prod-visible pixels; list them in the batch notes
+```
+Baselines live in `tests/e2e/__baselines__/` (committed). The feature flag `nativeShell`
+(`js/config/features.js`) is ON for dev/staging hosts and the app shell, OFF on prod;
+`?ff_native_shell=true|false` works on non-prod hosts only and persists per device.
+
 ### Sending to testers
 Send the `dist/*.apk` file (WhatsApp/Drive). On the phone: open it → allow
 "install unknown apps" for that source → install. Debug builds are signed with the
@@ -50,6 +60,26 @@ release build; never commit it.**
   restrictions in Google Cloud → Credentials (not the Firebase authorized-domains list).
 - Auth persistence on native should use `initializeAuth(app, { persistence: indexedDBLocalPersistence })`
   (batch: native plumbing) or users may be logged out on restart.
+
+## Lead checklist before wider Android testing (batch 1 · T5)
+
+The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).
+Firebase Auth rejects sign-in from those origins until the web API keys allow them.
+
+1. **API-key referrers (once per project, ~3 min each — staging and prod):**
+   1. Open https://console.cloud.google.com/apis/credentials and pick the project
+      (`tomodachi-staging`, then `tomodachi-prod`).
+   2. Under **API keys**, open the key named like *Browser key (auto created by Firebase)*.
+   3. **Application restrictions → Websites** → add three entries:
+      `capacitor://localhost/*` · `http://localhost/*` · `https://localhost/*`
+   4. Save. (Leave the existing github.io / pages.dev entries in place.)
+   Symptom if skipped: `auth/requests-from-referer-...-are-blocked` in the app's log.
+2. **Sideload the APK on a gesture-navigation Android phone** (`dist/Tomodachi-debug-*.apk`;
+   for staging data build with `node scripts/native/build-www.mjs --env=staging` first):
+   sign in → force-stop the app (Settings → Apps → Tomodachi → Force stop) → reopen →
+   **you must still be signed in** (IndexedDB persistence). Play one Zen round.
+3. **Report back:** phone model, Android version, and (Settings → Apps → Android System WebView)
+   the WebView version — the safe-area CSS variables need WebView ≥ 111.
 
 ## Release (later)
 - Android: `keytool -genkey -v -keystore tomodachi-upload.keystore -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias tomodachi`; git-ignored `keystore.properties`; `gradlew bundleRelease` → AAB → Play internal testing.

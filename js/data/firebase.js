@@ -4,10 +4,13 @@
 // and one pinned SDK version.
 // ============================================
 
-import { getEnv, getFirebaseConfig } from '../config/firebase.js?v=20260906a';
+import { getEnv, getFirebaseConfig, isNativeShell } from '../config/firebase.js?v=20260906b';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
+  initializeAuth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -44,7 +47,12 @@ if (env !== 'prod' || params.has('debug')) {
   console.log('[firebase-init] env=%s projectId=%s', env, firebaseConfig.projectId);
 }
 
-export const auth = getAuth(app);
+// Native shell: WKWebView/Android WebView can evict web storage, which logs
+// users out between launches; IndexedDB persistence (with local-storage
+// fallback) is the documented fix. Web keeps the SDK default.
+export const auth = isNativeShell()
+  ? initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] })
+  : getAuth(app);
 
 // Long polling avoids browser/network issues with Firestore streaming channels.
 export const db = initializeFirestore(app, {

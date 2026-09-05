@@ -55,3 +55,5 @@ docs/.obsidian/
 keystore.properties
 /android/app/src/main/assets/public/
 /ios/App/App/public/
+/tests/e2e/.results/
+/tests/e2e/.report/

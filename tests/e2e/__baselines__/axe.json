@@ -1,0 +1,80 @@
+{
+  "en-light": {
+    "landing": {
+      "aria-required-children": 1,
+      "meta-viewport": 1,
+      "scrollable-region-focusable": 1
+    },
+    "screen-dashboard": {
+      "color-contrast": 8,
+      "meta-viewport": 1
+    },
+    "screen-select": {
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 2,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "en-dark": {
+    "landing": {
+      "aria-required-children": 1,
+      "color-contrast": 1,
+      "meta-viewport": 1,
+      "scrollable-region-focusable": 1
+    },
+    "screen-dashboard": {
+      "color-contrast": 9,
+      "meta-viewport": 1
+    },
+    "screen-select": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 4,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "ar-light": {
+    "landing": {
+      "aria-required-children": 1,
+      "meta-viewport": 1,
+      "scrollable-region-focusable": 1
+    },
+    "screen-dashboard": {
+      "color-contrast": 6,
+      "meta-viewport": 1
+    },
+    "screen-select": {
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 2,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "ar-dark": {
+    "landing": {
+      "aria-required-children": 1,
+      "meta-viewport": 1,
+      "scrollable-region-focusable": 1
+    },
+    "screen-dashboard": {
+      "color-contrast": 6,
+      "meta-viewport": 1
+    },
+    "screen-select": {
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 2,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  }
+}
