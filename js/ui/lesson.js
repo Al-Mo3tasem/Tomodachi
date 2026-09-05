@@ -12,12 +12,12 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260807a';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260807a';
-import { cacheGet, cachePut } from '../data/content.js?v=20260807a';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260807a';
-import { t, getLocale } from '../i18n/index.js?v=20260807a';
-import { scheduleLessonSrs } from './review.js?v=20260807a';
+import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260906a';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906a';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906a';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906a';
+import { t, getLocale } from '../i18n/index.js?v=20260906a';
+import { scheduleLessonSrs } from './review.js?v=20260906a';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);

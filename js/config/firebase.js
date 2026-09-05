@@ -42,10 +42,20 @@ const configs = {
 };
 
 export function getEnv() {
+  // Native shell (Capacitor) override: the app loads from capacitor://localhost
+  // (iOS) or https://localhost (Android), which would otherwise map to DEV.
+  // scripts/native/build-www.mjs writes www/native-env.js that sets this.
+  const forced = typeof window !== 'undefined' && window.__TOMODACHI_ENV__;
+  if (forced && configs[forced]) return forced;
   const h = location.hostname;
   if (h === 'localhost' || h === '127.0.0.1') return 'dev';
   if (h.endsWith('.pages.dev') || h === 'staging.tomodachi.com') return 'staging';
   return 'prod';
+}
+
+// True inside the native app shell (set by www/native-env.js at build time).
+export function isNativeShell() {
+  return typeof window !== 'undefined' && window.__TOMODACHI_NATIVE__ === true;
 }
 
 export function getFirebaseConfig() {

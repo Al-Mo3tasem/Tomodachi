@@ -1,0 +1,47 @@
+{
+  "name": "tomodachi",
+  "version": "1.0.0",
+  "description": "Tomodachi native shell (Capacitor) — the static web app in www/",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:www": "node scripts/native/build-www.mjs",
+    "build:bridge": "node scripts/native/build-bridge.mjs",
+    "native:sync": "npm run build:www && npx cap sync",
+    "android:debug": "npm run native:sync && cd android && gradlew.bat assembleDebug",
+    "android:open": "npx cap open android",
+    "android:apk": "node scripts/native/collect-apk.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Al-Mo3tasem/Tomodachi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Al-Mo3tasem/Tomodachi/issues"
+  },
+  "homepage": "https://github.com/Al-Mo3tasem/Tomodachi#readme",
+  "private": true,
+  "dependencies": {
+    "@capacitor-community/text-to-speech": "^8.0.2",
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.1",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/share": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "esbuild": "^0.28.2"
+  }
+}

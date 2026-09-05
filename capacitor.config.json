@@ -1,0 +1,25 @@
+{
+  "appId": "com.bytepluslife.tomodachi",
+  "appName": "Tomodachi",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#FAF8F2"
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#FAF8F2"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#FAF8F2",
+      "androidScaleType": "CENTER_CROP",
+      "splashImmersive": false
+    },
+    "Keyboard": {
+      "resize": "body",
+      "resizeOnFullScreen": true
+    }
+  }
+}

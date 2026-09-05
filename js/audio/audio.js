@@ -15,7 +15,7 @@
 //     ~15s of idle time (primeSpeech / unprimeSpeech).
 // ============================================
 
-import { state } from '../core/core.js?v=20260807a';
+import { state } from '../core/core.js?v=20260906a';
 
 // ----- Speech (TTS) -----
 let jaVoice = null;
@@ -116,7 +116,15 @@ export function unprimeSpeech() {
  * click-to-sound latency.
  */
 export function speak(text) {
-  if (!speechSupported || !text) return;
+  if (!text) return;
+  // Native shell: use the platform TTS (AVSpeechSynthesizer / Android TTS)
+  // through the bridge — Web Speech is unreliable inside WKWebView (empty
+  // voice lists, ja-JP regressions). Web build: window.Native is undefined.
+  if (window.Native?.isNative && window.Native.tts) {
+    window.Native.tts.speak(text);
+    return;
+  }
+  if (!speechSupported) return;
   try {
     const synth = window.speechSynthesis;
     if (synth.speaking || synth.pending) synth.cancel();
@@ -134,6 +142,7 @@ export function speak(text) {
 }
 
 export function stopSpeech() {
+  if (window.Native?.isNative && window.Native.tts) { window.Native.tts.stop(); return; }
   if (speechSupported) {
     try { window.speechSynthesis.cancel(); } catch { /* ignore */ }
   }
