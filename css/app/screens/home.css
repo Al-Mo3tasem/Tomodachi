@@ -1,0 +1,268 @@
+/* ============================================================
+   Tomodachi — Home (layer: screens) — pick 4 (1 hero + 4 tiles), pick 7
+   (rings + heatmap), friends strip (chess.com pattern). Built by
+   js/ui/home.js under v2 from <template id="tpl-v2-home">; v1 never sees it.
+   ============================================================ */
+@layer screens {
+  html[data-shell="v2"] .home { display: grid; gap: var(--section-gap); }
+  html[data-shell="v2"] .home-view { display: grid; gap: var(--section-gap); }
+  html[data-shell="v2"] .home-view[hidden] { display: none; }
+  html[data-shell="v2"] .home-switch { justify-self: start; }
+  html[data-shell="v2"] .home-switch .seg-btn { min-width: 96px; }
+  html[data-shell="v2"] .home-section-title {
+    margin: 0 0 var(--card-gap);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  html[data-shell="v2"]:lang(ar) .home-section-title { font-family: var(--font-display-ar); font-weight: 800; }
+
+  /* legacy dashboard chrome that the new layout replaces */
+  html[data-shell="v2"] #screen-dashboard .friend-bar,
+  html[data-shell="v2"] #screen-dashboard .mastery-bar-wrap { display: none; }
+
+  /* ---------- hero: the one next action ---------- */
+  html[data-shell="v2"] .home-hero {
+    display: grid;
+    gap: var(--card-gap);
+    padding: var(--card-pad-hero);
+    border-radius: var(--radius-xl);
+  }
+  html[data-shell="v2"] .home-hero:empty { display: none; }
+  html[data-shell="v2"] .home-hero .lesson-cta {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 0;
+  }
+  html[data-shell="v2"] .home-hero .lesson-cta-title { font-family: var(--font-display); font-size: 1.375rem; line-height: 1.2; }
+  html[data-shell="v2"]:lang(ar) .home-hero .lesson-cta-title { font-family: var(--font-display-ar); font-weight: 800; }
+  html[data-shell="v2"] .home-hero .lesson-cta-sub { font-size: 0.9375rem; }
+  html[data-shell="v2"] .home-hero .lesson-cta-actions { align-items: center; }
+  html[data-shell="v2"] .home-hero .review-cta {
+    padding-block-start: var(--card-gap);
+    border-block-start: 1px solid var(--border);
+  }
+  html[data-shell="v2"] .home-hero .review-cta .lesson-cta-title { font-size: 1rem; }
+  html[data-shell="v2"] .home-hero .review-cta[hidden] { display: none; }
+
+  /* ---------- bento: 2 x 2 ink-number tiles ---------- */
+  html[data-shell="v2"] .bento {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--card-gap);
+  }
+  html[data-shell="v2"] .tile {
+    position: relative;
+    display: grid;
+    align-content: end;
+    gap: var(--label-gap);
+    min-height: 108px;
+    padding: var(--card-pad);
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 2px rgba(22, 19, 17, 0.06), 0 8px 24px rgba(22, 19, 17, 0.06);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform var(--dur-press) var(--ease-out-quint), box-shadow var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"][data-theme="dark"] .tile,
+  html[data-shell="v2"][data-theme="oled"] .tile { box-shadow: none; border-color: rgba(255, 240, 225, 0.08); }
+  html[data-shell="v2"] .tile:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  html[data-shell="v2"] .tile .ic {
+    position: absolute;
+    inset-block-start: var(--card-pad);
+    inset-inline-start: var(--card-pad);
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    color: var(--text-secondary);
+    transition: transform var(--dur-press) var(--ease-spring-soft), color var(--dur-fast);
+  }
+  html[data-shell="v2"] .tile:active .ic { transform: scale(var(--press-scale-icon)); }
+  html[data-shell="v2"] .tile .num-hero { font-size: var(--num-hero-size); }
+  html[data-shell="v2"] .tile.is-attention .num-hero { color: var(--num-attention); }
+  html[data-shell="v2"] .tile.is-attention .ic { color: var(--num-attention); }
+  html[data-shell="v2"] .tile .num-caption { min-height: 1.3em; }
+
+  /* ---------- friends strip ---------- */
+  html[data-shell="v2"] .friends-strip {
+    display: flex;
+    gap: var(--card-gap);
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    padding-block: 4px 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--gutter);
+    scrollbar-width: none;
+  }
+  html[data-shell="v2"] .friends-strip::-webkit-scrollbar { display: none; }
+  html[data-shell="v2"] .friend-card {
+    flex: none;
+    width: 72px;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    background: none;
+    border: 0;
+    color: var(--text-primary);
+    font: inherit;
+    scroll-snap-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html[data-shell="v2"] .friend-card:active .friend-avatar { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .friend-avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--avatar-strip);
+    height: var(--avatar-strip);
+    border-radius: var(--radius-full);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    font-size: 1.625rem;
+    transition: transform var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"] .presence-dot {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    width: var(--presence-dot);
+    height: var(--presence-dot);
+    border-radius: var(--radius-full);
+    background: var(--success);
+    box-shadow: 0 0 0 2px var(--bg-base);
+  }
+  html[data-shell="v2"] .presence-dot.is-in-game { background: #C8A975; }
+  html[data-shell="v2"] .friend-name {
+    max-width: 100%;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  html[data-shell="v2"] .friend-card.is-ghost .friend-avatar { background: transparent; border-style: dashed; color: var(--text-secondary); font-size: 1.25rem; }
+  html[data-shell="v2"] .friend-card.is-ghost .friend-name { color: var(--text-secondary); }
+
+  /* the legacy modes card stays reachable on Home until batch 9 moves it */
+  html[data-shell="v2"] .home .modes-card { border-radius: var(--radius-lg); }
+
+  /* ---------- course view: rings + heatmap ---------- */
+  html[data-shell="v2"] .track-rings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: var(--card-gap);
+  }
+  html[data-shell="v2"] .track-ring {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: var(--card-pad) 8px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"] .track-ring:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .track-ring svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+  html[data-shell="v2"] .track-ring .ring-bg { fill: none; stroke: var(--bg-inset); stroke-width: 5; }
+  html[data-shell="v2"] .track-ring .ring-fg {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: var(--ring-c);
+    stroke-dashoffset: var(--ring-off);
+    transition: stroke-dashoffset var(--dur-progress) var(--ease-out);
+  }
+  html[data-shell="v2"] .track-ring.is-complete .ring-fg { stroke: var(--success); }
+  html[data-shell="v2"] .track-ring .num-hero { margin-block-start: -50px; margin-block-end: 18px; font-size: var(--num-hero-size-mini); pointer-events: none; }
+  html[data-shell="v2"] .track-label { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+
+  html[data-shell="v2"] .heatmap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 12px);
+    grid-auto-columns: 12px;
+    gap: 3px;
+    justify-content: end;
+    overflow-x: auto;
+    padding-block: 4px;
+  }
+  html[data-shell="v2"] .heat-cell { width: 12px; height: 12px; border-radius: 3px; background: var(--bg-inset); }
+  html[data-shell="v2"] .heat-cell[data-level="1"] { background: #CFE9D6; }
+  html[data-shell="v2"] .heat-cell[data-level="2"] { background: #8FCFA3; }
+  html[data-shell="v2"] .heat-cell[data-level="3"] { background: #4FAF72; }
+  html[data-shell="v2"] .heat-cell[data-level="4"] { background: #2F7A4B; }
+  html[data-shell="v2"][data-theme="dark"] .heat-cell[data-level="1"],
+  html[data-shell="v2"][data-theme="oled"] .heat-cell[data-level="1"] { background: #244B33; }
+  html[data-shell="v2"][data-theme="dark"] .heat-cell[data-level="2"],
+  html[data-shell="v2"][data-theme="oled"] .heat-cell[data-level="2"] { background: #2F6B44; }
+  html[data-shell="v2"][data-theme="dark"] .heat-cell[data-level="3"],
+  html[data-shell="v2"][data-theme="oled"] .heat-cell[data-level="3"] { background: #3E9A5E; }
+  html[data-shell="v2"][data-theme="dark"] .heat-cell[data-level="4"],
+  html[data-shell="v2"][data-theme="oled"] .heat-cell[data-level="4"] { background: #5CBF7A; }
+  html[data-shell="v2"] .heatmap-caption { margin: 6px 0 0; font-size: var(--num-caption-size); color: var(--text-caption); }
+
+  /* ---------- lessons list: track filter pill ---------- */
+  html[data-shell="v2"] .lessons-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-block-end: var(--card-gap);
+    padding: 6px 8px 6px 14px;
+    border: 1px solid #C8A975;
+    border-radius: var(--radius-full);
+    background: #F3E7CF;
+    color: #3F2E10;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  html[data-shell="v2"][data-theme="dark"] .lessons-filter,
+  html[data-shell="v2"][data-theme="oled"] .lessons-filter { background: #4A3A22; color: #F3E7CF; }
+  html[data-shell="v2"] .lessons-filter[hidden] { display: none; }
+  html[data-shell="v2"] .lessons-filter button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: rgba(60, 35, 20, 0.08);
+    color: inherit;
+    cursor: pointer;
+  }
+  html[data-shell="v2"] .lessons-filter button svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+
+  /* ---------- Me: the cards that moved out of Home (styled properly in batch 10) ---------- */
+  html[data-shell="v2"] #screen-settings .profile-card,
+  html[data-shell="v2"] #screen-settings .lb-card,
+  html[data-shell="v2"] #screen-settings .history-card { margin-block-start: var(--section-gap); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-shell="v2"] .track-ring .ring-fg { transition: none; }
+  }
+}

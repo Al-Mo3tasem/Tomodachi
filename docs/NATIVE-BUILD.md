@@ -219,6 +219,36 @@ release build; never commit it.**
   data before its screen shows); the page-behind scale under a sheet is left
   for a device pass.
 
+### Batch 6 — Home: greeting, hero + 4 tiles, friends strip, Today | Course, rings + heatmap
+- `js/ui/home.js` stamps `<template id="tpl-v2-home">` into the dashboard
+  under v2 (v1 markup untouched). The large title becomes the greeting
+  (`setTopbarTitle`, no streak/XP line); the hero adopts the lesson and
+  review CTA cards (ids intact); four tiles from `tpl-stat-tile` show one
+  ink number each — reviews due (rose only when overdue, "all caught up" at
+  0), lessons done, practice best, friends online — and switch tabs on tap.
+  Stats, leaderboard preview and history moved under Me (batch 10 styles
+  them); the modes card stays on Home until batch 9.
+- Friends strip (`tpl-friend-card`, 56 px avatar in a 72 px card, scroll-snap,
+  presence dot, "All friends" ghost card) over today's single-friend
+  prototype; a card opens a sheet with Duel / Sync Match, which carries the
+  opponent uid into `sendChallenge(uid)` / `sendCoopChallenge(uid)`.
+- `js/data/friends.js`: `loadFriends()` and `watchPresence(uids)` — the
+  presence listener now targets the friends' documents (`documentId() in`,
+  chunks of 30) instead of the whole collection.
+- Course view: `renderTrackRings()` (SVG rings per track from
+  `lesson.trackProgress()`, tap → lesson browser filtered to that track with a
+  clearable pill) and `renderHeatmap()` (12 weeks × 7 from
+  `users/{uid}.activity`). `js/data/users.js writeActivity(kind)` increments
+  the day counter after a lesson, a review session and a game (own-document
+  update; gated to the nativeShell flag so prod writes are unchanged; field
+  documented in `docs/Firestore_Rules.md`).
+- Home refetches at most once a minute (`goHome`), and any activity write
+  resets that clock, so tab switches do not cost reads.
+- Tests: `tests/e2e/home.spec.mjs` (hero/tiles/greeting/glass budget; switch,
+  rings, filtered browser; tile navigation; Me holds the moved cards).
+  Lesson: a test that leaves the router's tab state stale by calling
+  `showScreen` directly must go Home through the dock before tapping tiles.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

@@ -161,7 +161,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Haptics: APK answer tile -> light impact (bridge debug log); web haptic() no-op without console noise.
 - grep gates green (localStorage, window.Native); prod-shell-unchanged green; unit suite green.
 
-### Batch 5 — Primitives: sheets + destructive dialog, status chip/toast, quiz tiles + feedback sheet, buttons, segmented, numbers, skeletons — SHIPPED  _(2 days (done))_
+### Batch 5 — Primitives: sheets + destructive dialog, status chip/toast, quiz tiles + feedback sheet, buttons, segmented, numbers, skeletons — SHIPPED (f8d4615)  _(2 days (done))_
 
 **Goal:** Every reusable component the screens need exists with the researched numbers (pick 6, 8, 9, 11, 17, 22).
 
@@ -181,7 +181,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Glass budget with a sheet open on Home: iOS 3, Android 2 (sheet head drops glass); axe: role=dialog/aria-modal, labelled dlg-confirm, aria-live chip; .num-caption dark contrast >= 4.5:1.
 - prod-shell-unchanged green (toast container move is v2-scoped); primitives.spec green EN+AR.
 
-### Batch 6 — Home: hero + 4 tiles, friends strip, Today|Course, rings + heatmap data  _(2 days)_
+### Batch 6 — Home: hero + 4 tiles, friends strip, Today|Course, rings + heatmap data — SHIPPED  _(2 days (done))_
 
 **Goal:** Pick 4 + 7 (data): the dashboard becomes Home — greeting title, 1 hero + 4 icon tiles with ink numbers, horizontal online-friends strip, Today|Course pill, per-track rings, activity data source.
 

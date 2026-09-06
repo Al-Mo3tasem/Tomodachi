@@ -12,16 +12,17 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260906f';
-import { navigate, back as navBack } from '../core/nav.js?v=20260906f';
-import { haptic } from '../core/haptics.js?v=20260906f';
-import { setJa } from '../core/format.js?v=20260906f';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906f';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906f';
-import { cacheGet } from '../data/content.js?v=20260906f';
-import { loadLessons } from './lesson.js?v=20260906f';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906f';
-import { t, getLocale } from '../i18n/index.js?v=20260906f';
+import { state, $, shuffle } from '../core/core.js?v=20260906g';
+import { navigate, back as navBack } from '../core/nav.js?v=20260906g';
+import { haptic } from '../core/haptics.js?v=20260906g';
+import { setJa } from '../core/format.js?v=20260906g';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906g';
+import { writeActivity } from '../data/users.js?v=20260906g';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906g';
+import { cacheGet } from '../data/content.js?v=20260906g';
+import { loadLessons } from './lesson.js?v=20260906g';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906g';
+import { t, getLocale } from '../i18n/index.js?v=20260906g';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
@@ -75,6 +76,13 @@ function dueEntries() {
   if (!map) return [];
   const now = Date.now();
   return Object.entries(map).filter(([, v]) => v && v.d <= now);
+}
+
+/** Home tile: how many items are due, and how many of those are more than a day late. */
+export function dueSummary() {
+  const now = Date.now();
+  const due = dueEntries();
+  return { due: due.length, overdue: due.filter(([, v]) => now - v.d > 86400000).length };
 }
 
 // ----- dashboard card -----
@@ -186,6 +194,7 @@ async function finishSession() {
     local[key] = entry;
   }
   state.userData = { ...state.userData, srs: local };
+  writeActivity('review');   // Home heatmap
   if (state.user && Object.keys(updates).length) {
     try { await updateDoc(doc(db, 'users', state.user.uid), updates); }
     catch (err) { console.error('[srs] reschedule failed:', err); }

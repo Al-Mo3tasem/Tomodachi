@@ -15,8 +15,8 @@
 //     ~15s of idle time (primeSpeech / unprimeSpeech).
 // ============================================
 
-import { state } from '../core/core.js?v=20260906f';
-import { nativeTts, onNativeEvent } from '../native/shell.js?v=20260906f';
+import { state } from '../core/core.js?v=20260906g';
+import { nativeTts, onNativeEvent } from '../native/shell.js?v=20260906g';
 
 // App shell going to the background: never keep talking over another app.
 onNativeEvent('appState', ({ isActive }) => { if (!isActive) stopSpeech(); });

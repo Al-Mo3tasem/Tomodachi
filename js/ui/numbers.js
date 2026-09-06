@@ -5,7 +5,7 @@
 // the digits setting holds mid-animation. Instant under reduced motion.
 // ============================================
 
-import { fmtNumber } from '../core/format.js?v=20260906f';
+import { fmtNumber } from '../core/format.js?v=20260906g';
 
 const reducedMotion = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_e) { return false; } };
 const easeOutCubic = (p) => 1 - Math.pow(1 - p, 3);

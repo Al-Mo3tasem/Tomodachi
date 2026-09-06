@@ -11,7 +11,7 @@
 // one line, one verb CTA; illustrations are never mirrored.
 // ============================================
 
-import { $ } from '../core/core.js?v=20260906f';
+import { $ } from '../core/core.js?v=20260906g';
 
 const DELAY_MS = 300;
 const timers = new WeakMap();

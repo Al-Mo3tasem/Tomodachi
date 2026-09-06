@@ -3,8 +3,8 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260906f';
-import { getPref, setPref } from './prefs.js?v=20260906f';
+import { APP_CONFIG } from '../config/firebase.js?v=20260906g';
+import { getPref, setPref } from './prefs.js?v=20260906g';
 // (the hiraquest-* → tomodachi-* key migration now lives in prefs.js)
 
 // ----- Global App State -----

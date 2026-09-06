@@ -18,6 +18,21 @@
   "sheet": {
     "close": "إغلاق"
   },
+  "home": {
+    "today": "اليوم",
+    "course": "المسار",
+    "friends": "الأصدقاء",
+    "all_friends": "كل الأصدقاء",
+    "activity": "النشاط",
+    "activity_caption": "{{count}} جلسة تعلّم في آخر 12 أسبوعًا",
+    "tile": {
+      "reviews": "مراجعات مستحقة",
+      "reviews_clear": "لا مراجعات الآن",
+      "course": "من {{total}} درسًا مكتملة",
+      "practice": "أفضل نتيجة تدريب",
+      "friends": "أصدقاء متصلون"
+    }
+  },
   "quiz": {
     "correct": "إجابة صحيحة!",
     "not_quite": "ليست صحيحة",
@@ -747,7 +762,8 @@
     "katakana": "كاتاكانا",
     "words": "الكلمات",
     "kanji": "كانجي",
-    "lesson_n": "الدرس {{n}} من {{total}}"
+    "lesson_n": "الدرس {{n}} من {{total}}",
+    "filter_clear": "عرض الكل"
   },
   "review": {
     "title": "المراجعة",

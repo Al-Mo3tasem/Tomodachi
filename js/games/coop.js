@@ -10,20 +10,20 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
-import { fmtTime } from '../core/format.js?v=20260906f';
-import { haptic } from '../core/haptics.js?v=20260906f';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
-import { statusChip } from '../ui/status.js?v=20260906f';
-import { countUp } from '../ui/numbers.js?v=20260906f';
-import { navigate } from '../core/nav.js?v=20260906f';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
+import { fmtTime } from '../core/format.js?v=20260906g';
+import { haptic } from '../core/haptics.js?v=20260906g';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
+import { statusChip } from '../ui/status.js?v=20260906g';
+import { countUp } from '../ui/numbers.js?v=20260906g';
+import { navigate } from '../core/nav.js?v=20260906g';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906f';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906f';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260906f';
-import { t } from '../i18n/index.js?v=20260906f';
+} from '../data/firebase.js?v=20260906g';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906g';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260906g';
+import { t } from '../i18n/index.js?v=20260906g';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -68,11 +68,11 @@ export function isInCoop() {
   return !!c && !c.finished;
 }
 
-export async function sendCoopChallenge() {
+export async function sendCoopChallenge(opponentUid = null) {
   if (!state.user) return;
   if (c) teardown();
 
-  const friend = state.friend;
+  const friend = (opponentUid && (state.friends || []).find((f) => f.uid === opponentUid)) || state.friend;
   if (!friend || !friend.uid) {
     toast(t('coop.toast.no_friend'), 'warning');
     return;

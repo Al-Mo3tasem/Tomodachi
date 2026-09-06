@@ -12,23 +12,24 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260906f';
-import { haptic } from '../core/haptics.js?v=20260906f';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
-import { statusChip } from '../ui/status.js?v=20260906f';
-import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906f';
-import { countUp } from '../ui/numbers.js?v=20260906f';
-import { navigate } from '../core/nav.js?v=20260906f';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260906g';
+import { haptic } from '../core/haptics.js?v=20260906g';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
+import { statusChip } from '../ui/status.js?v=20260906g';
+import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906g';
+import { countUp } from '../ui/numbers.js?v=20260906g';
+import { writeActivity } from '../data/users.js?v=20260906g';
+import { navigate } from '../core/nav.js?v=20260906g';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906f';
+} from '../data/firebase.js?v=20260906g';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906f';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906f';
-import { t } from '../i18n/index.js?v=20260906f';
+} from '../audio/audio.js?v=20260906g';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906g';
+import { t } from '../i18n/index.js?v=20260906g';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -855,6 +856,7 @@ function endGame(reason) {
   unprimeSpeech();
   hidePauseOverlay();
   setPresence('online');
+  writeActivity('game');   // Home heatmap
 
   const total = g.correct + g.wrong;
   const summary = {

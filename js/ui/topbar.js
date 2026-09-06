@@ -9,10 +9,10 @@
 // bar's actions — same nodes, same ids, same listeners.
 // ============================================
 
-import { $ } from '../core/core.js?v=20260906f';
-import { back as navBack, navigate, canGoBack, currentScreenId } from '../core/nav.js?v=20260906f';
-import { applyTranslations } from '../i18n/apply.js?v=20260906f';
-import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260906f';
+import { $ } from '../core/core.js?v=20260906g';
+import { back as navBack, navigate, canGoBack, currentScreenId } from '../core/nav.js?v=20260906g';
+import { applyTranslations } from '../i18n/apply.js?v=20260906g';
+import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260906g';
 
 // screen → i18n key of its title (immersive screens keep their own chrome)
 const TITLES = {
@@ -91,6 +91,18 @@ function onNavChange(e) {
   if (!entry) return;
   setCollapsed(entry, false);
   entry.bar.querySelector('.topbar-back').hidden = !canGoBack();
+}
+
+/** Replace a screen's title (large + compact) with runtime text, e.g. the Home greeting. */
+export function setTopbarTitle(screenId, text) {
+  const entry = bars.get(screenId);
+  if (!entry) return;
+  const compact = entry.bar.querySelector('.topbar-compact');
+  for (const el of [entry.title, compact]) {
+    if (!el) continue;
+    el.removeAttribute('data-i18n');   // apply.js must not clobber it on a locale change
+    el.textContent = text;
+  }
 }
 
 export function initTopbars() {

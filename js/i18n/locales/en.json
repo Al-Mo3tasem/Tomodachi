@@ -18,6 +18,21 @@
   "sheet": {
     "close": "Close"
   },
+  "home": {
+    "today": "Today",
+    "course": "Course",
+    "friends": "Friends",
+    "all_friends": "All friends",
+    "activity": "Activity",
+    "activity_caption": "{{count}} study sessions in the last 12 weeks",
+    "tile": {
+      "reviews": "reviews due",
+      "reviews_clear": "all caught up",
+      "course": "of {{total}} lessons done",
+      "practice": "practice best",
+      "friends": "friends online"
+    }
+  },
   "quiz": {
     "correct": "Correct!",
     "not_quite": "Not quite",
@@ -733,7 +748,8 @@
     "katakana": "Katakana",
     "words": "Words",
     "kanji": "Kanji",
-    "lesson_n": "Lesson {{n}} of {{total}}"
+    "lesson_n": "Lesson {{n}} of {{total}}",
+    "filter_clear": "Show all"
   },
   "review": {
     "title": "Review",

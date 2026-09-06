@@ -4,52 +4,54 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906f';
-import { getFunctionUrl } from './config/functions.js?v=20260906f';
+import { APP_CONFIG } from './config/firebase.js?v=20260906g';
+import { getFunctionUrl } from './config/functions.js?v=20260906g';
 import {
   state, $, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906f';
+} from './core/core.js?v=20260906g';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
-  doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
+  doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906f';
+} from './data/firebase.js?v=20260906g';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906f';
+} from './games/engine.js?v=20260906g';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906f';
-import { isSpeechSupported } from './audio/audio.js?v=20260906f';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906f';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906f';
-import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906f';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906f';
-import { shellVersion } from './config/features.js?v=20260906f';
-import { applyPlatformAttrs } from './core/platform.js?v=20260906f';
-import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906f';
-import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906f';
-import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906f';
-import { initDock } from './ui/dock.js?v=20260906f';
-import { initTopbars } from './ui/topbar.js?v=20260906f';
-import { initSegmented } from './ui/segmented.js?v=20260906f';
-import { statusChip } from './ui/status.js?v=20260906f';
-import { mountSkeleton } from './ui/skeleton.js?v=20260906f';
+} from './data/leaderboards.js?v=20260906g';
+import { isSpeechSupported } from './audio/audio.js?v=20260906g';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906g';
+import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906g';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906g';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906g';
+import { shellVersion } from './config/features.js?v=20260906g';
+import { applyPlatformAttrs } from './core/platform.js?v=20260906g';
+import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906g';
+import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906g';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906g';
+import { initDock } from './ui/dock.js?v=20260906g';
+import { initTopbars, setTopbarTitle } from './ui/topbar.js?v=20260906g';
+import { initHome, renderHome } from './ui/home.js?v=20260906g';
+import { loadFriends, watchPresence } from './data/friends.js?v=20260906g';
+import { initSegmented } from './ui/segmented.js?v=20260906g';
+import { statusChip } from './ui/status.js?v=20260906g';
+import { mountSkeleton } from './ui/skeleton.js?v=20260906g';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906f';
+} from './games/duel.js?v=20260906g';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906f';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906f';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906f';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906f';
+} from './games/coop.js?v=20260906g';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906g';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906g';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906g';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -176,6 +178,7 @@ function renderUserIdentity() {
 
   const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
   set('dash-welcome-line', t('dashboard.subtitle_named', { name: displayName }));
+  setTopbarTitle('screen-dashboard', t('dashboard.subtitle_named', { name: displayName }));   // v2: the greeting is the Home title
   set('dash-displayname', displayName);
   set('dash-username', `@${username}`);
   set('dash-avatar', avatar);
@@ -743,15 +746,18 @@ function initPresence() {
     }, { merge: true });
   });
 
-  presenceUnsub = onSnapshot(collection(db, 'presence'), (snap) => {
-    snap.forEach(docSnap => {
-      if (docSnap.id !== state.user?.uid) {
-        state.friendPresence = docSnap.data();
-        renderFriend();
-      }
-    });
-  }, (err) => {
-    console.error('Presence listener failed:', err);
+}
+
+// Presence for the friend list only (documentId in [...]), not the whole collection.
+function watchFriendPresence(uids) {
+  if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }
+  const ids = (uids || []).filter((id) => id && id !== state.user?.uid);
+  if (!ids.length) return;
+  presenceUnsub = watchPresence(ids, (uid, data) => {
+    // single-friend prototype: the latest change is "the friend's" presence
+    state.friendPresence = data ? { ...data, userId: data.userId || uid } : null;
+    renderFriend();
+    renderHome();
   });
 }
 
@@ -935,6 +941,7 @@ async function loadDashboard() {
   try {
     const statsDoc = await getDoc(doc(db, 'stats', state.user.uid));
     const stats = statsDoc.exists() ? statsDoc.data() : {};
+    state.stats = stats;   // Home tiles read it
 
     const masteredCount = (stats.charactersMastered || []).length;
     const total = totalCharCount() || 46;
@@ -953,17 +960,18 @@ async function loadDashboard() {
 
     renderUserIdentity();
 
-    const usersSnap = await getDocs(collection(db, 'users'));
-    usersSnap.forEach(u => {
-      if (u.id !== state.user.uid) state.friend = u.data();
-    });
+    const friends = await loadFriends();
+    state.friends = friends;
+    state.friend = friends[0] || null;
+    watchFriendPresence(friends.map((f) => f.uid));
 
     renderFriend();
     renderLeaderboardPreview();
 
     // L2.13 linear-course CTA — only where the content-v2 bridge is on
     // (localhost/dev today); elsewhere the card stays hidden.
-    if (contentV2Enabled()) { renderLessonCta(); renderReviewCta(); }
+    if (contentV2Enabled()) { await renderLessonCta(); await renderReviewCta(); }
+    renderHome();
   } catch (err) {
     console.error('Dashboard load error:', err);
   }
@@ -1202,14 +1210,22 @@ function handleInputSeg(method) {
 // NAVIGATION
 // ============================================
 
-function goHome() {
+// Home refetches at most once a minute; anything that changes progress
+// (lesson, review, game — see users.js writeActivity) resets the clock.
+const HOME_CACHE_MS = 60000;
+let lastHomeLoad = 0;
+document.addEventListener('tomo:activity', () => { lastHomeLoad = 0; });
+function goHome({ force = false } = {}) {
   cleanupGame();
   cleanupDuel();
   cleanupCoop();
   state.returnScreen = null;
   navigate('screen-dashboard');   // root of the Home tab: resets its stack
-  loadDashboard();
-  loadHistory();
+  if (force || Date.now() - lastHomeLoad > HOME_CACHE_MS) {
+    lastHomeLoad = Date.now();
+    loadDashboard();
+    loadHistory();
+  }
 }
 
 function navBrandClick() {
@@ -1291,7 +1307,8 @@ function goToSelect(gameType) {
   updateSelectionUI();
 }
 
-function handleModeClick(mode) {
+function handleModeClick(mode, opponentUid = null) {
+  state.opponentUid = opponentUid || null;   // from the Home friend sheet; null = the prototype's single friend
   if (mode === 'duel' || mode === 'coop') {
     const fp = state.friendPresence;
     if (!fp || fp.status === 'offline') {
@@ -1303,8 +1320,8 @@ function handleModeClick(mode) {
 }
 
 function handleStartGame() {
-  if (state.currentGameType === 'duel') sendChallenge();
-  else if (state.currentGameType === 'coop') sendCoopChallenge();
+  if (state.currentGameType === 'duel') sendChallenge(state.opponentUid);
+  else if (state.currentGameType === 'coop') sendCoopChallenge(state.opponentUid);
   else startGame(state.currentGameType);
 }
 
@@ -1664,6 +1681,7 @@ function attachListeners() {
 
   // Friend bar
   $('btn-invite')?.addEventListener('click', () => handleModeClick('duel'));
+  document.addEventListener('home:play', (e) => handleModeClick(e.detail && e.detail.mode, e.detail && e.detail.uid));   // friend sheet on Home
 
   // Lesson screen (L2.13) + SRS review
   initLessonUi();
@@ -1813,6 +1831,7 @@ async function init() {
   initDock();             // v2 only (returns early on v1)
   initTopbars();          // v2 only
   initSegmented();        // v2 only (sliding pills on the segmented controls)
+  initHome();             // v2 only (Home layout over the dashboard markup)
   setTheme(state.theme, false); // apply only — never persist a boot-time fallback
   // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
   // single source of truth (persists, syncs settings checkbox + aria-pressed).

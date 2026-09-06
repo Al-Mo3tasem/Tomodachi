@@ -12,18 +12,18 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
-import { haptic } from '../core/haptics.js?v=20260906f';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
-import { statusChip } from '../ui/status.js?v=20260906f';
-import { navigate } from '../core/nav.js?v=20260906f';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
+import { haptic } from '../core/haptics.js?v=20260906g';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
+import { statusChip } from '../ui/status.js?v=20260906g';
+import { navigate } from '../core/nav.js?v=20260906g';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906f';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906f';
-import { acceptCoop, isInCoop } from './coop.js?v=20260906f';
-import { t } from '../i18n/index.js?v=20260906f';
+} from '../data/firebase.js?v=20260906g';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906g';
+import { acceptCoop, isInCoop } from './coop.js?v=20260906g';
+import { t } from '../i18n/index.js?v=20260906g';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -144,10 +144,10 @@ function hideInvite() {
 // HOST: SEND / CANCEL CHALLENGE
 // ============================================
 
-export async function sendChallenge() {
+export async function sendChallenge(opponentUid = null) {
   if (!state.user) return;
   if (d) teardown();
-  const friend = state.friend;
+  const friend = (opponentUid && (state.friends || []).find((f) => f.uid === opponentUid)) || state.friend;
   if (!friend || !friend.uid) {
     toast(t('duel.toast.no_friend'), 'warning');
     return;

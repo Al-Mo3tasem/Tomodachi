@@ -81,6 +81,10 @@ service cloud.firestore {
       allow create, update, delete: if request.auth != null
                                      && request.auth.uid == userId;
     }
+    // Fields written by the client on the OWN document only (no rule change
+    // needed): `activity.{YYYY-MM-DD}` and `activityKinds.{day}.{lesson|review|game}`
+    // counters (js/data/users.js, batch 6 — Home heatmap), next to `srs`,
+    // `completedLessons` and `seenMeta`.
 
     // ----- Stats -----
     match /stats/{userId} {

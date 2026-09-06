@@ -12,17 +12,18 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260906f';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906f';
-import { haptic } from '../core/haptics.js?v=20260906f';
-import { setJa, fmtCount } from '../core/format.js?v=20260906f';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906f';
-import { statusChip } from '../ui/status.js?v=20260906f';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906f';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906f';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906f';
-import { t, getLocale } from '../i18n/index.js?v=20260906f';
-import { scheduleLessonSrs } from './review.js?v=20260906f';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260906g';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906g';
+import { haptic } from '../core/haptics.js?v=20260906g';
+import { setJa, fmtCount } from '../core/format.js?v=20260906g';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906g';
+import { statusChip } from '../ui/status.js?v=20260906g';
+import { writeActivity } from '../data/users.js?v=20260906g';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906g';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906g';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906g';
+import { t, getLocale } from '../i18n/index.js?v=20260906g';
+import { scheduleLessonSrs } from './review.js?v=20260906g';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -339,6 +340,7 @@ async function completeLesson() {
     // just-completed lesson while the network write is in flight.
     state.userData = { ...state.userData, completedLessons: [...done, key] };
     scheduleLessonSrs(L.lesson, L.items);   // SRS: learned items enter the review queue
+    writeActivity('lesson');                // Home heatmap
     try {
       await updateDoc(doc(db, 'users', state.user.uid), { completedLessons: arrayUnion(key) });
     } catch (err) {
@@ -352,7 +354,7 @@ async function completeLesson() {
 // Item counts are COURSE-derived (items taught by completed lessons over items
 // in all lessons) so the numbers are always coherent with the path itself.
 
-const PROGRESS_TRACKS = [
+export const PROGRESS_TRACKS = [
   { key: 'course' },
   { key: 'hiragana', types: ['hiragana'] },
   { key: 'katakana', types: ['katakana'] },
@@ -360,24 +362,37 @@ const PROGRESS_TRACKS = [
   { key: 'kanji', types: ['kanji'] },
 ];
 
-export function renderCourseProgress() {
-  const wrap = $('course-progress');
-  if (!wrap || !lessons || !lessons.length) return;
+/** { done, total } lessons on the linear path (0/0 before the catalog loads). */
+export function courseProgress() {
+  if (!lessons || !lessons.length) return { done: 0, total: 0 };
+  return { done: completedSet().size, total: lessons.length };
+}
+
+/** Per-track progress for the rings and the legacy rows: [{ key, types, done, total, pct }]. */
+export function trackProgress() {
+  if (!lessons || !lessons.length) return PROGRESS_TRACKS.map((tr) => ({ key: tr.key, types: tr.types || null, done: 0, total: 0, pct: 0 }));
   const done = completedSet();
-  wrap.innerHTML = '';
-  for (const tr of PROGRESS_TRACKS) {
-    let doneN, totalN;
-    if (tr.key === 'course') {
-      doneN = done.size; totalN = lessons.length;
-    } else {
-      doneN = 0; totalN = 0;
+  return PROGRESS_TRACKS.map((tr) => {
+    let doneN = 0, totalN = 0;
+    if (tr.key === 'course') { doneN = done.size; totalN = lessons.length; }
+    else {
       for (const l of lessons) {
         if (!tr.types.includes(l.contentType)) continue;
         totalN += l.itemKeys.length;
         if (done.has(l.lessonKey)) doneN += l.itemKeys.length;
       }
     }
-    const pct = totalN ? Math.round((doneN / totalN) * 100) : 0;
+    return { key: tr.key, types: tr.types || null, done: doneN, total: totalN, pct: totalN ? Math.round((doneN / totalN) * 100) : 0 };
+  });
+}
+
+export function renderCourseProgress() {
+  const wrap = $('course-progress');
+  if (!wrap || !lessons || !lessons.length) return;
+  const done = completedSet();
+  wrap.innerHTML = '';
+  for (const { key, done: doneN, total: totalN, pct } of trackProgress()) {
+    const tr = { key };
     const row = document.createElement('div');
     row.className = 'cp-row' + (doneN >= totalN && totalN ? ' is-complete' : '');
     const label = document.createElement('span');
@@ -473,9 +488,13 @@ async function markMetaSeen(id) {
 
 const TYPE_ICON = { hiragana: 'あ', katakana: 'ア', vocab: '💬', grammar: '文', kanji: '漢' };
 
-export async function openLessonBrowser() {
+let browserFilter = null;   // { track, types } from a Home ring, or null for the whole path
+
+/** @param {{ track?: string, types?: string[] }} [filter]  a track from the Home rings */
+export async function openLessonBrowser(filter = null) {
   try { await loadLessons(); } catch (_e) { toast(t('lesson.load_failed'), 'error'); return; }
   if (!lessons || !lessons.length) return;
+  browserFilter = filter && filter.types && filter.types.length ? { track: filter.track, types: filter.types } : null;
   renderLessonBrowser();
   navigate('screen-lessons-list');   // root of the Course tab
 }
@@ -486,8 +505,14 @@ function renderLessonBrowser() {
   wrap.innerHTML = '';
   const done = completedSet();
   const current = nextLesson();
+  const filterEl = $('lessons-filter');
+  if (filterEl) {
+    filterEl.hidden = !browserFilter;
+    if (browserFilter) $('lessons-filter-label').textContent = t(`progress.${browserFilter.track}`);
+  }
+  const rows = browserFilter ? lessons.filter((l) => browserFilter.types.includes(l.contentType)) : lessons;
   const frag = document.createDocumentFragment();
-  for (const l of lessons) {
+  for (const l of rows) {
     const isDone = done.has(l.lessonKey);
     const isCurrent = current && current.lessonKey === l.lessonKey;
     const row = document.createElement('button');
@@ -529,7 +554,8 @@ export function applyLessonA11y() {
 export function initLessonUi() {
   applyLessonA11y();
   $('lesson-cta-btn')?.addEventListener('click', openNextLesson);
-  $('lesson-cta-browse')?.addEventListener('click', openLessonBrowser);
+  $('lesson-cta-browse')?.addEventListener('click', () => openLessonBrowser());
+  $('lessons-filter-clear')?.addEventListener('click', () => { browserFilter = null; renderLessonBrowser(); });
   $('meta-continue')?.addEventListener('click', async (e) => {
     const id = e.currentTarget.dataset.metaId;
     if (id) await markMetaSeen(id);
