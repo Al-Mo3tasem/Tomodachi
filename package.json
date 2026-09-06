@@ -9,7 +9,7 @@
     "build:www": "node scripts/native/build-www.mjs",
     "build:bridge": "node scripts/native/build-bridge.mjs",
     "native:sync": "npm run build:www && npx cap sync",
-    "android:debug": "npm run native:sync && cd android && gradlew.bat assembleDebug",
+    "android:debug": "npm run native:sync && node scripts/native/gradle.mjs assembleDebug",
     "android:open": "npx cap open android",
     "android:apk": "node scripts/native/collect-apk.mjs",
     "dev": "http-server -p 8744 -c-1",

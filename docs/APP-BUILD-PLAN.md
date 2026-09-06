@@ -143,7 +143,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Naming first-click test recorded in the Progress Log; prod-shell-unchanged green with the flag off; id-contract green.
 - grep gate: showScreen() only in core.js + nav.js.
 
-### Batch 4 — Facades: prefs, haptics, digits/format, bdi pass, platform attrs (mechanical) — SHIPPED  _(1.5 days (done))_
+### Batch 4 — Facades: prefs, haptics, digits/format, bdi pass, platform attrs (mechanical) — SHIPPED (4b8b8d9)  _(1.5 days (done))_
 
 **Goal:** Every cross-cutting primitive the screens need is in place and every call site migrated: sync prefs facade with native write-through, haptic vocabulary, one number formatter honouring the digits setting, JP tokens isolated, text-size/digits attributes.
 
