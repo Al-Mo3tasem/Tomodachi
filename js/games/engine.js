@@ -12,18 +12,17 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import {
-  state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260906c';
+import { state, $, toast, shuffle, clamp, formatTime } from '../core/core.js?v=20260906d';
+import { navigate } from '../core/nav.js?v=20260906d';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906c';
+} from '../data/firebase.js?v=20260906d';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906c';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906c';
-import { t } from '../i18n/index.js?v=20260906c';
+} from '../audio/audio.js?v=20260906d';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906d';
+import { t } from '../i18n/index.js?v=20260906d';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -130,7 +129,7 @@ export function startGame(type) {
   };
 
   buildScreen();
-  showScreen('screen-game');
+  navigate('screen-game');
   hidePauseOverlay();
   setPresence('in_game');
   playSound('start');

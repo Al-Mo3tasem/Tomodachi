@@ -10,16 +10,15 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import {
-  state, $, showScreen, toast, shuffle, clamp, formatTime
-} from '../core/core.js?v=20260906c';
+import { state, $, toast, shuffle, clamp, formatTime } from '../core/core.js?v=20260906d';
+import { navigate } from '../core/nav.js?v=20260906d';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906c';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906c';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260906c';
-import { t } from '../i18n/index.js?v=20260906c';
+} from '../data/firebase.js?v=20260906d';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906d';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260906d';
+import { t } from '../i18n/index.js?v=20260906d';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -438,7 +437,7 @@ function writeMyProgress() {
 function enterCoopScreen() {
   if (c && c._entered) return;
   if (c) c._entered = true;
-  showScreen('screen-coop');
+  navigate('screen-coop');
   startTick();
 }
 
@@ -655,7 +654,7 @@ async function showCoopResults(data) {
   }
 
   setOverlay('coop-results', true);
-  showScreen('screen-coop');
+  navigate('screen-coop');
 
   const real = reason === 'cleared' || reason === 'timeup';
   const great = reason === 'cleared' || (N && cleared >= N * 0.6);
@@ -839,7 +838,7 @@ function opponentName() {
 }
 
 function showLobby(statusText, detailText) {
-  showScreen('screen-lobby');
+  navigate('screen-lobby');
   const title = $('lobby-title');
   const s = $('lobby-status');
   const det = $('lobby-detail');

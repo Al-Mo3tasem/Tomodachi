@@ -1,24 +1,248 @@
 /* ============================================================
    Tomodachi — shell chrome (layer: components)
-   #dock, .topbar, .app-scroll, body[data-immersive] / body[data-kb].
-   Batch 2 ships the structural scaffolding only (safe-area padding on the
-   scroll container); the dock and top bar arrive in batch 3.
+   #dock (floating glass tab dock + optional shelf), .app-scroll padding,
+   body[data-immersive] / body[data-kb], html[data-chrome="compact"].
+   Everything is scoped to html[data-shell="v2"]; v1 never sees it.
+   Dock geometry: --dock-h / --dock-inset-x / --dock-inset-bottom /
+   --dock-radius / --dock-icon / --dock-label-size (css/app/tokens.css).
    ============================================================ */
 @layer components {
-  /* Screens scroll under the (future) floating dock; bottom padding keeps the
-     last card reachable. Applied only under v2 so v1 is untouched. */
+  /* ----- content clearance ----- */
   html[data-shell="v2"] .app-scroll,
   html[data-shell="v2"] .screen > .container {
     padding-block-end: var(--content-pad-bottom);
     padding-inline-start: max(var(--gutter), var(--safe-inline-start));
     padding-inline-end: max(var(--gutter), var(--safe-inline-end));
   }
-  /* Immersive screens (lesson, game, review) hide the dock and drop the padding. */
   html[data-shell="v2"] body[data-immersive] .screen > .container {
     padding-block-end: max(var(--gutter), var(--safe-bottom));
   }
-  /* Keyboard open: content lifts by the keyboard height set from the bridge. */
   html[data-shell="v2"] body[data-kb] .screen > .container {
     padding-block-end: calc(var(--kb-h) + var(--gutter));
+  }
+
+  /* ----- dock: ONE glass element (shelf row + tabs row inside it) ----- */
+  html[data-shell="v2"] #dock {
+    position: fixed;
+    inset-inline: var(--dock-inset-x);
+    bottom: var(--dock-inset-bottom);
+    z-index: var(--z-dock);
+    display: grid;
+    grid-template-rows: auto auto;
+    border-radius: var(--dock-radius);
+    box-shadow: 0 8px 24px rgba(22, 19, 17, 0.12);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  [data-theme="dark"] #dock,
+  [data-theme="oled"] #dock { box-shadow: none; }
+
+  /* sits above the dock, outside its rounded box (glass.css .glass-scrim) */
+  #dock > .glass-scrim { bottom: calc(100% + 1px); }
+
+  .dock-shelf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 40px;
+    padding: 6px var(--card-pad);
+    border-block-end: 1px solid var(--glass-hairline);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .dock-shelf[hidden] { display: none; }
+
+  .dock-tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+    height: var(--dock-h);
+    transition: height var(--dur-base) var(--ease-out);
+  }
+
+  /* sliding active pill — position is MEASURED (getBoundingClientRect), so the
+     physical transform is correct in both directions */
+  .dock-indicator {
+    position: absolute;
+    top: 50%;
+    left: 0;                                 /* lint-allow-physical */
+    width: 56px;
+    height: 32px;
+    margin-top: -16px;
+    border-radius: var(--radius-full);
+    background: rgba(200, 169, 117, 0.28);   /* tan */
+    transform: translateX(var(--x, 0px));    /* lint-allow-physical */
+    transition: transform var(--dur-spring-soft) var(--ease-spring-soft), opacity var(--dur-fast);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .dock-indicator.is-ready { opacity: 1; }
+  html[data-chrome="compact"] .dock-indicator { height: 28px; margin-top: -14px; }
+
+  .dock-tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: var(--tap-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--text-secondary);
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .dock-tab svg {
+    width: var(--dock-icon);
+    height: var(--dock-icon);
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    transition: stroke-width var(--dur-fast), fill-opacity var(--dur-fast), transform var(--dur-press) var(--ease-spring-soft);
+  }
+  .dock-tab:active svg { transform: scale(var(--press-scale-icon)); }
+  .dock-tab.is-active { color: #B91C1C; }            /* crimson glyph: never #E04848 */
+  [data-theme="dark"] .dock-tab.is-active,
+  [data-theme="oled"] .dock-tab.is-active { color: #F28585; }
+  .dock-tab.is-active svg { stroke-width: 2.5; fill: currentColor; fill-opacity: 0.16; }
+  .dock-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: var(--radius-lg); }
+
+  .dock-label {
+    font-size: var(--dock-label-size);
+    font-weight: var(--dock-label-weight);
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+    transition: opacity var(--dur-fast) var(--ease-effects);
+  }
+  html[data-shell="v2"]:lang(ar) .dock-label { font-family: var(--font-ar); }
+
+  /* compact chrome while scrolling down: labels fade, tabs row shrinks (class
+     toggle → one transition, never per-frame height animation of the blur) */
+  html[data-chrome="compact"] .dock-tabs { height: 48px; }
+  html[data-chrome="compact"] .dock-label { opacity: 0; }
+
+  /* hidden states */
+  body[data-immersive] #dock,
+  body[data-kb] #dock { display: none; }
+
+  /* Reduced motion: no sliding pill, no compact animation */
+  @media (prefers-reduced-motion: reduce) {
+    .dock-indicator, .dock-tabs, .dock-tab svg { transition: none; }
+  }
+}
+
+/* ============================================================
+   Top bar (v2): sticky compact bar + large in-flow editorial title.
+   Legacy chrome (nav + page headers) is hidden under v2 only.
+   ============================================================ */
+@layer components {
+  html[data-shell="v2"] .nav,
+  html[data-shell="v2"] .page-header,
+  html[data-shell="v2"] .screen .back-btn:not(.auth-back-btn),
+  html[data-shell="v2"] #screen-lessons-list > .container > .lesson-topbar { display: none; }
+
+  /* logout moved out of the bar into the account screen (see topbar.js) */
+  html[data-shell="v2"] #screen-settings #btn-logout {
+    display: block;
+    width: 100%;
+    margin-block-start: var(--space-6);
+    min-height: var(--cta-h);
+  }
+
+  html[data-shell="v2"] .topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-topbar);
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--topbar-h);
+    margin-inline: calc(-1 * max(var(--gutter), var(--safe-inline-start)));
+    padding-inline: max(var(--gutter), var(--safe-inline-start));
+    padding-block-start: var(--safe-top);
+    border-radius: 0;
+    transition: background-color var(--dur-fast) var(--ease-effects), border-color var(--dur-fast);
+  }
+  /* the collapsed bar is a glass surface (budget: dock + this = 2) with a bottom hairline only */
+  html[data-shell="v2"] .topbar.glass { border-width: 0 0 1px; }
+  html[data-shell="v2"] .topbar.is-collapsed { min-height: var(--topbar-h-collapsed); }
+
+  .topbar-back {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: none;
+    color: var(--text-primary);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .topbar-back[hidden] { display: none; }
+  .topbar-back svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  [dir="rtl"] .topbar-back svg { transform: scaleX(-1); }   /* the back arrow mirrors by design */
+  .topbar-back:active { background: var(--bg-hover); }
+
+  .topbar-compact {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-effects);
+  }
+  html[data-shell="v2"]:lang(ar) .topbar-compact { font-family: var(--font-ar); letter-spacing: 0; }
+  .topbar.is-collapsed .topbar-compact { opacity: 1; }
+
+  .topbar-actions {
+    grid-column: 3;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    justify-self: end;
+  }
+  .topbar-actions .nav-locale-bar { margin: 0; }
+  .topbar-actions .btn-sm { padding-inline: var(--space-3); }
+
+  html[data-shell="v2"] .topbar-title {
+    margin: 0;
+    padding-block: var(--space-1) var(--space-4);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0;
+    color: var(--text-primary);
+    text-wrap: balance;
+  }
+}
+
+/* Until batch 9 moves the Start CTA into the dock shelf, the sticky select
+   footer rides above the dock instead of under it. */
+@layer components {
+  html[data-shell="v2"] .select-footer {
+    bottom: calc(var(--dock-h) + var(--dock-inset-bottom) + var(--space-2));
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
   }
 }

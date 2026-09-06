@@ -12,16 +12,15 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import {
-  state, $, showScreen, toast, shuffle, clamp
-} from '../core/core.js?v=20260906c';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906d';
+import { navigate } from '../core/nav.js?v=20260906d';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906c';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906c';
-import { acceptCoop, isInCoop } from './coop.js?v=20260906c';
-import { t } from '../i18n/index.js?v=20260906c';
+} from '../data/firebase.js?v=20260906d';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906d';
+import { acceptCoop, isInCoop } from './coop.js?v=20260906d';
+import { t } from '../i18n/index.js?v=20260906d';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -486,7 +485,7 @@ async function submitAnswer(value) {
 function enterDuelScreen() {
   if (d && d._entered) return;
   if (d) d._entered = true;
-  showScreen('screen-duel');
+  navigate('screen-duel');
   startTick();
 }
 
@@ -730,7 +729,7 @@ async function showResults(data) {
   }
 
   setOverlay('duel-results', true);
-  showScreen('screen-duel');
+  navigate('screen-duel');
 
   if (!draw && iWon) { confetti(); playSound('win'); }
   else if (!draw) playSound('lose');
@@ -991,7 +990,7 @@ function opponentName() {
 }
 
 function showLobby(statusText, detailText) {
-  showScreen('screen-lobby');
+  navigate('screen-lobby');
   const title = $('lobby-title');
   const s = $('lobby-status');
   const det = $('lobby-detail');

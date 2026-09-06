@@ -15,7 +15,12 @@ const GATES = [
     pattern: /window\.Native\b/,
     allow: ['js/native/shell.js'],
   },
-  // Batch 3 adds: { name: 'showScreen only in nav.js', pattern: /\bshowScreen\(/, allow: ['js/core/nav.js', 'js/core/core.js'] }
+  {
+    name: 'showScreen() only in the router',
+    scope: 'js', ext: '.js',
+    pattern: /\bshowScreen\(/,
+    allow: ['js/core/nav.js', 'js/core/core.js'],
+  },
   // Batch 4 adds: { name: 'localStorage only in prefs.js', pattern: /\blocalStorage\b/, allow: ['js/core/prefs.js', 'js/config/features.js'] }
   // Batch 5 adds: { name: 'confirm() only in sheet.js', pattern: /\bconfirm\(/, allow: ['js/ui/sheet.js'] }
 ];

@@ -12,12 +12,13 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, showScreen, shuffle } from '../core/core.js?v=20260906c';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906c';
-import { cacheGet } from '../data/content.js?v=20260906c';
-import { loadLessons } from './lesson.js?v=20260906c';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906c';
-import { t, getLocale } from '../i18n/index.js?v=20260906c';
+import { state, $, shuffle } from '../core/core.js?v=20260906d';
+import { navigate, back as navBack } from '../core/nav.js?v=20260906d';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906d';
+import { cacheGet } from '../data/content.js?v=20260906d';
+import { loadLessons } from './lesson.js?v=20260906d';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906d';
+import { t, getLocale } from '../i18n/index.js?v=20260906d';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
@@ -104,7 +105,7 @@ export async function startReview() {
   if (!rows.length) return;
 
   R = { rows: shuffle(rows), i: 0, correct: 0, results: {}, locked: false };
-  showScreen('screen-review');
+  navigate('screen-review');
   renderQuestion();
 }
 
@@ -192,9 +193,12 @@ async function finishSession() {
   }
 }
 
+/** Drop the active review session (router onLeave hook; idempotent). */
+export function abandonReview() { R = null; }
+
 export function exitReview() {
-  R = null;
-  showScreen('screen-dashboard');
+  abandonReview();
+  if (!navBack()) navigate('screen-dashboard');
   renderReviewCta();
 }
 

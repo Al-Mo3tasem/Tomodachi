@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906c">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260906c">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906d">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260906d">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -104,13 +104,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260906c">
+  <link rel="stylesheet" href="css/style.css?v=20260906d">
   <!-- v2 foundation (docs/APP-BUILD-PLAN.md batch 2): layered on top of the legacy sheet -->
-  <link rel="stylesheet" href="css/app/fonts.css?v=20260906c">
-  <link rel="stylesheet" href="css/app/tokens.css?v=20260906c">
-  <link rel="stylesheet" href="css/app/base.css?v=20260906c">
-  <link rel="stylesheet" href="css/app/glass.css?v=20260906c">
-  <link rel="stylesheet" href="css/app/shell.css?v=20260906c">
+  <link rel="stylesheet" href="css/app/fonts.css?v=20260906d">
+  <link rel="stylesheet" href="css/app/tokens.css?v=20260906d">
+  <link rel="stylesheet" href="css/app/base.css?v=20260906d">
+  <link rel="stylesheet" href="css/app/glass.css?v=20260906d">
+  <link rel="stylesheet" href="css/app/shell.css?v=20260906d">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -994,6 +994,32 @@
       </div>
     </section>
 
+    <!-- Lucide icons (MIT) used by the v2 shell: outline at rest, weight + 16% fill when active -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+      <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+      <symbol id="ic-course" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+      <symbol id="ic-practice" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+      <symbol id="ic-friends" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+      <symbol id="ic-me" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+      <symbol id="ic-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+      <symbol id="ic-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    </svg>
+
+    <!-- v2 dock: stamped into #app by js/ui/dock.js when the nativeShell flag is on -->
+    <template id="tpl-dock">
+      <nav id="dock" class="dock glass" aria-label="Main" data-i18n-attr="aria-label:dock.aria">
+        <div class="glass-scrim" aria-hidden="true"></div>
+        <div id="dock-shelf" class="dock-shelf" hidden></div>
+        <div class="dock-tabs" role="tablist">
+          <span class="dock-indicator" aria-hidden="true"></span>
+          <button type="button" class="dock-tab" role="tab" data-tab="home" aria-selected="true"><svg aria-hidden="true"><use href="#ic-home"/></svg><span class="dock-label" data-i18n="dock.home">Home</span></button>
+          <button type="button" class="dock-tab" role="tab" data-tab="course" aria-selected="false"><svg aria-hidden="true"><use href="#ic-course"/></svg><span class="dock-label" data-i18n="dock.course">Course</span></button>
+          <button type="button" class="dock-tab" role="tab" data-tab="practice" aria-selected="false"><svg aria-hidden="true"><use href="#ic-practice"/></svg><span class="dock-label" data-i18n="dock.practice">Practice</span></button>
+          <button type="button" class="dock-tab" role="tab" data-tab="friends" aria-selected="false"><svg aria-hidden="true"><use href="#ic-friends"/></svg><span class="dock-label" data-i18n="dock.friends">Friends</span></button>
+          <button type="button" class="dock-tab" role="tab" data-tab="me" aria-selected="false"><svg aria-hidden="true"><use href="#ic-me"/></svg><span class="dock-label" data-i18n="dock.me">Me</span></button>
+        </div>
+      </nav>
+    </template>
     <!-- ===== META SCREEN (orientation / reading rules / checkpoints) ===== -->
     <section id="screen-meta" class="screen">
       <div class="container container-narrow">
@@ -1322,7 +1348,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260906c"></script>
+  <script type="module" src="js/app.js?v=20260906d"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

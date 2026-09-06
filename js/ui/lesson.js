@@ -12,12 +12,13 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, showScreen, toast, shuffle } from '../core/core.js?v=20260906c';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906c';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906c';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906c';
-import { t, getLocale } from '../i18n/index.js?v=20260906c';
-import { scheduleLessonSrs } from './review.js?v=20260906c';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260906d';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906d';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906d';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906d';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906d';
+import { t, getLocale } from '../i18n/index.js?v=20260906d';
+import { scheduleLessonSrs } from './review.js?v=20260906d';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -119,7 +120,8 @@ export async function openLesson(lesson) {
     const items = await fetchItems(lesson);
     if (!items.length) { toast(t('lesson.load_failed'), 'error'); return; }
     L = { lesson, items, phase: 'intro', i: 0, quiz: [], qi: 0, correct: 0, locked: false };
-    showScreen('screen-lesson');
+    // A meta screen (orientation/checkpoint) is REPLACED by its lesson so back never revisits it
+    navigate('screen-lesson', { replace: currentScreenId() === 'screen-meta' });
     render();
   } catch (err) {
     console.error('[lesson] open failed:', err);
@@ -134,9 +136,12 @@ export function onLessonLocaleChange() {
   if (L) render();
 }
 
+/** Drop the active lesson runtime (router onLeave hook; idempotent). */
+export function abandonLesson() { L = null; }
+
 export function exitLesson() {
-  L = null;
-  showScreen('screen-dashboard');
+  abandonLesson();
+  if (!navBack()) navigate('screen-dashboard');
   renderLessonCta();
 }
 
@@ -451,7 +456,7 @@ function renderMetaScreen(m) {
       bodyWrap.appendChild(p);
     }
   }
-  showScreen('screen-meta');
+  navigate('screen-meta');
 }
 
 async function markMetaSeen(id) {
@@ -471,7 +476,7 @@ export async function openLessonBrowser() {
   try { await loadLessons(); } catch (_e) { toast(t('lesson.load_failed'), 'error'); return; }
   if (!lessons || !lessons.length) return;
   renderLessonBrowser();
-  showScreen('screen-lessons-list');
+  navigate('screen-lessons-list');   // root of the Course tab
 }
 
 function renderLessonBrowser() {
@@ -531,7 +536,7 @@ export function initLessonUi() {
     // Re-enter the flow: more pending metas show in sequence; else the lesson.
     openNextLesson();
   });
-  $('lessons-list-back')?.addEventListener('click', () => { showScreen('screen-dashboard'); renderLessonCta(); });
+  $('lessons-list-back')?.addEventListener('click', () => { if (!navBack()) navigate('screen-dashboard'); renderLessonCta(); });
   $('lesson-btn-exit')?.addEventListener('click', exitLesson);
   $('lesson-btn-begin')?.addEventListener('click', () => { if (L) setPhase('teach'); });
   $('lesson-btn-prev')?.addEventListener('click', () => { if (L && L.i > 0) { L.i--; render(); } });

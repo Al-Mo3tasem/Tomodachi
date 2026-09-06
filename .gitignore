@@ -57,3 +57,4 @@ keystore.properties
 /ios/App/App/public/
 /tests/e2e/.results/
 /tests/e2e/.report/
+/shots/

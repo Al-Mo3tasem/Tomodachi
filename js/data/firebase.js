@@ -4,7 +4,7 @@
 // and one pinned SDK version.
 // ============================================
 
-import { getEnv, getFirebaseConfig, isNativeShell } from '../config/firebase.js?v=20260906c';
+import { getEnv, getFirebaseConfig, isNativeShell } from '../config/firebase.js?v=20260906d';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,

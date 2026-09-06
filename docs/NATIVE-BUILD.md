@@ -83,6 +83,31 @@ release build; never commit it.**
   render; sign-in fails with `auth/requests-from-referer-https://localhost-are-blocked`
   until the lead completes step 1 below.
 
+### Batch 3 — router, dock, top bar (v2 only; v1 pixels unchanged)
+- `js/core/nav.js` is the one way to change screens (`navigate()` / `back()` /
+  `setTab()`); `showScreen()` is gated to core.js + nav.js. Per-tab stacks
+  (Home · Course · Practice · Friends · Me), scroll restoration, state-only
+  history entries (browser back = router back), immersive screens push onto the
+  current tab, settings pushes so a paused game resumes on back.
+- Android hardware/predictive back → `nav.back()`; at a root the app is
+  minimized (never killed).
+- `js/ui/dock.js` + `<template id="tpl-dock">`: one glass element (shelf row
+  + tabs), measured sliding tan pill (RTL-safe), compact on scroll-down,
+  hidden on immersive screens / keyboard. Friends tab temporarily opens Home
+  and scrolls to the friend bar (its own screen arrives in batch 11).
+- `js/ui/topbar.js`: sticky bar + large in-flow title on every app screen;
+  collapses to the second glass surface at 72 px (releases at 24 px). Under v2
+  the legacy `<nav>` and `.page-header`s are hidden and the account cluster
+  (locale · theme · settings · logout) lives in the Home bar — same nodes/ids.
+- Temporary tab roots until their screens exist: Course → lesson browser,
+  Practice → game setup, Me → settings.
+- Review captures: `node scripts/dev/shots.mjs --out=shots` (dev server on :8744).
+- Known (legacy, pre-existing) defect seen in review: the game-setup footer
+  ("N characters selected · Difficulty") is untranslated and mis-ordered in
+  Arabic; batch 9 replaces that footer with the dock shelf.
+- Logout lives at the bottom of the Me (settings) screen under v2; the Home
+  bar keeps locale · theme · settings so the compact title never truncates.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

@@ -721,5 +721,13 @@
     "start": "Review now",
     "done_title": "Review complete!",
     "back": "Dashboard"
+  },
+  "dock": {
+    "aria": "Main navigation",
+    "home": "Home",
+    "course": "Course",
+    "practice": "Practice",
+    "friends": "Friends",
+    "me": "Me"
   }
 }

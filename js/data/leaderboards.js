@@ -5,9 +5,10 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $, showScreen } from '../core/core.js?v=20260906c';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906c';
-import { t } from '../i18n/index.js?v=20260906c';
+import { state, $ } from '../core/core.js?v=20260906d';
+import { navigate } from '../core/nav.js?v=20260906d';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906d';
+import { t } from '../i18n/index.js?v=20260906d';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -155,7 +156,7 @@ let lbMode = 'survival';
 let lbBracket = 10;
 
 export async function openLeaderboard() {
-  showScreen('screen-leaderboard');
+  navigate('screen-leaderboard');
 
   // Rebuilt on every open (not cached) so a locale switch between visits
   // re-renders tab labels in the new language. The data-i18n attribute on

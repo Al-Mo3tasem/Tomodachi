@@ -61,6 +61,8 @@ const app = {
   onState: (fn) => App.addListener('appStateChange', fn),
   onUrl: (fn) => App.addListener('appUrlOpen', fn),
   exit: () => App.exitApp(),
+  // Android: send the app to the background instead of killing it (back on a root tab).
+  minimize: () => quiet(App.minimizeApp()),
   info: () => App.getInfo(),
 };
 

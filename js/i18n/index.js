@@ -14,14 +14,14 @@
 
 import i18next from 'https://cdn.jsdelivr.net/npm/i18next@26.3.0/+esm';
 import LanguageDetector from 'https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@8.2.1/+esm';
-import { I18N_CONFIG } from '../config/i18n.js?v=20260906c';
-import { applyTranslations } from './apply.js?v=20260906c';
-import { applyDirection } from './rtl.js?v=20260906c';
+import { I18N_CONFIG } from '../config/i18n.js?v=20260906d';
+import { applyTranslations } from './apply.js?v=20260906d';
+import { applyDirection } from './rtl.js?v=20260906d';
 
 // Fetch a locale JSON next to this module so the path works regardless of
 // where the page is mounted (root, sub-path, file:// during dev).
 async function loadLocale(lang) {
-  const url = new URL(`./locales/${lang}.json?v=20260906c`, import.meta.url);
+  const url = new URL(`./locales/${lang}.json?v=20260906d`, import.meta.url);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load locale "${lang}": ${res.status}`);
   return res.json();
@@ -105,6 +105,11 @@ export function t(key, vars) {
 export async function setLocale(lang) {
   if (!I18N_CONFIG.supportedLocales.includes(lang)) return;
   await i18next.changeLanguage(lang);
+}
+
+/** The i18next instance — for modules that stamp <template>s and must translate them (dock, sheets). */
+export function getI18n() {
+  return i18next;
 }
 
 export function getLocale() {

@@ -4,44 +4,47 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906c';
-import { getFunctionUrl } from './config/functions.js?v=20260906c';
+import { APP_CONFIG } from './config/firebase.js?v=20260906d';
+import { getFunctionUrl } from './config/functions.js?v=20260906d';
 import {
-  state, $, showScreen, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906c';
+  state, $, currentScreen, showLoading, toast, setTheme, withTimeout
+} from './core/core.js?v=20260906d';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906c';
+} from './data/firebase.js?v=20260906d';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906c';
+} from './games/engine.js?v=20260906d';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906c';
-import { isSpeechSupported } from './audio/audio.js?v=20260906c';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906c';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange } from './ui/lesson.js?v=20260906c';
-import { initReviewUi, renderReviewCta } from './ui/review.js?v=20260906c';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906c';
-import { shellVersion } from './config/features.js?v=20260906c';
-import { applyPlatformAttrs } from './core/platform.js?v=20260906c';
+} from './data/leaderboards.js?v=20260906d';
+import { isSpeechSupported } from './audio/audio.js?v=20260906d';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906d';
+import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906d';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906d';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906d';
+import { shellVersion } from './config/features.js?v=20260906d';
+import { applyPlatformAttrs } from './core/platform.js?v=20260906d';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906d';
+import { initDock } from './ui/dock.js?v=20260906d';
+import { initTopbars } from './ui/topbar.js?v=20260906d';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906c';
+} from './games/duel.js?v=20260906d';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906c';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906c';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906c';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906c';
+} from './games/coop.js?v=20260906d';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906d';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906d';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906d';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -493,8 +496,8 @@ function updateLocaleAwareSeo() {
   }
 }
 
-function showAuthScreen() { showScreen('screen-auth'); }
-function showLandingScreen() { showScreen('screen-landing'); }
+function showAuthScreen() { navigate('screen-auth'); }
+function showLandingScreen() { navigate('screen-landing', { reset: true }); }
 
 // Basic email-shape check; the CTA stays disabled until this passes.
 // Same regex used in handleWaitlistSubmit so the gate is consistent.
@@ -1197,7 +1200,7 @@ function goHome() {
   cleanupDuel();
   cleanupCoop();
   state.returnScreen = null;
-  showScreen('screen-dashboard');
+  navigate('screen-dashboard');   // root of the Home tab: resets its stack
   loadDashboard();
   loadHistory();
 }
@@ -1276,7 +1279,7 @@ function goToSelect(gameType) {
     setI18n(startBtn, 'select.start_button.zen');
   }
 
-  showScreen('screen-select');
+  navigate('screen-select');      // root of the Practice tab
   renderSets();
   updateSelectionUI();
 }
@@ -1333,15 +1336,17 @@ function openSettings() {
     toast(t('settings.blocked_during_match'), 'info', 3500);
     return;
   }
-  state.returnScreen = currentScreen() || 'screen-dashboard';
-  if (state.returnScreen === 'screen-game' && isActive()) {
-    pauseGame();
-  }
+  // The router remembers where we came from; a paused game resumes through
+  // the screen-game onEnter hook when back() returns to it.
+  state.returnScreen = null;
+  if (currentScreen() === 'screen-game' && isActive()) pauseGame();
   showSettings();
 }
 
 function showSettings() {
-  showScreen('screen-settings');
+  // Pushed onto the CURRENT tab (settings gear inside a game/select must come
+  // back there); the Me dock tab opens the same screen as its own root.
+  navigate('screen-settings', { push: true });
 
   const themeToggle = $('toggle-theme');
   if (themeToggle) themeToggle.checked = state.theme === 'dark';
@@ -1363,16 +1368,8 @@ function showSettings() {
 }
 
 function settingsBack() {
-  const ret = state.returnScreen;
   state.returnScreen = null;
-  if (ret === 'screen-game' && isActive()) {
-    showScreen('screen-game');
-    resumeGame();
-  } else if (ret === 'screen-select' || ret === 'screen-leaderboard') {
-    showScreen(ret);
-  } else {
-    goHome();
-  }
+  if (!navBack()) goHome();       // at a root (opened from the Me tab): home
 }
 
 function toggleTheme() {
@@ -1756,12 +1753,40 @@ function bindLocaleToggles() {
   update();
 }
 
+// Router registry (docs/APP-BUILD-PLAN.md batch 3). Tabs: home · course ·
+// practice · friends · me. Immersive screens hide the dock and always push
+// onto the current tab. Temporary tab roots until the real tab screens land:
+// course → lesson browser, practice → game setup, me → settings.
+function registerScreens() {
+  registerScreen('screen-dashboard',    { tab: 'home', root: true });
+  registerScreen('screen-leaderboard',  { tab: 'home' });
+  registerScreen('screen-lessons-list', { tab: 'course', root: true });
+  registerScreen('screen-select',       { tab: 'practice', root: true });
+  registerScreen('screen-settings',     { tab: 'me', root: true });
+  registerScreen('screen-game', {
+    tab: 'practice', immersive: true,
+    onEnter: () => { if (isActive()) resumeGame(); },     // back from settings resumes a paused game
+    onLeave: () => { if (isActive()) pauseGame(); },
+    onBack:  () => { requestExit(); return false; },      // the game owns "back" (confirm / results)
+  });
+  registerScreen('screen-lesson', { tab: 'course', immersive: true, onLeave: abandonLesson });
+  registerScreen('screen-meta',   { tab: 'course', immersive: true });
+  registerScreen('screen-review', { tab: 'practice', immersive: true, onLeave: abandonReview });
+  registerScreen('screen-lobby',  { tab: 'friends', immersive: true });
+  registerScreen('screen-duel',   { tab: 'friends', immersive: true, onBack: () => { exitDuel(); return false; } });
+  registerScreen('screen-coop',   { tab: 'friends', immersive: true, onBack: () => { exitCoop(); return false; } });
+}
+
 async function init() {
   // Feature-flagged shell: re-assert what the pre-paint <head> script set,
   // from the single source of truth (js/config/features.js). Until the v2
   // CSS/JS lands this changes nothing visible.
   document.documentElement.dataset.shell = shellVersion();
   applyPlatformAttrs();   // data-platform / data-glass for the token variants
+  registerScreens();
+  initNav();
+  initDock();             // v2 only (returns early on v1)
+  initTopbars();          // v2 only
   setTheme(state.theme, false); // apply only — never persist a boot-time fallback
   // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
   // single source of truth (persists, syncs settings checkbox + aria-pressed).
@@ -1851,7 +1876,8 @@ async function init() {
         // L1.04: unauthenticated users now land on the waitlist hero.
         // The auth-screen is still reachable via the "Sign in" link in
         // the landing nav.
-        showScreen('screen-landing');
+        resetStacks();
+        navigate('screen-landing', { reset: true });
       }
     } catch (err) {
       console.error('App startup failed:', err);

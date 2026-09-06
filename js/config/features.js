@@ -17,7 +17,7 @@
 // init() re-asserts it from here. tests/unit/features.test.mjs proves parity.
 // ============================================
 
-import { getEnv } from './firebase.js?v=20260906c';
+import { getEnv } from './firebase.js?v=20260906d';
 
 export const FEATURES = {
   nativeShell:        { dev: true,  staging: true,  prod: false },

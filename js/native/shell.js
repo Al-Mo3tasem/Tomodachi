@@ -12,7 +12,7 @@
 // the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { showScreen, currentScreen } from '../core/core.js?v=20260906c';
+import { back as navBack } from '../core/nav.js?v=20260906d';
 
 const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
 
@@ -48,27 +48,14 @@ export function onNativeEvent(event, fn) {
   if (listeners[event]) listeners[event].push(fn);
 }
 
-// ----- back-button policy v0 -----
-// Screens where "back" means "leave the app".
-const ROOT_SCREENS = new Set(['screen-landing', 'screen-auth', 'screen-dashboard']);
-// Screens with their own exit control (keeps their state machines clean).
-const EXIT_BUTTON = {
-  'screen-lesson': 'lesson-btn-exit',
-  'screen-review': 'review-btn-exit',
-};
-// In-game screens ignore hardware back (a mis-tap must not kill a duel);
-// the game's own ✕ handles quitting with confirmation.
-const GAME_SCREENS = new Set(['screen-game', 'screen-duel', 'screen-coop']);
-
+// ----- hardware / predictive back -----
+// The router owns the policy (per-tab stacks, screens that consume back via
+// onBack). At a root there is nothing to pop: background the app rather than
+// kill it (Android convention); exitApp only where minimize is unavailable.
 function handleBack() {
+  if (navBack()) return;
   const n = N();
-  const cur = currentScreen();
-  if (!cur || ROOT_SCREENS.has(cur)) { n.app.exit(); return; }
-  if (GAME_SCREENS.has(cur)) return;
-  const exitId = EXIT_BUTTON[cur];
-  const btn = exitId && document.getElementById(exitId);
-  if (btn) { btn.click(); return; }
-  showScreen('screen-dashboard');
+  if (n.app.minimize) n.app.minimize(); else n.app.exit();
 }
 
 function wire() {

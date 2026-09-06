@@ -7,7 +7,7 @@
 // Never touches the native global directly (lint gate): uses the shell adapters.
 // ============================================
 
-import { isNative, nativePlatform } from '../native/shell.js?v=20260906c';
+import { isNative, nativePlatform } from '../native/shell.js?v=20260906d';
 
 const GLASS_PREF_KEY = 'tomodachi-glass';   // 'full' | 'reduced' (Me › Appearance, batch 10)
 
