@@ -12,19 +12,23 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260906e';
-import { haptic } from '../core/haptics.js?v=20260906e';
-import { navigate } from '../core/nav.js?v=20260906e';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260906f';
+import { haptic } from '../core/haptics.js?v=20260906f';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
+import { statusChip } from '../ui/status.js?v=20260906f';
+import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906f';
+import { countUp } from '../ui/numbers.js?v=20260906f';
+import { navigate } from '../core/nav.js?v=20260906f';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906e';
+} from '../data/firebase.js?v=20260906f';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906e';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906e';
-import { t } from '../i18n/index.js?v=20260906e';
+} from '../audio/audio.js?v=20260906f';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906f';
+import { t } from '../i18n/index.js?v=20260906f';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -59,7 +63,7 @@ let visHandler = null;
 /** Start a game of the given type using state.selectedChars. */
 export function startGame(type) {
   if (type !== 'zen' && type !== 'survival') {
-    toast(t('game.mode_soon'), 'info', 4000);
+    statusChip(t('game.mode_soon'), { duration: 4000 });
     return false;
   }
 
@@ -147,8 +151,10 @@ export function playAgain() {
   startGame(lastType);
 }
 
-/** HUD exit (✕) handler. */
-export function requestExit() {
+/** HUD exit (✕) / hardware back. Survival asks first (in-app dialog); the
+ *  game pauses under the dialog and a second press while it is open is ignored. */
+let exitPending = false;
+export async function requestExit() {
   if (!g || !g.active) {
     goHome();
     return;
@@ -158,16 +164,21 @@ export function requestExit() {
     return;
   }
   // Survival
-  if (g.correct === 0 && g.wrong === 0) {
-    if (confirm(t('game.confirm_leave_survival'))) {
-      cleanup();
-      goHome();
-    }
-    return;
-  }
-  if (confirm(t('game.confirm_quit_zen'))) {
-    endGame('quit');
-  }
+  if (exitPending) return;
+  exitPending = true;
+  const untouched = g.correct === 0 && g.wrong === 0;
+  pauseGame();
+  let ok = false;
+  try {
+    ok = await confirmDestructive({
+      title: t(untouched ? 'game.confirm_leave_survival' : 'game.confirm_quit_zen'),
+      confirm: t('common.leave'),
+      cancel: t('common.stay'),
+    });
+  } finally { exitPending = false; }
+  if (!ok) { if (g && g.active) resumeGame(); return; }
+  if (untouched) { cleanup(); goHome(); }
+  else endGame('quit');
 }
 
 /** Pause without showing the overlay (used when navigating to Settings). */
@@ -459,17 +470,13 @@ function renderInput() {
 
   const grid = $('choice-grid');
   if (!grid) return;
-  grid.innerHTML = '';
   const isListen = g.practice === 'listen';
-  const choices = makeChoices();
-
-  choices.forEach((value, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn' + (isListen ? ' choice-jp' : '');
-    btn.dataset.value = value;
-    btn.innerHTML = `<span class="choice-key">${i + 1}</span><span class="choice-text">${value}</span>`;
-    btn.addEventListener('click', () => onAnswer(value, btn));
-    grid.appendChild(btn);
+  renderChoiceTiles(grid, makeChoices(), {
+    onPick: (value, tile) => onAnswer(value, tile),
+    jp: isListen,
+    kana: isListen && (g.current.kind || 'kana') === 'kana',
+    hotkeys: true,
+    tileClass: isListen ? 'choice-jp' : '',
   });
 }
 
@@ -1029,18 +1036,6 @@ function hidePauseOverlay() {
 // ============================================
 // HELPERS
 // ============================================
-
-function countUp(el, target, suffix = '') {
-  const start = performance.now();
-  const duration = 900;
-  function step(now) {
-    const p = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = fmtNumber(Math.round(target * eased)) + suffix;
-    if (p < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
 
 function confetti() {
   const colors = ['#0071E3', '#34C759', '#FF9500', '#FF3B30', '#AF52DE', '#FFD60A'];

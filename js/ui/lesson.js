@@ -12,15 +12,17 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260906e';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906e';
-import { haptic } from '../core/haptics.js?v=20260906e';
-import { setJa, fmtCount } from '../core/format.js?v=20260906e';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906e';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906e';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906e';
-import { t, getLocale } from '../i18n/index.js?v=20260906e';
-import { scheduleLessonSrs } from './review.js?v=20260906e';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260906f';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906f';
+import { haptic } from '../core/haptics.js?v=20260906f';
+import { setJa, fmtCount } from '../core/format.js?v=20260906f';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906f';
+import { statusChip } from '../ui/status.js?v=20260906f';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906f';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906f';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906f';
+import { t, getLocale } from '../i18n/index.js?v=20260906f';
+import { scheduleLessonSrs } from './review.js?v=20260906f';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -302,14 +304,7 @@ function renderQuiz() {
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
   if (q.sub) { $('lesson-quiz-sub').textContent = q.sub; } else { $('lesson-quiz-sub').textContent = ''; }
   const grid = $('lesson-quiz-choices');
-  grid.innerHTML = '';
-  q.choices.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn lesson-choice';
-    btn.textContent = c;
-    btn.addEventListener('click', () => answer(btn, c === q.answer, q));
-    grid.appendChild(btn);
-  });
+  renderChoiceTiles(grid, q.choices, { onPick: (c, tile) => answer(tile, c === String(q.answer), q), tileClass: 'lesson-choice' });
   if (q.say) speak(q.say);
 }
 
@@ -319,17 +314,20 @@ function answer(btn, ok, q) {
   L.locked = true;
   haptic(ok ? 'ok' : 'no');
   btn.classList.add(ok ? 'correct' : 'wrong');
+  lockTiles($('lesson-quiz-choices'));
   if (!ok) {
     // reveal the right one
-    [...$('lesson-quiz-choices').children].forEach(b => { if (b.textContent === q.answer) b.classList.add('correct'); });
+    [...$('lesson-quiz-choices').children].forEach(b => { if (b.dataset.value === String(q.answer)) b.classList.add('correct'); });
   } else {
     L.correct++;
   }
-  setTimeout(() => {
+  const advance = () => {
     if (L !== run) return;   // exited (or reopened) during the feedback pause
     L.qi++;
     if (L.qi >= L.quiz.length) { completeLesson(); } else { render(); }
-  }, ok ? 550 : 1400);
+  };
+  // v2: the verdict sheet holds the question until Continue; v1: timed auto-advance
+  if (!showFeedbackSheet({ ok, answer: q.answer, onContinue: advance })) setTimeout(advance, ok ? 550 : 1400);
 }
 
 async function completeLesson() {
@@ -510,7 +508,7 @@ function renderLessonBrowser() {
     row.append(icon, num, name, st);
     row.addEventListener('click', () => {
       if (isDone || isCurrent) openLesson(l);
-      else toast(t('lesson.locked_toast'), 'info');
+      else statusChip(t('lesson.locked_toast'));
     });
     frag.appendChild(row);
   }

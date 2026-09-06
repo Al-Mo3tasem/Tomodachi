@@ -1,0 +1,110 @@
+/* ============================================================
+   Tomodachi — controls (layer: components)
+   Buttons (pick 8: soft-elevated crimson, tonal secondary, rose
+   destructive), the sliding-pill segmented control, the RTL-safe toggle
+   knob and the consent banner's logical centring. v2 only.
+   ============================================================ */
+@layer components {
+  /* ---------- buttons ---------- */
+  html[data-shell="v2"] .btn {
+    min-height: var(--tap-min);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    letter-spacing: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform var(--dur-press) var(--ease-out-quint), box-shadow var(--dur-press) var(--ease-out-quint),
+                background-color var(--dur-fast) var(--ease-effects), color var(--dur-fast) var(--ease-effects);
+  }
+  html[data-shell="v2"]:lang(ar) .btn { font-family: var(--font-ar); font-weight: 700; letter-spacing: 0; }
+  html[data-shell="v2"] .btn:focus-visible { outline: 2px solid #B91C1C; outline-offset: 2px; }
+  html[data-shell="v2"][data-theme="dark"] .btn:focus-visible,
+  html[data-shell="v2"][data-theme="oled"] .btn:focus-visible { outline-color: #F28585; }
+
+  /* primary: one crimson per screen; inset top highlight = the "soft elevation" */
+  html[data-shell="v2"] .btn-primary {
+    min-height: var(--cta-h);
+    background: #B91C1C;
+    color: #FFFFFF;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 2px rgba(22, 19, 17, 0.12), 0 6px 16px rgba(185, 28, 28, 0.24);
+  }
+  html[data-shell="v2"][data-theme="dark"] .btn-primary,
+  html[data-shell="v2"][data-theme="oled"] .btn-primary {
+    background: #E04848;   /* fill only — never as text */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+  html[data-shell="v2"] .btn-primary:hover:not(:disabled) { transform: none; }
+  html[data-shell="v2"] .btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 2px rgba(22, 19, 17, 0.12);
+  }
+  /* the legacy shine sweep only where a hover exists */
+  html[data-shell="v2"] .btn-primary::after { display: none; }
+  @media (hover: hover) { html[data-shell="v2"] .btn-primary::after { display: block; } }
+  /* disabled: colour tokens, never opacity on (Arabic) text */
+  html[data-shell="v2"] .btn-primary:disabled { opacity: 1; background: #E3A9A9; color: #FFFFFF; box-shadow: none; }
+  html[data-shell="v2"][data-theme="dark"] .btn-primary:disabled,
+  html[data-shell="v2"][data-theme="oled"] .btn-primary:disabled { background: #6B3A3A; color: #D9C7C7; }
+
+  /* secondary: tonal tan */
+  html[data-shell="v2"] .btn-secondary { background: #F3E7CF; color: #3F2E10; border: 0; box-shadow: none; }
+  html[data-shell="v2"][data-theme="dark"] .btn-secondary,
+  html[data-shell="v2"][data-theme="oled"] .btn-secondary { background: #4A3A22; color: #F3E7CF; }
+  html[data-shell="v2"] .btn-secondary:hover:not(:disabled) { transform: none; }
+  html[data-shell="v2"] .btn-secondary:active:not(:disabled) { transform: scale(var(--press-scale)); }
+
+  /* destructive: rose, never the brand crimson */
+  html[data-shell="v2"] .btn-danger { background: #BE123C; color: #FFFFFF; border: 0; box-shadow: none; }
+  html[data-shell="v2"][data-theme="dark"] .btn-danger,
+  html[data-shell="v2"][data-theme="oled"] .btn-danger { background: #FB7185; color: #3B0A14; }
+  html[data-shell="v2"] .btn-danger:active:not(:disabled) { transform: scale(var(--press-scale)); }
+
+  /* ---------- segmented: sliding pill (measured by js/ui/segmented.js) ---------- */
+  html[data-shell="v2"] .segmented,
+  html[data-shell="v2"] .lb-modes { position: relative; isolation: isolate; }
+  html[data-shell="v2"] .segmented { background: var(--bg-inset); }
+  html[data-shell="v2"] .seg-pill {
+    position: absolute;
+    inset-block: 3px;
+    inset-inline-start: var(--seg-x, 3px);
+    width: var(--seg-w, 0px);
+    z-index: 0;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    box-shadow: 0 1px 2px rgba(22, 19, 17, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: inset-inline-start var(--dur-spring-soft) var(--ease-spring-soft), width var(--dur-spring-soft) var(--ease-spring-soft), opacity var(--dur-fast);
+  }
+  html[data-shell="v2"] .seg-pill.is-ready { opacity: 1; }
+  html[data-shell="v2"] .seg-btn,
+  html[data-shell="v2"] .lb-tab { position: relative; z-index: 1; min-height: var(--tap-min); letter-spacing: 0; }
+  html[data-shell="v2"] .segmented:has(.seg-pill.is-ready) .seg-btn.active,
+  html[data-shell="v2"] .lb-modes:has(.seg-pill.is-ready) .lb-tab.active { background: transparent; box-shadow: none; }
+  html[data-shell="v2"] .seg-btn:disabled { opacity: 1; color: var(--text-caption); }
+
+  /* ---------- toggle: the knob moves along the inline axis ---------- */
+  html[data-shell="v2"] .toggle-slider::before {
+    inset-inline-start: 2px;
+    transform: none;
+    transition: inset-inline-start var(--dur-press) var(--ease-out-quint), background-color var(--dur-fast);
+  }
+  html[data-shell="v2"] .toggle input:checked + .toggle-slider::before { transform: none; inset-inline-start: 22px; }
+
+  /* ---------- consent banner: logical centring, no physical translate ---------- */
+  html[data-shell="v2"] .consent-banner {
+    inset-inline: var(--space-4);
+    width: auto;
+    max-width: 720px;
+    margin-inline: auto;
+    transform: none;
+    animation-name: consent-rise;
+  }
+  @keyframes consent-rise { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-shell="v2"] .seg-pill,
+    html[data-shell="v2"] .toggle-slider::before { transition: none; }
+    html[data-shell="v2"] .consent-banner { animation: none; }
+  }
+}

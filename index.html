@@ -72,8 +72,8 @@
   }
   </script>
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906e">
-  <link rel="apple-touch-icon" href="favicon.svg?v=20260906e">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260906f">
+  <link rel="apple-touch-icon" href="favicon.svg?v=20260906f">
 
   <!-- ===== PWA install manifest (L1.16) ===== -->
   <link rel="manifest" href="manifest.json">
@@ -104,13 +104,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Cairo:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260906e">
+  <link rel="stylesheet" href="css/style.css?v=20260906f">
   <!-- v2 foundation (docs/APP-BUILD-PLAN.md batch 2): layered on top of the legacy sheet -->
-  <link rel="stylesheet" href="css/app/fonts.css?v=20260906e">
-  <link rel="stylesheet" href="css/app/tokens.css?v=20260906e">
-  <link rel="stylesheet" href="css/app/base.css?v=20260906e">
-  <link rel="stylesheet" href="css/app/glass.css?v=20260906e">
-  <link rel="stylesheet" href="css/app/shell.css?v=20260906e">
+  <link rel="stylesheet" href="css/app/fonts.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/tokens.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/base.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/glass.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/shell.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/components/overlays.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/components/surfaces.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/components/controls.css?v=20260906f">
+  <link rel="stylesheet" href="css/app/components/feedback.css?v=20260906f">
 </head>
 <body>
   <!-- Inline brand symbol. The standalone assets/brand/logo.svg hardcodes a
@@ -1286,6 +1290,47 @@
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- ========== v2 primitives (batch 5): status chip, sheet root, destructive dialog ========== -->
+  <div id="status-chip" role="status" aria-live="polite" hidden>
+    <span class="status-chip-icon" aria-hidden="true"></span>
+    <span class="status-chip-text"></span>
+  </div>
+  <div id="sheet-root"></div>
+  <dialog id="dlg-confirm" aria-labelledby="dlg-confirm-title" aria-describedby="dlg-confirm-body">
+    <form method="dialog" class="dlg-card">
+      <h2 class="dlg-title" id="dlg-confirm-title"></h2>
+      <p class="dlg-body" id="dlg-confirm-body"></p>
+      <div class="dlg-actions">
+        <button type="submit" class="btn btn-secondary" value="cancel" data-i18n="common.cancel">Cancel</button>
+        <button type="submit" class="btn btn-danger" value="confirm" data-i18n="common.leave">Leave</button>
+      </div>
+    </form>
+  </dialog>
+  <template id="tpl-sheet">
+    <div class="sheet-scrim"></div>
+    <section class="sheet" role="dialog" aria-modal="true" tabindex="-1">
+      <div class="sheet-head">
+        <div class="sheet-grabber" aria-hidden="true"></div>
+        <div class="sheet-title-row">
+          <h2 class="sheet-title"></h2>
+          <button type="button" class="sheet-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-close"/></svg></button>
+        </div>
+      </div>
+      <div class="sheet-body"></div>
+    </section>
+  </template>
+  <template id="tpl-choice-tile">
+    <button type="button" class="choice-btn quiz-tile"><span class="choice-key quiz-tile-key" aria-hidden="true"></span><span class="choice-text quiz-tile-text"></span></button>
+  </template>
+  <template id="tpl-skel-row">
+    <div class="skel-row"><span class="skeleton skel-avatar"></span><span class="skel-lines"><span class="skeleton skel-line"></span><span class="skeleton skel-line is-short"></span></span></div>
+  </template>
+  <template id="tpl-skel-card"><div class="skeleton skel-card"></div></template>
+  <template id="tpl-skel-tile"><div class="skeleton skel-tile"></div></template>
+  <template id="tpl-skel-friend">
+    <div class="skel-friend"><span class="skeleton skel-avatar"></span><span class="skeleton skel-line"></span></div>
+  </template>
+
   <!-- ========== COOKIE CONSENT BANNER (L1.10) ========== -->
   <div id="consent-banner" class="consent-banner" role="region"
        aria-labelledby="consent-title" aria-describedby="consent-body" hidden>
@@ -1348,7 +1393,7 @@
   </div>
 
   <!-- App Module -->
-  <script type="module" src="js/app.js?v=20260906e"></script>
+  <script type="module" src="js/app.js?v=20260906f"></script>
 
   <!-- Mockup carousel dots (mobile-only). IntersectionObserver tracks
        which card is centered in the scroll-snap container and toggles

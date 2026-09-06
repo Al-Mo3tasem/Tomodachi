@@ -161,7 +161,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Haptics: APK answer tile -> light impact (bridge debug log); web haptic() no-op without console noise.
 - grep gates green (localStorage, window.Native); prod-shell-unchanged green; unit suite green.
 
-### Batch 5 — Primitives: sheets + destructive dialog, status chip/toast, quiz tiles + feedback sheet, buttons, segmented, numbers, skeletons  _(2 days)_
+### Batch 5 — Primitives: sheets + destructive dialog, status chip/toast, quiz tiles + feedback sheet, buttons, segmented, numbers, skeletons — SHIPPED  _(2 days (done))_
 
 **Goal:** Every reusable component the screens need exists with the researched numbers (pick 6, 8, 9, 11, 17, 22).
 

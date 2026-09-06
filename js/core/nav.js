@@ -14,7 +14,7 @@
 // on the GitHub Pages sub-path can never 404); popstate → back().
 // ============================================
 
-import { showScreen } from './core.js?v=20260906e';
+import { showScreen } from './core.js?v=20260906f';
 
 export const TABS = ['home', 'course', 'practice', 'friends', 'me'];
 
@@ -25,6 +25,12 @@ let tab = 'home';
 let currentId = null;
 let suppressPop = 0;
 let listening = false;
+let backGuard = null;                      // an open overlay (sheet / dialog) consumes "back" first
+
+/** Overlays register a guard while open: return true to consume a back press. */
+export function setBackGuard(fn) { backGuard = typeof fn === 'function' ? fn : null; }
+/** An overlay popped its own history entry: ignore the next popstate. */
+export function suppressNextPop() { suppressPop++; }
 
 const hasDoc = () => typeof document !== 'undefined';
 const win = () => (typeof window !== 'undefined' ? window : null);
@@ -122,7 +128,8 @@ export function navigate(id, { replace = false, reset = false, push = false, tab
 
 // Stack pop without touching history (used by popstate).
 function popInternal() {
-  if (hasDoc() && document.querySelector('dialog[open]')) return true;   // dialogs own "back"
+  if (backGuard && backGuard() === true) return true;                    // sheet / confirm dialog closed instead
+  if (hasDoc() && document.querySelector('dialog[open]')) return true;   // any other dialog owns "back"
   const top = stacks[tab][stacks[tab].length - 1];
   const meta = top ? screens.get(top.id) : null;
   if (meta && meta.onBack && meta.onBack() === false) return true;      // screen consumed it (confirm prompt etc.)

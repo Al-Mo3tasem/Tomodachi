@@ -7,7 +7,7 @@
 //   import of the i18n module, so this file is unit-testable in Node.
 // ============================================
 
-import { getPref } from './prefs.js?v=20260906e';
+import { getPref } from './prefs.js?v=20260906f';
 
 function lang() {
   try { return (document.documentElement.getAttribute('lang') || 'en').split('-')[0]; } catch (_e) { return 'en'; }

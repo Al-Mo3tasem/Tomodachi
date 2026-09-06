@@ -3,8 +3,8 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260906e';
-import { getPref, setPref } from './prefs.js?v=20260906e';
+import { APP_CONFIG } from '../config/firebase.js?v=20260906f';
+import { getPref, setPref } from './prefs.js?v=20260906f';
 // (the hiraquest-* → tomodachi-* key migration now lives in prefs.js)
 
 // ----- Global App State -----
@@ -61,12 +61,19 @@ export function showLoading(show) {
 }
 
 // ----- Toasts -----
-export function toast(message, type = 'info', duration = 3000) {
+// toast(message, type, duration) or toast(message, type, { duration, action: { label, onClick } }).
+// Errors and undo only under the v2 shell (events go to the status chip,
+// js/ui/status.js); v2 shows one toast at a time, above the dock.
+export function toast(message, type = 'info', durationOrOpts = 3000) {
   const container = $('toast-container');
   if (!container) return;
+  const opts = durationOrOpts && typeof durationOrOpts === 'object' ? durationOrOpts : { duration: durationOrOpts };
+  const duration = Number.isFinite(opts.duration) ? opts.duration : 3000;
+  if (document.documentElement.dataset.shell === 'v2') container.querySelectorAll('.toast').forEach((el) => el.remove());
 
   const toastEl = document.createElement('div');
   toastEl.className = `toast toast-${type}`;
+  toastEl.setAttribute('role', type === 'error' ? 'alert' : 'status');
   // Status icons: monochrome Lucide line glyphs, tinted per severity by CSS
   // (.toast-icon color). These are trusted literals, so innerHTML is safe
   // here; the user-supplied message still goes through textContent below.
@@ -82,12 +89,22 @@ export function toast(message, type = 'info', duration = 3000) {
   const text = document.createElement('span');
   text.textContent = message;
   toastEl.append(icon, text);
-  container.appendChild(toastEl);
-
-  setTimeout(() => {
+  let timer = null;
+  const dismiss = () => {
+    clearTimeout(timer);
     toastEl.classList.add('leaving');
     setTimeout(() => toastEl.remove(), 300);
-  }, duration);
+  };
+  if (opts.action && opts.action.label) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'toast-action';
+    btn.textContent = opts.action.label;
+    btn.addEventListener('click', () => { try { if (opts.action.onClick) opts.action.onClick(); } finally { dismiss(); } });
+    toastEl.appendChild(btn);
+  }
+  container.appendChild(toastEl);
+  timer = setTimeout(dismiss, duration);
 }
 
 // ----- Theme -----

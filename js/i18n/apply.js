@@ -22,7 +22,7 @@
 // languageChanged event, index.js re-runs this against `document`.
 // ============================================
 
-import { localizeDigits } from '../core/format.js?v=20260906e';
+import { localizeDigits } from '../core/format.js?v=20260906f';
 
 export function applyTranslations(i18n, root = document) {
   applyTextContent(i18n, root);

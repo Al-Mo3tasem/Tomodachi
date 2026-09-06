@@ -1,0 +1,63 @@
+/* ============================================================
+   Tomodachi — feedback surfaces (layer: components)
+   Skeletons (pick 17: geometry-matched, 1.6 s shimmer, static under
+   reduced motion) and the empty-state block (Tomo + one line + one CTA).
+   Mounted by js/ui/skeleton.js; v2 only.
+   ============================================================ */
+@layer components {
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    color: transparent;
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
+    translate: -100% 0;
+    animation: skel-shimmer var(--dur-skeleton) linear infinite;
+  }
+  [data-theme="dark"] .skeleton::after,
+  [data-theme="oled"] .skeleton::after { background: linear-gradient(90deg, transparent 0%, rgba(255, 240, 225, 0.08) 50%, transparent 100%); }
+  @keyframes skel-shimmer { to { translate: 100% 0; } }
+
+  .skel-group { display: grid; gap: var(--space-2); }
+  .skel-group[data-skeleton="friend"] { grid-auto-flow: column; justify-content: start; gap: var(--space-3); overflow: hidden; }
+  .skel-row { display: grid; grid-template-columns: var(--avatar-row) minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 0; }
+  .skel-avatar { width: var(--avatar-row); height: var(--avatar-row); border-radius: var(--radius-full); }
+  .skel-lines { display: grid; gap: 8px; }
+  .skel-line { height: 12px; }
+  .skel-line.is-short { width: 55%; }
+  .skel-card { height: 96px; border-radius: var(--radius-lg); }
+  .skel-tile { min-height: var(--tile-min-h); border-radius: var(--radius-tile); }
+  .skel-friend { display: grid; justify-items: center; gap: 8px; width: 88px; }
+  .skel-friend .skel-avatar { width: var(--avatar-strip); height: var(--avatar-strip); }
+  .skel-friend .skel-line { width: 60%; }
+
+  /* ---------- empty state ---------- */
+  .empty-view {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    padding: var(--space-6) var(--space-4);
+    text-align: center;
+  }
+  .empty-view img { width: min(180px, 48vw); height: auto; }   /* illustrations are never mirrored */
+  .empty-view-title {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  html[data-shell="v2"]:lang(ar) .empty-view-title { font-family: var(--font-display-ar); font-weight: 800; }
+  .empty-view-body { margin: 0; max-width: 34ch; color: var(--text-secondary); }
+  .empty-view .btn { margin-block-start: var(--space-2); min-height: var(--tap-min); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton::after { animation: none; display: none; }
+  }
+}

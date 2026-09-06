@@ -168,6 +168,57 @@ release build; never commit it.**
   one bidi island on the lesson card, prefs survive a reload including
   Arabic-Indic digits).
 
+### Batch 5 — primitives: sheet + dialog, status chip, quiz tiles, controls, skeletons
+- `js/ui/sheet.js` — `openSheet()` (detents half/full, drag on the head with
+  over-pull damping, flick or > 120 px to dismiss, Escape/scrim/✕, focus trap
+  and return) and `confirmDestructive()` on the native `<dialog id="dlg-confirm">`.
+  Both push one state-only history entry so the browser/Android back gesture
+  closes the overlay first (`nav.setBackGuard`) and the screen stack stays in
+  sync. The pointer is captured only after a 6 px drag intent, so taps on
+  buttons inside a sheet still click. The sheet head is opaque by design (the
+  glass budget stays with the dock and top bar). `window.confirm` is gated to
+  this module; Survival exit, duel forfeit and co-op leave now use the dialog
+  (the game pauses underneath and a second back press is ignored while it is
+  open). Prod-visible on every shell: an in-app dialog instead of the browser
+  confirm box.
+- `js/ui/status.js` — `statusChip()` for events (friend online, signed in,
+  saved, welcome, cancelled match, locked lesson…); on v1 it degrades to the
+  old toast. `toast()` (core.js) gained `{ duration, action }`, a role, and
+  under v2 shows one pill at a time above the dock (bottom placement; the
+  container's `bottom` counts the dock's two hairline borders). Toasts are
+  for errors and undo only.
+- `js/ui/quiz-tiles.js` — `renderChoiceTiles()` is the one renderer for every
+  2×2 answer grid (lesson, review, Zen/Survival choices). Tiles keep the
+  legacy classes so v1 is pixel-identical; v2 styles `.quiz-tile` (≥ 64 px,
+  4 px press edge, matcha/rose verdicts with a springing mark, kana variant,
+  hotkey hints hidden on coarse pointers). Japanese runs are bidi islands,
+  romaji is isolated LTR, meanings are plain text. `showFeedbackSheet()` —
+  lessons and review hold the question under a tinted sheet with the answer
+  and Continue (v2); v1 keeps the timed auto-advance; timed games keep the
+  inline flash.
+- `css/app/components/controls.css` — soft-elevated crimson primary (inset
+  highlight, 1 px press), tonal tan secondary, rose destructive (`--danger`
+  is rose under v2), sliding-pill segmented controls placed by
+  `js/ui/segmented.js` through `--seg-x`/`--seg-w` as inline-start offsets
+  (RTL-correct without transforms), a toggle knob that moves along the
+  inline axis, and a consent banner centred without `translateX`.
+- `js/ui/skeleton.js` — `mountSkeleton()` follows the loading ladder (nothing
+  for 300 ms, then geometry-matched rows/cards/tiles/friends from templates)
+  on the history list, the leaderboard preview and the full board;
+  `renderEmptyState()` (`.empty-view`, Tomo illustration + one CTA) is ready
+  for Home/Friends. `js/ui/numbers.js` — one `countUp()` ticker.
+- Tests: `tests/e2e/primitives.spec.mjs` (v2; uses the new worker-scoped
+  `appPageV2` fixture — `appPage` is deliberately v1 for the baselines) covers
+  sheet stacking/dismissal/focus/back, dialog labels and back veto, the real
+  Survival exit flow, tile geometry + press + verdict sheet, chip vs toast
+  placement, pill placement in both directions, the skeleton ladder, empty
+  view, and numbers-as-ink contrast. Lint gate 4: `confirm(` only in sheet.js.
+- Deviations from the plan text, on purpose: the 2×2 grid is v2-scoped rather
+  than deleting the legacy ≤ 480 px one-column rule (v1 pixels untouched until
+  the flip); no lessons-list skeleton (the list is built from already-loaded
+  data before its screen shows); the page-behind scale under a sheet is left
+  for a device pass.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

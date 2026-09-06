@@ -29,7 +29,12 @@ const GATES = [
     pattern: /\blocalStorage\b/,
     allow: ['js/core/prefs.js', 'js/config/features.js'],
   },
-  // Batch 5 adds: { name: 'confirm() only in sheet.js', pattern: /\bconfirm\(/, allow: ['js/ui/sheet.js'] }
+  {
+    name: 'confirm() only in the sheet/dialog module',
+    scope: 'js', ext: '.js',
+    pattern: /\bconfirm\(/,
+    allow: ['js/ui/sheet.js'],
+  },
 ];
 
 function walk(dir, ext, out = []) {

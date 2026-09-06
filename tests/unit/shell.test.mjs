@@ -23,8 +23,8 @@ globalThis.location = { hostname: 'localhost', search: '' };
 globalThis.matchMedia = () => ({ matches: true });
 globalThis.CustomEvent = class { constructor(type, init) { this.type = type; this.detail = init && init.detail; } };
 
-const shell = await import('../../js/native/shell.js?v=20260906e');
-const prefs = await import('../../js/core/prefs.js?v=20260906e');   // same instance shell.js installs the adapter into
+const shell = await import('../../js/native/shell.js?v=20260906f');
+const prefs = await import('../../js/core/prefs.js?v=20260906f');   // same instance shell.js installs the adapter into
 
 function fakeBridge(platform) {
   const native = new Map();

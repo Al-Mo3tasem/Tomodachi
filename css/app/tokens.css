@@ -201,5 +201,13 @@
   /* v2 shell: the typography pick (IBM Plex Sans Arabic, bundled in assets/fonts) */
   html[data-shell="v2"] {
     --font-ar: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
+    /* destructive / wrong = rose, so errors never read as the brand crimson (pick 8) */
+    --danger: #BE123C;
+    --danger-soft: rgba(190, 18, 60, 0.12);
+  }
+  html[data-shell="v2"][data-theme="dark"],
+  html[data-shell="v2"][data-theme="oled"] {
+    --danger: #FB7185;
+    --danger-soft: rgba(251, 113, 133, 0.16);
   }
 }

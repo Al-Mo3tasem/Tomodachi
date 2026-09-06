@@ -5,12 +5,13 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $ } from '../core/core.js?v=20260906e';
-import { getPref, setPref } from '../core/prefs.js?v=20260906e';
-import { fmtNumber, fmtDate } from '../core/format.js?v=20260906e';
-import { navigate } from '../core/nav.js?v=20260906e';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906e';
-import { t } from '../i18n/index.js?v=20260906e';
+import { state, $ } from '../core/core.js?v=20260906f';
+import { getPref, setPref } from '../core/prefs.js?v=20260906f';
+import { fmtNumber, fmtDate } from '../core/format.js?v=20260906f';
+import { mountSkeleton } from '../ui/skeleton.js?v=20260906f';
+import { navigate } from '../core/nav.js?v=20260906f';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906f';
+import { t } from '../i18n/index.js?v=20260906f';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -130,7 +131,9 @@ export async function renderLeaderboardPreview() {
   const host = $('lb-preview');
   if (!host) return;
   const bracket = Number(getPref('lastBracket')) || 10;
-  const entries = await fetchLeaderboard('survival', bracket);
+  const clearSkel = mountSkeleton(host, 'row', 3);
+  let entries = [];
+  try { entries = await fetchLeaderboard('survival', bracket); } finally { clearSkel(); }
 
   if (!entries.length) {
     host.innerHTML = `<p class="empty-state" data-i18n="leaderboard.preview_cta">${t('leaderboard.preview_cta')}</p>`;
@@ -216,9 +219,11 @@ async function renderBoard() {
   });
   const list = $('lb-list');
   if (!list) return;
-  list.innerHTML = `<p class="empty-state">${t('leaderboard.loading')}</p>`;
-
-  const entries = await fetchLeaderboard(lbMode, lbBracket);
+  // v2 shows skeleton rows (after the 300 ms ladder) instead of a loading line
+  list.innerHTML = document.documentElement.dataset.shell === 'v2' ? '' : `<p class="empty-state">${t('leaderboard.loading')}</p>`;
+  const clearSkel = mountSkeleton(list, 'row', 5);
+  let entries = [];
+  try { entries = await fetchLeaderboard(lbMode, lbBracket); } finally { clearSkel(); }
   if (!entries.length) {
     list.innerHTML = `<p class="empty-state">${t('leaderboard.empty_bracket')}</p>`;
     return;

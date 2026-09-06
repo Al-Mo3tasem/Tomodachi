@@ -19,6 +19,11 @@ function initScript([l, t, shell]) {
     localStorage.setItem('tomodachi-glass', 'full');   // headless renders ~2fps: pin glass so the budget spec measures the real thing
     localStorage.setItem('FF_NATIVE_SHELL', shell === 'v2' ? 'true' : 'false');   // dev defaults to v2; baselines must see what prod users see
   } catch (e) { /* ignore */ }
+  // The auth listener navigates once it has resolved (landing when signed out,
+  // dashboard when a session is cached). boot() waits for that first router
+  // change, otherwise a show() issued earlier can be undone by it (seen once
+  // as a landing page captured under the "auth" baseline on a loaded machine).
+  try { document.addEventListener('nav:change', () => { window.__navChanges = (window.__navChanges || 0) + 1; }); } catch (e) { /* ignore */ }
 }
 
 export const test = base.extend({
@@ -34,6 +39,17 @@ export const test = base.extend({
     const u = workerInfo.project.use || {};
     const ctx = await browser.newContext({ viewport: u.viewport, userAgent: u.userAgent, deviceScaleFactor: u.deviceScaleFactor, isMobile: u.isMobile, hasTouch: u.hasTouch, colorScheme: u.colorScheme, locale: u.locale, baseURL: u.baseURL });
     await ctx.addInitScript(initScript, [lang, theme, 'v1']);   // worker page = v1 (prod behaviour)
+    const page = await ctx.newPage();
+    await signIn(page);
+    await use(page);
+    await ctx.close();
+  }, { scope: 'worker' }],
+  // Same idea with the flag ON: one signed-in v2 page per worker for the redesign specs.
+  appPageV2: [async ({ browser }, use, workerInfo) => {
+    const { lang = 'en', theme = 'light' } = workerInfo.project.metadata || {};
+    const u = workerInfo.project.use || {};
+    const ctx = await browser.newContext({ viewport: u.viewport, userAgent: u.userAgent, deviceScaleFactor: u.deviceScaleFactor, isMobile: u.isMobile, hasTouch: u.hasTouch, colorScheme: u.colorScheme, locale: u.locale, baseURL: u.baseURL });
+    await ctx.addInitScript(initScript, [lang, theme, 'v2']);
     const page = await ctx.newPage();
     await signIn(page);
     await use(page);
@@ -55,6 +71,7 @@ export async function boot(page) {
   await page.goto('/index.html');
   await page.waitForSelector('.screen.active', { timeout: 30_000 });
   await page.waitForFunction(() => document.documentElement.getAttribute('data-shell') !== null);
+  await page.waitForFunction(() => (window.__navChanges || 0) >= 1, null, { timeout: 30_000 });   // auth state resolved → router settled
   await page.evaluate(() => document.fonts.ready).catch(() => {});
   // Cookie banner (fresh context): dismiss through its first button ('Reject non-essential')
   await page.evaluate(() => { const b = document.querySelector('#consent-banner button'); if (b && b.offsetParent) b.click(); }).catch(() => {});

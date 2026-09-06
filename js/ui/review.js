@@ -12,15 +12,16 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260906e';
-import { navigate, back as navBack } from '../core/nav.js?v=20260906e';
-import { haptic } from '../core/haptics.js?v=20260906e';
-import { setJa } from '../core/format.js?v=20260906e';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906e';
-import { cacheGet } from '../data/content.js?v=20260906e';
-import { loadLessons } from './lesson.js?v=20260906e';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906e';
-import { t, getLocale } from '../i18n/index.js?v=20260906e';
+import { state, $, shuffle } from '../core/core.js?v=20260906f';
+import { navigate, back as navBack } from '../core/nav.js?v=20260906f';
+import { haptic } from '../core/haptics.js?v=20260906f';
+import { setJa } from '../core/format.js?v=20260906f';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906f';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906f';
+import { cacheGet } from '../data/content.js?v=20260906f';
+import { loadLessons } from './lesson.js?v=20260906f';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906f';
+import { t, getLocale } from '../i18n/index.js?v=20260906f';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
@@ -146,14 +147,7 @@ function renderQuestion() {
   setJa(promptEl, q.prompt);
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
   const grid = $('review-choices');
-  grid.innerHTML = '';
-  q.choices.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn lesson-choice';
-    btn.textContent = c;
-    btn.addEventListener('click', () => answer(btn, c === q.answer));
-    grid.appendChild(btn);
-  });
+  renderChoiceTiles(grid, q.choices, { onPick: (c, tile) => answer(tile, c === String(q.answer)), tileClass: 'lesson-choice' });
   ['review-quiz', 'review-done'].forEach(id => { $(id).hidden = (id !== 'review-quiz'); });
   if (q.say) speak(q.say);
 }
@@ -164,14 +158,16 @@ function answer(btn, ok) {
   R.locked = true;
   haptic(ok ? 'ok' : 'no');
   btn.classList.add(ok ? 'correct' : 'wrong');
-  if (!ok) [...$('review-choices').children].forEach(b => { if (b.textContent === R.q.answer) b.classList.add('correct'); });
+  lockTiles($('review-choices'));
+  if (!ok) [...$('review-choices').children].forEach(b => { if (b.dataset.value === String(R.q.answer)) b.classList.add('correct'); });
   else R.correct++;
   R.results[R.rows[R.i].key] = ok;
-  setTimeout(() => {
+  const advance = () => {
     if (R !== run) return;
     R.i++;
     if (R.i >= R.rows.length) finishSession(); else renderQuestion();
-  }, ok ? 550 : 1400);
+  };
+  if (!showFeedbackSheet({ ok, answer: R.q.answer, onContinue: advance })) setTimeout(advance, ok ? 550 : 1400);
 }
 
 async function finishSession() {

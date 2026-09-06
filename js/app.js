@@ -4,49 +4,52 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906e';
-import { getFunctionUrl } from './config/functions.js?v=20260906e';
+import { APP_CONFIG } from './config/firebase.js?v=20260906f';
+import { getFunctionUrl } from './config/functions.js?v=20260906f';
 import {
   state, $, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906e';
+} from './core/core.js?v=20260906f';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906e';
+} from './data/firebase.js?v=20260906f';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906e';
+} from './games/engine.js?v=20260906f';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906e';
-import { isSpeechSupported } from './audio/audio.js?v=20260906e';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906e';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906e';
-import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906e';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906e';
-import { shellVersion } from './config/features.js?v=20260906e';
-import { applyPlatformAttrs } from './core/platform.js?v=20260906e';
-import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906e';
-import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906e';
-import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906e';
-import { initDock } from './ui/dock.js?v=20260906e';
-import { initTopbars } from './ui/topbar.js?v=20260906e';
+} from './data/leaderboards.js?v=20260906f';
+import { isSpeechSupported } from './audio/audio.js?v=20260906f';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906f';
+import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906f';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906f';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906f';
+import { shellVersion } from './config/features.js?v=20260906f';
+import { applyPlatformAttrs } from './core/platform.js?v=20260906f';
+import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906f';
+import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906f';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906f';
+import { initDock } from './ui/dock.js?v=20260906f';
+import { initTopbars } from './ui/topbar.js?v=20260906f';
+import { initSegmented } from './ui/segmented.js?v=20260906f';
+import { statusChip } from './ui/status.js?v=20260906f';
+import { mountSkeleton } from './ui/skeleton.js?v=20260906f';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906e';
+} from './games/duel.js?v=20260906f';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906e';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906e';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906e';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906e';
+} from './games/coop.js?v=20260906f';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906f';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906f';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906f';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -162,7 +165,7 @@ async function ensureUserProfile(user) {
     createdAt: serverTimestamp()
   }, { merge: true }), 'Creating missing stats profile', 15000);
 
-  toast(t('toast.profile_created'), 'success', 5000);
+  statusChip(t('toast.profile_created'), { icon: 'ok', duration: 5000 });
   return profile;
 }
 
@@ -221,7 +224,7 @@ async function handleLogin(e) {
   try {
     showLoading(true);
     await withTimeout(signInWithEmailAndPassword(auth, email, password), 'Signing in', 15000);
-    toast(t('toast.signed_in'), 'success');
+    statusChip(t('toast.signed_in'), { icon: 'ok' });
   } catch (err) {
     showFormError(errorEl, formatAuthError(err.code, err.message));
     console.error('Login error:', err);
@@ -819,7 +822,7 @@ function renderFriend() {
   lastFriendOnline[fid] = isOnline;
   const notifyToggle = $('toggle-notify');
   if (isOnline && prevOnline === false && notifyToggle && notifyToggle.checked) {
-    toast(t('dashboard.friend.online_toast', { name: p.displayName || p.username }), 'success');
+    statusChip(t('dashboard.friend.online_toast', { name: p.displayName || p.username }), { icon: 'friend' });
   }
 
   // Let the multiplayer engines react to opponent disconnects.
@@ -969,6 +972,7 @@ async function loadDashboard() {
 async function loadHistory() {
   const list = $('history-list');
   if (!list || !state.user) return;
+  const clearSkel = mountSkeleton(list, 'row', 3);   // v2: rows appear only if the query takes > 300 ms
   try {
     const q = query(
       collection(db, 'game_sessions'),
@@ -976,6 +980,7 @@ async function loadHistory() {
       limit(20)
     );
     const snap = await getDocs(q);
+    clearSkel();
 
     // Only genuinely-finished games belong in history. Abandoned or
     // declined challenges (status 'waiting' / 'cancelled' / 'countdown' /
@@ -1039,6 +1044,7 @@ async function loadHistory() {
     });
   } catch (err) {
     console.error('History load error:', err);
+    clearSkel();
     list.innerHTML = `<p class="empty-state">${escapeText(t('dashboard.history.could_not_load'))}</p>`;
   }
 }
@@ -1334,7 +1340,7 @@ function renderAvatarPicker() {
 
 function openSettings() {
   if (isInDuel() || isInCoop()) {
-    toast(t('settings.blocked_during_match'), 'info', 3500);
+    statusChip(t('settings.blocked_during_match'), { duration: 3500 });
     return;
   }
   // The router remembers where we came from; a paused game resumes through
@@ -1477,7 +1483,7 @@ async function saveProfileSettings(e) {
     };
 
     renderUserIdentity();
-    toast(t('settings.profile_updated'), 'success');
+    statusChip(t('settings.profile_updated'), { icon: 'saved' });
   } catch (err) {
     // If we claimed the new usernames/ doc but a later write failed,
     // release the reservation so the user can retry without seeing a
@@ -1566,7 +1572,7 @@ async function resetProgress() {
 
     await removeUserFromLeaderboards(state.user.uid);
 
-    toast(t('settings.reset_success'), 'success', 5000);
+    statusChip(t('settings.reset_success'), { icon: 'ok', duration: 5000 });
     cancelReset();
     goHome();
   } catch (err) {
@@ -1728,10 +1734,7 @@ async function enterAppAsUser(user, isFreshRegistration = false) {
   initDuelInvites();
 
   const name = state.userData?.displayName || t('nav.user_default_name');
-  toast(
-    t(isFreshRegistration ? 'toast.welcome_new' : 'toast.welcome_back', { name }),
-    'success'
-  );
+  statusChip(t(isFreshRegistration ? 'toast.welcome_new' : 'toast.welcome_back', { name }), { icon: 'ok', duration: 2500 });
 }
 
 // Wire the EN | AR locale toggles in both the auth-screen and nav bars.
@@ -1809,6 +1812,7 @@ async function init() {
   initNav();
   initDock();             // v2 only (returns early on v1)
   initTopbars();          // v2 only
+  initSegmented();        // v2 only (sliding pills on the segmented controls)
   setTheme(state.theme, false); // apply only — never persist a boot-time fallback
   // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
   // single source of truth (persists, syncs settings checkbox + aria-pressed).

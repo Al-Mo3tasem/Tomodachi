@@ -12,16 +12,18 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
-import { haptic } from '../core/haptics.js?v=20260906e';
-import { navigate } from '../core/nav.js?v=20260906e';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
+import { haptic } from '../core/haptics.js?v=20260906f';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
+import { statusChip } from '../ui/status.js?v=20260906f';
+import { navigate } from '../core/nav.js?v=20260906f';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906e';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906e';
-import { acceptCoop, isInCoop } from './coop.js?v=20260906e';
-import { t } from '../i18n/index.js?v=20260906e';
+} from '../data/firebase.js?v=20260906f';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906f';
+import { acceptCoop, isInCoop } from './coop.js?v=20260906f';
+import { t } from '../i18n/index.js?v=20260906f';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -769,9 +771,10 @@ export function isInDuel() {
   return !!d && !d.finished;
 }
 
+let exitPending = false;
 export async function exitDuel() {
   if (!d) { goDashboard(); return; }
-  const data = d.data;
+  let data = d.data;
 
   // Waiting lobby (host) → just cancel.
   if (data && data.status === 'waiting') {
@@ -784,8 +787,18 @@ export async function exitDuel() {
     goDashboard();
     return;
   }
-  // Live duel → confirm forfeit.
-  if (!confirm(t('duel.confirm_forfeit'))) return;
+  // Live duel → confirm forfeit (in-app dialog; a second back press while it is open is ignored).
+  if (exitPending) return;
+  exitPending = true;
+  let ok = false;
+  try { ok = await confirmDestructive({ title: t('duel.confirm_forfeit'), confirm: t('common.forfeit'), cancel: t('common.stay') }); }
+  finally { exitPending = false; }
+  if (!ok) return;
+  // The dialog no longer blocks the event loop: rounds may have advanced or the
+  // duel may have ended while it was open. Forfeit from the FRESH state.
+  if (!d || d.ended) { if (!d) goDashboard(); return; }
+  data = d.data;
+  if (!data || data.status === 'completed' || data.status === 'cancelled') { teardown(); goDashboard(); return; }
   // Snapshot the final state BEFORE teardown so we can record the loss.
   // The forfeiting client leaves immediately (no showResults), so unlike a
   // normal finish it must write its own stats here — otherwise the game
@@ -825,7 +838,7 @@ export function onFriendPresence(presence) {
 function handleEnded(reason) {
   if (!d || d.ended) return;
   if (reason === 'cancelled') {
-    toast(t('duel.toast.cancelled'), 'info', 4000);
+    statusChip(t('duel.toast.cancelled'), { duration: 4000 });
   }
   teardown();
   goDashboard();

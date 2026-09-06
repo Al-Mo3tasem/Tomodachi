@@ -10,17 +10,20 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260906e';
-import { haptic } from '../core/haptics.js?v=20260906e';
-import { navigate } from '../core/nav.js?v=20260906e';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906f';
+import { fmtTime } from '../core/format.js?v=20260906f';
+import { haptic } from '../core/haptics.js?v=20260906f';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906f';
+import { statusChip } from '../ui/status.js?v=20260906f';
+import { countUp } from '../ui/numbers.js?v=20260906f';
+import { navigate } from '../core/nav.js?v=20260906f';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906e';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906e';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260906e';
-import { t } from '../i18n/index.js?v=20260906e';
+} from '../data/firebase.js?v=20260906f';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906f';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260906f';
+import { t } from '../i18n/index.js?v=20260906f';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -166,6 +169,7 @@ export async function acceptCoop(invite) {
   }
 }
 
+let exitPending = false;
 export async function exitCoop() {
   if (!c) { goDashboard(); return; }
   const data = c.data;
@@ -179,7 +183,14 @@ export async function exitCoop() {
     goDashboard();
     return;
   }
-  if (!confirm(t('coop.confirm_leave'))) return;
+  if (exitPending) return;
+  exitPending = true;
+  let ok = false;
+  try { ok = await confirmDestructive({ title: t('coop.confirm_leave'), confirm: t('common.leave'), cancel: t('common.stay') }); }
+  finally { exitPending = false; }
+  if (!ok) return;
+  // The dialog no longer blocks the event loop: the match may have ended while it was open.
+  if (!c || c.ended) { if (!c) goDashboard(); return; }
   try {
     await updateDoc(c.ref, {
       status: 'completed',
@@ -727,7 +738,7 @@ function clearStallWatchdog() {
 
 function handleEnded(reason) {
   if (!c || c.ended) return;
-  if (reason === 'cancelled') toast(t('coop.toast.cancelled'), 'info', 4000);
+  if (reason === 'cancelled') statusChip(t('coop.toast.cancelled'), { duration: 4000 });
   teardown();
   goDashboard();
 }
@@ -852,19 +863,6 @@ function showLobby(statusText, detailText) {
 function setOverlay(id, on) {
   const el = $(id);
   if (el) el.classList.toggle('active', on);
-}
-
-function countUp(el, target) {
-  if (!el) return;
-  const start = performance.now();
-  const duration = 900;
-  function step(now) {
-    const p = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = fmtNumber(Math.round(target * eased));
-    if (p < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
 }
 
 function confetti() {

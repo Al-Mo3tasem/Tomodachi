@@ -19,7 +19,8 @@ const RULES = [
   [/translateX\(/, 'compute direction-aware transforms from getBoundingClientRect or use logical margins'],
   // letter-spacing may only ever be 0 / normal (tracking breaks Arabic joins);
   // the lookahead consumes the whitespace so it cannot backtrack past it.
-  [/letter-spacing\s*:(?!\s*(?:0|normal)\s*[;}])/, 'letter-spacing breaks Arabic joins — only 0/normal allowed'],
+  // --num-hero-tracking is the one token allowed: digits only, and 0 under :lang(ar) (tokens.css).
+  [/letter-spacing\s*:(?!\s*(?:0|normal|var\(--num-hero-tracking\))\s*[;}])/, 'letter-spacing breaks Arabic joins — only 0/normal allowed'],
 ];
 
 function walk(dir, out = []) {

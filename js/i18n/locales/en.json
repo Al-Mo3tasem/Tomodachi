@@ -8,7 +8,21 @@
     "save": "Save",
     "play_again": "Play Again",
     "rematch": "Rematch",
-    "enter": "Enter"
+    "enter": "Enter",
+    "leave": "Leave",
+    "stay": "Stay",
+    "forfeit": "Forfeit",
+    "close": "Close",
+    "retry": "Retry"
+  },
+  "sheet": {
+    "close": "Close"
+  },
+  "quiz": {
+    "correct": "Correct!",
+    "not_quite": "Not quite",
+    "answer_label": "Answer",
+    "continue": "Continue"
   },
   "hero": {
     "tagline": "Learn Japanese With Friends",
