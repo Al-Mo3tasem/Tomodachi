@@ -9,10 +9,10 @@
 // bar's actions — same nodes, same ids, same listeners.
 // ============================================
 
-import { $ } from '../core/core.js?v=20260906d';
-import { back as navBack, navigate, canGoBack, currentScreenId } from '../core/nav.js?v=20260906d';
-import { applyTranslations } from '../i18n/apply.js?v=20260906d';
-import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260906d';
+import { $ } from '../core/core.js?v=20260906e';
+import { back as navBack, navigate, canGoBack, currentScreenId } from '../core/nav.js?v=20260906e';
+import { applyTranslations } from '../i18n/apply.js?v=20260906e';
+import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260906e';
 
 // screen → i18n key of its title (immersive screens keep their own chrome)
 const TITLES = {

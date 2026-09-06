@@ -1,5 +1,25 @@
 # Your to-do list — everything that needs YOU
 
+## 🟠 Native app phase (updated 2026-09-06) — open items
+
+1. **API-key referrers (blocks sign-in inside the app).** Google Cloud →
+   Credentials → the *Browser key (auto created by Firebase)* of
+   `tomodachi-prod` and `tomodachi-staging` → Websites → add
+   `capacitor://localhost/*`, `http://localhost/*`, `https://localhost/*`.
+   Step-by-step in `docs/NATIVE-BUILD.md` ("Lead checklist"). Tell me when done
+   so I can retest sign-in on the emulator.
+2. **Send `docs/IOS-APPLE-ACCOUNT-CHECKLIST.md` to your friend** (the Apple
+   developer account owner). iOS/TestFlight cannot start until those items land.
+3. **Arabic copy check (30 s):** the game-setup duration chips now read
+   `1 د · 3 د · 5 د · 7 د · 10 د` in Arabic (were `1m … 10m`). If you would
+   rather see `دقيقة` spelled out, or a different short form, say so.
+4. **Later, not now:** first-click naming test for the tabs (Learn vs
+   Course/Practice) once the Course/Practice screens exist (batch 9).
+
+Everything below is history from the go-live run-up (all closed).
+
+---
+
 **Updated 2026-08-01 (evening).** Five of the original six items are closed.
 Nothing here blocks my work — I continue regardless.
 

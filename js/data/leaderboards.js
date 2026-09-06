@@ -5,10 +5,12 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $ } from '../core/core.js?v=20260906d';
-import { navigate } from '../core/nav.js?v=20260906d';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906d';
-import { t } from '../i18n/index.js?v=20260906d';
+import { state, $ } from '../core/core.js?v=20260906e';
+import { getPref, setPref } from '../core/prefs.js?v=20260906e';
+import { fmtNumber, fmtDate } from '../core/format.js?v=20260906e';
+import { navigate } from '../core/nav.js?v=20260906e';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260906e';
+import { t } from '../i18n/index.js?v=20260906e';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;
@@ -55,7 +57,7 @@ async function submitEntry(gameType, bracket, entry) {
 export async function submitSurvivalScore({ score, characterCount }) {
   if (!state.user) return null;
   const bracket = bracketFor(characterCount);
-  localStorage.setItem('tomodachi-last-bracket', String(bracket));
+  setPref('lastBracket', String(bracket));
   return submitEntry('survival', bracket, {
     userId: state.user.uid,
     username: state.userData?.username || 'player',
@@ -127,7 +129,7 @@ function escapeHtml(str) {
 export async function renderLeaderboardPreview() {
   const host = $('lb-preview');
   if (!host) return;
-  const bracket = Number(localStorage.getItem('tomodachi-last-bracket')) || 10;
+  const bracket = Number(getPref('lastBracket')) || 10;
   const entries = await fetchLeaderboard('survival', bracket);
 
   if (!entries.length) {
@@ -144,7 +146,7 @@ export async function renderLeaderboardPreview() {
       <span class="lb-rank">${medal(i + 1)}</span>
       <span class="lb-avatar">${escapeHtml(e.avatarEmoji || '🌸')}</span>
       <span class="lb-name">${escapeHtml(e.displayName || e.username)}</span>
-      <span class="lb-score">${e.score.toLocaleString()}</span>
+      <span class="lb-score">${fmtNumber(e.score)}</span>
     `;
     host.appendChild(row);
   });
@@ -191,7 +193,7 @@ export async function openLeaderboard() {
     });
   }
 
-  lbBracket = Number(localStorage.getItem('tomodachi-last-bracket')) || 10;
+  lbBracket = Number(getPref('lastBracket')) || 10;
   selectMode('survival');
 }
 
@@ -226,7 +228,7 @@ async function renderBoard() {
   entries.forEach((e, i) => {
     const row = document.createElement('div');
     row.className = 'lb-row';
-    const date = e.at ? new Date(e.at).toLocaleDateString() : '';
+    const date = e.at ? fmtDate(e.at) : '';
 
     if (lbMode === 'coop') {
       if ((e.playerIds || []).includes(state.user?.uid)) row.classList.add('lb-row-me');
@@ -240,7 +242,7 @@ async function renderBoard() {
           <span class="lb-name">${names}</span>
           <span class="lb-date">${date}</span>
         </div>
-        <span class="lb-score">${e.score.toLocaleString()}</span>
+        <span class="lb-score">${fmtNumber(e.score)}</span>
       `;
     } else {
       if (e.userId === state.user?.uid) row.classList.add('lb-row-me');
@@ -251,7 +253,7 @@ async function renderBoard() {
           <span class="lb-name">${escapeHtml(e.displayName || e.username)}</span>
           <span class="lb-date">${date}</span>
         </div>
-        <span class="lb-score">${e.score.toLocaleString()}</span>
+        <span class="lb-score">${fmtNumber(e.score)}</span>
       `;
     }
     list.appendChild(row);

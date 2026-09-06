@@ -13,9 +13,10 @@
 // initial page weight light.
 // ============================================
 
-import { getSentryDsn } from '../config/sentry.js?v=20260906d';
-import { getEnv } from '../config/firebase.js?v=20260906d';
-import { APP_CONFIG } from '../config/firebase.js?v=20260906d';
+import { getSentryDsn } from '../config/sentry.js?v=20260906e';
+import { getPref } from '../core/prefs.js?v=20260906e';
+import { getEnv } from '../config/firebase.js?v=20260906e';
+import { APP_CONFIG } from '../config/firebase.js?v=20260906e';
 
 let _sentry = null;
 let _initialized = false;
@@ -80,7 +81,7 @@ export function initSentry() {
  *  app.js). Direct localStorage read with the same key + schema. */
 function _consentGranted() {
   try {
-    const raw = localStorage.getItem('tomodachi-consent');
+    const raw = getPref('consent');
     if (!raw) return false;
     const parsed = JSON.parse(raw);
     if (!parsed.expiresAt || Date.now() > parsed.expiresAt) return false;

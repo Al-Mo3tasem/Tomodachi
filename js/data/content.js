@@ -18,10 +18,10 @@
 // caller falls back to the legacy loader — it must NEVER throw.
 // ============================================
 
-import { getEnv } from '../config/firebase.js?v=20260906d';
-import { getLocale } from '../i18n/index.js?v=20260906d';
-import { db, collection, getDocs } from './firebase.js?v=20260906d';
-import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260906d';
+import { getEnv } from '../config/firebase.js?v=20260906e';
+import { getLocale } from '../i18n/index.js?v=20260906e';
+import { db, collection, getDocs } from './firebase.js?v=20260906e';
+import { KANA_TYPES, groupKanaItems, groupVocabItems } from './content-transform.js?v=20260906e';
 
 // GO-LIVE 2026-08-02: v2 content + the 151-lesson course, all environments.
 export function contentV2Enabled() {

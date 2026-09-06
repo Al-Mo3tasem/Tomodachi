@@ -83,7 +83,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Already verified: APK builds (7.2 MB), www/ contains native-env.js (prod) + native-bridge.js + viewport-fit=cover.
 - Carried into batch 1: device launch test, sign-in persistence across restart, safe-area variables non-zero on a gesture-nav device.
 
-### Batch 1 — Harness, v1 baselines, flag scaffold, native auth persistence (zero visual change)  _(1.5 days)_
+### Batch 1 — Harness, v1 baselines, flag scaffold, native auth persistence (zero visual change) — SHIPPED (c309408 + b23d412)  _(1.5 days (done))_
 
 **Goal:** Before any pixel moves: Playwright + node --test exist with v1 baseline screenshots, a glass-budget counter, lint-css and grep gates; the nativeShell flag resolves safely on every host; the APK keeps users signed in across restarts and has been launch-tested.
 
@@ -102,7 +102,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - APK: sign in -> force-stop -> reopen shows the dashboard without re-login (indexedDB persistence); no `requests-from-capacitor://localhost-are-blocked` error after the referrer change; --safe-area-inset-bottom non-zero on the gesture-bar device; WebView version >= 111 recorded.
 - Web prod unchanged: `git push origin main:staging` preview identical to prod; the batch touches no CSS.
 
-### Batch 2 — Foundation CSS: cascade layers, tokens, glass recipe, safe areas, prod-visible fixes  _(2 days)_
+### Batch 2 — Foundation CSS: cascade layers, tokens, glass recipe, safe areas, prod-visible fixes — SHIPPED (7d5aa58)  _(2 days (done))_
 
 **Goal:** The token sheet and glass ladder exist; safe areas work on notch + gesture bar; blur is stripped from every non-nav surface and overlays no longer sit mounted at rest; the legacy stylesheet is layered; the only prod-visible changes are the contract-required fixes on the mask list.
 
@@ -122,7 +122,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Cascade proof: a temporary `@layer base { .btn-primary { background: lime } }` wins over legacy without !important (removed before merge); reduced-motion emulation keeps 120ms fades and kills transforms.
 - axe: no new violations; dark-mode 13px --text-tertiary usages flagged and moved to --text-caption (>= 4.5:1).
 
-### Batch 3 — Router, dock, collapsing top bar (v2 only)  _(2 days)_
+### Batch 3 — Router, dock, collapsing top bar (v2 only) — SHIPPED (ff10a07)  _(2 days (done))_
 
 **Goal:** Under the flag: 5-tab floating glass dock (Home · Course · Practice · Friends · Me / الرئيسية · المسار · تدريب · الأصدقاء · حسابي), editorial collapsing title per screen, a real screen stack with view transitions, Android back through nav.js, immersive game/lesson screens.
 
@@ -143,7 +143,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Naming first-click test recorded in the Progress Log; prod-shell-unchanged green with the flag off; id-contract green.
 - grep gate: showScreen() only in core.js + nav.js.
 
-### Batch 4 — Facades: prefs, haptics, digits/format, bdi pass, platform attrs (mechanical)  _(1.5 days)_
+### Batch 4 — Facades: prefs, haptics, digits/format, bdi pass, platform attrs (mechanical) — SHIPPED  _(1.5 days (done))_
 
 **Goal:** Every cross-cutting primitive the screens need is in place and every call site migrated: sync prefs facade with native write-through, haptic vocabulary, one number formatter honouring the digits setting, JP tokens isolated, text-size/digits attributes.
 

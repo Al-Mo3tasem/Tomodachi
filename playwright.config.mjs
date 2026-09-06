@@ -27,7 +27,7 @@ for (const p of PHONES) {
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 90_000,
-  expect: { timeout: 10_000, toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled', caret: 'hide' } },
+  expect: { timeout: 10_000, toHaveScreenshot: { maxDiffPixels: 0, animations: 'disabled', caret: 'hide' } },
   fullyParallel: false,          // the specs share one QA account on the dev project
   workers: 1,
   retries: 0,

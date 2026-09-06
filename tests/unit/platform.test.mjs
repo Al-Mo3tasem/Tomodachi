@@ -8,7 +8,7 @@ const store = new Map();
 globalThis.localStorage = { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, String(v)), removeItem: (k) => store.delete(k) };
 globalThis.window = { __TOMODACHI_NATIVE__: false };
 globalThis.location = { hostname: 'localhost', search: '' };
-globalThis.document = { documentElement: { dataset: {}, classList: { add() {} } }, addEventListener() {}, querySelectorAll: () => [] };
+globalThis.document = { documentElement: { dataset: {}, classList: { add() {} }, style: { setProperty() {} } }, addEventListener() {}, querySelectorAll: () => [] };
 Object.defineProperty(globalThis, 'navigator', { value: { userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7)', maxTouchPoints: 5 }, configurable: true, writable: true });
 let reducedTransparency = false;
 globalThis.matchMedia = (q) => ({ matches: q.includes('reduced-transparency') ? reducedTransparency : false });
@@ -16,6 +16,7 @@ globalThis.performance = { now: () => 0 };
 globalThis.requestAnimationFrame = () => 0;
 
 const { detectPlatform, decideGlass, applyPlatformAttrs, setGlass } = await import('../../js/core/platform.js');
+const { _resetPrefCache } = await import('../../js/core/prefs.js?v=20260906e');   // same instance platform.js uses
 
 test('platform from the user agent on the web', () => {
   assert.equal(detectPlatform(), 'android');
@@ -26,7 +27,7 @@ test('platform from the user agent on the web', () => {
 });
 
 test('glass ladder: pref > reduced-transparency > low memory > full', () => {
-  store.clear();
+  store.clear(); _resetPrefCache();
   delete globalThis.navigator.deviceMemory;
   assert.equal(decideGlass(), 'full');
   globalThis.navigator.deviceMemory = 4;
@@ -36,15 +37,15 @@ test('glass ladder: pref > reduced-transparency > low memory > full', () => {
   reducedTransparency = true;
   assert.equal(decideGlass(), 'reduced', 'OS reduced-transparency reduces');
   reducedTransparency = false;
-  store.set('tomodachi-glass', 'full');
+  store.set('tomodachi-glass', 'full'); _resetPrefCache();
   globalThis.navigator.deviceMemory = 2;
   assert.equal(decideGlass(), 'full', 'explicit pref wins over memory');
-  store.set('tomodachi-glass', 'reduced');
+  store.set('tomodachi-glass', 'reduced'); _resetPrefCache();
   assert.equal(decideGlass(), 'reduced');
 });
 
 test('applyPlatformAttrs stamps <html>; setGlass persists', () => {
-  store.clear();
+  store.clear(); _resetPrefCache();
   delete globalThis.navigator.deviceMemory;
   applyPlatformAttrs();
   const ds = globalThis.document.documentElement.dataset;

@@ -12,15 +12,16 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906d';
-import { navigate } from '../core/nav.js?v=20260906d';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
+import { haptic } from '../core/haptics.js?v=20260906e';
+import { navigate } from '../core/nav.js?v=20260906e';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906d';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906d';
-import { acceptCoop, isInCoop } from './coop.js?v=20260906d';
-import { t } from '../i18n/index.js?v=20260906d';
+} from '../data/firebase.js?v=20260906e';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906e';
+import { acceptCoop, isInCoop } from './coop.js?v=20260906e';
+import { t } from '../i18n/index.js?v=20260906e';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -468,7 +469,7 @@ async function submitAnswer(value) {
   const q = data.questions[N];
   const correct = romajiMatches(value, q.romaji);
   lockInput(value, correct, q, true);
-  playSound(correct ? 'correct' : 'wrong');
+  playSound(correct ? 'correct' : 'wrong'); haptic(correct ? 'ok' : 'no');
 
   try {
     await updateDoc(d.ref, {
@@ -731,8 +732,8 @@ async function showResults(data) {
   setOverlay('duel-results', true);
   navigate('screen-duel');
 
-  if (!draw && iWon) { confetti(); playSound('win'); }
-  else if (!draw) playSound('lose');
+  if (!draw && iWon) { confetti(); playSound('win'); haptic('ok'); }
+  else if (!draw) { playSound('lose'); haptic('no'); }
   else playSound('tick');
 
   await writeDuelStats(data);

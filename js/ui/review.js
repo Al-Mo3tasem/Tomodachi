@@ -12,13 +12,15 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260906d';
-import { navigate, back as navBack } from '../core/nav.js?v=20260906d';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906d';
-import { cacheGet } from '../data/content.js?v=20260906d';
-import { loadLessons } from './lesson.js?v=20260906d';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906d';
-import { t, getLocale } from '../i18n/index.js?v=20260906d';
+import { state, $, shuffle } from '../core/core.js?v=20260906e';
+import { navigate, back as navBack } from '../core/nav.js?v=20260906e';
+import { haptic } from '../core/haptics.js?v=20260906e';
+import { setJa } from '../core/format.js?v=20260906e';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906e';
+import { cacheGet } from '../data/content.js?v=20260906e';
+import { loadLessons } from './lesson.js?v=20260906e';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906e';
+import { t, getLocale } from '../i18n/index.js?v=20260906e';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
@@ -141,7 +143,7 @@ function renderQuestion() {
   R.locked = false;
   $('review-count').textContent = `${R.i + 1} / ${R.rows.length}`;
   const promptEl = $('review-prompt');
-  promptEl.textContent = q.prompt;
+  setJa(promptEl, q.prompt);
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
   const grid = $('review-choices');
   grid.innerHTML = '';
@@ -160,6 +162,7 @@ function answer(btn, ok) {
   if (!R || R.locked) return;
   const run = R;
   R.locked = true;
+  haptic(ok ? 'ok' : 'no');
   btn.classList.add(ok ? 'correct' : 'wrong');
   if (!ok) [...$('review-choices').children].forEach(b => { if (b.textContent === R.q.answer) b.classList.add('correct'); });
   else R.correct++;

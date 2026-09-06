@@ -4,47 +4,49 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906d';
-import { getFunctionUrl } from './config/functions.js?v=20260906d';
+import { APP_CONFIG } from './config/firebase.js?v=20260906e';
+import { getFunctionUrl } from './config/functions.js?v=20260906e';
 import {
   state, $, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906d';
+} from './core/core.js?v=20260906e';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where, onSnapshot,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906d';
+} from './data/firebase.js?v=20260906e';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906d';
+} from './games/engine.js?v=20260906e';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906d';
-import { isSpeechSupported } from './audio/audio.js?v=20260906d';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906d';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906d';
-import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906d';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906d';
-import { shellVersion } from './config/features.js?v=20260906d';
-import { applyPlatformAttrs } from './core/platform.js?v=20260906d';
-import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906d';
-import { initDock } from './ui/dock.js?v=20260906d';
-import { initTopbars } from './ui/topbar.js?v=20260906d';
+} from './data/leaderboards.js?v=20260906e';
+import { isSpeechSupported } from './audio/audio.js?v=20260906e';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906e';
+import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906e';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906e';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906e';
+import { shellVersion } from './config/features.js?v=20260906e';
+import { applyPlatformAttrs } from './core/platform.js?v=20260906e';
+import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906e';
+import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906e';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906e';
+import { initDock } from './ui/dock.js?v=20260906e';
+import { initTopbars } from './ui/topbar.js?v=20260906e';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906d';
+} from './games/duel.js?v=20260906e';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906d';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906d';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906d';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906d';
+} from './games/coop.js?v=20260906e';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906e';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906e';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906e';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -60,7 +62,6 @@ const WAITLIST_BASELINE = 350;
 // PROJECT_RULES.md §19.2. The actual gating of GA4 + Sentry user-
 // context happens at L1.11 + L1.14; L1.10 just captures + stores the
 // decision so those tasks can read it.
-const CONSENT_STORAGE_KEY = 'tomodachi-consent';
 const CONSENT_VERSION = 1;
 const CONSENT_TTL_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -470,7 +471,8 @@ function setupInstallPrompt() {
 function renderFooterCopyright() {
   const el = $('landing-footer-copyright');
   if (!el) return;
-  const year = new Date().getFullYear();
+  // a year is a label, not a quantity: digits follow the setting, no grouping
+  const year = fmtNumber(new Date().getFullYear(), { useGrouping: false });
   const key = t('footer.copyright', { year });
   if (key && key !== 'footer.copyright') {
     el.textContent = key;
@@ -515,7 +517,7 @@ function updateWaitlistSubmitState() {
 // Read the stored decision. Returns null if absent / malformed / expired.
 function loadConsent() {
   try {
-    const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
+    const raw = getPref('consent');
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (parsed.v !== CONSENT_VERSION) return null;
@@ -542,7 +544,7 @@ function saveConsent({ analytics, errorContext }) {
     errorContext: !!errorContext
   };
   try {
-    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(decision));
+    setPref('consent', JSON.stringify(decision));
   } catch (err) {
     console.warn('[consent] Failed to persist decision:', err);
   }
@@ -935,14 +937,14 @@ async function loadDashboard() {
     const total = totalCharCount() || 46;
 
     const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
-    set('stat-total', stats.totalGames || 0);
-    set('stat-best', (stats.highestSoloScore || 0).toLocaleString());
-    set('stat-record', `${stats.duelsWon || 0}–${stats.duelsLost || 0}`);
-    set('stat-coop', (stats.highestCoopScore || 0).toLocaleString());
-    set('stat-mastered', `${masteredCount}/${total}`);
+    set('stat-total', fmtCount(stats.totalGames || 0));
+    set('stat-best', fmtNumber(stats.highestSoloScore || 0));
+    set('stat-record', `${fmtCount(stats.duelsWon || 0)}–${fmtCount(stats.duelsLost || 0)}`);
+    set('stat-coop', fmtNumber(stats.highestCoopScore || 0));
+    set('stat-mastered', `${fmtCount(masteredCount)}/${fmtCount(total)}`);
 
     const pct = Math.round((masteredCount / total) * 100);
-    set('mastery-percent', `${pct}%`);
+    set('mastery-percent', `${fmtCount(pct)}%`);
     const fill = $('mastery-fill');
     if (fill) fill.style.width = `${pct}%`;
 
@@ -998,7 +1000,7 @@ async function loadHistory() {
     list.innerHTML = '';
     games.slice(0, 6).forEach(data => {
       const type = data.gameType || 'game';
-      const date = new Date(toMillis(data.createdAt)).toLocaleDateString();
+      const date = fmtDate(toMillis(data.createdAt));
       const item = document.createElement('div');
       item.className = 'history-item';
 
@@ -1013,14 +1015,14 @@ async function loadHistory() {
         metaHtml = `<div class="history-score ${cls}">${escapeText(result)}</div>
                     <div class="history-sub">${escapeText(oppText)}</div>`;
       } else if (type === 'coop') {
-        const scoreText = t('dashboard.history.score_pts', { score: (data.finalScore || 0).toLocaleString() });
+        const scoreText = t('dashboard.history.score_pts', { score: fmtNumber(data.finalScore || 0) });
         const subText = data.endReason === 'cleared'
           ? t('dashboard.history.all_cleared')
           : t('dashboard.history.team_run');
         metaHtml = `<div class="history-score">${escapeText(scoreText)}</div>
                     <div class="history-sub">${escapeText(subText)}</div>`;
       } else {
-        const scoreText = t('dashboard.history.score_pts', { score: (data.score || 0).toLocaleString() });
+        const scoreText = t('dashboard.history.score_pts', { score: fmtNumber(data.score || 0) });
         const accText = t('dashboard.history.accuracy', { percent: Math.round((data.accuracy || 0) * 100) });
         metaHtml = `<div class="history-score">${escapeText(scoreText)}</div>
                     <div class="history-sub">${escapeText(accText)}</div>`;
@@ -1077,16 +1079,15 @@ function updateSelectionUI() {
   });
 
   const totalChars = state.selectedChars.size;
-  const multiplier = totalChars > 0 ? (totalChars / 5).toFixed(1) : '1.0';
+  const multiplier = fmtNumber(totalChars > 0 ? totalChars / 5 : 1, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
   const countEl = $('selection-count');
   const diffEl = $('selection-difficulty');
   const startBtn = $('btn-start');
 
   if (countEl) {
-    countEl.textContent = totalChars === 1
-      ? t('select.footer.count_one', { count: totalChars })
-      : t('select.footer.count_other', { count: totalChars });
+    // i18next picks the plural form (EN one/other; AR zero/one/two/few/many/other)
+    countEl.textContent = t('select.footer.count', { count: totalChars });
   }
   if (diffEl) diffEl.textContent = t('select.footer.difficulty', { multiplier });
   if (startBtn) {
@@ -1148,7 +1149,7 @@ function syncSegmented(groupSelector, attr, value) {
 
 function setPractice(type) {
   state.practiceType = type;
-  localStorage.setItem('tomodachi-practice', type);
+  setPref('practice', type);
   syncSegmented('#seg-practice', 'practice', type);
   const inputRow = $('option-input');
   if (inputRow) inputRow.style.display = type === 'listen' ? 'none' : 'flex';
@@ -1156,31 +1157,31 @@ function setPractice(type) {
 
 function setInputMethod(method) {
   state.inputMethod = method;
-  localStorage.setItem('tomodachi-input', method);
+  setPref('input', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
 function setZenDuration(seconds) {
   state.zenDuration = seconds;
-  localStorage.setItem('tomodachi-duration', String(seconds));
+  setPref('duration', String(seconds));
   syncSegmented('#seg-duration', 'duration', seconds);
 }
 
 function setWinCondition(wc) {
   state.winCondition = wc;
-  localStorage.setItem('tomodachi-wincon', wc);
+  setPref('wincon', wc);
   syncSegmented('#seg-wincon', 'wincon', wc);
 }
 
 function setDuelInput(method) {
   state.duelInput = method;
-  localStorage.setItem('tomodachi-duelinput', method);
+  setPref('duelinput', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
 function setCoopInput(method) {
   state.coopInput = method;
-  localStorage.setItem('tomodachi-coopinput', method);
+  setPref('coopinput', method);
   syncSegmented('#seg-input', 'input', method);
 }
 
@@ -1378,7 +1379,7 @@ function toggleTheme() {
 
 function toggleAudio() {
   state.audioEnabled = $('toggle-audio').checked;
-  localStorage.setItem('tomodachi-audio', state.audioEnabled);
+  setPref('audio', state.audioEnabled);
 }
 
 async function saveProfileSettings(e) {
@@ -1661,7 +1662,6 @@ function attachListeners() {
   // Lesson screen (L2.13) + SRS review
   initLessonUi();
   initReviewUi();
-  initNativeShell();
 
   // Solo game screen
   $('game-exit')?.addEventListener('click', requestExit);
@@ -1777,11 +1777,33 @@ function registerScreens() {
   registerScreen('screen-coop',   { tab: 'friends', immersive: true, onBack: () => { exitCoop(); return false; } });
 }
 
+// Native shell: core.js computed its boot state from localStorage at module
+// evaluation, before the Capacitor Preferences mirror could answer. When the
+// WebView evicted storage, restoreFromNative() copies the mirror back and
+// names what changed; only those fields are recomputed here. Everything else
+// that reads a preference (platform attrs, theme, the i18n detector) runs
+// after this in init(), so it simply sees the restored values.
+function applyRestoredPrefs(names) {
+  if (!names.length) return;
+  if (names.includes('theme')) state.theme = getPref('theme') || state.theme;
+  if (names.includes('audio')) state.audioEnabled = getPref('audio') !== 'false';
+  if (names.includes('practice')) state.practiceType = getPref('practice') || state.practiceType;
+  if (names.includes('input')) state.inputMethod = getPref('input') || state.inputMethod;
+  if (names.includes('duration')) state.zenDuration = Number(getPref('duration')) || state.zenDuration;
+  if (names.includes('wincon')) state.winCondition = getPref('wincon') || state.winCondition;
+  if (names.includes('duelinput')) state.duelInput = getPref('duelinput') || state.duelInput;
+  if (names.includes('coopinput')) state.coopInput = getPref('coopinput') || state.coopInput;
+}
+
 async function init() {
   // Feature-flagged shell: re-assert what the pre-paint <head> script set,
   // from the single source of truth (js/config/features.js). Until the v2
   // CSS/JS lands this changes nothing visible.
   document.documentElement.dataset.shell = shellVersion();
+  // Native bridge first (web: resolves at once), then the preference mirror,
+  // so every pref read below — platform attrs, theme, locale — is the saved one.
+  await initNativeShell();
+  applyRestoredPrefs(await restoreFromNative());
   applyPlatformAttrs();   // data-platform / data-glass for the token variants
   registerScreens();
   initNav();
@@ -1799,6 +1821,7 @@ async function init() {
   // t() is callable everywhere downstream (auth listener may call enter-
   // AppAsUser immediately on cached session, which calls t() for toasts).
   await initI18n();
+  updateSelectionUI();   // footer copy is translated + digit-aware from the first paint
   attachListeners();
   bindLocaleToggles();
 
@@ -1839,6 +1862,7 @@ async function init() {
   // on its own (it only handles static [data-i18n] nodes; vars like the
   // {{name}} in "Welcome back, {{name}}" live in JS state).
   onLocaleChange(() => {
+    updateSelectionUI();
     if (state.userData) renderUserIdentity();
     renderHeroCounter();
     renderFooterCopyright();

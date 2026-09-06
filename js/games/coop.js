@@ -10,15 +10,17 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import { state, $, toast, shuffle, clamp, formatTime } from '../core/core.js?v=20260906d';
-import { navigate } from '../core/nav.js?v=20260906d';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260906e';
+import { haptic } from '../core/haptics.js?v=20260906e';
+import { navigate } from '../core/nav.js?v=20260906e';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906d';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906d';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260906d';
-import { t } from '../i18n/index.js?v=20260906d';
+} from '../data/firebase.js?v=20260906e';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906e';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260906e';
+import { t } from '../i18n/index.js?v=20260906e';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -394,13 +396,13 @@ function submitAnswer(value, btnEl) {
 
   if (correct) {
     c.myClearedRound = N;
-    playSound('correct');
+    playSound('correct'); haptic('ok');
     lockAll(q);
     const oppCleared = ((c.data.progress || {})[`r${N}`] || {})[otherId(c.data)]?.cleared;
     setFeedback('good', oppCleared ? t('coop.feedback.synced') : t('coop.feedback.got_it', { name: opponentName() }));
     writeMyProgress();
   } else {
-    playSound('wrong');
+    playSound('wrong'); haptic('no');
     if (c.myMissedRound !== N) { c.myMissedRound = N; writeMyProgress(); }
     setFeedback('bad', t('coop.feedback.not_quite'));
     if (c.data.settings.inputMethod === 'typing') {
@@ -479,7 +481,7 @@ function updateClock(data) {
   }
   const t = $('coop-hud-time');
   if (t) {
-    t.textContent = '⏱ ' + formatTime(remain);
+    t.textContent = '⏱ ' + fmtTime(remain);
     t.classList.toggle('danger', data.status === 'active' && remain < budget * 0.2);
   }
   const fill = $('coop-timer-fill');
@@ -658,7 +660,7 @@ async function showCoopResults(data) {
 
   const real = reason === 'cleared' || reason === 'timeup';
   const great = reason === 'cleared' || (N && cleared >= N * 0.6);
-  if (great) { confetti(); playSound('win'); }
+  if (great) { confetti(); playSound('win'); haptic('ok'); }
   else playSound('lose');
 
   if (real) {
@@ -859,7 +861,7 @@ function countUp(el, target) {
   function step(now) {
     const p = Math.min(1, (now - start) / duration);
     const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(target * eased).toLocaleString();
+    el.textContent = fmtNumber(Math.round(target * eased));
     if (p < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);

@@ -7,13 +7,13 @@
 // Never touches the native global directly (lint gate): uses the shell adapters.
 // ============================================
 
-import { isNative, nativePlatform } from '../native/shell.js?v=20260906d';
+import { isNative, nativePlatform } from '../native/shell.js?v=20260906e';
+import { getPref, setPref } from './prefs.js?v=20260906e';
 
-const GLASS_PREF_KEY = 'tomodachi-glass';   // 'full' | 'reduced' (Me › Appearance, batch 10)
+const readPref = () => getPref('glass');   // 'full' | 'reduced' (Me › Appearance, batch 10)
 
-function readPref(key) {
-  try { return localStorage.getItem(key); } catch (_e) { return null; }
-}
+// Text size setting → root scale (Me › Text size, batch 10)
+const TEXT_SCALE = { s: 0.9, m: 1, l: 1.15, xl: 1.3 };
 
 export function detectPlatform() {
   if (isNative()) return nativePlatform();
@@ -30,7 +30,7 @@ export function detectPlatform() {
  * The async frame benchmark below can downgrade full → reduced after boot.
  */
 export function decideGlass() {
-  const pref = readPref(GLASS_PREF_KEY);
+  const pref = readPref();
   if (pref === 'reduced' || pref === 'full') return pref;
   try { if (matchMedia('(prefers-reduced-transparency: reduce)').matches) return 'reduced'; } catch (_e) { /* ignore */ }
   if (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) return 'reduced';
@@ -41,7 +41,7 @@ export function decideGlass() {
 // burst, which dips every device below 50 fps); < 40 fps → reduce glass. Only
 // runs when no explicit preference exists and the document is visible.
 function benchmarkGlass(root) {
-  if (readPref(GLASS_PREF_KEY)) return;
+  if (readPref()) return;
   // Only a visible, settled document gives a meaningful frame rate: background
   // tabs are throttled to ~1 fps and would always look slow.
   if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
@@ -64,11 +64,31 @@ export function applyPlatformAttrs() {
   root.dataset.platform = detectPlatform();
   root.dataset.glass = decideGlass();
   if (root.dataset.glass === 'full') benchmarkGlass(root);
+  applyTextAttrs(root);
+}
+
+/** html[data-text-size] + --text-scale and html[data-digits] from prefs. */
+export function applyTextAttrs(root = document.documentElement) {
+  const size = getPref('textSize');
+  const key = TEXT_SCALE[size] ? size : 'm';
+  root.dataset.textSize = key;
+  root.style.setProperty('--text-scale', String(TEXT_SCALE[key]));
+  root.dataset.digits = getPref('digits') === 'arab' ? 'arab' : 'latn';
+}
+
+export function setTextSize(size) {
+  setPref('textSize', TEXT_SCALE[size] ? size : 'm');
+  applyTextAttrs();
+}
+
+export function setDigits(system) {
+  setPref('digits', system === 'arab' ? 'arab' : 'latn');
+  applyTextAttrs();
 }
 
 /** Runtime switch used by the Reduce-glass setting (batch 10). */
 export function setGlass(mode) {
   const v = mode === 'reduced' ? 'reduced' : 'full';
-  try { localStorage.setItem(GLASS_PREF_KEY, v); } catch (_e) { /* ignore */ }
+  setPref('glass', v);
   document.documentElement.dataset.glass = v;
 }

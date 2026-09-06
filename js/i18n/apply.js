@@ -22,6 +22,8 @@
 // languageChanged event, index.js re-runs this against `document`.
 // ============================================
 
+import { localizeDigits } from '../core/format.js?v=20260906e';
+
 export function applyTranslations(i18n, root = document) {
   applyTextContent(i18n, root);
   applyPlaceholders(i18n, root);
@@ -33,7 +35,7 @@ function applyTextContent(i18n, root) {
     const key = el.getAttribute('data-i18n');
     if (!key) return;
     // textContent — avoids HTML injection from translation values.
-    el.textContent = i18n.t(key);
+    el.textContent = localizeDigits(i18n.t(key));
   });
 }
 
@@ -41,7 +43,7 @@ function applyPlaceholders(i18n, root) {
   root.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
     const key = el.getAttribute('data-i18n-placeholder');
     if (!key) return;
-    el.setAttribute('placeholder', i18n.t(key));
+    el.setAttribute('placeholder', localizeDigits(i18n.t(key)));
   });
 }
 
@@ -53,7 +55,7 @@ function applyArbitraryAttrs(i18n, root) {
     spec.split(',').forEach((pair) => {
       const [attr, key] = pair.split(':').map((s) => s.trim());
       if (!attr || !key) return;
-      el.setAttribute(attr, i18n.t(key));
+      el.setAttribute(attr, localizeDigits(i18n.t(key)));
     });
   });
 }

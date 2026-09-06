@@ -12,7 +12,8 @@
 // the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { back as navBack } from '../core/nav.js?v=20260906d';
+import { back as navBack } from '../core/nav.js?v=20260906e';
+import { setNativePrefsAdapter } from '../core/prefs.js?v=20260906e';
 
 const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
 
@@ -26,6 +27,12 @@ export function isNative() {
 export function nativePlatform() {
   const n = N();
   return n && n.isNative ? n.platform : 'web';
+}
+
+/** Native haptics vocabulary (tap/snap/tick/ok/no/warn), or null on the web. */
+export function nativeHaptics() {
+  const n = N();
+  return n && n.isNative && n.haptics ? n.haptics : null;
 }
 
 /** Native text-to-speech adapter, or null on the web. */
@@ -62,11 +69,26 @@ function wire() {
   const n = N();
   if (!n || !n.isNative) return;
   document.documentElement.classList.add('is-native', `is-${n.platform}`);
+  // every setPref() is mirrored into Capacitor Preferences from here on
+  if (n.prefs) setNativePrefsAdapter({ get: (k) => n.prefs.get(k), set: (k, v) => n.prefs.set(k, v), remove: (k) => n.prefs.remove(k) });
   n.app.onBack(handleBack);
   n.app.onState((payload) => { for (const fn of listeners.appState) { try { fn(payload); } catch (_e) { /* listener error must not break the shell */ } } });
 }
 
+// Resolves once the bridge is wired: immediately on the web or when the
+// bridge script already ran; otherwise on 'native-ready'. The native marker
+// (window.__TOMODACHI_NATIVE__, set by native-env.js before any module) tells
+// a shell build apart from the web, and a bounded wait keeps a broken bridge
+// bundle from stalling boot.
+const BRIDGE_WAIT_MS = 1500;
 export function initNativeShell() {
-  if (N()) wire();
-  else document.addEventListener('native-ready', wire, { once: true });
+  if (N()) { wire(); return Promise.resolve(); }
+  const expectBridge = typeof window !== 'undefined' && window.__TOMODACHI_NATIVE__ === true;
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => { if (done) return; done = true; wire(); resolve(); };
+    document.addEventListener('native-ready', finish, { once: true });
+    if (!expectBridge) { resolve(); return; }
+    setTimeout(finish, BRIDGE_WAIT_MS);
+  });
 }

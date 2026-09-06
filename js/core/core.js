@@ -3,24 +3,9 @@
 // Shared, dependency-free building blocks used by every feature module.
 // ============================================
 
-import { APP_CONFIG } from '../config/firebase.js?v=20260906d';
-
-// ----- One-shot localStorage migration: hiraquest-* → tomodachi-* (R1.05a).
-// Runs on module load; harmless after the first time. Removed once we're
-// confident every user's browser has migrated (Phase L3 or so).
-const _MIGRATE_KEYS = [
-  'audio', 'practice', 'input', 'duration', 'wincon',
-  'duelinput', 'coopinput', 'theme', 'last-bracket'
-];
-for (const k of _MIGRATE_KEYS) {
-  const oldK = 'hiraquest-' + k;
-  const newK = 'tomodachi-' + k;
-  const oldV = localStorage.getItem(oldK);
-  if (oldV !== null && localStorage.getItem(newK) === null) {
-    localStorage.setItem(newK, oldV);
-    localStorage.removeItem(oldK);
-  }
-}
+import { APP_CONFIG } from '../config/firebase.js?v=20260906e';
+import { getPref, setPref } from './prefs.js?v=20260906e';
+// (the hiraquest-* → tomodachi-* key migration now lives in prefs.js)
 
 // ----- Global App State -----
 export const state = {
@@ -36,21 +21,21 @@ export const state = {
 
   // audioEnabled controls game sound EFFECTS only. Japanese pronunciation
   // is functional (not a preference) and is governed by game design.
-  audioEnabled: localStorage.getItem('tomodachi-audio') !== 'false',
+  audioEnabled: getPref('audio') !== 'false',
 
   // Zen practice options (solo mode — options are appropriate here).
-  practiceType: localStorage.getItem('tomodachi-practice') || 'read', // 'read' | 'listen'
-  inputMethod: localStorage.getItem('tomodachi-input') || 'typing',   // 'typing' | 'multiple'
-  zenDuration: Number(localStorage.getItem('tomodachi-duration')) || 60, // seconds
+  practiceType: getPref('practice') || 'read', // 'read' | 'listen'
+  inputMethod: getPref('input') || 'typing',   // 'typing' | 'multiple'
+  zenDuration: Number(getPref('duration')) || 60, // seconds
 
   // Duel / Co-op options (host picks these for both players — fixed for fairness).
-  winCondition: localStorage.getItem('tomodachi-wincon') || 'first_to_10', // 'first_to_10' | 'rounds_20'
-  duelInput: localStorage.getItem('tomodachi-duelinput') || 'multiple',    // 'multiple' | 'typing'
-  coopInput: localStorage.getItem('tomodachi-coopinput') || 'multiple',    // 'multiple' | 'typing'
+  winCondition: getPref('wincon') || 'first_to_10', // 'first_to_10' | 'rounds_20'
+  duelInput: getPref('duelinput') || 'multiple',    // 'multiple' | 'typing'
+  coopInput: getPref('coopinput') || 'multiple',    // 'multiple' | 'typing'
 
   // Stored choice wins; first-visit falls back to the system preference
   // (mirrors the pre-paint script in each page's <head>), then the config default.
-  theme: localStorage.getItem('tomodachi-theme') ||
+  theme: getPref('theme') ||
     (typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark' : APP_CONFIG.defaultTheme)
 };
@@ -106,12 +91,12 @@ export function toast(message, type = 'info', duration = 3000) {
 }
 
 // ----- Theme -----
-// persist=false applies without writing localStorage — used at boot so a
+// persist=false applies without writing the preference — used at boot so a
 // first-visit system-preference fallback isn't frozen as an explicit choice
 // (the OS theme keeps steering until the user actually touches a toggle).
 export function setTheme(theme, persist = true) {
   document.documentElement.setAttribute('data-theme', theme);
-  if (persist) localStorage.setItem('tomodachi-theme', theme);
+  if (persist) setPref('theme', theme);
   state.theme = theme;
   const toggle = $('toggle-theme');
   if (toggle) toggle.checked = theme === 'dark';
@@ -149,11 +134,4 @@ export function shuffle(array) {
 
 export function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
-}
-
-export function formatTime(ms) {
-  const total = Math.max(0, Math.ceil(ms / 1000));
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return `${m}:${String(s).padStart(2, '0')}`;
 }

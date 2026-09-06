@@ -10,8 +10,6 @@ export const I18N_CONFIG = {
   defaultLocale: 'en',
   // Locales that render right-to-left. L1.02 wires <html dir> off this list.
   rtlLocales: ['ar'],
-  // localStorage key for the user's last picked locale.
-  storageKey: 'tomodachi-lang',
   // URL query param the language detector honors first.
   queryParam: 'lang'
 };

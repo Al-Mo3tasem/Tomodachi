@@ -12,13 +12,15 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260906d';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906d';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906d';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906d';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906d';
-import { t, getLocale } from '../i18n/index.js?v=20260906d';
-import { scheduleLessonSrs } from './review.js?v=20260906d';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260906e';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906e';
+import { haptic } from '../core/haptics.js?v=20260906e';
+import { setJa, fmtCount } from '../core/format.js?v=20260906e';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906e';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906e';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906e';
+import { t, getLocale } from '../i18n/index.js?v=20260906e';
+import { scheduleLessonSrs } from './review.js?v=20260906e';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -237,7 +239,7 @@ function renderTeach() {
     (it.examples || []).forEach(e => {
       const div = document.createElement('div');
       div.className = 'lesson-example';
-      const ja = document.createElement('div'); ja.className = 'lesson-example-ja'; ja.textContent = e.ja;
+      const ja = document.createElement('div'); ja.className = 'lesson-example-ja'; setJa(ja, e.ja);
       const ro = document.createElement('div'); ro.className = 'lesson-example-ro'; ro.textContent = e.romaji;
       const tr = document.createElement('div'); tr.className = 'lesson-example-tr'; tr.textContent = pick(e.en, e.ar);
       div.append(ja, ro, tr);
@@ -246,7 +248,7 @@ function renderTeach() {
     });
   } else if (type === 'kanji') {
     big.hidden = false;
-    big.textContent = it.kanji;
+    setJa(big, it.kanji);
     big.classList.remove('is-word');
     read.textContent = pick(it.en_meanings, it.ar_meanings)?.join(getLocale() === 'ar' ? '، ' : ', ') || '';
     const mn = pick(it.mnemonic?.en, it.mnemonic?.ar);
@@ -263,7 +265,7 @@ function renderTeach() {
     if (say) speak(say);
   } else if (type === 'vocab') {
     big.hidden = false;
-    big.textContent = it.reading;
+    setJa(big, it.reading);
     big.classList.toggle('is-word', String(it.reading).length > 1);
     read.textContent = `${it.romaji} — ${pick(it.en?.primary, it.ar?.primary)}`;
     body.textContent = pick(it.en?.notes, it.ar?.notes) || '';
@@ -279,7 +281,7 @@ function renderTeach() {
     speak(it.reading);
   } else {
     big.hidden = false;
-    big.textContent = it.glyph;
+    setJa(big, it.glyph);
     big.classList.remove('is-word');
     read.textContent = it.romaji;
     body.textContent = pick(it.mnemonic_en, it.mnemonic_ar) || '';
@@ -296,7 +298,7 @@ function renderQuiz() {
   L.locked = false;
   $('lesson-quiz-count').textContent = t('lesson.progress_count', { i: L.qi + 1, n: L.quiz.length });
   const promptEl = $('lesson-quiz-prompt');
-  promptEl.textContent = q.prompt;
+  setJa(promptEl, q.prompt);
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
   if (q.sub) { $('lesson-quiz-sub').textContent = q.sub; } else { $('lesson-quiz-sub').textContent = ''; }
   const grid = $('lesson-quiz-choices');
@@ -315,6 +317,7 @@ function answer(btn, ok, q) {
   if (!L || L.locked) return;
   const run = L;   // identity guard: a stale timer must not touch a reopened lesson
   L.locked = true;
+  haptic(ok ? 'ok' : 'no');
   btn.classList.add(ok ? 'correct' : 'wrong');
   if (!ok) {
     // reveal the right one
@@ -390,9 +393,9 @@ export function renderCourseProgress() {
     bar.appendChild(fill);
     const count = document.createElement('span');
     count.className = 'cp-count';
-    count.textContent = (doneN >= totalN && totalN) ? `${doneN}/${totalN} ✓`
+    count.textContent = (doneN >= totalN && totalN) ? `${fmtCount(doneN)}/${fmtCount(totalN)} ✓`
       : tr.key === 'course' ? t('progress.lesson_n', { n: done.size + 1, total: totalN })
-      : `${doneN}/${totalN}`;
+      : `${fmtCount(doneN)}/${fmtCount(totalN)}`;
     row.append(label, bar, count);
     wrap.appendChild(row);
   }

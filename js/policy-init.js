@@ -12,14 +12,15 @@
 // identical to the landing-page toggle.
 // ============================================
 
-import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260906d';
+import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260906e';
+import { setPref } from './core/prefs.js?v=20260906e';
 
 // Theme on policy pages: the <head> pre-paint script already resolved
 // stored-choice-else-system before first paint. Here we only wire the nav
-// quick-toggle. Same storage key as core.js setTheme(); no Firebase needed.
+// quick-toggle. Same pref as core.js setTheme(); no Firebase needed.
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('tomodachi-theme', theme);
+  setPref('theme', theme);
   document.querySelectorAll('.theme-toggle').forEach((btn) => {
     btn.setAttribute('aria-pressed', String(theme === 'dark'));
   });

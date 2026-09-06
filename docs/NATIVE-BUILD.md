@@ -33,10 +33,12 @@ Debug APK path: `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 ### Guard rails (batch 1) — run before every push
 ```
-npm test                 # lint:css (logical properties in css/app) + lint:gates (window.Native only in js/native/shell.js) + unit tests
-npm run test:e2e         # Playwright: 2 phones × EN/AR × light/dark — v1 baselines, glass budget, axe baseline (needs the dev QA account + network)
+npm test                 # lint:css (logical properties in css/app) + lint:gates (window.Native / showScreen / localStorage owners) + unit tests
+node scripts/dev/leftovers.mjs   # migrated patterns that crept back (toLocaleString, toLocaleDateString, formatTime, localStorage)
+npm run test:e2e         # Playwright: 2 phones × EN/AR × light/dark — v1 baselines (maxDiffPixels 0), glass budget, axe baseline, v2 specs (needs the dev QA account + network)
 npm run test:e2e:update  # re-record baselines ONLY for a batch that deliberately changes prod-visible pixels; list them in the batch notes
 ```
+One Playwright process at a time (they share `tests/e2e/.results`).
 Baselines live in `tests/e2e/__baselines__/` (committed). The feature flag `nativeShell`
 (`js/config/features.js`) is ON for dev/staging hosts and the app shell, OFF on prod;
 `?ff_native_shell=true|false` works on non-prod hosts only and persists per device.
@@ -107,6 +109,64 @@ release build; never commit it.**
   Arabic; batch 9 replaces that footer with the dock shelf.
 - Logout lives at the bottom of the Me (settings) screen under v2; the Home
   bar keeps locale · theme · settings so the compact title never truncates.
+
+### Batch 4 — facades: prefs · haptics · numbers · bidi (v1 pixels unchanged)
+- `js/core/prefs.js` is the only module that touches localStorage (lint gate;
+  the two documented exceptions are the pre-paint `<head>` script, which is not
+  a module, and the flag reader in `js/config/features.js`). Short names
+  (`getPref('theme')`, `setPref('digits', 'arab')`), the `hiraquest-*` key
+  migration, and the native mirror live there: in the shell every `setPref()`
+  is written through to Capacitor Preferences, and `restoreFromNative()`
+  copies mirrored values back when the WebView evicted web storage.
+- Boot order in `app.js init()`: `await initNativeShell()` (resolves at once on
+  the web; a shell build waits for the bridge's `native-ready`, bounded to
+  1.5 s so a broken bundle cannot stall boot) → `restoreFromNative()` →
+  platform attrs → theme → i18n. Everything that reads a preference therefore
+  sees the restored value. The i18n language detector uses a custom `prefs`
+  detector (order querystring → prefs → navigator → htmlTag, cache `prefs`)
+  instead of its built-in localStorage one; `tomodachi-lang` stays the key.
+- `js/core/haptics.js` — `haptic(kind)` with the bridge vocabulary
+  tap · snap · tick · ok · no · warn — beside every `playSound()` (engine,
+  duel, co-op), lesson/review answers and the dock tab press. Preference
+  `haptics` (default on); silent no-op on the web.
+- `js/core/format.js` — `fmtNumber / fmtCount / fmtPercent / fmtTime /
+  fmtDate` through `Intl` with the UI language for grouping and the `digits`
+  preference (`latn` default, `arab` = ١٢٣) for the numbering system, so a
+  screen never mixes digit systems. `setJa()` / `jaNode()` wrap Japanese runs
+  in `<bdi lang="ja" dir="ltr">`. Every `toLocaleString()` / `formatTime()` /
+  `toLocaleDateString()` call site is migrated (history + leaderboard dates now
+  follow the UI language); `node scripts/dev/leftovers.mjs` scans for stragglers.
+- Translated strings: i18next 26 always installs its own formatter module and
+  points `interpolation.format` at it, so the number rule is a formatter
+  module of our own (`alwaysFormat: true` → every `{{value}}` that is a number
+  goes through `fmtNumber`). Literal digits in static copy ("First to 10",
+  the duration chips, a version string) are converted by `localizeDigits()`,
+  which `t()` and the `[data-i18n]` walker apply to every result. A caller
+  that needs a bare number (the copyright year) passes a pre-formatted string.
+- Select footer: the count now goes through i18next plurals
+  (`select.footer.count` — AR has the full zero/one/two/few/many/other set)
+  and is rendered at boot and on locale change, so the Arabic screen no longer
+  shows the English placeholder until the first tap; the duration chips are
+  i18n keys (AR "1 د"). Prod-visible in AR only.
+- Harness lesson: the 1 % pixel-ratio tolerance let that two-line footer
+  change pass unnoticed. A zero-tolerance measurement showed every signed-in
+  baseline off by ≈4k px for one reason — the masked `#toast-container` box
+  is timing-dependent (the 3 s welcome toast) — plus the AR select change.
+  `shot()` in `tests/e2e/fixtures.mjs` now removes toasts, parks the pointer
+  at 0,0 (an earlier spec's click otherwise leaves a button in its hover
+  state — the full matrix caught that on every `screen-select` shot) and the
+  comparison runs at `maxDiffPixels: 0`. With the toast gone, re-recording
+  reproduced 68 of the 72 baselines byte-for-byte; only the four AR
+  `screen-select` shots changed (the deliberate footer/chip fix above), and a
+  second zero-tolerance pass was green. Never run two Playwright processes at
+  once: they share `tests/e2e/.results`, and the second wipes the first's traces.
+- `platform.js` — `html[data-text-size]` + `--text-scale` (s · m · l · xl) and
+  `html[data-digits]` from prefs (the Me › Text size / Digits controls arrive
+  in batch 10).
+- Tests: unit `prefs` / `format` / `shell` (bridge readiness, mirror, restore)
+  and `tests/e2e/numbers.spec.mjs` (no mixed digits on the dashboard, exactly
+  one bidi island on the lesson card, prefs survive a reload including
+  Arabic-Indic digits).
 
 ## Lead checklist before wider Android testing (batch 1 · T5)
 

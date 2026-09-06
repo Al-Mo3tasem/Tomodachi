@@ -12,17 +12,19 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp, formatTime } from '../core/core.js?v=20260906d';
-import { navigate } from '../core/nav.js?v=20260906d';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906e';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260906e';
+import { haptic } from '../core/haptics.js?v=20260906e';
+import { navigate } from '../core/nav.js?v=20260906e';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906d';
+} from '../data/firebase.js?v=20260906e';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906d';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906d';
-import { t } from '../i18n/index.js?v=20260906d';
+} from '../audio/audio.js?v=20260906e';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906e';
+import { t } from '../i18n/index.js?v=20260906e';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -132,7 +134,7 @@ export function startGame(type) {
   navigate('screen-game');
   hidePauseOverlay();
   setPresence('in_game');
-  playSound('start');
+  playSound('start'); haptic('tick');
 
   if (g.mode === 'zen') startSessionTimer();
   nextQuestion();
@@ -558,11 +560,11 @@ function onAnswer(value, btnEl) {
     g.streak++;
     g.bestStreak = Math.max(g.bestStreak, g.streak);
     g.times.push(Math.max(MIN_RESPONSE, elapsed));
-    playSound('correct');
+    playSound('correct'); haptic('ok');
   } else {
     g.wrong++;
     g.streak = 0;
-    playSound('wrong');
+    playSound('wrong'); haptic('no');
     if (g.mode === 'survival') loseLife();
   }
 
@@ -577,7 +579,7 @@ function onTimeout() {
   g.wrong++;
   g.streak = 0;
   recordChar(g.current.char, false);
-  playSound('wrong');
+  playSound('wrong'); haptic('no');
   loseLife();
   showFeedback(false, null, true);
   renderHud();
@@ -678,7 +680,7 @@ function renderHud() {
     hud.innerHTML = `
       <span class="hud-lives">${hearts}</span>
       <span class="hud-chip">${t('duel.round_n', { n: round })}</span>
-      <span class="hud-chip hud-score">${liveScore().toLocaleString()}</span>
+      <span class="hud-chip hud-score">${fmtNumber(liveScore())}</span>
     `;
   } else {
     const remaining = g.paused
@@ -688,7 +690,7 @@ function renderHud() {
     const total = g.correct + g.wrong;
     const acc = total ? Math.round((g.correct / total) * 100) : 100;
     hud.innerHTML = `
-      <span class="hud-chip hud-time ${low ? 'danger' : ''}">⏱ ${formatTime(remaining)}</span>
+      <span class="hud-chip hud-time ${low ? 'danger' : ''}">⏱ ${fmtTime(remaining)}</span>
       <span class="hud-chip hud-good">✓ ${g.correct}</span>
       <span class="hud-chip">${acc}%</span>
     `;
@@ -1034,7 +1036,7 @@ function countUp(el, target, suffix = '') {
   function step(now) {
     const p = Math.min(1, (now - start) / duration);
     const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(target * eased).toLocaleString() + suffix;
+    el.textContent = fmtNumber(Math.round(target * eased)) + suffix;
     if (p < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);

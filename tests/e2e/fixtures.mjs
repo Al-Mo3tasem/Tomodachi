@@ -104,3 +104,18 @@ export async function signIn(page) {
 export function volatile(page) {
   return [page.locator('#history-list'), page.locator('#toast-container'), page.locator('#friend-bar'), page.locator('.hero-counter'), page.locator('.nav-right'), page.locator('#consent-banner'), page.locator('#review-cta')];
 }
+
+/**
+ * Deterministic page baseline. Toasts live on 3 s timers inside a masked
+ * container, so one caught mid-flight changes the mask box (≈4k px) between
+ * runs; remove them, let fonts settle, then compare with the masks applied.
+ */
+export async function shot(page, name, opts = {}) {
+  await page.evaluate(() => document.querySelectorAll('#toast-container > *').forEach((n) => n.remove()));
+  // an earlier spec's click leaves the pointer over a button (hover state);
+  // park it where the baselines were recorded (the browser's initial 0,0)
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => document.fonts.ready).catch(() => {});
+  await page.waitForTimeout(100);
+  await expect(page).toHaveScreenshot(name, { mask: volatile(page), ...opts });
+}
