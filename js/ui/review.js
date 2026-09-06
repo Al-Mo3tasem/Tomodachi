@@ -12,12 +12,12 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, showScreen, shuffle } from '../core/core.js?v=20260906b';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906b';
-import { cacheGet } from '../data/content.js?v=20260906b';
-import { loadLessons } from './lesson.js?v=20260906b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906b';
-import { t, getLocale } from '../i18n/index.js?v=20260906b';
+import { state, $, showScreen, shuffle } from '../core/core.js?v=20260906c';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906c';
+import { cacheGet } from '../data/content.js?v=20260906c';
+import { loadLessons } from './lesson.js?v=20260906c';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906c';
+import { t, getLocale } from '../i18n/index.js?v=20260906c';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;

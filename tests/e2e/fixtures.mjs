@@ -12,21 +12,28 @@ import { test as base, expect } from '@playwright/test';
 
 export const QA = { email: 'claude.qa.tomodachi@example.com', password: 'TomoQa-Dev-2026!' };
 
-function initScript([l, t]) {
-  try { localStorage.setItem('tomodachi-lang', l); localStorage.setItem('tomodachi-theme', t); } catch (e) { /* ignore */ }
+function initScript([l, t, shell]) {
+  try {
+    localStorage.setItem('tomodachi-lang', l);
+    localStorage.setItem('tomodachi-theme', t);
+    localStorage.setItem('tomodachi-glass', 'full');   // headless renders ~2fps: pin glass so the budget spec measures the real thing
+    localStorage.setItem('FF_NATIVE_SHELL', shell === 'v2' ? 'true' : 'false');   // dev defaults to v2; baselines must see what prod users see
+  } catch (e) { /* ignore */ }
 }
 
 export const test = base.extend({
-  context: async ({ context }, use, testInfo) => {
+  // Which shell a spec exercises: 'v1' (prod behaviour, default) or 'v2' (the flag on). Set per file with test.use({ shell: 'v2' }).
+  shell: ['v1', { option: true }],
+  context: async ({ context, shell }, use, testInfo) => {
     const { lang = 'en', theme = 'light' } = testInfo.project.metadata || {};
-    await context.addInitScript(initScript, [lang, theme]);
+    await context.addInitScript(initScript, [lang, theme, shell]);
     await use(context);
   },
   appPage: [async ({ browser }, use, workerInfo) => {
     const { lang = 'en', theme = 'light' } = workerInfo.project.metadata || {};
     const u = workerInfo.project.use || {};
     const ctx = await browser.newContext({ viewport: u.viewport, userAgent: u.userAgent, deviceScaleFactor: u.deviceScaleFactor, isMobile: u.isMobile, hasTouch: u.hasTouch, colorScheme: u.colorScheme, locale: u.locale, baseURL: u.baseURL });
-    await ctx.addInitScript(initScript, [lang, theme]);
+    await ctx.addInitScript(initScript, [lang, theme, 'v1']);   // worker page = v1 (prod behaviour)
     const page = await ctx.newPage();
     await signIn(page);
     await use(page);

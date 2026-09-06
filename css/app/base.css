@@ -1,0 +1,79 @@
+/* ============================================================
+   Tomodachi — base layer (layer: base)
+   Resets and document-level behaviour for the v2 shell. Everything here is
+   scoped to html[data-shell="v2"] EXCEPT the items on the batch-2 prod-visible
+   mask list (100dvh body, reduced-motion allowlist for v2 only).
+   ============================================================ */
+@layer base {
+  /* Prod-visible (mask list): viewport height that ignores the URL bar. */
+  body { min-height: 100dvh; }
+
+  /* Arabic typography (typography pick + native reviewer rules): 17px / 1.75,
+     zero tracking, Plex for body, Cairo 800 for display. v2 only until the flip. */
+  html[data-shell="v2"]:lang(ar) body {
+    font-family: var(--font-ar);
+    font-size: var(--ar-body-size);
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+  html[data-shell="v2"]:lang(ar) h1,
+  html[data-shell="v2"]:lang(ar) h2,
+  html[data-shell="v2"]:lang(ar) h3,
+  html[data-shell="v2"]:lang(ar) .page-title,
+  html[data-shell="v2"]:lang(ar) .section-title {
+    font-family: var(--font-display-ar);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+  /* Tracked uppercase labels have no Arabic equivalent: reset them. */
+  html[data-shell="v2"]:lang(ar) [class*="eyebrow"],
+  html[data-shell="v2"]:lang(ar) [class*="label"] {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Japanese runs inside Arabic text are always LTR islands. */
+  html[data-shell="v2"] [lang="ja"],
+  html[data-shell="v2"] bdi[lang="ja"] {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-family: var(--font-jp);
+  }
+
+  /* Hover styling only where hover exists (touch devices get :active only). */
+  @media (hover: none) {
+    html[data-shell="v2"] .btn:hover,
+    html[data-shell="v2"] .card:hover { transform: none; }
+  }
+
+  /* Reduced motion — ALLOWLIST, not a nuke: opacity fades keep --dur-reduced,
+     everything spatial/looping stops. (The legacy 0.01ms !important rule stays
+     scoped to v1 in style.css.) */
+  @media (prefers-reduced-motion: reduce) {
+    html[data-shell="v2"] {
+      --dur-instant: 0ms;
+      --dur-press-down: 0ms;
+      --dur-press: 0ms;
+      --dur-fast: var(--dur-reduced);
+      --dur-sheet: var(--dur-reduced);
+      --dur-base: var(--dur-reduced);
+      --dur-progress: 0ms;
+      --dur-screen: var(--dur-reduced);
+      --dur-spring-soft: 0ms;
+      --dur-spring-pop: 0ms;
+      --dur-ticker: 0ms;
+      --dur-celebrate: 0ms;
+      --dur-confetti: 0ms;
+      --dur-skeleton: 0ms;
+      --stagger-step: 0ms;
+      --press-scale: 1;
+      --press-scale-icon: 1;
+      --press-translate: 0px;
+      scroll-behavior: auto;
+    }
+    html[data-shell="v2"] [data-motion="loop"],
+    html[data-shell="v2"] .skeleton,
+    html[data-shell="v2"] .app::before { animation: none !important; }
+  }
+}

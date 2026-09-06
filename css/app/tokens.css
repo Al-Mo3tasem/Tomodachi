@@ -1,0 +1,205 @@
+/* ============================================================
+   Tomodachi — design tokens (layer: tokens)
+   The token sheet from docs/APP-BUILD-PLAN.md (research-backed values:
+   Duolingo/Apple HIG/M3 motion, chess.com social sizes, iOS 26 glass).
+   Rules:
+   • Motion is expressed ONLY through these tokens; components never hardcode ms.
+   • Theme-dependent values live under [data-theme]; platform/glass variants
+     under [data-platform] / [data-glass] (set by js/core/platform.js).
+   • Nothing here changes rendering by itself — a token must be consumed.
+   ============================================================ */
+@layer tokens {
+  :root {
+    /* --- motion: durations --- */
+    --dur-instant: 80ms;        /* state tint on select */
+    --dur-press-down: 100ms;    /* tile/CTA depress */
+    --dur-press: 140ms;         /* press release; pairs with --ease-spring-soft */
+    --dur-fast: 200ms;          /* colour/opacity state changes, presence dot crossfade */
+    --dur-sheet: 200ms;         /* feedback sheet slide-up */
+    --dur-base: 240ms;          /* stagger item duration */
+    --dur-progress: 300ms;      /* progress/timer fill, ring fill */
+    --dur-screen: 320ms;        /* view-transition push/pop */
+    --dur-spring-soft: 400ms;   /* damping .8 settle (sheet detent, tile mount, shelf reveal) */
+    --dur-spring-pop: 340ms;    /* celebration tickers only */
+    --dur-ticker: 400ms;        /* count-up; 200ms for tile updates */
+    --dur-celebrate: 600ms;     /* milestone stagger tail */
+    --dur-confetti: 1200ms;     /* perfect-only, non-blocking */
+    --dur-skeleton: 1600ms;     /* shimmer loop; static under reduced motion */
+    --dur-reduced: 120ms;       /* allowlisted opacity fades under reduced motion */
+
+    /* --- motion: easings --- */
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);            /* default for spatial moves */
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);  /* Apple-style ease-out (pick 15) */
+    --ease-decel: cubic-bezier(0.05, 0.7, 0.1, 1);     /* sheet enter */
+    --ease-accel: cubic-bezier(0.3, 0, 0.8, 0.15);     /* sheet exit */
+    --ease-effects: cubic-bezier(0.2, 0, 0, 1);        /* colour/opacity only */
+    /* springs as linear() (damping .8 ≈ 1.5% overshoot; pop ≈ 9%) */
+    --ease-spring-soft: linear(0, 0.066, 0.21, 0.38, 0.542, 0.681, 0.792, 0.875, 0.933, 0.971, 0.994, 1.006, 1.011, 1.011, 1.008, 1.004, 1.001, 1);
+    --ease-spring-pop: linear(0, 0.115, 0.36, 0.621, 0.837, 0.984, 1.065, 1.093, 1.089, 1.068, 1.041, 1.017, 1, 0.99, 0.986, 0.988, 0.992, 0.997, 1);
+    --ease-spring-fallback: cubic-bezier(0.38, 1.21, 0.22, 1);
+
+    /* --- press / edge --- */
+    --press-scale: 0.97;        /* cards/icons :active; tiles use the edge instead */
+    --press-scale-icon: 0.92;   /* duotone pressed content icons */
+    --press-edge: 4px;          /* box-shadow 0 4px 0 0 var(--edge-color) on .quiz-tile / .btn-edge */
+    --press-translate: 4px;     /* :active translateY on edge elements */
+    --tile-border: 2px;
+    --tile-border-selected: 3px;
+    --stagger-step: 40ms;       /* cap --stagger-max items */
+    --stagger-max: 6;
+    --stagger-offset-y: 8px;
+
+    /* --- spacing / sizes --- */
+    --gutter: 20px;             /* only horizontal page margin */
+    --gutter-min: 16px;         /* under 360px */
+    --card-pad: 16px;
+    --card-pad-hero: 20px;
+    --card-gap: 12px;
+    --section-gap: 24px;
+    --label-gap: 4px;
+    --tile-min-h: 64px;         /* quiz tile */
+    --tile-min-h-list: 56px;
+    --tile-gap: 12px;
+    --tile-pad-inline: 16px;
+    --tap-min: 44px;
+    --tap-min-android: 48px;
+    --tap-gap-min: 8px;
+    --cta-h: 52px;
+    --cta-h-social: 56px;
+    --cta-pad-inline: 24px;
+    --radius-tile: 16px;        /* --radius-sm/md/lg/xl 8/12/20/28 stay in style.css */
+    --progress-h: 12px;
+    --progress-h-hud: 8px;
+    --hud-chip-h: 40px;         /* one glass chip; 44px hit area via padding */
+    --status-chip-h: 36px;      /* top event chip (tonal, never glass) */
+    --dock-h: 64px;
+    --dock-icon: 24px;
+    --dock-label-size: 13px;
+    --dock-label-weight: 600;
+    --dock-inset-x: 16px;
+    --dock-inset-bottom: max(12px, var(--safe-bottom));
+    --dock-radius: 28px;
+    --topbar-h: 56px;
+    --topbar-title-h: 44px;
+    --topbar-h-collapsed: 48px;
+    --content-pad-bottom: calc(var(--dock-h) + var(--dock-inset-bottom) + 16px);
+    --sheet-radius: 28px;
+    --sheet-pad: 20px;
+    --sheet-grabber-w: 36px;
+    --sheet-grabber-h: 5px;
+    --sheet-max-h: 90dvh;
+    --sheet-detent: 50dvh;
+    --avatar-strip: 56px;       /* card 72 / row 40 / hud 48 / post-match 64 */
+    --avatar-card: 72px;
+    --avatar-row: 40px;
+    --avatar-hud: 48px;
+    --presence-dot: 12px;       /* 8px on 32-40px avatars, 16px on 96px; 2px surface ring */
+
+    /* --- safe areas (Capacitor 8.5 injects --safe-area-inset-* on Android; iOS via env()) --- */
+    --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+    --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+    --safe-inline-start: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+    --safe-inline-end: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+    --kb-h: 0px;                /* keyboard height, set by shell.js from Native.keyboard */
+
+    /* --- z scale (replaces hardcoded 50–9999) --- */
+    --z-content: 0;
+    --z-topbar: 100;
+    --z-dock: 200;
+    --z-chip: 300;
+    --z-sheet: 400;
+    --z-dialog: 500;
+    --z-toast: 600;
+    --z-loading: 900;
+
+    /* --- numbers are ink --- */
+    --num-hero-size: 2rem;
+    --num-hero-size-results: 2.75rem;
+    --num-hero-size-mini: 1.25rem;
+    --num-hero-size-hud: 1.5rem;
+    --num-hero-weight: 600;     /* Space Grotesk SemiBold; never 800 */
+    --num-hero-tracking: -0.02em;   /* 0 under :lang(ar) */
+    --num-hero-min-w: 4ch;      /* no reflow 99 → 100 */
+    --num-eyebrow-size: 0.6875rem;
+    --num-eyebrow-size-ar: 0.75rem;
+    --num-caption-size: 0.8125rem;
+
+    /* --- typography --- */
+    --font-display-ar: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;   /* weight 800 display under :lang(ar) */
+    --text-scale: 1;            /* html font-size calc(16px * var(--text-scale)); S .9 / M 1 / L 1.15 / XL 1.3 */
+    --ar-body-size: 17px;       /* :lang(ar) body 17px / 1.75 / 0 tracking (v2 only until the flip) */
+
+    /* --- glass (consumed only by css/app/glass.css) --- */
+    --glass-blur: 20px;
+    --glass-sat: 160%;
+    --glass-grain-opacity: 0.06;
+
+    /* --- misc --- */
+    --bg-subtle: var(--bg-inset);   /* was undefined in legacy (style.css 5445/5478) */
+    --challenge-ttl-live: 120s;
+    --disconnect-forfeit: 30s;
+  }
+
+  /* Numbers in Arabic never track */
+  :root:lang(ar) { --num-hero-tracking: 0; }
+
+  /* Theme-dependent tokens */
+  [data-theme="light"] {
+    --glass-fill: rgba(252, 250, 245, 0.74);
+    --glass-fill-opaque: rgba(252, 250, 245, 0.96);
+    --glass-hairline: rgba(60, 35, 20, 0.12);
+    --text-caption: #6E6660;    /* --text-tertiary fails 4.5:1 at 13px */
+    --edge-color: rgba(60, 35, 20, 0.14);
+    --num-attention: var(--danger, #BE123C);
+  }
+  [data-theme="dark"] {
+    --glass-fill: rgba(24, 20, 17, 0.72);
+    --glass-fill-opaque: rgba(24, 20, 17, 0.96);
+    --glass-hairline: rgba(255, 255, 255, 0.08);
+    --text-caption: #A89E94;
+    --edge-color: rgba(0, 0, 0, 0.35);
+    --num-attention: var(--danger, #FB7185);
+  }
+  /* OLED canvas (Me › Theme, batch 10): dark palette with a true-black ground */
+  [data-theme="oled"] {
+    --bg-base: #000000;
+    --bg-surface: #0E0C0B;
+    --bg-elevated: #161311;
+    --bg-inset: #0A0908;
+    --glass-fill: rgba(10, 8, 7, 0.78);
+    --glass-fill-opaque: rgba(10, 8, 7, 0.97);
+    --glass-hairline: rgba(255, 255, 255, 0.08);
+    --text-caption: #A89E94;
+    --edge-color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Android: lower blur + higher fill (blur is expensive; alpha carries legibility), no saturate */
+  [data-platform="android"] {
+    --glass-blur: 12px;
+    --glass-sat: 100%;
+    --tap-min: var(--tap-min-android);
+  }
+  [data-platform="android"][data-theme="light"] { --glass-fill: rgba(252, 250, 245, 0.82); }
+  [data-platform="android"][data-theme="dark"]  { --glass-fill: rgba(24, 20, 17, 0.84); }
+
+  /* Reduce glass (pref, low memory, failed benchmark, or reduced-transparency) */
+  [data-glass="reduced"] {
+    --glass-blur: 0px;
+    --glass-sat: 100%;
+    --glass-fill: var(--glass-fill-opaque);
+    --glass-grain-opacity: 0;
+  }
+
+  /* Spring fallback where linear() is unsupported (older WebViews) */
+  @supports not (animation-timing-function: linear(0, 1)) {
+    :root {
+      --ease-spring-soft: var(--ease-spring-fallback);
+      --ease-spring-pop: var(--ease-spring-fallback);
+    }
+  }
+
+  /* v2 shell: the typography pick (IBM Plex Sans Arabic, bundled in assets/fonts) */
+  html[data-shell="v2"] {
+    --font-ar: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
+  }
+}

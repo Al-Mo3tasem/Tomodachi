@@ -1,3 +1,5 @@
+@layer legacy, tokens, base, components, screens, overrides;
+@layer legacy {
 
 /* ============================================
    Tomodachi Design System
@@ -928,7 +930,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  backdrop-filter: blur(12px);
 }
 
 .selection-meta {
@@ -1737,8 +1738,6 @@ body {
   justify-content: center;
   padding: var(--space-5);
   background: var(--overlay-scrim);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-base);
@@ -1849,7 +1848,8 @@ body {
 
 /* ----- Reduced motion ----- */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  /* v1 only — the v2 shell uses the reduced-motion allowlist in css/app/base.css */
+  html[data-shell="v1"] *, html[data-shell="v1"] *::before, html[data-shell="v1"] *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -2012,8 +2012,6 @@ body {
   justify-content: center;
   padding: var(--space-5);
   background: var(--overlay-scrim);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-base);
@@ -2204,8 +2202,6 @@ body {
   gap: var(--space-4);
   padding: var(--space-5);
   background: var(--overlay-scrim);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-base);
@@ -2279,8 +2275,6 @@ body {
   justify-content: center;
   padding: var(--space-5);
   background: var(--overlay-scrim);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-base);
@@ -3274,8 +3268,6 @@ body {
   border-top: 1px solid var(--border);
   padding: var(--space-7) var(--space-5) var(--space-6);
   background: var(--footer-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .landing-footer-inner {
@@ -3373,8 +3365,6 @@ body {
   padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--border);
   background: var(--nav-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .policy-nav .landing-brand {
@@ -3649,8 +3639,6 @@ body {
   position: absolute;
   inset: 0;
   background: var(--overlay-scrim);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   animation: consent-fade-in 0.3s ease both;
 }
 
@@ -4413,8 +4401,15 @@ input:focus-visible {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* ---------- D1 stat digits (numbers are ink) ------------------------------ */
 .stat-value, .results-score, .lb-score, .lb-rank, .hero-counter,
-.game-hud-stats, /* ---------- T1 typography ----------------------------------------------- */
+.game-hud-stats {
+  font-family: var(--font-digits);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+/* ---------- T1 typography ----------------------------------------------- */
 .hero-tagline,
 .section-title,
 .page-title,
@@ -4784,8 +4779,6 @@ input:focus-visible {
 
 /* ---------- M1 modals / overlays / toasts -------------------------------- */
 .results-overlay, .pause-overlay {
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  backdrop-filter: blur(8px) saturate(120%);
 }
 .results-card, .pause-card {
   border: 1px solid var(--border);
@@ -4951,7 +4944,7 @@ input:focus-visible {
    (.btn, .hero-split .hero-form) outranking the UA's [hidden] { display:none }:
    the waitlist form stayed visible after success, and Settings' "Reset"
    button stayed clickable behind its confirm panel. Kill the class of bug. */
-[hidden] { display: none !important; }
+/* [hidden] guard: see the end of this file */
 
 /* Bento stickers reserved no space — body text ran underneath them at
    901–1000px and on phones. Reserve the sticker zone; shrink it on mobile. */
@@ -5552,3 +5545,28 @@ input:focus-visible {
 
 /* SRS review card: green accent to distinguish from the course CTA */
 .review-cta { border-inline-start-color: var(--success); }
+
+/* ==========================================================================
+   Batch 2 (docs/APP-BUILD-PLAN.md) — prod-visible foundation fixes
+   ========================================================================== */
+/* Overlays are not mounted at rest (no idle compositing); fade in via keyframe */
+.results-overlay, .pause-overlay, .duel-overlay, .invite-overlay { display: none; }
+.results-overlay.active, .pause-overlay.active, .duel-overlay.active, .invite-overlay.active {
+  display: flex;
+  animation: overlay-in var(--dur-fast, 200ms) var(--ease-effects, ease-out) both;
+}
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Background pattern is a static tile (the 120s drift loop repainted a fixed layer) */
+#screen-landing.active::before, .auth-container::before, .app::before, .policy-page::before { animation: none; }
+
+/* Safe areas (notch / home indicator / gesture bar). Tokens from css/app/tokens.css; 0 on the web. */
+.nav { padding-top: calc(var(--space-3) + var(--safe-top, 0px)); }
+.select-footer { padding-bottom: calc(var(--space-5) + var(--safe-bottom, 0px)); }
+.toast-container { top: calc(var(--space-5) + var(--safe-top, 0px)); }
+.consent-banner { bottom: calc(var(--space-4) + var(--safe-bottom, 0px)); }
+.results-overlay, .pause-overlay, .duel-overlay, .invite-overlay {
+  padding-top: calc(var(--space-5) + var(--safe-top, 0px));
+  padding-bottom: calc(var(--space-5) + var(--safe-bottom, 0px));
+}
+}

@@ -17,7 +17,9 @@ const RULES = [
   [/text-align\s*:\s*(left|right)\b/, 'use text-align: start / end'],
   [/float\s*:\s*(left|right)\b/, 'use float: inline-start / inline-end'],
   [/translateX\(/, 'compute direction-aware transforms from getBoundingClientRect or use logical margins'],
-  [/letter-spacing\s*:\s*(?!0\b|normal\b)/, 'letter-spacing breaks Arabic joins — only 0/normal allowed'],
+  // letter-spacing may only ever be 0 / normal (tracking breaks Arabic joins);
+  // the lookahead consumes the whitespace so it cannot backtrack past it.
+  [/letter-spacing\s*:(?!\s*(?:0|normal)\s*[;}])/, 'letter-spacing breaks Arabic joins — only 0/normal allowed'],
 ];
 
 function walk(dir, out = []) {

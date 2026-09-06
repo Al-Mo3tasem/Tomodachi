@@ -18,7 +18,7 @@
 // the user is signed in (per L1.10 + PROJECT_RULES.md §19.1).
 // ============================================
 
-import { getEnv } from './firebase.js?v=20260906b';
+import { getEnv } from './firebase.js?v=20260906c';
 
 const dsns = {
   dev:     '', // localhost — skip Sentry for dev unless explicitly enabled

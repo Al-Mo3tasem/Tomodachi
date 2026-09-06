@@ -1,7 +1,7 @@
 {
-  "landing": 1,
-  "screen-dashboard": 2,
-  "screen-select": 3,
-  "screen-settings": 2,
-  "screen-leaderboard": 2
+  "landing": 0,
+  "screen-dashboard": 1,
+  "screen-select": 1,
+  "screen-settings": 1,
+  "screen-leaderboard": 1
 }

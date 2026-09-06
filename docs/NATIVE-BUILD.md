@@ -61,6 +61,28 @@ release build; never commit it.**
 - Auth persistence on native should use `initializeAuth(app, { persistence: indexedDBLocalPersistence })`
   (batch: native plumbing) or users may be logged out on restart.
 
+## Batch notes
+
+### Batch 2 — foundation CSS (prod-visible changes, all on the mask list)
+- `css/style.css` is now `@layer legacy { … }` behind the order statement
+  `@layer legacy, tokens, base, components, screens, overrides;` (no inline
+  `<style>` exists in index.html, so nothing unlayered can undercut it).
+- New sheets: `css/app/{fonts,tokens,base,glass,shell}.css` (fonts.css has no
+  layer; the rest self-wrap). `glass.css` is the only file allowed to use
+  `backdrop-filter`.
+- Prod-visible: stat digits now use Space Grotesk (the D1/T1 selector splice
+  bug), blur removed from every non-nav surface (select footer, results/pause/
+  duel/invite overlays, landing footer, policy nav, consent backdrop), overlays
+  are `display:none` at rest with a 200 ms fade-in, the background pattern no
+  longer drifts, safe-area insets on nav/footer/toasts/consent/overlays,
+  `viewport-fit=cover`, `body{min-height:100dvh}`, reduced-motion nuke scoped
+  to v1. Screenshot baselines were re-recorded for the affected screens.
+- Deferred to later batches: `css/landing.css` extraction (mechanical), the
+  `.game-shell` min-height change (batch 8).
+- Emulator launch test (Pixel 7 · Android 16): app boots, landing + auth
+  render; sign-in fails with `auth/requests-from-referer-https://localhost-are-blocked`
+  until the lead completes step 1 below.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

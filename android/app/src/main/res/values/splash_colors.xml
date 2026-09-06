@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ system splash: washi paper (light) — see values-night for urushi -->
+    <color name="splash_background">#FAF8F2</color>
+</resources>

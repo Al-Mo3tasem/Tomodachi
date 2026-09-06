@@ -12,7 +12,7 @@
 // the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { showScreen, currentScreen } from '../core/core.js?v=20260906b';
+import { showScreen, currentScreen } from '../core/core.js?v=20260906c';
 
 const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
 

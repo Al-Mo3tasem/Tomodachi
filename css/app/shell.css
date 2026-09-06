@@ -1,0 +1,24 @@
+/* ============================================================
+   Tomodachi — shell chrome (layer: components)
+   #dock, .topbar, .app-scroll, body[data-immersive] / body[data-kb].
+   Batch 2 ships the structural scaffolding only (safe-area padding on the
+   scroll container); the dock and top bar arrive in batch 3.
+   ============================================================ */
+@layer components {
+  /* Screens scroll under the (future) floating dock; bottom padding keeps the
+     last card reachable. Applied only under v2 so v1 is untouched. */
+  html[data-shell="v2"] .app-scroll,
+  html[data-shell="v2"] .screen > .container {
+    padding-block-end: var(--content-pad-bottom);
+    padding-inline-start: max(var(--gutter), var(--safe-inline-start));
+    padding-inline-end: max(var(--gutter), var(--safe-inline-end));
+  }
+  /* Immersive screens (lesson, game, review) hide the dock and drop the padding. */
+  html[data-shell="v2"] body[data-immersive] .screen > .container {
+    padding-block-end: max(var(--gutter), var(--safe-bottom));
+  }
+  /* Keyboard open: content lifts by the keyboard height set from the bridge. */
+  html[data-shell="v2"] body[data-kb] .screen > .container {
+    padding-block-end: calc(var(--kb-h) + var(--gutter));
+  }
+}
