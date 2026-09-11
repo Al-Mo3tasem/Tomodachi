@@ -18,6 +18,12 @@
   "sheet": {
     "close": "Close"
   },
+  "hud": {
+    "score": "score",
+    "left": "left",
+    "lives": "lives",
+    "round": "round"
+  },
   "home": {
     "today": "Today",
     "course": "Course",

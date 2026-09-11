@@ -202,7 +202,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - DEBUG_QUOTA: Home re-entry within 60s = 0 new reads; 10 tab switches < 5 reads; presence listener touches only friend docs.
 - id-contract on the stamped template; glass budget Home 2; axe tiles are buttons with composed names; prod-shell-unchanged green.
 
-### Batch 7 — Lesson and review surfaces + introduction lesson pages — SHIPPED  _(1.5 days (done))_
+### Batch 7 — Lesson and review surfaces + introduction lesson pages — SHIPPED (0efd3cb)  _(1.5 days (done))_
 
 **Goal:** Picks 5, 6 (lessons/review) and the lead's intro-lesson requirement: paper teach card, 2x2 tiles + feedback sheet, results sheet, orientation extended with 'how the course is organised' and re-openable from Me › Help.
 

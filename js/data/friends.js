@@ -10,8 +10,8 @@
 // collection — reads stay proportional to the friend list.
 // ============================================
 
-import { db, collection, getDocs, query, where, documentId, onSnapshot } from './firebase.js?v=20260906h';
-import { state } from '../core/core.js?v=20260906h';
+import { db, collection, getDocs, query, where, documentId, onSnapshot } from './firebase.js?v=20260911a';
+import { state } from '../core/core.js?v=20260911a';
 
 const IN_LIMIT = 30;   // Firestore 'in' clause cap
 

@@ -12,8 +12,8 @@
 // the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { back as navBack } from '../core/nav.js?v=20260906h';
-import { setNativePrefsAdapter } from '../core/prefs.js?v=20260906h';
+import { back as navBack } from '../core/nav.js?v=20260911a';
+import { setNativePrefsAdapter } from '../core/prefs.js?v=20260911a';
 
 const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
 
@@ -72,6 +72,12 @@ function wire() {
   // every setPref() is mirrored into Capacitor Preferences from here on
   if (n.prefs) setNativePrefsAdapter({ get: (k) => n.prefs.get(k), set: (k, v) => n.prefs.set(k, v), remove: (k) => n.prefs.remove(k) });
   n.app.onBack(handleBack);
+  // keyboard: body[data-kb] hides the dock and pads the input area (css/app), --kb-h carries the height
+  if (n.keyboard) {
+    const root = document.documentElement;
+    n.keyboard.onShow((ev) => { document.body.setAttribute('data-kb', '1'); root.style.setProperty('--kb-h', `${(ev && ev.keyboardHeight) || 0}px`); });
+    n.keyboard.onHide(() => { document.body.removeAttribute('data-kb'); root.style.setProperty('--kb-h', '0px'); });
+  }
   n.app.onState((payload) => { for (const fn of listeners.appState) { try { fn(payload); } catch (_e) { /* listener error must not break the shell */ } } });
 }
 

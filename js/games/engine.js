@@ -12,24 +12,26 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906h';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260906h';
-import { haptic } from '../core/haptics.js?v=20260906h';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906h';
-import { statusChip } from '../ui/status.js?v=20260906h';
-import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906h';
-import { countUp } from '../ui/numbers.js?v=20260906h';
-import { writeActivity } from '../data/users.js?v=20260906h';
-import { navigate } from '../core/nav.js?v=20260906h';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911a';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260911a';
+import { haptic } from '../core/haptics.js?v=20260911a';
+import { confirmDestructive, openSheet, closeSheet } from '../ui/sheet.js?v=20260911a';
+import { mountHud, updateHud } from '../ui/hud.js?v=20260911a';
+import { showResultsSheet, hideResultsSheet } from '../ui/results.js?v=20260911a';
+import { statusChip } from '../ui/status.js?v=20260911a';
+import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260911a';
+import { countUp } from '../ui/numbers.js?v=20260911a';
+import { writeActivity } from '../data/users.js?v=20260911a';
+import { navigate } from '../core/nav.js?v=20260911a';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906h';
+} from '../data/firebase.js?v=20260911a';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906h';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906h';
-import { t } from '../i18n/index.js?v=20260906h';
+} from '../audio/audio.js?v=20260911a';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260911a';
+import { t } from '../i18n/index.js?v=20260911a';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;
@@ -40,6 +42,7 @@ const RAMP_EVERY = 5;      // correct answers per speed-up
 const MIN_RESPONSE = 0.3;  // seconds — anti-cheat floor for speed bonus
 const FEEDBACK_OK = 480;   // ms pause after a correct answer
 const FEEDBACK_BAD = 1150; // ms pause after a wrong answer
+const v2 = () => document.documentElement.dataset.shell === 'v2';
 
 // Romaji that have accepted spelling variants.
 const ROMAJI_ALT = {
@@ -322,6 +325,7 @@ function buildScreen() {
   if (timer) timer.style.display = g.mode === 'survival' ? 'block' : 'none';
 
   buildInputArea();
+  if (v2()) mountHud('screen-game', { lead: $('game-exit') });   // one glass chip; legacy .game-hud row is hidden
   renderHud();
   attachHandlers();
 }
@@ -685,11 +689,22 @@ function renderHud() {
   if (g.mode === 'survival') {
     const hearts = '❤️'.repeat(g.lives) + '🤍'.repeat(Math.max(0, SURVIVAL_LIVES - g.lives));
     const round = Math.floor(g.correct / RAMP_EVERY) + 1;
-    hud.innerHTML = `
-      <span class="hud-lives">${hearts}</span>
-      <span class="hud-chip">${t('duel.round_n', { n: round })}</span>
-      <span class="hud-chip hud-score">${fmtNumber(liveScore())}</span>
-    `;
+    if (v2()) {
+      updateHud('screen-game', {
+        primary: { value: fmtNumber(liveScore()), caption: t('hud.score') },
+        stats: [
+          { key: 'lives', value: hearts },
+          { key: 'round', value: t('duel.round_n', { n: round }) },
+        ],
+        danger: g.lives <= 1,
+      });
+    } else {
+      hud.innerHTML = `
+        <span class="hud-lives">${hearts}</span>
+        <span class="hud-chip">${t('duel.round_n', { n: round })}</span>
+        <span class="hud-chip hud-score">${fmtNumber(liveScore())}</span>
+      `;
+    }
   } else {
     const remaining = g.paused
       ? g.sessionRemaining
@@ -697,11 +712,22 @@ function renderHud() {
     const low = remaining <= 10000;
     const total = g.correct + g.wrong;
     const acc = total ? Math.round((g.correct / total) * 100) : 100;
-    hud.innerHTML = `
-      <span class="hud-chip hud-time ${low ? 'danger' : ''}">⏱ ${fmtTime(remaining)}</span>
-      <span class="hud-chip hud-good">✓ ${g.correct}</span>
-      <span class="hud-chip">${acc}%</span>
-    `;
+    if (v2()) {
+      updateHud('screen-game', {
+        primary: { value: fmtTime(remaining), caption: t('hud.left'), tone: low ? 'danger' : '' },
+        stats: [
+          { key: 'correct', value: fmtNumber(g.correct), icon: '✓', tone: 'good' },
+          { key: 'acc', value: `${fmtNumber(acc)}%` },
+        ],
+        danger: low,
+      });
+    } else {
+      hud.innerHTML = `
+        <span class="hud-chip hud-time ${low ? 'danger' : ''}">⏱ ${fmtTime(remaining)}</span>
+        <span class="hud-chip hud-good">✓ ${g.correct}</span>
+        <span class="hud-chip">${acc}%</span>
+      `;
+    }
   }
 
   const streak = $('game-streak');
@@ -877,6 +903,7 @@ function endGame(reason) {
 }
 
 function showResults(s) {
+  if (v2()) { showResultsV2(s); return; }
   const overlay = $('results-overlay');
   if (!overlay) return;
 
@@ -917,6 +944,38 @@ function showResults(s) {
   if (note) note.innerHTML = s.mode === 'survival' ? `<span class="muted">${t('game.results.saving')}</span>` : '';
 
   overlay.classList.add('active');
+  persistResults(s, note);
+}
+
+// v2: the results sheet (pick 10 tiers: 'perfect' only for a run worth confetti)
+function showResultsV2(s) {
+  const accPct = Math.round(s.accuracy * 100);
+  const survival = s.mode === 'survival';
+  const perfect = survival ? accPct >= 80 && s.correct >= 8 : (s.accuracy >= 0.9 && s.correct >= 8);
+  const cells = [
+    { label: t('game.stats.correct'), value: fmtNumber(s.correct) },
+    { label: t('game.stats.missed'), value: fmtNumber(s.wrong) },
+    { label: t('game.stats.accuracy'), value: `${fmtNumber(accPct)}%` },
+    { label: t('game.stats.best_streak'), value: fmtNumber(s.bestStreak) },
+  ];
+  if (survival) cells[2] = { label: t('game.stats.round'), value: fmtNumber(s.round) };
+  const shown = showResultsSheet({
+    tier: perfect ? 'perfect' : 'normal',
+    art: survival ? (accPct >= 80 ? '🏆' : accPct >= 50 ? '💪' : '🌱') : (accPct >= 90 ? '🌸' : accPct >= 60 ? '🧘' : '📚'),
+    title: survival
+      ? (s.reason === 'quit' ? t('game.results.title_run_ended') : t('game.results.title_game_over'))
+      : (s.practice === 'listen' ? t('game.results.title_listening_done') : t('game.results.title_reading_done')),
+    value: survival ? s.score : s.correct,
+    caption: survival ? t('game.results.label_final_score') : t('game.results.label_chars_cleared'),
+    stats: cells,
+    note: survival,
+    actions: [
+      { label: t('game.results.play_again_btn'), primary: true, onClick: () => playAgain() },
+      { label: t('game.results.dashboard_btn'), onClick: () => goHome() },
+    ],
+  });
+  const note = shown && shown.note;
+  if (note) note.innerHTML = `<span class="muted">${t('game.results.saving')}</span>`;
   persistResults(s, note);
 }
 
@@ -1017,6 +1076,7 @@ async function saveSession(s) {
 }
 
 function hideResults() {
+  if (v2()) { hideResultsSheet(); return; }
   const overlay = $('results-overlay');
   if (overlay) overlay.classList.remove('active');
 }
@@ -1026,11 +1086,32 @@ function hideResults() {
 // ============================================
 
 function showPauseOverlay() {
+  if (v2()) {
+    if (document.querySelector('#sheet-root .sheet--pause')) return;
+    openSheet({
+      className: 'sheet--pause',
+      detent: 'half',
+      content: (body) => {
+        body.innerHTML = '<div class="pause-emoji" aria-hidden="true">⏸️</div><h2 class="pause-title"></h2><p class="pause-desc"></p><div class="sheet-actions"><button type="button" class="btn btn-primary" autofocus></button></div>';
+        body.querySelector('.pause-title').textContent = t('game.pause.title');
+        body.querySelector('.pause-desc').textContent = t('game.pause.desc');
+        const btn = body.querySelector('.btn');
+        btn.textContent = t('game.pause.resume_btn');
+        btn.addEventListener('click', () => closeSheet({ reason: 'resume' }));
+      },
+      onClose: () => { if (g && g.active && g.paused) resumeFromPause(); },   // any dismissal resumes
+    });
+    return;
+  }
   const o = $('pause-overlay');
   if (o) o.classList.add('active');
 }
 
+/** Test/support hook: show the pause surface for the paused game. */
+export function showPause() { showPauseOverlay(); }
+
 function hidePauseOverlay() {
+  if (v2()) { if (document.querySelector('#sheet-root .sheet--pause')) closeSheet({ reason: 'program' }); return; }
   const o = $('pause-overlay');
   if (o) o.classList.remove('active');
 }

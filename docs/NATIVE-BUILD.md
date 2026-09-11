@@ -277,6 +277,37 @@ release build; never commit it.**
 - Deviation: the superseded `.lesson-*` rules stay in style.css until the flip
   (v1 pixels); the plan's deletion happens in batch 14.
 
+### Batch 8a — solo game surfaces: one glass HUD chip, inline flash, results and pause sheets, keyboard state
+- `js/ui/hud.js` — `mountHud(screenId, { lead })` / `updateHud(screenId, { primary,
+  stats, danger })`: one `.hud.glass` chip per game screen (sticky under the
+  safe area, the only glass on an immersive screen), with a leading slot
+  that adopts the existing exit button (ids intact), a tabular hero number
+  with caption, a run of small stats and a trailing slot. Zen shows time
+  left (rose in the last 10 s) · ✓ correct · accuracy; Survival shows the
+  score · lives · round. The legacy `.game-hud` row is hidden under v2; the
+  timer bar is opaque under the chip; the stage card is paper with the
+  matcha/rose inline flash (no verdict sheet in timed games).
+- Results: `showResultsSheet()` grew `art`, `stats` (mini tiles, 40 ms
+  stagger), `note` (the survival "saving… / new best / ranked" line, updated
+  by `persistResults`) and `versus` (for duel, batch 8b); it returns
+  `{ note }` and `hideResultsSheet()` closes it for Play again. The engine's
+  `showResultsV2()` picks the tier ('perfect' = Zen ≥ 90 % and ≥ 8 correct,
+  Survival ≥ 80 % and ≥ 8) — confetti is still decided by `persistResults`.
+- Pause: the tab-hidden pause is a `sheet--pause` (any dismissal resumes);
+  `showPause()` is exported for tests. Sheets gained `dismissable: false`
+  (locked: no scrim/✕/drag/Escape, back swallowed) for the stall sheets in 8b.
+- Keyboard: `shell.js` wires `Native.keyboard.onShow/onHide` to
+  `body[data-kb]` (hides the dock, pads the input area) and `--kb-h`.
+- Tests: `tests/e2e/game.spec.mjs` (Zen: one glass surface = the chip, exit
+  adopted, opaque stage, inline flash, results sheet with four stat tiles and
+  tabular digits, legacy overlay closed; pause sheet resumes; keyboard state
+  keeps the typed input on screen). Finished games write `stats/{uid}`, so the
+  spec snapshots and restores that document.
+- Left for 8b: duel and co-op chips (two 48 px avatars at the chip ends,
+  scores as hero numbers, round dots), their results as sheets (loser sees
+  Rematch first) and the locked stall sheet; deleting the legacy
+  `.game-card` / `.toast` / `.results-card` redefinitions waits for the flip.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

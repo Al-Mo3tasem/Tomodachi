@@ -8,9 +8,9 @@
 // two actions. Sits on the sheet primitive; v1 keeps its done cards.
 // ============================================
 
-import { openSheet, closeSheet } from './sheet.js?v=20260906h';
-import { countUp } from './numbers.js?v=20260906h';
-import { haptic } from '../core/haptics.js?v=20260906h';
+import { openSheet, closeSheet } from './sheet.js?v=20260911a';
+import { countUp } from './numbers.js?v=20260911a';
+import { haptic } from '../core/haptics.js?v=20260911a';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 const ART = { normal: '🎉', perfect: '🌸' };
@@ -25,9 +25,10 @@ const ART = { normal: '🎉', perfect: '🌸' };
  * @param {{ label: string, primary?: boolean, onClick?: Function }[]} [o.actions]  first primary
  * @param {(reason: string) => void} [o.onClose]
  */
-export function showResultsSheet({ tier = 'normal', title = '', value = 0, caption = '', lines = [], actions = [], onClose = null } = {}) {
+export function showResultsSheet({ tier = 'normal', art: artOverride = null, title = '', value = 0, caption = '', lines = [], stats = [], note = false, versus = null, actions = [], onClose = null } = {}) {
   if (!v2()) return false;
   let numEl = null;
+  let noteEl = null;
   openSheet({
     className: `sheet--results is-${tier === 'perfect' ? 'perfect' : 'normal'}`,
     detent: 'half',
@@ -35,7 +36,7 @@ export function showResultsSheet({ tier = 'normal', title = '', value = 0, capti
       const art = document.createElement('div');
       art.className = 'results-art';
       art.setAttribute('aria-hidden', 'true');
-      art.textContent = ART[tier] || ART.normal;
+      art.textContent = artOverride || ART[tier] || ART.normal;
       const h = document.createElement('h2');
       h.className = 'results-title';
       h.textContent = title;
@@ -46,6 +47,41 @@ export function showResultsSheet({ tier = 'normal', title = '', value = 0, capti
       cap.className = 'num-caption';
       cap.textContent = caption;
       body.append(art, h, numEl, cap);
+      if (versus) {
+        const wrap = document.createElement('div');
+        wrap.className = 'dr-scores';
+        for (const side of [versus.self, versus.opp]) {
+          const box = document.createElement('div');
+          box.className = 'dr-side' + (side.win ? ' dr-win' : '');
+          box.innerHTML = '<div class="dr-name"></div><div class="dr-score"></div><div class="dr-sub"></div>';
+          box.querySelector('.dr-name').textContent = side.name || '';
+          box.querySelector('.dr-score').textContent = side.score == null ? '' : String(side.score);
+          box.querySelector('.dr-sub').textContent = side.sub || '';
+          if (wrap.children.length === 1) { const vs = document.createElement('div'); vs.className = 'dr-vs'; vs.textContent = versus.vs || 'VS'; wrap.appendChild(vs); }
+          wrap.appendChild(box);
+        }
+        body.appendChild(wrap);
+      }
+      if (stats.length) {
+        const grid = document.createElement('div');
+        grid.className = 'results-stats';
+        stats.slice(0, 6).forEach((st, i) => {
+          const cell = document.createElement('div');
+          cell.className = 'rstat';
+          cell.style.setProperty('--i', String(i));
+          cell.innerHTML = '<div class="rstat-value"></div><div class="rstat-label"></div>';
+          cell.querySelector('.rstat-value').textContent = st.value == null ? '' : String(st.value);
+          cell.querySelector('.rstat-label').textContent = st.label || '';
+          grid.appendChild(cell);
+        });
+        body.appendChild(grid);
+      }
+      if (note) {
+        noteEl = document.createElement('div');
+        noteEl.className = 'results-note';
+        noteEl.setAttribute('aria-live', 'polite');
+        body.appendChild(noteEl);
+      }
       for (const text of lines.filter(Boolean)) {
         const p = document.createElement('p');
         p.className = 'results-line';
@@ -71,5 +107,11 @@ export function showResultsSheet({ tier = 'normal', title = '', value = 0, capti
   });
   haptic('ok');
   requestAnimationFrame(() => { if (numEl) countUp(numEl, value, { duration: 700 }); });
-  return true;
+  return { note: noteEl };
+}
+
+/** Close the results sheet if one is open (play again / new match). */
+export function hideResultsSheet() {
+  if (document.querySelector('#sheet-root .sheet--results')) return closeSheet({ reason: 'program' });
+  return Promise.resolve(false);
 }

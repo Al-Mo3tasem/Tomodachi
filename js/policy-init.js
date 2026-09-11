@@ -12,8 +12,8 @@
 // identical to the landing-page toggle.
 // ============================================
 
-import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260906h';
-import { setPref } from './core/prefs.js?v=20260906h';
+import { initI18n, setLocale, getLocale } from './i18n/index.js?v=20260911a';
+import { setPref } from './core/prefs.js?v=20260911a';
 
 // Theme on policy pages: the <head> pre-paint script already resolved
 // stored-choice-else-system before first paint. Here we only wire the nav

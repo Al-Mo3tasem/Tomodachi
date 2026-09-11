@@ -18,10 +18,10 @@
 // WebViews without <dialog>; lint gate).
 // ============================================
 
-import { $ } from '../core/core.js?v=20260906h';
-import { t } from '../i18n/index.js?v=20260906h';
-import { haptic } from '../core/haptics.js?v=20260906h';
-import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260906h';
+import { $ } from '../core/core.js?v=20260911a';
+import { t } from '../i18n/index.js?v=20260911a';
+import { haptic } from '../core/haptics.js?v=20260911a';
+import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260911a';
 
 const DISMISS_PX = 120;        // drag distance that closes
 const FLICK_PX_PER_MS = 0.5;   // downward velocity that closes
@@ -76,7 +76,7 @@ export function isSheetOpen() { return !!current && !current.closing; }
  * @param {string} [opts.className]      extra classes on .sheet (e.g. 'sheet--feedback is-ok')
  * @param {(reason:string)=>void} [opts.onClose]   reason: button | scrim | drag | escape | back | program | continue
  */
-export function openSheet({ title = '', content = null, detent = 'half', className = '', onClose = null } = {}) {
+export function openSheet({ title = '', content = null, detent = 'half', className = '', onClose = null, dismissable = true } = {}) {
   const host = root();
   const tpl = $('tpl-sheet');
   if (!host || !tpl) return null;
@@ -105,16 +105,22 @@ export function openSheet({ title = '', content = null, detent = 'half', classNa
   host.classList.add('is-mounted');
 
   const opener = document.activeElement;
-  const rec = { el, body, opener, onClose, closing: false, pushed: false, byBack: false, released: false };
+  const rec = { el, body, opener, onClose, closing: false, pushed: false, byBack: false, released: false, dismissable: !!dismissable };
   claimOverlayEntry(rec);   // before it becomes current: a closing predecessor may hand its entry over
   current = rec;
   document.body.setAttribute('data-sheet', el.dataset.detent);
 
-  scrim.addEventListener('click', () => closeSheet({ reason: 'scrim' }));
-  closeBtn.addEventListener('click', () => closeSheet({ reason: 'button' }));
+  if (dismissable) {
+    scrim.addEventListener('click', () => closeSheet({ reason: 'scrim' }));
+    closeBtn.addEventListener('click', () => closeSheet({ reason: 'button' }));
+    wireDrag(el, body);
+  } else {
+    closeBtn.hidden = true;
+    el.classList.add('is-locked');
+  }
   el.addEventListener('keydown', onKeydown);
-  wireDrag(el, body);
-  setBackGuard(() => { if (!current || current.closing) return false; current.byBack = true; closeSheet({ reason: 'back' }); return true; });
+  // a locked sheet (stall) swallows back without closing; the game owns the exit
+  setBackGuard(() => { if (!current || current.closing) return false; if (!current.dismissable) return true; current.byBack = true; closeSheet({ reason: 'back' }); return true; });
 
   // two frames: mount, then transition in
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -160,7 +166,7 @@ export function closeSheet({ reason = 'program', immediate = false } = {}) {
 
 function onKeydown(e) {
   if (!current || current.closing) return;
-  if (e.key === 'Escape') { e.preventDefault(); closeSheet({ reason: 'escape' }); return; }
+  if (e.key === 'Escape') { e.preventDefault(); if (current.dismissable) closeSheet({ reason: 'escape' }); return; }
   if (e.key !== 'Tab') return;
   const nodes = [...current.el.querySelectorAll(FOCUSABLE)].filter((n) => n.offsetParent !== null);
   if (!nodes.length) { e.preventDefault(); current.el.focus(); return; }

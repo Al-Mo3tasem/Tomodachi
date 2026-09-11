@@ -12,19 +12,19 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260906h';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906h';
-import { haptic } from '../core/haptics.js?v=20260906h';
-import { setJa, fmtCount } from '../core/format.js?v=20260906h';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906h';
-import { statusChip } from '../ui/status.js?v=20260906h';
-import { writeActivity } from '../data/users.js?v=20260906h';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906h';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906h';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906h';
-import { t, getLocale } from '../i18n/index.js?v=20260906h';
-import { scheduleLessonSrs } from './review.js?v=20260906h';
-import { showResultsSheet } from './results.js?v=20260906h';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260911a';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260911a';
+import { haptic } from '../core/haptics.js?v=20260911a';
+import { setJa, fmtCount } from '../core/format.js?v=20260911a';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911a';
+import { statusChip } from '../ui/status.js?v=20260911a';
+import { writeActivity } from '../data/users.js?v=20260911a';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260911a';
+import { cacheGet, cachePut } from '../data/content.js?v=20260911a';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260911a';
+import { t, getLocale } from '../i18n/index.js?v=20260911a';
+import { scheduleLessonSrs } from './review.js?v=20260911a';
+import { showResultsSheet } from './results.js?v=20260911a';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
