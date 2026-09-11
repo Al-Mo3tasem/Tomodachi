@@ -303,10 +303,29 @@ release build; never commit it.**
   tabular digits, legacy overlay closed; pause sheet resumes; keyboard state
   keeps the typed input on screen). Finished games write `stats/{uid}`, so the
   spec snapshots and restores that document.
-- Left for 8b: duel and co-op chips (two 48 px avatars at the chip ends,
-  scores as hero numbers, round dots), their results as sheets (loser sees
-  Rematch first) and the locked stall sheet; deleting the legacy
-  `.game-card` / `.toast` / `.results-card` redefinitions waits for the flip.
+- Deleting the legacy `.game-card` / `.toast` / `.results-card`
+  redefinitions from style.css waits for the flip (batch 14).
+
+### Batch 8b — duel and co-op: chips with avatars, versus results, locked stall sheet
+- Duel: `mountDuelChip()` on screen entry — the exit button and the player's
+  48 px avatar in the leading slot, the opponent's at the trailing slot (an
+  answered-round ring on it), the primary number is "mine – theirs" in
+  tabular digits with the round as caption. Co-op: the chip shows the shared
+  clock (rose under 20 %), round x/N and ✓ cleared; the team pips stay. The
+  legacy `.duel-hud`, `.duel-topbar` and `.coop-statusbar` rows are hidden
+  under v2.
+- Results: duel opens the results sheet with a versus block (winner
+  highlighted); the winner sees Home first, the loser or a draw sees Rematch
+  first. Co-op opens it with the team score, the cleared line and three
+  stat tiles. Both reuse `showResultsSheet`, the legacy overlays stay
+  closed under v2.
+- Stall: `showStallSheet()` — a locked sheet (no scrim/✕/drag/Escape, back
+  swallowed) whose only action is the existing leave handler; hidden again on
+  the next live snapshot. Both games route it through their `setOverlay`.
+- Tests: `tests/e2e/duel-coop.spec.mjs` exercises the chip layout (avatars at
+  the logical ends in both directions), the versus results sheet and the
+  locked stall sheet through the modules; a real two-player match needs a
+  second account and lands with the friends model (batch 11).
 
 ## Lead checklist before wider Android testing (batch 1 · T5)
 

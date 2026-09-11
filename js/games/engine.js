@@ -12,26 +12,26 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911a';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
-import { confirmDestructive, openSheet, closeSheet } from '../ui/sheet.js?v=20260911a';
-import { mountHud, updateHud } from '../ui/hud.js?v=20260911a';
-import { showResultsSheet, hideResultsSheet } from '../ui/results.js?v=20260911a';
-import { statusChip } from '../ui/status.js?v=20260911a';
-import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260911a';
-import { countUp } from '../ui/numbers.js?v=20260911a';
-import { writeActivity } from '../data/users.js?v=20260911a';
-import { navigate } from '../core/nav.js?v=20260911a';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911b';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
+import { confirmDestructive, openSheet, closeSheet } from '../ui/sheet.js?v=20260911b';
+import { mountHud, updateHud } from '../ui/hud.js?v=20260911b';
+import { showResultsSheet, hideResultsSheet } from '../ui/results.js?v=20260911b';
+import { statusChip } from '../ui/status.js?v=20260911b';
+import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260911b';
+import { countUp } from '../ui/numbers.js?v=20260911b';
+import { writeActivity } from '../data/users.js?v=20260911b';
+import { navigate } from '../core/nav.js?v=20260911b';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260911a';
+} from '../data/firebase.js?v=20260911b';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260911a';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260911a';
-import { t } from '../i18n/index.js?v=20260911a';
+} from '../audio/audio.js?v=20260911b';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260911b';
+import { t } from '../i18n/index.js?v=20260911b';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;

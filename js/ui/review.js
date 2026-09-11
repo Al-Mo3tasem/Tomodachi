@@ -12,18 +12,18 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260911a';
-import { navigate, back as navBack } from '../core/nav.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
-import { setJa } from '../core/format.js?v=20260911a';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911a';
-import { writeActivity } from '../data/users.js?v=20260911a';
-import { showResultsSheet } from './results.js?v=20260911a';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260911a';
-import { cacheGet } from '../data/content.js?v=20260911a';
-import { loadLessons } from './lesson.js?v=20260911a';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260911a';
-import { t, getLocale } from '../i18n/index.js?v=20260911a';
+import { state, $, shuffle } from '../core/core.js?v=20260911b';
+import { navigate, back as navBack } from '../core/nav.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
+import { setJa } from '../core/format.js?v=20260911b';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911b';
+import { writeActivity } from '../data/users.js?v=20260911b';
+import { showResultsSheet } from './results.js?v=20260911b';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260911b';
+import { cacheGet } from '../data/content.js?v=20260911b';
+import { loadLessons } from './lesson.js?v=20260911b';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260911b';
+import { t, getLocale } from '../i18n/index.js?v=20260911b';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;

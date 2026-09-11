@@ -16,7 +16,7 @@ globalThis.performance = { now: () => 0 };
 globalThis.requestAnimationFrame = () => 0;
 
 const { detectPlatform, decideGlass, applyPlatformAttrs, setGlass } = await import('../../js/core/platform.js');
-const { _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911a');   // same instance platform.js uses
+const { _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911b');   // same instance platform.js uses
 
 test('platform from the user agent on the web', () => {
   assert.equal(detectPlatform(), 'android');

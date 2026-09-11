@@ -12,18 +12,21 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
-import { confirmDestructive } from '../ui/sheet.js?v=20260911a';
-import { statusChip } from '../ui/status.js?v=20260911a';
-import { navigate } from '../core/nav.js?v=20260911a';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
+import { confirmDestructive } from '../ui/sheet.js?v=20260911b';
+import { mountHud, updateHud as updateHudChip } from '../ui/hud.js?v=20260911b';
+import { showResultsSheet, hideResultsSheet, showStallSheet, hideStallSheet } from '../ui/results.js?v=20260911b';
+import { fmtNumber } from '../core/format.js?v=20260911b';
+import { statusChip } from '../ui/status.js?v=20260911b';
+import { navigate } from '../core/nav.js?v=20260911b';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260911a';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260911a';
-import { acceptCoop, isInCoop } from './coop.js?v=20260911a';
-import { t } from '../i18n/index.js?v=20260911a';
+} from '../data/firebase.js?v=20260911b';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260911b';
+import { acceptCoop, isInCoop } from './coop.js?v=20260911b';
+import { t } from '../i18n/index.js?v=20260911b';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
@@ -35,6 +38,7 @@ const MAX_ROUNDS = 30;       // hard cap for first_to_10
 const QUESTION_COUNT = 30;
 const STALL_MS = 26000;      // no snapshot for this long → opponent likely gone
 const INVITE_FRESH_MS = 180000;
+const v2 = () => document.documentElement.dataset.shell === 'v2';
 
 const ROMAJI_ALT = {
   shi: ['si'], si: ['shi'], chi: ['ti'], ti: ['chi'],
@@ -485,10 +489,33 @@ async function submitAnswer(value) {
 // RENDERING
 // ============================================
 
+let duelAv = null;   // { self, opp } avatar nodes inside the chip (v2)
+function mountDuelChip() {
+  if (!v2()) return;
+  const el = mountHud('screen-duel', { lead: $('duel-exit') });
+  if (!el || duelAv) return;
+  const mk = (cls) => { const a = document.createElement('span'); a.className = 'hud-avatar ' + cls; a.setAttribute('aria-hidden', 'true'); return a; };
+  duelAv = { self: mk('is-self'), opp: mk('is-opp') };
+  el.querySelector('.hud-lead').appendChild(duelAv.self);
+  el.querySelector('.hud-trail').appendChild(duelAv.opp);
+}
+
+function updateDuelChip(data, { players, scores, myId, oppId, oppAnswered }) {
+  if (!v2() || !duelAv) return;
+  duelAv.self.textContent = players[myId]?.avatarEmoji || '🌸';
+  duelAv.opp.textContent = players[oppId]?.avatarEmoji || '🎮';
+  duelAv.opp.classList.toggle('is-answered', !!oppAnswered);
+  const total = data.settings?.winCondition === 'rounds_20' ? ` / ${fmtNumber(TOTAL_ROUNDS)}` : '';
+  updateHudChip('screen-duel', {
+    primary: { value: `${fmtNumber(scores[myId] || 0)} – ${fmtNumber(scores[oppId] || 0)}`, caption: t('duel.round_n', { n: (data.currentRound || 0) + 1 }) + total },
+  });
+}
+
 function enterDuelScreen() {
   if (d && d._entered) return;
   if (d) d._entered = true;
   navigate('screen-duel');
+  mountDuelChip();
   startTick();
 }
 
@@ -539,6 +566,7 @@ function updatePanels(data) {
     oppPanel.classList.toggle('answered',
       !!oppAns && data.status === 'active' && data.roundState === 'answering');
   }
+  updateDuelChip(data, { players, scores, myId, oppId, oppAnswered: !!oppAns && data.status === 'active' && data.roundState === 'answering' });
 }
 
 function renderQuestion(data) {
@@ -702,16 +730,12 @@ async function showResults(data) {
 
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set('duel-result-emoji', draw ? '🤝' : iWon ? '🏆' : '💪');
-  set('duel-result-title', draw ? t('duel.result.draw') : iWon ? t('duel.result.victory') : t('duel.result.defeat'));
-  if (forfeit) {
-    set('duel-result-detail', iWon
-      ? t('duel.result.opponent_left', { name: opponentName() })
-      : t('duel.result.you_left'));
-  } else {
-    set('duel-result-detail', draw
-      ? t('duel.result.detail_draw')
-      : iWon ? t('duel.result.detail_won') : t('duel.result.detail_lost', { name: opponentName() }));
-  }
+  const resultTitle = draw ? t('duel.result.draw') : iWon ? t('duel.result.victory') : t('duel.result.defeat');
+  const resultDetail = forfeit
+    ? (iWon ? t('duel.result.opponent_left', { name: opponentName() }) : t('duel.result.you_left'))
+    : (draw ? t('duel.result.detail_draw') : iWon ? t('duel.result.detail_won') : t('duel.result.detail_lost', { name: opponentName() }));
+  set('duel-result-title', resultTitle);
+  set('duel-result-detail', resultDetail);
 
   const scores = data.scores || {};
   const won = data.roundsWon || {};
@@ -731,7 +755,27 @@ async function showResults(data) {
       </div>`;
   }
 
-  setOverlay('duel-results', true);
+  if (v2()) {
+    // loser (or a draw) sees Rematch first; the winner sees Home first
+    const rematch = { label: t('duel.result.rematch_btn'), onClick: () => playAgainDuel() };
+    const home = { label: t('duel.result.dashboard_btn'), onClick: () => exitDuel() };
+    showResultsSheet({
+      tier: iWon && !draw ? 'perfect' : 'normal',
+      art: draw ? '🤝' : iWon ? '🏆' : '💪',
+      title: resultTitle,
+      value: scores[myId] || 0,
+      caption: t('duel.you'),
+      lines: [resultDetail],
+      versus: {
+        vs: t('duel.vs'),
+        self: { name: t('duel.you'), score: fmtNumber(scores[myId] || 0), sub: t('duel.result.rounds_won', { count: won[myId] || 0 }), win: iWon && !draw },
+        opp: { name: opponentName(), score: fmtNumber(scores[oppId] || 0), sub: t('duel.result.rounds_won', { count: won[oppId] || 0 }), win: !iWon && !draw },
+      },
+      actions: iWon && !draw ? [{ ...home, primary: true }, rematch] : [{ ...rematch, primary: true }, home],
+    });
+  } else {
+    setOverlay('duel-results', true);
+  }
   navigate('screen-duel');
 
   if (!draw && iWon) { confetti(); playSound('win'); haptic('ok'); }
@@ -1014,6 +1058,14 @@ function showLobby(statusText, detailText) {
 }
 
 function setOverlay(id, on) {
+  if (v2()) {
+    if (id === 'duel-stall') {
+      if (on) showStallSheet({ title: t('duel.stall.title'), desc: t('duel.stall.desc'), button: t('duel.stall.leave_btn'), onLeave: () => resolveStall() });
+      else hideStallSheet();
+      return;
+    }
+    if (id === 'duel-results' && !on) { hideResultsSheet(); return; }
+  }
   const el = $(id);
   if (el) el.classList.toggle('active', on);
 }

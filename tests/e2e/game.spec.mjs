@@ -20,6 +20,9 @@ async function snapshotStats(page) {
   }, v);
 }
 async function restoreStats(page, snap) {
+  // the engine writes stats (totalGames etc.) shortly after the results sheet
+  // opens; let that write land first, otherwise it overtakes the restore
+  await page.waitForTimeout(3000);
   const v = await ver(page);
   await page.evaluate(async ([v, snap]) => {
     const c = await import(`/js/core/core.js?v=${v}`);

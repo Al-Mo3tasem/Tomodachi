@@ -9,7 +9,7 @@ globalThis.document = { documentElement: { getAttribute: (a) => (a === 'lang' ? 
 
 const { fmtNumber, fmtCount, fmtTime, fmtPercent, jaNode, localizeDigits } = await import('../../js/core/format.js');
 // same module instance as format.js (the ?v= query is part of the module identity)
-const { setPref, _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911a');
+const { setPref, _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911b');
 
 test('Latin digits by default in both languages', () => {
   htmlLang = 'en'; assert.equal(fmtNumber(1240), '1,240');

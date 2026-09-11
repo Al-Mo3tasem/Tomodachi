@@ -8,9 +8,9 @@
 // two actions. Sits on the sheet primitive; v1 keeps its done cards.
 // ============================================
 
-import { openSheet, closeSheet } from './sheet.js?v=20260911a';
-import { countUp } from './numbers.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
+import { openSheet, closeSheet } from './sheet.js?v=20260911b';
+import { countUp } from './numbers.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 const ART = { normal: '🎉', perfect: '🌸' };
@@ -108,6 +108,35 @@ export function showResultsSheet({ tier = 'normal', art: artOverride = null, tit
   haptic('ok');
   requestAnimationFrame(() => { if (numEl) countUp(numEl, value, { duration: 700 }); });
   return { note: noteEl };
+}
+
+/**
+ * Locked sheet for a stalled online match: no scrim/✕/drag/Escape, back is
+ * swallowed; the only way out is the leave action (the game records the outcome).
+ */
+export function showStallSheet({ art = '📡', title = '', desc = '', button = '', onLeave = null } = {}) {
+  if (!v2()) return false;
+  if (document.querySelector('#sheet-root .sheet--stall')) return true;
+  openSheet({
+    className: 'sheet--stall',
+    detent: 'half',
+    dismissable: false,
+    content: (body) => {
+      body.innerHTML = '<div class="pause-emoji" aria-hidden="true"></div><h2 class="pause-title"></h2><p class="pause-desc"></p><div class="sheet-actions"><button type="button" class="btn btn-primary" autofocus></button></div>';
+      body.querySelector('.pause-emoji').textContent = art;
+      body.querySelector('.pause-title').textContent = title;
+      body.querySelector('.pause-desc').textContent = desc;
+      const btn = body.querySelector('.btn');
+      btn.textContent = button;
+      btn.addEventListener('click', async () => { await closeSheet({ reason: 'program' }); if (onLeave) onLeave(); });
+    },
+  });
+  return true;
+}
+
+export function hideStallSheet() {
+  if (document.querySelector('#sheet-root .sheet--stall')) return closeSheet({ reason: 'program' });
+  return Promise.resolve(false);
 }
 
 /** Close the results sheet if one is open (play again / new match). */

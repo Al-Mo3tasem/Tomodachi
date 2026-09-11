@@ -7,7 +7,7 @@
 // behaviour is unchanged until the flip.
 // ============================================
 
-import { $, toast } from '../core/core.js?v=20260911a';
+import { $, toast } from '../core/core.js?v=20260911b';
 
 const DEFAULT_MS = 1800;
 const ICONS = {

@@ -78,9 +78,13 @@
     padding-inline: max(var(--gutter), var(--safe-inline-start)) max(var(--gutter), var(--safe-inline-end));
     padding-block-end: max(var(--gutter), var(--safe-bottom));
   }
-  /* the legacy HUD row is replaced by the chip (its exit button moved into it);
-     duel / co-op keep their rows until their chips land (batch 8b) */
-  html[data-shell="v2"] #screen-game .game-hud { display: none; }
+  /* the legacy HUD rows are replaced by the chips (exit buttons moved into them) */
+  html[data-shell="v2"] #screen-game .game-hud,
+  html[data-shell="v2"] #screen-duel .duel-hud,
+  html[data-shell="v2"] #screen-duel .duel-topbar,
+  html[data-shell="v2"] #screen-coop .duel-topbar,
+  html[data-shell="v2"] #screen-coop .coop-statusbar { display: none; }
+  html[data-shell="v2"] .coop-team { margin-block-start: var(--space-3); }
   /* timer: opaque, sits right under the chip */
   html[data-shell="v2"] .game-timer { height: var(--progress-h-hud); border-radius: var(--radius-full); background: var(--bg-inset); overflow: hidden; }
   html[data-shell="v2"] .game-timer-fill { transition: width 100ms linear; }
@@ -130,10 +134,13 @@
   html[data-shell="v2"] .answer-submit { min-height: var(--cta-h); }
   html[data-shell="v2"] body[data-kb] .game-input-area { padding-block-end: 8px; }
 
-  /* the solo game's centred overlays are replaced by sheets under v2
-     (duel / co-op results and stall follow in batch 8b) */
+  /* the centred overlays are replaced by sheets under v2 (countdowns stay) */
   html[data-shell="v2"] #results-overlay,
-  html[data-shell="v2"] #pause-overlay { display: none; }
+  html[data-shell="v2"] #pause-overlay,
+  html[data-shell="v2"] #duel-results,
+  html[data-shell="v2"] #coop-results,
+  html[data-shell="v2"] #duel-stall,
+  html[data-shell="v2"] #coop-stall { display: none; }
 
   /* ---------- results sheet: game variant (mini stat tiles) ---------- */
   .sheet--results .results-stats {

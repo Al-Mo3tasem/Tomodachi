@@ -10,25 +10,28 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911a';
-import { fmtTime } from '../core/format.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
-import { confirmDestructive } from '../ui/sheet.js?v=20260911a';
-import { statusChip } from '../ui/status.js?v=20260911a';
-import { countUp } from '../ui/numbers.js?v=20260911a';
-import { navigate } from '../core/nav.js?v=20260911a';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911b';
+import { fmtTime, fmtNumber } from '../core/format.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
+import { confirmDestructive } from '../ui/sheet.js?v=20260911b';
+import { mountHud, updateHud as updateHudChip } from '../ui/hud.js?v=20260911b';
+import { showResultsSheet, hideResultsSheet, showStallSheet, hideStallSheet } from '../ui/results.js?v=20260911b';
+import { statusChip } from '../ui/status.js?v=20260911b';
+import { countUp } from '../ui/numbers.js?v=20260911b';
+import { navigate } from '../core/nav.js?v=20260911b';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260911a';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260911a';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260911a';
-import { t } from '../i18n/index.js?v=20260911a';
+} from '../data/firebase.js?v=20260911b';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260911b';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260911b';
+import { t } from '../i18n/index.js?v=20260911b';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;
 const SEC_PER_CHAR = 5000;   // shared time budget = 5s per character
 const STALL_MS = 40000;      // co-op rounds can be slow; stall = likely disconnect
+const v2 = () => document.documentElement.dataset.shell === 'v2';
 
 const ROMAJI_ALT = {
   shi: ['si'], si: ['shi'], chi: ['ti'], ti: ['chi'],
@@ -451,6 +454,7 @@ function enterCoopScreen() {
   if (c && c._entered) return;
   if (c) c._entered = true;
   navigate('screen-coop');
+  if (v2()) mountHud('screen-coop', { lead: $('coop-exit') });
   startTick();
 }
 
@@ -479,9 +483,18 @@ function updateHud(data) {
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set('coop-hud-rounds', t('coop.hud_round', { current: Math.min(round + 1, N), total: N }));
   set('coop-hud-cleared', `✓ ${data.correctRounds || 0}`);
+  if (v2()) {
+    updateHudChip('screen-coop', {
+      stats: [
+        { key: 'round', value: t('coop.hud_round', { current: Math.min(round + 1, N), total: N }) },
+        { key: 'cleared', value: fmtNumber(data.correctRounds || 0), icon: '✓', tone: 'good' },
+      ],
+    });
+  }
   updateClock(data);
 }
 
+const hudLeftCaption = () => t('hud.left');   // updateClock shadows t() with the clock node
 function updateClock(data) {
   const budget = (data.settings?.characterCount || 1) * SEC_PER_CHAR;
   let remain = budget;
@@ -490,10 +503,12 @@ function updateClock(data) {
   } else if (data.status === 'completed') {
     remain = Math.max(0, budget - (data.timeUsedMs || budget));
   }
+  const danger = data.status === 'active' && remain < budget * 0.2;
+  if (v2()) updateHudChip('screen-coop', { primary: { value: fmtTime(remain), caption: hudLeftCaption(), tone: danger ? 'danger' : '' }, danger });
   const t = $('coop-hud-time');
   if (t) {
     t.textContent = '⏱ ' + fmtTime(remain);
-    t.classList.toggle('danger', data.status === 'active' && remain < budget * 0.2);
+    t.classList.toggle('danger', danger);
   }
   const fill = $('coop-timer-fill');
   if (fill) {
@@ -666,7 +681,28 @@ async function showCoopResults(data) {
       .join('');
   }
 
-  setOverlay('coop-results', true);
+  if (v2()) {
+    const acc = N ? Math.round((cleared / N) * 100) : 0;
+    showResultsSheet({
+      tier: reason === 'cleared' ? 'perfect' : 'normal',
+      art: reason === 'cleared' ? '🎉' : reason === 'abandoned' ? '🚪' : '⏱️',
+      title: reason === 'cleared' ? t('coop.result.title_cleared') : reason === 'abandoned' ? t('coop.result.title_ended') : t('coop.result.title_times_up'),
+      value: score,
+      caption: t('coop.result.team_score_label'),
+      lines: [t('coop.result.detail_cleared', { cleared, total: N })],
+      stats: [
+        { label: t('coop.stats.cleared'), value: `${fmtNumber(cleared)}/${fmtNumber(N)}` },
+        { label: t('coop.stats.perfect'), value: fmtNumber(data.perfectRounds || 0) },
+        { label: t('coop.stats.completion'), value: `${fmtNumber(acc)}%` },
+      ],
+      actions: [
+        { label: t('coop.result.again_btn'), primary: true, onClick: () => playAgainCoop() },
+        { label: t('coop.result.dashboard_btn'), onClick: () => exitCoop() },
+      ],
+    });
+  } else {
+    setOverlay('coop-results', true);
+  }
   navigate('screen-coop');
 
   const real = reason === 'cleared' || reason === 'timeup';
@@ -861,6 +897,14 @@ function showLobby(statusText, detailText) {
 }
 
 function setOverlay(id, on) {
+  if (v2()) {
+    if (id === 'coop-stall') {
+      if (on) showStallSheet({ title: t('coop.stall.title'), desc: t('coop.stall.desc'), button: t('coop.stall.leave_btn'), onLeave: () => resolveCoopStall() });
+      else hideStallSheet();
+      return;
+    }
+    if (id === 'coop-results' && !on) { hideResultsSheet(); return; }
+  }
   const el = $(id);
   if (el) el.classList.toggle('active', on);
 }

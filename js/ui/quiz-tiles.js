@@ -16,11 +16,11 @@
 // sheet is not shown and the caller keeps its auto-advance.
 // ============================================
 
-import { $ } from '../core/core.js?v=20260911a';
-import { t } from '../i18n/index.js?v=20260911a';
-import { haptic } from '../core/haptics.js?v=20260911a';
-import { jaNode } from '../core/format.js?v=20260911a';
-import { openSheet, closeSheet } from './sheet.js?v=20260911a';
+import { $ } from '../core/core.js?v=20260911b';
+import { t } from '../i18n/index.js?v=20260911b';
+import { haptic } from '../core/haptics.js?v=20260911b';
+import { jaNode } from '../core/format.js?v=20260911b';
+import { openSheet, closeSheet } from './sheet.js?v=20260911b';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 

@@ -7,8 +7,8 @@
 // Never touches the native global directly (lint gate): uses the shell adapters.
 // ============================================
 
-import { isNative, nativePlatform } from '../native/shell.js?v=20260911a';
-import { getPref, setPref } from './prefs.js?v=20260911a';
+import { isNative, nativePlatform } from '../native/shell.js?v=20260911b';
+import { getPref, setPref } from './prefs.js?v=20260911b';
 
 const readPref = () => getPref('glass');   // 'full' | 'reduced' (Me › Appearance, batch 10)
 

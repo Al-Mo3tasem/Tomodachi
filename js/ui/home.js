@@ -13,13 +13,13 @@
 // Numbers are ink: one hero number per tile, rose only for overdue reviews.
 // ============================================
 
-import { $, state } from '../core/core.js?v=20260911a';
-import { t, onLocaleChange } from '../i18n/index.js?v=20260911a';
-import { setTab } from '../core/nav.js?v=20260911a';
-import { fmtCount, fmtNumber } from '../core/format.js?v=20260911a';
-import { dueSummary, startReview } from './review.js?v=20260911a';
-import { courseProgress, trackProgress, openLessonBrowser } from './lesson.js?v=20260911a';
-import { openSheet, closeSheet } from './sheet.js?v=20260911a';
+import { $, state } from '../core/core.js?v=20260911b';
+import { t, onLocaleChange } from '../i18n/index.js?v=20260911b';
+import { setTab } from '../core/nav.js?v=20260911b';
+import { fmtCount, fmtNumber } from '../core/format.js?v=20260911b';
+import { dueSummary, startReview } from './review.js?v=20260911b';
+import { courseProgress, trackProgress, openLessonBrowser } from './lesson.js?v=20260911b';
+import { openSheet, closeSheet } from './sheet.js?v=20260911b';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 const RING_R = 20;
