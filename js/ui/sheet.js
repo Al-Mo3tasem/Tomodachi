@@ -18,10 +18,10 @@
 // WebViews without <dialog>; lint gate).
 // ============================================
 
-import { $ } from '../core/core.js?v=20260906g';
-import { t } from '../i18n/index.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260906g';
+import { $ } from '../core/core.js?v=20260906h';
+import { t } from '../i18n/index.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260906h';
 
 const DISMISS_PX = 120;        // drag distance that closes
 const FLICK_PX_PER_MS = 0.5;   // downward velocity that closes
@@ -34,11 +34,28 @@ let current = null;            // { el, body, opener, onClose, closing, pushed, 
 const root = () => $('sheet-root');
 const reducedMotion = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_e) { return false; } };
 
-// ----- history entry for overlays -----
-function pushOverlayEntry() {
-  try { window.history.pushState({ tomo: true, overlay: true }, ''); return true; } catch (_e) { return false; }
+// ----- one history entry per open overlay -----
+// entryOwner is the overlay record that pushed (or inherited) the entry. When
+// an overlay opens synchronously from another's onClose (verdict sheet →
+// results sheet), it inherits the entry instead of pushing a second one, so a
+// queued history.back() can never pop the wrong entry. Release only pops when
+// an overlay entry is actually on top — a screen entry is never popped here.
+let entryOwner = null;
+function claimOverlayEntry(rec) {
+  if (entryOwner && entryOwner.closing && entryOwner.pushed && !entryOwner.byBack && !entryOwner.released) {
+    entryOwner = rec; rec.pushed = true; return;
+  }
+  try { window.history.pushState({ tomo: true, overlay: true }, ''); rec.pushed = true; entryOwner = rec; }
+  catch (_e) { rec.pushed = false; }
 }
-function popOverlayEntry() {
+function releaseOverlayEntry(rec) {
+  rec.released = true;
+  if (entryOwner !== rec) return;                 // inherited by a newer overlay, or never owned
+  entryOwner = null;
+  if (!rec.pushed || rec.byBack) return;          // the browser already popped it
+  let st = null;
+  try { st = window.history.state; } catch (_e) { st = null; }
+  if (!(st && st.tomo && st.overlay)) return;     // not on top any more: leave screen entries alone
   suppressNextPop();
   try { window.history.back(); } catch (_e) { /* nothing to pop */ }
 }
@@ -88,7 +105,9 @@ export function openSheet({ title = '', content = null, detent = 'half', classNa
   host.classList.add('is-mounted');
 
   const opener = document.activeElement;
-  current = { el, body, opener, onClose, closing: false, pushed: pushOverlayEntry(), byBack: false };
+  const rec = { el, body, opener, onClose, closing: false, pushed: false, byBack: false, released: false };
+  claimOverlayEntry(rec);   // before it becomes current: a closing predecessor may hand its entry over
+  current = rec;
   document.body.setAttribute('data-sheet', el.dataset.detent);
 
   scrim.addEventListener('click', () => closeSheet({ reason: 'scrim' }));
@@ -115,8 +134,9 @@ export function closeSheet({ reason = 'program', immediate = false } = {}) {
   const host = root();
   setBackGuard(null);
   document.body.removeAttribute('data-sheet');
-  if (c.pushed && !c.byBack) popOverlayEntry();
+  // onClose first: a successor opened inside it inherits the history entry; then release
   try { if (c.onClose) c.onClose(reason); } catch (_e) { /* a listener must not break the sheet */ }
+  releaseOverlayEntry(c);
 
   const finish = () => {
     if (current !== c) return;                 // a newer sheet took the host over mid-exit: leave it alone
@@ -219,14 +239,15 @@ export function confirmDestructive({ title = '', body = '', confirm: confirmLabe
   okBtn.className = `btn ${tone === 'danger' ? 'btn-danger' : 'btn-primary'}`;
 
   const opener = document.activeElement;
-  const pushed = pushOverlayEntry();
-  let byBack = false;
-  setBackGuard(() => { if (!dlg.open) return false; byBack = true; dlg.close('cancel'); return true; });
+  const rec = { closing: false, pushed: false, byBack: false, released: false };
+  claimOverlayEntry(rec);
+  setBackGuard(() => { if (!dlg.open) return false; rec.byBack = true; dlg.close('cancel'); return true; });
 
   return new Promise((resolve) => {
     dlg.addEventListener('close', () => {
       setBackGuard(null);
-      if (pushed && !byBack) popOverlayEntry();
+      rec.closing = true;
+      releaseOverlayEntry(rec);
       const ok = dlg.returnValue === 'confirm';
       dlg.returnValue = '';
       restoreFocus(opener);

@@ -1,0 +1,112 @@
+/* ============================================================
+   Tomodachi — learn surfaces (layer: screens): lesson player, review
+   session, meta/orientation pages and the results sheet. Pick 5 (paper
+   teach card), pick 6 (tiles + verdict sheet — css/app/components), pick 10
+   (tiered results). v2 only; the legacy .lesson-* rules stay for v1.
+   ============================================================ */
+@layer screens {
+  /* ---------- immersive bar: close + progress (lesson) / close + count (review) ---------- */
+  html[data-shell="v2"] #screen-lesson .lesson-topbar,
+  html[data-shell="v2"] #screen-review .lesson-topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-topbar);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 calc(-1 * max(var(--gutter), var(--safe-inline-start))) var(--space-3);
+    padding: calc(var(--safe-top) + 8px) max(var(--gutter), var(--safe-inline-start)) 8px;
+    background: var(--bg-base);
+  }
+  html[data-shell="v2"] .btn-icon {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border: 0;
+    background: var(--bg-inset);
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    transition: transform var(--dur-press) var(--ease-out-quint), background-color var(--dur-fast);
+  }
+  html[data-shell="v2"] .btn-icon:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .lesson-progress { height: var(--progress-h-hud); background: var(--bg-inset); }
+  html[data-shell="v2"] .lesson-progress-fill { transition: width var(--dur-progress) var(--ease-out); }
+  html[data-shell="v2"] #review-count { color: var(--text-caption); font-family: var(--font-digits); font-variant-numeric: tabular-nums; }
+
+  html[data-shell="v2"] .lesson-title {
+    margin: 0 0 var(--space-4);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  html[data-shell="v2"]:lang(ar) .lesson-title { font-family: var(--font-display-ar); font-weight: 800; }
+  html[data-shell="v2"] .lesson-count { margin-block-end: var(--space-3); color: var(--text-caption); font-family: var(--font-digits); }
+
+  /* ---------- paper teach card ---------- */
+  html[data-shell="v2"] .lesson-card,
+  html[data-shell="v2"] .lesson-intro-card {
+    padding: var(--card-pad-hero);
+    border-radius: var(--radius-xl);
+  }
+  html[data-shell="v2"][data-theme="dark"] .lesson-card,
+  html[data-shell="v2"][data-theme="dark"] .lesson-intro-card,
+  html[data-shell="v2"][data-theme="oled"] .lesson-card,
+  html[data-shell="v2"][data-theme="oled"] .lesson-intro-card { box-shadow: none; border: 1px solid rgba(255, 240, 225, 0.08); }
+  html[data-shell="v2"] .lesson-card-big {
+    font-family: var(--font-jp);
+    font-size: 3.5rem;
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+  html[data-shell="v2"] .lesson-card-big bdi[lang="ja"] { font-family: inherit; }
+  html[data-shell="v2"] .lesson-card-big.is-kana { font-family: var(--font-kana); font-size: 5rem; font-weight: 700; }
+  html[data-shell="v2"] .lesson-card-big.is-word { font-size: 2.5rem; }
+  html[data-shell="v2"] .lesson-card-reading { font-size: 1.125rem; letter-spacing: 0; }
+  html[data-shell="v2"] .lesson-card-body { line-height: 1.7; }
+  html[data-shell="v2"] .lesson-example {
+    margin-block-start: var(--space-3);
+    padding: 12px var(--card-pad);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--bg-inset);
+    text-align: start;
+  }
+  html[data-shell="v2"] .lesson-example-ja { font-size: 1.375rem; }
+  html[data-shell="v2"] .lesson-nav { gap: var(--card-gap); }
+  html[data-shell="v2"] .lesson-nav .btn { flex: 1 1 0; min-height: var(--cta-h); }
+  html[data-shell="v2"] #lesson-btn-begin,
+  html[data-shell="v2"] #meta-continue { min-height: var(--cta-h); width: 100%; }
+
+  /* the quiz card is the prompt: same paper, tighter */
+  html[data-shell="v2"] #lesson-quiz .lesson-card,
+  html[data-shell="v2"] #review-quiz .lesson-card { margin-block-end: var(--section-gap); }
+
+  /* ---------- meta / orientation pages ---------- */
+  html[data-shell="v2"] .meta-body p { text-align: start; line-height: 1.7; margin: 0 0 var(--space-3); }
+  html[data-shell="v2"] .lesson-done-emoji { font-size: 2.75rem; }
+
+  /* ---------- results sheet ---------- */
+  .sheet--results .sheet-body { text-align: center; }
+  .results-art { margin: 4px 0 8px; font-size: 2.75rem; line-height: 1; }
+  .sheet--results.is-perfect .results-art { animation: mark-in var(--dur-spring-pop) var(--ease-spring-pop) both; }
+  .results-title {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  html[data-shell="v2"]:lang(ar) .results-title { font-family: var(--font-display-ar); font-weight: 800; }
+  .sheet--results .num-hero { display: block; margin: 0 auto; }
+  .results-line { margin: 8px 0 0; color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.5; }
+
+  /* ---------- Me › Help row (v2 only via data-v2-only) ---------- */
+  html[data-shell="v2"] .setting-row .btn-sm { min-height: 40px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sheet--results.is-perfect .results-art { animation: none; }
+    html[data-shell="v2"] .lesson-progress-fill { transition: none; }
+  }
+}

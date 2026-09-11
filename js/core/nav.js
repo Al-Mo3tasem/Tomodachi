@@ -14,7 +14,7 @@
 // on the GitHub Pages sub-path can never 404); popstate → back().
 // ============================================
 
-import { showScreen } from './core.js?v=20260906g';
+import { showScreen } from './core.js?v=20260906h';
 
 export const TABS = ['home', 'course', 'practice', 'friends', 'me'];
 

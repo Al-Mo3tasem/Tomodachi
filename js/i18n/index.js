@@ -14,16 +14,16 @@
 
 import i18next from 'https://cdn.jsdelivr.net/npm/i18next@26.3.0/+esm';
 import LanguageDetector from 'https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@8.2.1/+esm';
-import { I18N_CONFIG } from '../config/i18n.js?v=20260906g';
-import { applyTranslations } from './apply.js?v=20260906g';
-import { applyDirection } from './rtl.js?v=20260906g';
-import { getPref, setPref } from '../core/prefs.js?v=20260906g';
-import { fmtNumber, localizeDigits } from '../core/format.js?v=20260906g';
+import { I18N_CONFIG } from '../config/i18n.js?v=20260906h';
+import { applyTranslations } from './apply.js?v=20260906h';
+import { applyDirection } from './rtl.js?v=20260906h';
+import { getPref, setPref } from '../core/prefs.js?v=20260906h';
+import { fmtNumber, localizeDigits } from '../core/format.js?v=20260906h';
 
 // Fetch a locale JSON next to this module so the path works regardless of
 // where the page is mounted (root, sub-path, file:// during dev).
 async function loadLocale(lang) {
-  const url = new URL(`./locales/${lang}.json?v=20260906g`, import.meta.url);
+  const url = new URL(`./locales/${lang}.json?v=20260906h`, import.meta.url);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load locale "${lang}": ${res.status}`);
   return res.json();

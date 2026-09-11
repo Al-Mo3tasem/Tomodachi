@@ -15,6 +15,11 @@
    rather see `دقيقة` spelled out, or a different short form, say so.
 4. **Later, not now:** first-click naming test for the tabs (Learn vs
    Course/Practice) once the Course/Practice screens exist (batch 9).
+5. **Arabic native check (3 paragraphs):** the orientation gained three pages
+   (`meta.orientation_5/6/7` in `js/i18n/locales/ar.json`) — what a "row" is,
+   the rows → scripts → words → kanji order, and the short-lesson + review
+   loop. They are drafted by me, not native-checked. Open Me › "كيف يعمل
+   المسار" in the app (dev, Arabic) and tell me what reads wrong.
 
 Everything below is history from the go-live run-up (all closed).
 

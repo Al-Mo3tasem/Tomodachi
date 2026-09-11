@@ -12,24 +12,24 @@
 // and both pause cleanly when the tab is hidden or Settings is opened.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
-import { fmtNumber, fmtTime } from '../core/format.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
-import { statusChip } from '../ui/status.js?v=20260906g';
-import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906g';
-import { countUp } from '../ui/numbers.js?v=20260906g';
-import { writeActivity } from '../data/users.js?v=20260906g';
-import { navigate } from '../core/nav.js?v=20260906g';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906h';
+import { fmtNumber, fmtTime } from '../core/format.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906h';
+import { statusChip } from '../ui/status.js?v=20260906h';
+import { renderChoiceTiles } from '../ui/quiz-tiles.js?v=20260906h';
+import { countUp } from '../ui/numbers.js?v=20260906h';
+import { writeActivity } from '../data/users.js?v=20260906h';
+import { navigate } from '../core/nav.js?v=20260906h';
 import {
   db, doc, getDoc, setDoc, addDoc, collection, serverTimestamp
-} from '../data/firebase.js?v=20260906g';
+} from '../data/firebase.js?v=20260906h';
 import {
   speak, stopSpeech, playSound, unlockAudio,
   primeSpeech, unprimeSpeech
-} from '../audio/audio.js?v=20260906g';
-import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906g';
-import { t } from '../i18n/index.js?v=20260906g';
+} from '../audio/audio.js?v=20260906h';
+import { submitSurvivalScore, bracketFor } from '../data/leaderboards.js?v=20260906h';
+import { t } from '../i18n/index.js?v=20260906h';
 
 // ----- Tuning constants -----
 const SURVIVAL_LIVES = 3;

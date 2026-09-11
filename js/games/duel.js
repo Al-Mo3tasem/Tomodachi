@@ -12,18 +12,18 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
-import { statusChip } from '../ui/status.js?v=20260906g';
-import { navigate } from '../core/nav.js?v=20260906g';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906h';
+import { statusChip } from '../ui/status.js?v=20260906h';
+import { navigate } from '../core/nav.js?v=20260906h';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906g';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906g';
-import { acceptCoop, isInCoop } from './coop.js?v=20260906g';
-import { t } from '../i18n/index.js?v=20260906g';
+} from '../data/firebase.js?v=20260906h';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906h';
+import { acceptCoop, isInCoop } from './coop.js?v=20260906h';
+import { t } from '../i18n/index.js?v=20260906h';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

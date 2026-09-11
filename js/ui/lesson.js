@@ -12,18 +12,19 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260906g';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { setJa, fmtCount } from '../core/format.js?v=20260906g';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906g';
-import { statusChip } from '../ui/status.js?v=20260906g';
-import { writeActivity } from '../data/users.js?v=20260906g';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906g';
-import { cacheGet, cachePut } from '../data/content.js?v=20260906g';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906g';
-import { t, getLocale } from '../i18n/index.js?v=20260906g';
-import { scheduleLessonSrs } from './review.js?v=20260906g';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260906h';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { setJa, fmtCount } from '../core/format.js?v=20260906h';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906h';
+import { statusChip } from '../ui/status.js?v=20260906h';
+import { writeActivity } from '../data/users.js?v=20260906h';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260906h';
+import { cacheGet, cachePut } from '../data/content.js?v=20260906h';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906h';
+import { t, getLocale } from '../i18n/index.js?v=20260906h';
+import { scheduleLessonSrs } from './review.js?v=20260906h';
+import { showResultsSheet } from './results.js?v=20260906h';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -252,7 +253,7 @@ function renderTeach() {
   } else if (type === 'kanji') {
     big.hidden = false;
     setJa(big, it.kanji);
-    big.classList.remove('is-word');
+    big.classList.remove('is-word', 'is-kana');
     read.textContent = pick(it.en_meanings, it.ar_meanings)?.join(getLocale() === 'ar' ? '، ' : ', ') || '';
     const mn = pick(it.mnemonic?.en, it.mnemonic?.ar);
     body.textContent = mn ? `${mn.meaning_story}\n\n${mn.reading_story}` : '';
@@ -269,6 +270,7 @@ function renderTeach() {
   } else if (type === 'vocab') {
     big.hidden = false;
     setJa(big, it.reading);
+    big.classList.remove('is-kana');
     big.classList.toggle('is-word', String(it.reading).length > 1);
     read.textContent = `${it.romaji} — ${pick(it.en?.primary, it.ar?.primary)}`;
     body.textContent = pick(it.en?.notes, it.ar?.notes) || '';
@@ -286,6 +288,7 @@ function renderTeach() {
     big.hidden = false;
     setJa(big, it.glyph);
     big.classList.remove('is-word');
+    big.classList.add('is-kana');
     read.textContent = it.romaji;
     body.textContent = pick(it.mnemonic_en, it.mnemonic_ar) || '';
     speak(it.glyph);
@@ -303,6 +306,7 @@ function renderQuiz() {
   const promptEl = $('lesson-quiz-prompt');
   setJa(promptEl, q.prompt);
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
+  promptEl.classList.toggle('is-kana', L.lesson.contentType === 'hiragana' || L.lesson.contentType === 'katakana');
   if (q.sub) { $('lesson-quiz-sub').textContent = q.sub; } else { $('lesson-quiz-sub').textContent = ''; }
   const grid = $('lesson-quiz-choices');
   renderChoiceTiles(grid, q.choices, { onPick: (c, tile) => answer(tile, c === String(q.answer), q), tileClass: 'lesson-choice' });
@@ -333,6 +337,18 @@ function answer(btn, ok, q) {
 
 async function completeLesson() {
   setPhase('done');
+  const run = L;
+  const perfect = run.quiz.length > 0 && run.correct >= run.quiz.length;
+  showResultsSheet({
+    tier: perfect ? 'perfect' : 'normal',
+    title: t(perfect ? 'results.lesson_perfect' : 'results.lesson_title'),
+    value: run.correct,
+    caption: t('results.correct_of', { total: run.quiz.length }),
+    actions: [
+      { label: t('lesson.next_lesson'), primary: true, onClick: () => { if (L === run) openNextLesson(); } },
+      { label: t('lesson.back_home'), onClick: () => { if (L === run) exitLesson(); } },
+    ],
+  });
   const key = L.lesson.lessonKey;
   const done = completedSet();
   if (!done.has(key) && state.user) {
@@ -425,7 +441,7 @@ export function renderCourseProgress() {
 
 function metaScreens() {
   const out = [
-    { id: 'orientation', before: 1, icon: '🧭', title: 'meta.orientation_title', bodies: ['meta.orientation_1', 'meta.orientation_2', 'meta.orientation_3', 'meta.orientation_4'] },
+    { id: 'orientation', before: 1, icon: '🧭', title: 'meta.orientation_title', bodies: ['meta.orientation_1', 'meta.orientation_2', 'meta.orientation_3', 'meta.orientation_4', 'meta.orientation_5', 'meta.orientation_6', 'meta.orientation_7'] },
     { id: 'reading_rules', before: 26, icon: '🔎', title: 'meta.rules_title', bodies: ['meta.rules_1', 'meta.rules_2'] },
   ];
   const total = lessons ? lessons.length : 151;
@@ -446,6 +462,17 @@ function pendingMeta(beforeOrder) {
 }
 
 let pendingLessonAfterMeta = null;
+let metaFromHelp = false;   // opened from Me › Help: Continue goes back instead of into a lesson
+
+/** Re-open a meta page (orientation, reading rules) from Me › Help. */
+export function openMeta(id) {
+  const m = metaScreens().find((x) => x.id === id);
+  if (!m) return false;
+  metaFromHelp = true;
+  renderMetaScreen(m);
+  $('meta-continue').dataset.metaId = '';
+  return true;
+}
 
 function renderMetaScreen(m) {
   $('meta-icon').textContent = m.icon;
@@ -557,6 +584,7 @@ export function initLessonUi() {
   $('lesson-cta-browse')?.addEventListener('click', () => openLessonBrowser());
   $('lessons-filter-clear')?.addEventListener('click', () => { browserFilter = null; renderLessonBrowser(); });
   $('meta-continue')?.addEventListener('click', async (e) => {
+    if (metaFromHelp) { metaFromHelp = false; if (!navBack()) navigate('screen-settings'); return; }
     const id = e.currentTarget.dataset.metaId;
     if (id) await markMetaSeen(id);
     pendingLessonAfterMeta = null;

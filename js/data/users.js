@@ -10,9 +10,9 @@
 // nativeShell feature so v1/prod stays write-identical until the flip.
 // ============================================
 
-import { db, doc, updateDoc, increment } from './firebase.js?v=20260906g';
-import { state } from '../core/core.js?v=20260906g';
-import { isEnabled } from '../config/features.js?v=20260906g';
+import { db, doc, updateDoc, increment } from './firebase.js?v=20260906h';
+import { state } from '../core/core.js?v=20260906h';
+import { isEnabled } from '../config/features.js?v=20260906h';
 
 export function todayKey(d = new Date()) {
   const p = (n) => String(n).padStart(2, '0');

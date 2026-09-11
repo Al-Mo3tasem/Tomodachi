@@ -4,7 +4,7 @@
 // and one pinned SDK version.
 // ============================================
 
-import { getEnv, getFirebaseConfig, isNativeShell } from '../config/firebase.js?v=20260906g';
+import { getEnv, getFirebaseConfig, isNativeShell } from '../config/firebase.js?v=20260906h';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import {
   getAuth,
@@ -34,7 +34,8 @@ import {
   limit,
   arrayUnion,
   documentId,
-  increment
+  increment,
+  deleteField
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
 const env = getEnv();
@@ -83,5 +84,6 @@ export {
   limit,
   arrayUnion,
   documentId,
-  increment
+  increment,
+  deleteField
 };

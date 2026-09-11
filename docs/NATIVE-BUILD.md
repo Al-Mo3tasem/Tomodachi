@@ -249,6 +249,34 @@ release build; never commit it.**
   Lesson: a test that leaves the router's tab state stale by calling
   `showScreen` directly must go Home through the dock before tapping tiles.
 
+### Batch 7 — lesson and review surfaces, results sheet, orientation pages
+- `css/app/screens/learn.css` (v2 only): the lesson/review bar becomes a sticky
+  immersive bar under the safe area (close + 300 ms progress fill / close +
+  count), the teach card is paper (radius 28, hero padding, kana glyphs in Zen
+  Maru Gothic via `.is-kana`, words and kanji in the JP face, examples as
+  tonal rows). The quiz already runs on batch 5's tiles + verdict sheet.
+- `js/ui/results.js` — `showResultsSheet({ tier, title, value, caption, lines,
+  actions })`: one ticking hero number, 'normal' | 'perfect' tier, up to two
+  actions. Lesson completion opens it with Next lesson / Home; review
+  completion opens it with the 7-day forecast (`review.computeForecast()`)
+  and the session-cap line. v1 keeps its done cards.
+- Orientation grew pages 5–7 (what a row is; rows → scripts → words → kanji;
+  the short-lesson + review loop) in EN and AR, and `openMeta('orientation')`
+  re-opens it from Me › Help (`#btn-help-orientation`, `data-v2-only` markup
+  — hidden on v1 by base.css). **The three new Arabic paragraphs are drafted,
+  not native-checked** — listed for the lead.
+- Sheet history fix: an overlay opened from another overlay's `onClose`
+  (verdict sheet → results sheet) now inherits the closing overlay's history
+  entry instead of pushing a second one, and an overlay only ever pops an
+  overlay entry. Before this, the queued `history.back()` popped the wrong
+  entry and the results sheet's Home action could back out of the page.
+- Tests: `tests/e2e/lesson-quiz.spec.mjs` — Firestore *writes* are aborted
+  at the network layer (`**/Firestore/Write/**`) so completing a lesson or a
+  review in the test never changes the QA account (the UI runs on optimistic
+  state); the review case skips when nothing is due.
+- Deviation: the superseded `.lesson-*` rules stay in style.css until the flip
+  (v1 pixels); the plan's deletion happens in batch 14.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

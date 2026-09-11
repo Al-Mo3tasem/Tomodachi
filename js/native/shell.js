@@ -12,8 +12,8 @@
 // the facades batch (haptics.js, prefs.js, tts.js) builds on these adapters.
 // ============================================
 
-import { back as navBack } from '../core/nav.js?v=20260906g';
-import { setNativePrefsAdapter } from '../core/prefs.js?v=20260906g';
+import { back as navBack } from '../core/nav.js?v=20260906h';
+import { setNativePrefsAdapter } from '../core/prefs.js?v=20260906h';
 
 const N = () => (typeof window !== 'undefined' ? window.Native : undefined);
 

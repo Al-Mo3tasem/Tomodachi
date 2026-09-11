@@ -4,54 +4,54 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260906g';
-import { getFunctionUrl } from './config/functions.js?v=20260906g';
+import { APP_CONFIG } from './config/firebase.js?v=20260906h';
+import { getFunctionUrl } from './config/functions.js?v=20260906h';
 import {
   state, $, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260906g';
+} from './core/core.js?v=20260906h';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where,
   serverTimestamp, limit
-} from './data/firebase.js?v=20260906g';
+} from './data/firebase.js?v=20260906h';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260906g';
+} from './games/engine.js?v=20260906h';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260906g';
-import { isSpeechSupported } from './audio/audio.js?v=20260906g';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906g';
-import { initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906g';
-import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906g';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906g';
-import { shellVersion } from './config/features.js?v=20260906g';
-import { applyPlatformAttrs } from './core/platform.js?v=20260906g';
-import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906g';
-import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906g';
-import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906g';
-import { initDock } from './ui/dock.js?v=20260906g';
-import { initTopbars, setTopbarTitle } from './ui/topbar.js?v=20260906g';
-import { initHome, renderHome } from './ui/home.js?v=20260906g';
-import { loadFriends, watchPresence } from './data/friends.js?v=20260906g';
-import { initSegmented } from './ui/segmented.js?v=20260906g';
-import { statusChip } from './ui/status.js?v=20260906g';
-import { mountSkeleton } from './ui/skeleton.js?v=20260906g';
+} from './data/leaderboards.js?v=20260906h';
+import { isSpeechSupported } from './audio/audio.js?v=20260906h';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260906h';
+import { openMeta, initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260906h';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260906h';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260906h';
+import { shellVersion } from './config/features.js?v=20260906h';
+import { applyPlatformAttrs } from './core/platform.js?v=20260906h';
+import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260906h';
+import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260906h';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260906h';
+import { initDock } from './ui/dock.js?v=20260906h';
+import { initTopbars, setTopbarTitle } from './ui/topbar.js?v=20260906h';
+import { initHome, renderHome } from './ui/home.js?v=20260906h';
+import { loadFriends, watchPresence } from './data/friends.js?v=20260906h';
+import { initSegmented } from './ui/segmented.js?v=20260906h';
+import { statusChip } from './ui/status.js?v=20260906h';
+import { mountSkeleton } from './ui/skeleton.js?v=20260906h';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260906g';
+} from './games/duel.js?v=20260906h';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260906g';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906g';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906g';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906g';
+} from './games/coop.js?v=20260906h';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260906h';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260906h';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260906h';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -1681,6 +1681,7 @@ function attachListeners() {
 
   // Friend bar
   $('btn-invite')?.addEventListener('click', () => handleModeClick('duel'));
+  $('btn-help-orientation')?.addEventListener('click', () => openMeta('orientation'));   // Me › Help (v2)
   document.addEventListener('home:play', (e) => handleModeClick(e.detail && e.detail.mode, e.detail && e.detail.uid));   // friend sheet on Home
 
   // Lesson screen (L2.13) + SRS review

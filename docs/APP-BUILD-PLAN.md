@@ -181,7 +181,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Glass budget with a sheet open on Home: iOS 3, Android 2 (sheet head drops glass); axe: role=dialog/aria-modal, labelled dlg-confirm, aria-live chip; .num-caption dark contrast >= 4.5:1.
 - prod-shell-unchanged green (toast container move is v2-scoped); primitives.spec green EN+AR.
 
-### Batch 6 — Home: hero + 4 tiles, friends strip, Today|Course, rings + heatmap data — SHIPPED  _(2 days (done))_
+### Batch 6 — Home: hero + 4 tiles, friends strip, Today|Course, rings + heatmap data — SHIPPED (6dcae14)  _(2 days (done))_
 
 **Goal:** Pick 4 + 7 (data): the dashboard becomes Home — greeting title, 1 hero + 4 icon tiles with ink numbers, horizontal online-friends strip, Today|Course pill, per-track rings, activity data source.
 
@@ -202,7 +202,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - DEBUG_QUOTA: Home re-entry within 60s = 0 new reads; 10 tab switches < 5 reads; presence listener touches only friend docs.
 - id-contract on the stamped template; glass budget Home 2; axe tiles are buttons with composed names; prod-shell-unchanged green.
 
-### Batch 7 — Lesson and review surfaces + introduction lesson pages  _(1.5 days)_
+### Batch 7 — Lesson and review surfaces + introduction lesson pages — SHIPPED  _(1.5 days (done))_
 
 **Goal:** Picks 5, 6 (lessons/review) and the lead's intro-lesson requirement: paper teach card, 2x2 tiles + feedback sheet, results sheet, orientation extended with 'how the course is organised' and re-openable from Me › Help.
 

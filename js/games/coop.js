@@ -10,20 +10,20 @@
 // progress and render purely from snapshots.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906g';
-import { fmtTime } from '../core/format.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { confirmDestructive } from '../ui/sheet.js?v=20260906g';
-import { statusChip } from '../ui/status.js?v=20260906g';
-import { countUp } from '../ui/numbers.js?v=20260906g';
-import { navigate } from '../core/nav.js?v=20260906g';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260906h';
+import { fmtTime } from '../core/format.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { confirmDestructive } from '../ui/sheet.js?v=20260906h';
+import { statusChip } from '../ui/status.js?v=20260906h';
+import { countUp } from '../ui/numbers.js?v=20260906h';
+import { navigate } from '../core/nav.js?v=20260906h';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc,
   collection, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260906g';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260906g';
-import { submitCoopScore } from '../data/leaderboards.js?v=20260906g';
-import { t } from '../i18n/index.js?v=20260906g';
+} from '../data/firebase.js?v=20260906h';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260906h';
+import { submitCoopScore } from '../data/leaderboards.js?v=20260906h';
+import { t } from '../i18n/index.js?v=20260906h';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

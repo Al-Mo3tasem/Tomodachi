@@ -33,6 +33,13 @@
       "friends": "friends online"
     }
   },
+  "results": {
+    "lesson_title": "Lesson complete!",
+    "lesson_perfect": "Perfect lesson!",
+    "correct_of": "of {{total}} correct",
+    "forecast": "{{tomorrow}} due tomorrow · {{week}} due this week",
+    "capped": "{{remaining}} more are waiting — start another session when you are ready."
+  },
   "quiz": {
     "correct": "Correct!",
     "not_quite": "Not quite",
@@ -473,7 +480,10 @@
       "audio_name": "Sound Effects",
       "audio_desc": "Blips for correct, wrong, and win moments",
       "notify_name": "Notifications",
-      "notify_desc": "Toast alerts when your friend comes online"
+      "notify_desc": "Toast alerts when your friend comes online",
+      "help_name": "How the course works",
+      "help_desc": "Rows, scripts, words, kanji — the path explained",
+      "help_btn": "Open"
     },
     "danger": {
       "description": "Reset all your progress — games played, scores, character mastery, duel record, and leaderboard entries. This cannot be undone.",
@@ -736,6 +746,9 @@
     "orientation_2": "There are no spaces between words. At first that looks impossible; within a few lessons your eyes will find the word edges on their own.",
     "orientation_3": "You will meet three writing systems: hiragana for Japanese words, katakana for foreign words, and kanji for meanings. This course introduces them one at a time, in that order.",
     "orientation_4": "Japanese is built from syllables — ka, mi, to — not single letters. Each symbol you learn is one complete sound.",
+    "orientation_5": "Hiragana comes in rows. A row is five symbols that share one consonant and walk through the vowels a · i · u · e · o — the か row is ka, ki, ku, ke, ko. One row per lesson, and the whole table falls into place.",
+    "orientation_6": "The course moves in four stretches: the hiragana rows, then the katakana rows, then everyday words built only from kana you already know, then kanji — one meaning at a time. Nothing appears before you can read it.",
+    "orientation_7": "Every lesson is short: learn a few items, take a quick quiz, done. What you learn comes back in Review on a schedule that stretches as you remember — a few minutes a day beats an hour once a week.",
     "rules_title": "Two reading rules",
     "rules_1": "Long vowels: some sounds are held twice as long, written with an extra vowel (おう) or a dash in katakana (ー). You already do this in Arabic — it is exactly the madd in قال.",
     "rules_2": "The small っ doubles the consonant after it, like the shadda in شدّة. きって (kitte) has that tiny pause — say it like the doubled letter in مرّة.",

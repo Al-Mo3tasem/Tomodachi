@@ -41,6 +41,9 @@
     font-family: var(--font-jp);
   }
 
+  /* Markup that only exists for the v2 shell (rows, entry points) stays out of v1. */
+  html:not([data-shell="v2"]) [data-v2-only] { display: none !important; }
+
   /* Hover styling only where hover exists (touch devices get :active only). */
   @media (hover: none) {
     html[data-shell="v2"] .btn:hover,

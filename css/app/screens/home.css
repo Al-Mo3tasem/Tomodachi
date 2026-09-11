@@ -60,7 +60,7 @@
     display: grid;
     align-content: end;
     gap: var(--label-gap);
-    min-height: 108px;
+    min-height: 128px;   /* icon row + hero number + caption without crowding */
     padding: var(--card-pad);
     background: var(--bg-elevated);
     color: var(--text-primary);

@@ -12,17 +12,18 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260906g';
-import { navigate, back as navBack } from '../core/nav.js?v=20260906g';
-import { haptic } from '../core/haptics.js?v=20260906g';
-import { setJa } from '../core/format.js?v=20260906g';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906g';
-import { writeActivity } from '../data/users.js?v=20260906g';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906g';
-import { cacheGet } from '../data/content.js?v=20260906g';
-import { loadLessons } from './lesson.js?v=20260906g';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260906g';
-import { t, getLocale } from '../i18n/index.js?v=20260906g';
+import { state, $, shuffle } from '../core/core.js?v=20260906h';
+import { navigate, back as navBack } from '../core/nav.js?v=20260906h';
+import { haptic } from '../core/haptics.js?v=20260906h';
+import { setJa } from '../core/format.js?v=20260906h';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260906h';
+import { writeActivity } from '../data/users.js?v=20260906h';
+import { showResultsSheet } from './results.js?v=20260906h';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260906h';
+import { cacheGet } from '../data/content.js?v=20260906h';
+import { loadLessons } from './lesson.js?v=20260906h';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260906h';
+import { t, getLocale } from '../i18n/index.js?v=20260906h';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
@@ -76,6 +77,22 @@ function dueEntries() {
   if (!map) return [];
   const now = Date.now();
   return Object.entries(map).filter(([, v]) => v && v.d <= now);
+}
+
+/** Due counts per day for the next `days` days ([0] = today incl. overdue), from the local SRS map. */
+export function computeForecast(days = 7) {
+  const out = new Array(days).fill(0);
+  const map = srsMap();
+  if (!map) return out;
+  const now = Date.now();
+  const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
+  for (const v of Object.values(map)) {
+    if (!v || typeof v.d !== 'number') continue;
+    if (v.d <= now) { out[0]++; continue; }
+    const idx = Math.floor((v.d - startOfToday.getTime()) / DAY);
+    if (idx >= 0 && idx < days) out[idx]++;
+  }
+  return out;
 }
 
 /** Home tile: how many items are due, and how many of those are more than a day late. */
@@ -150,7 +167,7 @@ function renderQuestion() {
   const q = questionFor(row);
   R.q = q;
   R.locked = false;
-  $('review-count').textContent = `${R.i + 1} / ${R.rows.length}`;
+  $('review-count').textContent = t('lesson.progress_count', { i: R.i + 1, n: R.rows.length });
   const promptEl = $('review-prompt');
   setJa(promptEl, q.prompt);
   promptEl.classList.toggle('is-word', String(q.prompt).length > 2);
@@ -195,6 +212,22 @@ async function finishSession() {
   }
   state.userData = { ...state.userData, srs: local };
   writeActivity('review');   // Home heatmap
+  // v2: results sheet with the 7-day forecast and the session cap (v1 keeps the done card)
+  const run = R;
+  const forecast = computeForecast(7);
+  const remaining = dueEntries().length;
+  const week = forecast.slice(1).reduce((a, b) => a + b, 0);
+  showResultsSheet({
+    tier: run.correct >= run.rows.length ? 'perfect' : 'normal',
+    title: t('review.done_title'),
+    value: run.correct,
+    caption: t('results.correct_of', { total: run.rows.length }),
+    lines: [
+      t('results.forecast', { tomorrow: forecast[1] || 0, week }),
+      remaining > 0 ? t('results.capped', { remaining }) : '',
+    ],
+    actions: [{ label: t('review.back'), primary: true, onClick: () => { if (R === run) exitReview(); } }],
+  });
   if (state.user && Object.keys(updates).length) {
     try { await updateDoc(doc(db, 'users', state.user.uid), updates); }
     catch (err) { console.error('[srs] reschedule failed:', err); }
