@@ -20,6 +20,11 @@
    the rows → scripts → words → kanji order, and the short-lesson + review
    loop. They are drafted by me, not native-checked. Open Me › "كيف يعمل
    المسار" in the app (dev, Arabic) and tell me what reads wrong.
+6. **Arabic check (1 min, batch 9):** the new Course / Practice tabs added
+   `course.*` and `practice.*` in `js/i18n/locales/ar.json` (the session-cap
+   line "تقتصر كل جلسة على 20 عنصرًا", the "next reviews" plural forms, "آخر
+   جولة", "لوحة ترتيب تحدي البقاء"). Open the two tabs in Arabic on dev and
+   tell me what reads wrong.
 
 Everything below is history from the go-live run-up (all closed).
 

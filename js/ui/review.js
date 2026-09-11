@@ -12,23 +12,23 @@
 // their learned items scheduled due-now.
 // ============================================
 
-import { state, $, shuffle } from '../core/core.js?v=20260911b';
-import { navigate, back as navBack } from '../core/nav.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
-import { setJa } from '../core/format.js?v=20260911b';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911b';
-import { writeActivity } from '../data/users.js?v=20260911b';
-import { showResultsSheet } from './results.js?v=20260911b';
-import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260911b';
-import { cacheGet } from '../data/content.js?v=20260911b';
-import { loadLessons } from './lesson.js?v=20260911b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260911b';
-import { t, getLocale } from '../i18n/index.js?v=20260911b';
+import { state, $, shuffle } from '../core/core.js?v=20260911c';
+import { navigate, back as navBack } from '../core/nav.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
+import { setJa } from '../core/format.js?v=20260911c';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911c';
+import { writeActivity } from '../data/users.js?v=20260911c';
+import { showResultsSheet } from './results.js?v=20260911c';
+import { db, doc, updateDoc, getDoc } from '../data/firebase.js?v=20260911c';
+import { cacheGet } from '../data/content.js?v=20260911c';
+import { loadLessons } from './lesson.js?v=20260911c';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260911c';
+import { t, getLocale } from '../i18n/index.js?v=20260911c';
 
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
 const DAY = 86400000;
 const STAGE_MS = [1 * DAY, 3 * DAY, 7 * DAY, 14 * DAY, 30 * DAY, 90 * DAY];
-const SESSION_CAP = 20;
+export const SESSION_CAP = 20;
 const SCHEDULABLE = new Set(['hiragana', 'katakana', 'vocab', 'kanji']);
 
 let R = null;   // active review session

@@ -4,54 +4,57 @@
 // Duel Mode, Sync Match (co-op), Leaderboards, Settings, Presence.
 // ============================================
 
-import { APP_CONFIG } from './config/firebase.js?v=20260911b';
-import { getFunctionUrl } from './config/functions.js?v=20260911b';
+import { APP_CONFIG } from './config/firebase.js?v=20260911c';
+import { getFunctionUrl } from './config/functions.js?v=20260911c';
 import {
   state, $, currentScreen, showLoading, toast, setTheme, withTimeout
-} from './core/core.js?v=20260911b';
+} from './core/core.js?v=20260911c';
 import {
   auth, db,
   onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, signOut,
   doc, getDoc, setDoc, getDocs, deleteDoc, collection, query, where,
-  serverTimestamp, limit
-} from './data/firebase.js?v=20260911b';
+  serverTimestamp
+} from './data/firebase.js?v=20260911c';
 import {
   startGame, requestExit, playAgain, cleanup as cleanupGame,
   speakCurrent, pauseGame, resumeGame, resumeFromPause, isActive
-} from './games/engine.js?v=20260911b';
+} from './games/engine.js?v=20260911c';
 import {
   openLeaderboard, renderLeaderboardPreview, removeUserFromLeaderboards
-} from './data/leaderboards.js?v=20260911b';
-import { isSpeechSupported } from './audio/audio.js?v=20260911b';
-import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260911b';
-import { openMeta, initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260911b';
-import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260911b';
-import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260911b';
-import { shellVersion } from './config/features.js?v=20260911b';
-import { applyPlatformAttrs } from './core/platform.js?v=20260911b';
-import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260911b';
-import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260911b';
-import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260911b';
-import { initDock } from './ui/dock.js?v=20260911b';
-import { initTopbars, setTopbarTitle } from './ui/topbar.js?v=20260911b';
-import { initHome, renderHome } from './ui/home.js?v=20260911b';
-import { loadFriends, watchPresence } from './data/friends.js?v=20260911b';
-import { initSegmented } from './ui/segmented.js?v=20260911b';
-import { statusChip } from './ui/status.js?v=20260911b';
-import { mountSkeleton } from './ui/skeleton.js?v=20260911b';
+} from './data/leaderboards.js?v=20260911c';
+import { isSpeechSupported } from './audio/audio.js?v=20260911c';
+import { contentV2Enabled, loadV2ContentSets } from './data/content.js?v=20260911c';
+import { openMeta, initLessonUi, renderLessonCta, onLessonLocaleChange, abandonLesson } from './ui/lesson.js?v=20260911c';
+import { initReviewUi, renderReviewCta, abandonReview } from './ui/review.js?v=20260911c';
+import { initNativeShell, nativeSplashHide } from './native/shell.js?v=20260911c';
+import { shellVersion } from './config/features.js?v=20260911c';
+import { applyPlatformAttrs } from './core/platform.js?v=20260911c';
+import { getPref, setPref, restoreFromNative } from './core/prefs.js?v=20260911c';
+import { fmtNumber, fmtCount, fmtDate } from './core/format.js?v=20260911c';
+import { registerScreen, navigate, back as navBack, initNav, resetStacks } from './core/nav.js?v=20260911c';
+import { initDock } from './ui/dock.js?v=20260911c';
+import { initTopbars, setTopbarTitle } from './ui/topbar.js?v=20260911c';
+import { initHome, renderHome } from './ui/home.js?v=20260911c';
+import { initCourse } from './ui/course.js?v=20260911c';
+import { initPractice } from './ui/practice.js?v=20260911c';
+import { loadRecentGames, resetHistory } from './data/history.js?v=20260911c';
+import { loadFriends, watchPresence } from './data/friends.js?v=20260911c';
+import { initSegmented } from './ui/segmented.js?v=20260911c';
+import { statusChip } from './ui/status.js?v=20260911c';
+import { mountSkeleton } from './ui/skeleton.js?v=20260911c';
 import {
   initDuelInvites, stopDuelInvites, sendChallenge, cancelChallenge,
   acceptInvite, declineInvite, exitDuel, isInDuel, onFriendPresence as duelOnFriendPresence,
   playAgainDuel, resolveStall, cleanupDuel
-} from './games/duel.js?v=20260911b';
+} from './games/duel.js?v=20260911c';
 import {
   sendCoopChallenge, cancelCoopChallenge, exitCoop, isInCoop,
   onFriendPresence as coopOnFriendPresence, playAgainCoop, resolveCoopStall, cleanupCoop
-} from './games/coop.js?v=20260911b';
-import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260911b';
-import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260911b';
-import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260911b';
+} from './games/coop.js?v=20260911c';
+import { initI18n, t, setLocale, getLocale, onLocaleChange } from './i18n/index.js?v=20260911c';
+import { initGA4, updateConsent as ga4UpdateConsent, trackEvent as ga4TrackEvent } from './analytics/ga4.js?v=20260911c';
+import { initSentry, setUserContext as sentrySetUserContext } from './analytics/sentry.js?v=20260911c';
 
 const AVATARS = ['🌸', '🐱', '🦊', '🐼', '🐧', '🦄', '🐸', '🦋', '⭐', '🌙', '🍙', '🍣', '🎮', '🏯', '🐉', '🌊'];
 const MODE_EMOJI = { zen: '🧘', survival: '🔥', duel: '⚔️', coop: '🤝' };
@@ -977,43 +980,24 @@ async function loadDashboard() {
   }
 }
 
-async function loadHistory() {
+async function loadHistory(force = false) {
   const list = $('history-list');
   if (!list || !state.user) return;
   const clearSkel = mountSkeleton(list, 'row', 3);   // v2: rows appear only if the query takes > 300 ms
   try {
-    const q = query(
-      collection(db, 'game_sessions'),
-      where('playerIds', 'array-contains', state.user.uid),
-      limit(20)
-    );
-    const snap = await getDocs(q);
+    // completed sessions, newest first (shared with the Practice tab's last-run card)
+    const games = await loadRecentGames({ force });
     clearSkel();
-
-    // Only genuinely-finished games belong in history. Abandoned or
-    // declined challenges (status 'waiting' / 'cancelled' / 'countdown' /
-    // 'active') carry no winnerId, which the duel renderer below would
-    // otherwise paint as a phantom "Lost" — a loss that never happened and
-    // never touched the W–L stat (hence history said Lost while the record
-    // stayed 0–0). Every real result — solo, co-op, duel — is written with
-    // status 'completed', so this keeps all of them and drops only ghosts.
-    const games = [];
-    snap.forEach(docSnap => {
-      const sess = docSnap.data();
-      if (sess.status === 'completed') games.push(sess);
-    });
 
     if (!games.length) {
       list.innerHTML = `<p class="empty-state">${escapeText(t('dashboard.history.empty'))}</p>`;
       return;
     }
 
-    games.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
-
     list.innerHTML = '';
     games.slice(0, 6).forEach(data => {
       const type = data.gameType || 'game';
-      const date = fmtDate(toMillis(data.createdAt));
+      const date = fmtDate(data.at);
       const item = document.createElement('div');
       item.className = 'history-item';
 
@@ -1067,13 +1051,6 @@ function escapeText(str) {
   const div = document.createElement('div');
   div.textContent = String(str ?? '');
   return div.innerHTML;
-}
-
-function toMillis(ts) {
-  if (!ts) return 0;
-  if (typeof ts.toMillis === 'function') return ts.toMillis();
-  if (typeof ts.toDate === 'function') return ts.toDate().getTime();
-  return new Date(ts).getTime() || 0;
 }
 
 // ============================================
@@ -1224,7 +1201,7 @@ function goHome({ force = false } = {}) {
   if (force || Date.now() - lastHomeLoad > HOME_CACHE_MS) {
     lastHomeLoad = Date.now();
     loadDashboard();
-    loadHistory();
+    loadHistory(force);
   }
 }
 
@@ -1302,7 +1279,8 @@ function goToSelect(gameType) {
     setI18n(startBtn, 'select.start_button.zen');
   }
 
-  navigate('screen-select');      // root of the Practice tab
+  navigate('screen-select');      // child of the Practice tab under v2 (its root on v1)
+  setTopbarTitle('screen-select', t(`modes.${gameType}.name`));   // v2 bar: the mode is the title
   renderSets();
   updateSelectionUI();
 }
@@ -1682,7 +1660,7 @@ function attachListeners() {
   // Friend bar
   $('btn-invite')?.addEventListener('click', () => handleModeClick('duel'));
   $('btn-help-orientation')?.addEventListener('click', () => openMeta('orientation'));   // Me › Help (v2)
-  document.addEventListener('home:play', (e) => handleModeClick(e.detail && e.detail.mode, e.detail && e.detail.uid));   // friend sheet on Home
+  document.addEventListener('tomo:play', (e) => handleModeClick(e.detail && e.detail.mode, e.detail && e.detail.uid));   // Home friend sheet, Practice tiles
 
   // Lesson screen (L2.13) + SRS review
   initLessonUi();
@@ -1777,14 +1755,24 @@ function bindLocaleToggles() {
 
 // Router registry (docs/APP-BUILD-PLAN.md batch 3). Tabs: home · course ·
 // practice · friends · me. Immersive screens hide the dock and always push
-// onto the current tab. Temporary tab roots until the real tab screens land:
-// course → lesson browser, practice → game setup, me → settings.
+// onto the current tab. v2 (batch 9): Course and Practice own their tabs and
+// the lesson browser / game setup / leaderboard are their children; v1 keeps
+// the lesson browser and the game setup as the tab roots. Me = settings
+// until batch 10.
 function registerScreens() {
   registerScreen('screen-dashboard',    { tab: 'home', root: true });
-  registerScreen('screen-leaderboard',  { tab: 'home' });
-  registerScreen('screen-lessons-list', { tab: 'course', root: true });
-  registerScreen('screen-select',       { tab: 'practice', root: true });
   registerScreen('screen-settings',     { tab: 'me', root: true });
+  if (shellVersion() === 'v2') {
+    registerScreen('screen-course',       { tab: 'course', root: true });
+    registerScreen('screen-practice',     { tab: 'practice', root: true });
+    registerScreen('screen-lessons-list', { tab: 'course' });
+    registerScreen('screen-select',       { tab: 'practice' });
+    registerScreen('screen-leaderboard',  { tab: 'practice' });
+  } else {
+    registerScreen('screen-leaderboard',  { tab: 'home' });
+    registerScreen('screen-lessons-list', { tab: 'course', root: true });
+    registerScreen('screen-select',       { tab: 'practice', root: true });
+  }
   registerScreen('screen-game', {
     tab: 'practice', immersive: true,
     onEnter: () => { if (isActive()) resumeGame(); },     // back from settings resumes a paused game
@@ -1833,6 +1821,8 @@ async function init() {
   initTopbars();          // v2 only
   initSegmented();        // v2 only (sliding pills on the segmented controls)
   initHome();             // v2 only (Home layout over the dashboard markup)
+  initCourse();           // v2 only (Course tab: rings, heatmap, lesson rows)
+  initPractice();         // v2 only (Practice tab + the game-setup dock shelf)
   setTheme(state.theme, false); // apply only — never persist a boot-time fallback
   // Nav quick-toggles (landing + app chrome) flip the theme; setTheme is the
   // single source of truth (persists, syncs settings checkbox + aria-pressed).
@@ -1894,6 +1884,7 @@ async function init() {
     // Lesson surfaces hold parametric + state-dependent text (Continue vs
     // Start, bilingual titles) that apply.js cannot know about.
     onLessonLocaleChange();
+    if (state.currentGameType) setTopbarTitle('screen-select', t(`modes.${state.currentGameType}.name`));
     if (contentV2Enabled() && state.user) renderLessonCta();
   });
 
@@ -1916,6 +1907,7 @@ async function init() {
         cleanupDuel();
         cleanupCoop();
         stopDuelInvites();
+        resetHistory();
         state.user = null;
         state.userData = null;
         if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }

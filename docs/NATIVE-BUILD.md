@@ -327,6 +327,84 @@ release build; never commit it.**
   locked stall sheet through the modules; a real two-player match needs a
   second account and lands with the friends model (batch 11).
 
+### Batch 9 — Course and Practice tabs, game setup with the Start CTA in the dock shelf
+- Course (`js/ui/course.js`, `#screen-course`): Continue hero (lesson N of
+  M · name · minutes), the five track rings and the activity heatmap
+  (renderers moved here from Home, which imports them for its Course view),
+  then the lesson rows from `tpl-lesson-row` — ✓ done / ▶ current / 🔒 locked
+  (`aria-disabled`, a tap shows the locked chip). A ring filters the rows
+  (pill + clear); Home's rings and its "All lessons" link land on this tab
+  through `setLessonBrowserHandler` — v1 keeps `#screen-lessons-list`.
+- Practice (`js/ui/practice.js`, `#screen-practice`): due hero (rose only
+  when overdue) with Review now, seven forecast bars (`computeForecast`, today
+  in tan, weekday narrow names in the UI language), the session-cap line
+  (`SESSION_CAP` exported from review.js; when nothing is due it names the
+  next batch through `fmtRelativeDays`), the last Survival run
+  (`js/data/history.js` — one cached `game_sessions` query now shared with
+  Me › Recent history), Zen / Survival tiles (`tomo:play` → app.js
+  `handleModeClick`, the event the Home friend sheet already used) and the
+  Survival leaderboard row. The legacy modes card is hidden under v2.
+- Game setup (`#screen-select`): the mode name is the bar title; stacked
+  full-width selectors with the sliding pill; tonal set rows and kana tiles;
+  while the screen is on top its `.selection-meta` + `#btn-start` nodes move
+  into the dock shelf (`setShelf`) and return to the footer on leave — same
+  ids, same listeners. Mounting flags the root element (`html[data-shelf]`),
+  which sets `--dock-shelf-h`; the setup screen's bottom padding and the toast
+  rail both read it, so nothing is drawn under the taller dock. The move is
+  refused outright when there is no `#dock-shelf` to land in, so the CTA can
+  never leave the DOM while CSS is hiding the footer. A direct `showScreen`
+  never mounts the shelf, so the sticky footer stays the fallback.
+- Router (`js/core/nav.js`): v2 registers `screen-course` / `screen-practice`
+  as the tab roots and lessons-list / select / leaderboard as children (v1
+  registration unchanged). Three hardening rules, **all gated on the v2 shell
+  so prod's back button does not move under this batch**: a child opened on a
+  fresh tab sits on that tab's root (and gets a history entry, so hardware
+  back pops the stack rather than leaving the app); leaving a finished
+  immersive screen for a root (results → Home) drops it from its tab (tapping
+  Practice after a game no longer resurrects a dead game screen); navigating
+  to the screen already on top (play again, next lesson) replaces instead of
+  stacking, and a replace never leaves the same id directly underneath — the
+  lesson → checkpoint page → lesson chain used to stack two `screen-lesson`
+  entries, so exiting the second one landed on a copy whose runtime `onLeave`
+  had just abandoned.
+- Two numbers on the Practice card mean different things on purpose: the hero
+  counts what is reviewable NOW, the first forecast bar counts everything
+  scheduled for today — which includes items coming back later in the day, so
+  it can stand above a hero reading zero (a wrong answer returns in an hour).
+  The cap line names that case explicitly.
+- Accessibility: `contrast.spec.mjs` gained a second axe suite that audits the
+  v2 tab roots (v1 never renders them, so the existing suite could not). First
+  recording, EN light: Course and Practice are clean, Home is down to one
+  colour-contrast violation from v1's eight — but Me now reports nine, because
+  batch 6 moved the profile / leaderboard / history cards there and they still
+  wear their legacy styling. That is relocated debt, not new: batch 10 restyles
+  those rows and should clear it.
+- Tests: `tests/e2e/course.spec.mjs` (hero/rings/heatmap/rows, filter via
+  the tab and via Home, Continue → lesson → exit), `tests/e2e/practice.spec.mjs`
+  (hero vs `dueSummary()`, forecast, cap, tiles, shelf CTA clear of the 34 px
+  inset, leaderboard under Practice, Arabic labels); game.spec now starts Zen
+  through the real route; nav/format unit tests extended.
+- Test-state lesson (cost us a polluted account): a spec must restore every
+  document the flow writes, not just the obvious one. `game.spec` restored
+  `stats/{uid}` but a finished run also calls `writeActivity('game')`, so
+  `users/{uid}.activity` had quietly grown to 50 sessions in a single day —
+  the exact field batch 9's heatmap reads. Dismissing an orientation page
+  writes `seenMeta` the same way. Both specs now snapshot and restore the full
+  `PROGRESS_FIELDS` set (`completedLessons`, `srs`, `activity`,
+  `activityKinds`, `seenMeta`), and the QA account is back at its baseline.
+- Known follow-ups: `js/data/history.js` inherits the old app.js query's
+  missing `orderBy('createdAt','desc')` — adding it needs a composite index
+  deployed first, so "last run" is the newest of an arbitrary 20; duel and
+  co-op completions never dispatch `tomo:activity`, so Me › Recent history can
+  lag a minute after a match; `nav:change` is dispatched before the view
+  transition's callback runs, so chrome that listeners move (the shelf, the
+  collapsing top bar) is captured in the OUTGOING frame — a one-frame flicker
+  on exit, inherent since batch 3 and best fixed by dispatching from inside the
+  transition callback (router cleanup, batch 14); and `--dock-shelf-h` is a
+  fixed 64px rather than the shelf's measured height, which is correct for
+  today's only shelf but would want measuring in `setShelf` once the live duel
+  score becomes a second one.
+
 ## Lead checklist before wider Android testing (batch 1 · T5)
 
 The app loads from `https://localhost` (Android) / `capacitor://localhost` (iOS).

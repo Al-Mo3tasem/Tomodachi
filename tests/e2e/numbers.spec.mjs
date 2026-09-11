@@ -76,8 +76,10 @@ test.describe('numbers & bidi', () => {
     // Escape hatches: Japanese runs, and identifiers marked data-keep-digits
     // (version string, join codes) — everything else is a formatting leak.
     const leaks = [];
-    for (const id of ['screen-dashboard', 'screen-lessons-list', 'screen-select', 'screen-settings', 'screen-leaderboard']) {
-      await show(page, id);
+    for (const id of ['screen-dashboard', 'screen-lessons-list', 'screen-select', 'screen-settings', 'screen-leaderboard', 'screen-course', 'screen-practice']) {
+      const tab = { 'screen-course': 'course', 'screen-practice': 'practice' }[id];
+      if (tab) { await page.click(`.dock-tab[data-tab="${tab}"]`); await page.waitForSelector(`#${id}.active`); await page.waitForTimeout(500); }   // the tab roots render on entry
+      else await show(page, id);
       const found = await page.evaluate((id) => {
         const root = document.getElementById(id);
         const out = [];

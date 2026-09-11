@@ -13,7 +13,7 @@
 // fixed min-width so 9 → 10 never shifts the layout.
 // ============================================
 
-import { $ } from '../core/core.js?v=20260911b';
+import { $ } from '../core/core.js?v=20260911c';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 const huds = new Map();   // screenId → { el, primary, caption, stats, lead, trail }

@@ -12,19 +12,19 @@
 // Flag-gated with the content-v2 bridge: dev (localhost) only for now.
 // ============================================
 
-import { state, $, toast, shuffle } from '../core/core.js?v=20260911b';
-import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
-import { setJa, fmtCount } from '../core/format.js?v=20260911b';
-import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911b';
-import { statusChip } from '../ui/status.js?v=20260911b';
-import { writeActivity } from '../data/users.js?v=20260911b';
-import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260911b';
-import { cacheGet, cachePut } from '../data/content.js?v=20260911b';
-import { speak, unlockAudio } from '../audio/audio.js?v=20260911b';
-import { t, getLocale } from '../i18n/index.js?v=20260911b';
-import { scheduleLessonSrs } from './review.js?v=20260911b';
-import { showResultsSheet } from './results.js?v=20260911b';
+import { state, $, toast, shuffle } from '../core/core.js?v=20260911c';
+import { navigate, back as navBack, currentScreenId } from '../core/nav.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
+import { setJa, fmtCount, localizeDigits } from '../core/format.js?v=20260911c';
+import { renderChoiceTiles, lockTiles, showFeedbackSheet } from '../ui/quiz-tiles.js?v=20260911c';
+import { statusChip } from '../ui/status.js?v=20260911c';
+import { writeActivity } from '../data/users.js?v=20260911c';
+import { db, doc, updateDoc, arrayUnion, collection, getDocs, getDoc } from '../data/firebase.js?v=20260911c';
+import { cacheGet, cachePut } from '../data/content.js?v=20260911c';
+import { speak, unlockAudio } from '../audio/audio.js?v=20260911c';
+import { t, getLocale } from '../i18n/index.js?v=20260911c';
+import { scheduleLessonSrs } from './review.js?v=20260911c';
+import { showResultsSheet } from './results.js?v=20260911c';
 
 // Locale pick: lesson content is bilingual by design; UI follows app locale.
 const pick = (en, ar) => (getLocale() === 'ar' && ar ? ar : en);
@@ -34,10 +34,20 @@ let L = null;              // active lesson runtime
 
 // ----- data -----
 
+// Callers overlap at boot (the Home CTA and the Course tab both want the
+// catalog), so the in-flight read is shared: 151 documents are worth one query,
+// not one per caller.
+let catalogLoad = null;
+
 export async function loadLessons() {
   if (lessons) return lessons;
   const cached = cacheGet('lessons-catalog');
   if (cached && cached.length) { lessons = cached; return cached; }
+  if (!catalogLoad) catalogLoad = fetchCatalog().finally(() => { catalogLoad = null; });
+  return catalogLoad;
+}
+
+async function fetchCatalog() {
   const snap = await getDocs(collection(db, 'content_sets', 'lessons', 'items'));
   const list = [];
   snap.forEach(d => list.push(d.data()));
@@ -57,6 +67,9 @@ export function nextLesson() {
   const done = completedSet();
   return lessons.find(l => !done.has(l.lessonKey)) || null;
 }
+
+/** The sorted lesson catalog once loaded (empty before loadLessons resolved). */
+export function lessonCatalog() { return lessons || []; }
 
 async function fetchItems(lesson) {
   // Parallel fetch; preserve the lesson's authored item order.
@@ -516,11 +529,16 @@ async function markMetaSeen(id) {
 const TYPE_ICON = { hiragana: 'あ', katakana: 'ア', vocab: '💬', grammar: '文', kanji: '漢' };
 
 let browserFilter = null;   // { track, types } from a Home ring, or null for the whole path
+let browserHandler = null;  // v2: the Course tab takes over browsing (js/ui/course.js)
+
+/** Register the v2 lesson browser; openLessonBrowser() hands the filter to it instead of #screen-lessons-list. */
+export function setLessonBrowserHandler(fn) { browserHandler = typeof fn === 'function' ? fn : null; }
 
 /** @param {{ track?: string, types?: string[] }} [filter]  a track from the Home rings */
 export async function openLessonBrowser(filter = null) {
   try { await loadLessons(); } catch (_e) { toast(t('lesson.load_failed'), 'error'); return; }
   if (!lessons || !lessons.length) return;
+  if (browserHandler) { browserHandler(filter); return; }
   browserFilter = filter && filter.types && filter.types.length ? { track: filter.track, types: filter.types } : null;
   renderLessonBrowser();
   navigate('screen-lessons-list');   // root of the Course tab
@@ -553,7 +571,7 @@ function renderLessonBrowser() {
     num.textContent = l.globalOrder;
     const name = document.createElement('span');
     name.className = 'lessons-row-name';
-    name.textContent = pick(l.displayName_en, l.displayName_ar);
+    name.textContent = localizeDigits(pick(l.displayName_en, l.displayName_ar));
     const st = document.createElement('span');
     st.className = 'lessons-row-state';
     st.textContent = isDone ? '✓' : isCurrent ? '▶' : '🔒';

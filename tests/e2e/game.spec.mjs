@@ -1,8 +1,9 @@
 // tests/e2e/game.spec.mjs — batch 8: Zen/Survival under the v2 shell — one
 // glass HUD chip over an opaque stage, inline flash, results sheet with
 // tiered celebration, pause sheet, keyboard-safe typed mode.
-// A finished solo game writes stats for the QA account, so the tests snapshot
-// stats/{uid} and restore it in `finally` through the app's Firestore module.
+// A finished solo game writes stats/{uid} AND users/{uid}.activity (the heatmap
+// counter, js/data/users.js writeActivity), so each test snapshots both and
+// restores them in `finally` through the app's own Firestore module.
 import { test, expect, show } from './fixtures.mjs';
 
 test.use({ shell: 'v2' });
@@ -31,6 +32,30 @@ async function restoreStats(page, snap) {
     if (snap) await f.setDoc(ref, snap); else await f.deleteDoc(ref);
   }, [v, snap]);
 }
+const PROGRESS_FIELDS = ['completedLessons', 'srs', 'activity', 'activityKinds', 'seenMeta'];
+async function snapshotUser(page) {
+  const v = await ver(page);
+  return page.evaluate(async ([v, fields]) => {
+    const c = await import(`/js/core/core.js?v=${v}`);
+    const f = await import(`/js/data/firebase.js?v=${v}`);
+    const snap = await f.getDoc(f.doc(f.db, 'users', c.state.user.uid));
+    const d = snap.data() || {};
+    const out = {};
+    for (const k of fields) out[k] = k in d ? d[k] : undefined;
+    return JSON.parse(JSON.stringify(out));
+  }, [v, PROGRESS_FIELDS]);
+}
+async function restoreUser(page, snap) {
+  const v = await ver(page);
+  await page.evaluate(async ([v, snap, fields]) => {
+    const c = await import(`/js/core/core.js?v=${v}`);
+    const f = await import(`/js/data/firebase.js?v=${v}`);
+    const patch = {};
+    for (const k of fields) patch[k] = snap[k] === undefined ? f.deleteField() : snap[k];
+    await f.updateDoc(f.doc(f.db, 'users', c.state.user.uid), patch);
+  }, [v, snap, PROGRESS_FIELDS]);
+}
+
 async function countGlass(page) {
   return page.evaluate(() => {
     const out = [];
@@ -44,18 +69,24 @@ async function countGlass(page) {
     return out;
   });
 }
+// The real route (batch 9): Practice tab → Zen tile → setup (Start lives in the dock shelf).
 async function startZen(page, input = 'multiple') {
   await show(page, 'screen-dashboard');
-  await page.evaluate(async ([v, input]) => {
-    const c = await import(`/js/core/core.js?v=${v}`);
-    c.state.currentGameType = 'zen';
-    c.state.practiceType = 'read';
-    c.state.inputMethod = input;
-  }, [await ver(page), input]);
-  await show(page, 'screen-select');
+  // switch away first: after a direct show() the router still believes it is on
+  // the tab it last routed to, so tapping that tab would only scroll
+  await page.click('.dock-tab[data-tab="me"]');
+  await page.waitForTimeout(250);
+  await page.click('.dock-tab[data-tab="practice"]');
+  await page.waitForTimeout(400);
+  if (!(await page.locator('#screen-practice.active').count())) await page.click('.dock-tab[data-tab="practice"]');   // pop to the root
+  await expect(page.locator('#screen-practice.active')).toBeVisible();
+  await page.click('#practice-tiles .mode-tile[data-mode="zen"]');
+  await expect(page.locator('#screen-select.active')).toBeVisible();
+  await page.click('#seg-practice .seg-btn[data-practice="read"]');
+  await page.click(`#seg-input .seg-btn[data-input="${input}"]`);
   await page.click('#btn-select-all');
-  await expect(page.locator('#btn-start')).toBeEnabled();
-  await page.click('#btn-start');
+  await expect(page.locator('#dock-shelf #btn-start')).toBeEnabled();
+  await page.click('#dock-shelf #btn-start');
   await expect(page.locator('#screen-game.active')).toBeVisible({ timeout: 15_000 });
   await page.waitForTimeout(500);
 }
@@ -63,6 +94,7 @@ async function startZen(page, input = 'multiple') {
 test.describe('play (v2)', () => {
   test('Zen: one glass chip, opaque stage, inline flash, results sheet with tabular numbers', async ({ appPageV2: page }) => {
     const snap = await snapshotStats(page);
+    const user = await snapshotUser(page);
     try {
       await startZen(page, 'multiple');
       const glass = await countGlass(page);
@@ -95,11 +127,13 @@ test.describe('play (v2)', () => {
       await expect(page.locator('#sheet-root .sheet')).toHaveCount(0);
     } finally {
       await restoreStats(page, snap);
+      await restoreUser(page, user);
     }
   });
 
   test('pause is a sheet that resumes; keyboard state hides the dock and keeps the typed input reachable', async ({ appPageV2: page }) => {
     const snap = await snapshotStats(page);
+    const user = await snapshotUser(page);
     try {
       await startZen(page, 'typing');
       await expect(page.locator('#answer-input')).toBeVisible();
@@ -126,6 +160,7 @@ test.describe('play (v2)', () => {
       await expect(page.locator('#screen-dashboard.active')).toBeVisible({ timeout: 10_000 });
     } finally {
       await restoreStats(page, snap);
+      await restoreUser(page, user);
     }
   });
 });

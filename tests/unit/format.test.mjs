@@ -7,9 +7,9 @@ globalThis.localStorage = { getItem: (k) => (store.has(k) ? store.get(k) : null)
 let htmlLang = 'en';
 globalThis.document = { documentElement: { getAttribute: (a) => (a === 'lang' ? htmlLang : null) }, createElement: (tag) => ({ tag, attrs: {}, textContent: '', setAttribute(k, v) { this.attrs[k] = v; } }) };
 
-const { fmtNumber, fmtCount, fmtTime, fmtPercent, jaNode, localizeDigits } = await import('../../js/core/format.js');
+const { fmtNumber, fmtCount, fmtTime, fmtPercent, fmtRelativeDays, jaNode, localizeDigits } = await import('../../js/core/format.js');
 // same module instance as format.js (the ?v= query is part of the module identity)
-const { setPref, _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911b');
+const { setPref, _resetPrefCache } = await import('../../js/core/prefs.js?v=20260911c');
 
 test('Latin digits by default in both languages', () => {
   htmlLang = 'en'; assert.equal(fmtNumber(1240), '1,240');
@@ -51,5 +51,20 @@ test('localizeDigits: static text follows the setting, tags are untouched', () =
   assert.equal(localizeDigits('First to 10'), 'First to ١٠');
   assert.equal(localizeDigits('Ranked <strong>#12</strong> · <h2>x</h2>'), 'Ranked <strong>#١٢</strong> · <h2>x</h2>', 'digits inside tags stay');
   assert.equal(localizeDigits(null), '');
+  setPref('digits', 'latn'); _resetPrefCache();
+});
+
+test('fmtRelativeDays: auto wording in both languages, digits follow the setting', () => {
+  htmlLang = 'en';
+  assert.equal(fmtRelativeDays(0), 'today');
+  assert.equal(fmtRelativeDays(1), 'tomorrow');
+  assert.equal(fmtRelativeDays(-1), 'yesterday');
+  assert.equal(fmtRelativeDays(3), 'in 3 days');
+  assert.equal(fmtRelativeDays(-3), '3 days ago');
+  htmlLang = 'ar';
+  assert.match(fmtRelativeDays(1), /[\u0600-\u06FF]/, 'Arabic wording');
+  assert.match(fmtRelativeDays(3), /3/, 'Latin digits by default');
+  setPref('digits', 'arab'); _resetPrefCache();
+  assert.match(fmtRelativeDays(3), /[٠-٩]/, 'Arabic-Indic digits under the setting');
   setPref('digits', 'latn'); _resetPrefCache();
 });

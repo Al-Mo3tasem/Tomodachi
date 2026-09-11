@@ -11,8 +11,8 @@
 // 'haptics' preference (default on). Never throws into UI code.
 // ============================================
 
-import { getPref } from './prefs.js?v=20260911b';
-import { nativeHaptics } from '../native/shell.js?v=20260911b';
+import { getPref } from './prefs.js?v=20260911c';
+import { nativeHaptics } from '../native/shell.js?v=20260911c';
 
 const KINDS = new Set(['tap', 'snap', 'tick', 'ok', 'no', 'warn']);
 

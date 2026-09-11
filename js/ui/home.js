@@ -4,7 +4,7 @@
 //   initHome()          v2 only: stamps <template id="tpl-v2-home"> into
 //                       #screen-dashboard, moves the lesson/review CTAs into
 //                       the hero, the stats/leaderboard/history cards to Me,
-//                       keeps the modes card reachable (batch 9 moves it).
+//                       hides the legacy grid (the modes moved to Practice).
 //   renderHome()        refreshes tile numbers, the friends strip, the rings
 //                       and the heatmap from state (cheap; no network).
 //
@@ -13,18 +13,16 @@
 // Numbers are ink: one hero number per tile, rose only for overdue reviews.
 // ============================================
 
-import { $, state } from '../core/core.js?v=20260911b';
-import { t, onLocaleChange } from '../i18n/index.js?v=20260911b';
-import { setTab } from '../core/nav.js?v=20260911b';
-import { fmtCount, fmtNumber } from '../core/format.js?v=20260911b';
-import { dueSummary, startReview } from './review.js?v=20260911b';
-import { courseProgress, trackProgress, openLessonBrowser } from './lesson.js?v=20260911b';
-import { openSheet, closeSheet } from './sheet.js?v=20260911b';
+import { $, state } from '../core/core.js?v=20260911c';
+import { t, onLocaleChange } from '../i18n/index.js?v=20260911c';
+import { setTab } from '../core/nav.js?v=20260911c';
+import { fmtCount, fmtNumber } from '../core/format.js?v=20260911c';
+import { dueSummary, startReview } from './review.js?v=20260911c';
+import { courseProgress } from './lesson.js?v=20260911c';
+import { openCourse, renderTrackRings, renderHeatmap } from './course.js?v=20260911c';
+import { openSheet, closeSheet } from './sheet.js?v=20260911c';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
-const RING_R = 20;
-const RING_C = 2 * Math.PI * RING_R;
-const HEATMAP_WEEKS = 12;
 
 const TILES = [
   { key: 'reviews',  icon: 'ic-reviews',  onTap: () => { if (dueSummary().due > 0) startReview(); else setTab('practice'); } },
@@ -47,10 +45,7 @@ export function initHome() {
   // the hero adopts the two CTA cards (ids intact)
   const hero = frag.querySelector('#home-hero');
   for (const id of ['lesson-cta', 'review-cta']) { const n = $(id); if (n) hero.appendChild(n); }
-  // the modes card stays on Home (below the strip) until batch 9
-  const today = frag.querySelector('#home-today');
-  const modes = container.querySelector('.modes-card');
-  if (modes) today.appendChild(modes);
+  // the modes card lives on Practice (batch 9); the emptied legacy grid is hidden by home.css
   // stats, leaderboard preview and history live under Me from now on
   const me = document.querySelector('#screen-settings .container');
   const logout = $('btn-logout');
@@ -83,7 +78,7 @@ function setView(next) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-selected', String(on));
   });
-  if (view === 'course') { renderTrackRings(); renderHeatmap(); }
+  if (view === 'course') renderCourseView();
 }
 
 function buildTiles() {
@@ -113,7 +108,7 @@ export function renderHome() {
   setTile('practice', fmtNumber(best), t('home.tile.practice'));
   setTile('friends', fmtCount(online), t('home.tile.friends'));
   renderFriendsStrip();
-  if (view === 'course') { renderTrackRings(); renderHeatmap(); }
+  if (view === 'course') renderCourseView();
 }
 
 function setTile(key, value, caption, attention = false) {
@@ -172,7 +167,7 @@ function openFriendSheet(f) {
         btn.disabled = f.status === 'in_game';
         btn.addEventListener('click', () => {
           closeSheet({ reason: 'program' });
-          document.dispatchEvent(new CustomEvent('home:play', { detail: { mode, uid: f.uid } }));
+          document.dispatchEvent(new CustomEvent('tomo:play', { detail: { mode, uid: f.uid } }));
         });
         actions.appendChild(btn);
       }
@@ -181,55 +176,8 @@ function openFriendSheet(f) {
   });
 }
 
-// ----- course view -----
-export function renderTrackRings() {
-  const host = $('track-rings');
-  const tpl = $('tpl-track-ring');
-  if (!host || !tpl) return;
-  host.innerHTML = '';
-  for (const tr of trackProgress()) {
-    const ring = tpl.content.firstElementChild.cloneNode(true);
-    ring.dataset.track = tr.key;
-    ring.classList.toggle('is-complete', tr.total > 0 && tr.done >= tr.total);
-    ring.style.setProperty('--ring-c', String(RING_C));
-    ring.style.setProperty('--ring-off', String(RING_C * (1 - (tr.pct / 100))));
-    ring.querySelector('.num-hero').textContent = `${fmtCount(tr.pct)}%`;
-    ring.querySelector('.track-label').textContent = t(`progress.${tr.key}`);
-    ring.setAttribute('aria-label', `${t(`progress.${tr.key}`)} ${fmtCount(tr.pct)}%`);
-    ring.addEventListener('click', () => openLessonBrowser(tr.key === 'course' ? {} : { track: tr.key, types: tr.types }));
-    host.appendChild(ring);
-  }
-}
-
-/** users/{uid}.activity = { 'YYYY-MM-DD': count } (written by js/data/users.js). */
-export function renderHeatmap() {
-  const host = $('home-heatmap');
-  if (!host) return;
-  const activity = (state.userData && state.userData.activity) || {};
-  host.innerHTML = '';
-  const today = new Date();
-  const start = new Date(today);
-  start.setDate(today.getDate() - (HEATMAP_WEEKS * 7 - 1) - today.getDay());
-  let total = 0;
-  for (let i = 0; i < HEATMAP_WEEKS * 7 + today.getDay() + 1; i++) {
-    const d = new Date(start);
-    d.setDate(start.getDate() + i);
-    if (d > today) break;
-    const key = isoDay(d);
-    const n = Number(activity[key]) || 0;
-    total += n;
-    const cell = document.createElement('span');
-    cell.className = 'heat-cell';
-    cell.dataset.level = String(n <= 0 ? 0 : n === 1 ? 1 : n <= 3 ? 2 : n <= 6 ? 3 : 4);
-    cell.dataset.day = key;
-    cell.title = `${key} · ${fmtCount(n)}`;
-    host.appendChild(cell);
-  }
-  const cap = $('home-heatmap-caption');
-  if (cap) cap.textContent = t('home.activity_caption', { count: total });
-}
-
-function isoDay(d) {
-  const p = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+// ----- course view: the Course tab's renderers, a ring tap opens that tab filtered -----
+function renderCourseView() {
+  renderTrackRings($('track-rings'), (tr) => openCourse(tr.key === 'course' ? null : { track: tr.key, types: tr.types }));
+  renderHeatmap($('home-heatmap'), $('home-heatmap-caption'));
 }

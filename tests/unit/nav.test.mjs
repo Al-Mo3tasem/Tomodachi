@@ -32,13 +32,18 @@ function setup() {
   nav.resetStacks();
   events.length = 0;
   history.entries.length = 0; history.state = null;
+  // the v2 topology app.js registers (batch 9): the tabs own their roots and the
+  // browser / setup / leaderboard are children. registerScreen writes to a
+  // module-level map, so every test has to see the same one.
   nav.registerScreen('screen-dashboard', { tab: 'home', root: true });
-  nav.registerScreen('screen-lessons-list', { tab: 'course', root: true });
+  nav.registerScreen('screen-course', { tab: 'course', root: true });
+  nav.registerScreen('screen-lessons-list', { tab: 'course' });
   nav.registerScreen('screen-select', { tab: 'practice', root: true });
   nav.registerScreen('screen-settings', { tab: 'me', root: true });
   nav.registerScreen('screen-leaderboard', { tab: 'home' });
   nav.registerScreen('screen-game', { tab: 'practice', immersive: true });
   nav.registerScreen('screen-lesson', { tab: 'course', immersive: true });
+  nav.registerScreen('screen-meta', { tab: 'course', immersive: true });
 }
 beforeEach(setup);
 
@@ -122,4 +127,44 @@ test('unregistered screens navigate without breaking the stacks', () => {
   assert.deepEqual(nav.stackOf(), ['screen-dashboard', 'screen-auth']);
   assert.equal(nav.back(), true);
   assert.equal(nav.currentScreenId(), 'screen-dashboard');
+});
+
+test('a child screen opened on a fresh tab sits on that tab\'s root (batch 9)', () => {
+  nav.navigate('screen-dashboard');
+  nav.navigate('screen-lessons-list');
+  assert.equal(nav.currentTab(), 'course');
+  assert.deepEqual(nav.stackOf(), ['screen-course', 'screen-lessons-list']);
+  assert.equal(nav.back(), true);
+  assert.equal(nav.currentScreenId(), 'screen-course');
+});
+
+test('leaving a finished immersive screen for a root drops it from its tab', () => {
+  nav.navigate('screen-select');
+  nav.navigate('screen-game');
+  nav.navigate('screen-dashboard');            // results → Home
+  assert.deepEqual(nav.stackOf('practice'), ['screen-select'], 'the dead game is gone');
+  nav.setTab('practice');
+  assert.equal(nav.currentScreenId(), 'screen-select');
+  assert.ok(!body.attrs.has('data-immersive'));
+});
+
+test('re-entering the screen on top replaces it (play again / next lesson)', () => {
+  nav.navigate('screen-select');
+  nav.navigate('screen-game');
+  const entries = history.entries.length;
+  nav.navigate('screen-game');
+  assert.deepEqual(nav.stackOf(), ['screen-select', 'screen-game']);
+  assert.equal(history.entries.length, entries, 'no second history entry');
+  assert.equal(events[events.length - 1].kind, 'replace');
+});
+
+test('a replace never leaves the same screen directly underneath (lesson -> checkpoint page -> lesson)', () => {
+  nav.navigate('screen-course');
+  nav.navigate('screen-lesson');
+  nav.navigate('screen-meta');                         // a checkpoint page interrupts the chain
+  assert.deepEqual(nav.stackOf(), ['screen-course', 'screen-lesson', 'screen-meta']);
+  nav.navigate('screen-lesson', { replace: true });    // the page hands over to its lesson
+  assert.deepEqual(nav.stackOf(), ['screen-course', 'screen-lesson'], 'no duplicate beneath the new top');
+  assert.equal(nav.back(), true);
+  assert.equal(nav.currentScreenId(), 'screen-course', 'back leaves the lesson, not onto a dead copy of it');
 });

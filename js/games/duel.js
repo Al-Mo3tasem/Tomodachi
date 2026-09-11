@@ -12,21 +12,21 @@
 //    by a stall watchdog, so a dead host never freezes the guest.
 // ============================================
 
-import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
-import { confirmDestructive } from '../ui/sheet.js?v=20260911b';
-import { mountHud, updateHud as updateHudChip } from '../ui/hud.js?v=20260911b';
-import { showResultsSheet, hideResultsSheet, showStallSheet, hideStallSheet } from '../ui/results.js?v=20260911b';
-import { fmtNumber } from '../core/format.js?v=20260911b';
-import { statusChip } from '../ui/status.js?v=20260911b';
-import { navigate } from '../core/nav.js?v=20260911b';
+import { state, $, toast, shuffle, clamp } from '../core/core.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
+import { confirmDestructive } from '../ui/sheet.js?v=20260911c';
+import { mountHud, updateHud as updateHudChip } from '../ui/hud.js?v=20260911c';
+import { showResultsSheet, hideResultsSheet, showStallSheet, hideStallSheet } from '../ui/results.js?v=20260911c';
+import { fmtNumber } from '../core/format.js?v=20260911c';
+import { statusChip } from '../ui/status.js?v=20260911c';
+import { navigate } from '../core/nav.js?v=20260911c';
 import {
   db, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc,
   collection, query, where, onSnapshot, serverTimestamp
-} from '../data/firebase.js?v=20260911b';
-import { playSound, unlockAudio } from '../audio/audio.js?v=20260911b';
-import { acceptCoop, isInCoop } from './coop.js?v=20260911b';
-import { t } from '../i18n/index.js?v=20260911b';
+} from '../data/firebase.js?v=20260911c';
+import { playSound, unlockAudio } from '../audio/audio.js?v=20260911c';
+import { acceptCoop, isInCoop } from './coop.js?v=20260911c';
+import { t } from '../i18n/index.js?v=20260911c';
 
 // ----- Tuning -----
 const COUNTDOWN_MS = 3500;

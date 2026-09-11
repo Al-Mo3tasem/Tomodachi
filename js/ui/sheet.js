@@ -18,10 +18,10 @@
 // WebViews without <dialog>; lint gate).
 // ============================================
 
-import { $ } from '../core/core.js?v=20260911b';
-import { t } from '../i18n/index.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
-import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260911b';
+import { $ } from '../core/core.js?v=20260911c';
+import { t } from '../i18n/index.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
+import { setBackGuard, suppressNextPop } from '../core/nav.js?v=20260911c';
 
 const DISMISS_PX = 120;        // drag distance that closes
 const FLICK_PX_PER_MS = 0.5;   // downward velocity that closes

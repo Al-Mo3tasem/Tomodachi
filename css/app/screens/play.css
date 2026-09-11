@@ -142,6 +142,201 @@
   html[data-shell="v2"] #duel-stall,
   html[data-shell="v2"] #coop-stall { display: none; }
 
+  /* ---------- Practice tab (pick 21): due hero → forecast → cap → last run → tiles ---------- */
+  html[data-shell="v2"] .practice { display: grid; gap: var(--section-gap); }
+  html[data-shell="v2"] .practice-hero {
+    display: grid;
+    gap: var(--card-gap);
+    padding: var(--card-pad-hero);
+    border-radius: var(--radius-xl);
+  }
+  html[data-shell="v2"] .practice-due { display: grid; gap: var(--label-gap); }
+  html[data-shell="v2"] .practice-due .num-hero { font-size: var(--num-hero-size-results); line-height: 1; }
+  html[data-shell="v2"] .practice-hero .btn-primary { width: 100%; }
+  html[data-shell="v2"] .practice-hero .btn-primary[hidden] { display: none; }
+  html[data-shell="v2"] .forecast {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    align-items: end;
+    padding-block-start: var(--space-2);
+  }
+  html[data-shell="v2"] .forecast-day { display: grid; justify-items: center; gap: 4px; }
+  html[data-shell="v2"] .forecast-count {
+    font-family: var(--font-digits);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-caption);
+  }
+  html[data-shell="v2"] .forecast-bar {
+    display: block;
+    width: 100%;
+    height: calc(6px + var(--h, 0) * 40px);
+    border-radius: 4px;
+    background: var(--bg-inset);
+    transition: height var(--dur-progress) var(--ease-out);
+  }
+  html[data-shell="v2"] .forecast-day.has-due .forecast-bar { background: #E9DCC3; }
+  html[data-shell="v2"][data-theme="dark"] .forecast-day.has-due .forecast-bar,
+  html[data-shell="v2"][data-theme="oled"] .forecast-day.has-due .forecast-bar { background: #4A3A22; }
+  html[data-shell="v2"] .forecast-day.is-today.has-due .forecast-bar { background: #C8A975; }
+  /* overdue wins over both tonal fills, so it has to carry their weight and come last */
+  html[data-shell="v2"] .forecast-day.is-attention.is-today .forecast-bar,
+  html[data-shell="v2"] .forecast-day.is-attention .forecast-bar { background: var(--num-attention); }
+  html[data-shell="v2"] .forecast-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+  html[data-shell="v2"] .forecast-day.is-today .forecast-label { color: var(--text-primary); }
+  html[data-shell="v2"] .practice-cap { margin: 0; font-size: var(--num-caption-size); line-height: 1.5; color: var(--text-caption); }
+  html[data-shell="v2"] .practice-last { display: grid; gap: 6px; padding: var(--card-pad); border-radius: var(--radius-lg); }
+  html[data-shell="v2"] .practice-last[hidden] { display: none; }
+  html[data-shell="v2"] .practice-last-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--card-gap); }
+  html[data-shell="v2"] .practice-last-mode { font-weight: 600; }
+  html[data-shell="v2"] .practice-last-when { font-size: var(--num-caption-size); color: var(--text-caption); }
+  html[data-shell="v2"] .practice-last-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); margin-block-start: 4px; }
+  html[data-shell="v2"] .plast { padding: 8px 10px; border-radius: var(--radius-md); background: var(--bg-inset); }
+  html[data-shell="v2"] .plast-value { display: block; font-family: var(--font-digits); font-variant-numeric: tabular-nums; font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
+  html[data-shell="v2"] .plast-label { display: block; margin-block-start: 2px; font-size: 0.625rem; font-weight: 600; letter-spacing: 0; text-transform: uppercase; color: var(--text-caption); }
+  html[data-shell="v2"]:lang(ar) .plast-label { text-transform: none; font-size: 0.6875rem; }
+  html[data-shell="v2"] .mode-tile { min-height: 132px; }
+  html[data-shell="v2"] .mode-tile-name { font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; line-height: 1.2; }
+  html[data-shell="v2"]:lang(ar) .mode-tile-name { font-family: var(--font-display-ar); font-weight: 800; line-height: 1.35; }
+  html[data-shell="v2"] .row-link {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) 20px;
+    align-items: center;
+    gap: var(--card-gap);
+    width: 100%;
+    min-height: 60px;
+    padding: 12px var(--card-pad);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"][data-theme="dark"] .row-link,
+  html[data-shell="v2"][data-theme="oled"] .row-link { border-color: rgba(255, 240, 225, 0.08); }
+  html[data-shell="v2"] .row-link:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .row-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  html[data-shell="v2"] .row-link .ic { width: 24px; height: 24px; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; fill: none; color: var(--text-secondary); }
+  html[data-shell="v2"] .row-link .row-link-chevron { width: 20px; height: 20px; color: var(--text-caption); }
+  html[data-shell="v2"] [dir="rtl"] .row-link-chevron,
+  html[data-shell="v2"][dir="rtl"] .row-link-chevron { transform: scaleX(-1); }   /* a pointer along the inline axis mirrors by design */
+  html[data-shell="v2"] .row-link-text { display: grid; gap: 2px; min-width: 0; }
+  html[data-shell="v2"] .row-link-title { font-weight: 600; }
+
+  /* ---------- game setup (#screen-select): stacked selectors, tonal sets, Start in the dock shelf ---------- */
+  html[data-shell="v2"] #screen-select .select-options {
+    gap: var(--card-gap);
+    padding: var(--card-pad);
+    border-radius: var(--radius-lg);
+  }
+  html[data-shell="v2"] #screen-select .select-options-info { font-size: 0.9375rem; line-height: 1.6; color: var(--text-secondary); }
+  html[data-shell="v2"] #screen-select .select-options-info:empty { display: none; }
+  html[data-shell="v2"] #screen-select .option-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding-block-start: var(--card-gap);
+    border-block-start: 1px solid var(--border);
+  }
+  html[data-shell="v2"] #screen-select .option-label { font-size: var(--num-eyebrow-size); color: var(--text-caption); }
+  html[data-shell="v2"]:lang(ar) #screen-select .option-label { font-size: var(--num-eyebrow-size-ar); }
+  html[data-shell="v2"] #screen-select .segmented {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0;
+    width: 100%;
+    padding: 3px;
+    border-radius: var(--radius-md);
+  }
+  html[data-shell="v2"] #screen-select .seg-btn { min-width: 0; padding: 8px 6px; }
+  html[data-shell="v2"] #screen-select .seg-stacked .seg-btn { padding: 9px 6px; }
+  html[data-shell="v2"] #screen-select .seg-btn.active { color: var(--text-primary); }
+  html[data-shell="v2"] .select-layout { display: grid; gap: var(--section-gap); margin-block-start: var(--section-gap); }
+  html[data-shell="v2"] .select-panel { padding: 0; background: none; border: 0; box-shadow: none; }
+  html[data-shell="v2"] .panel-header { margin-block-end: var(--card-gap); }
+  html[data-shell="v2"] .panel-header h3 { margin: 0; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; letter-spacing: 0; }
+  html[data-shell="v2"]:lang(ar) .panel-header h3 { font-family: var(--font-display-ar); font-weight: 800; }
+  html[data-shell="v2"] .panel-header .btn-ghost { min-height: 36px; padding-inline: 10px; color: #B91C1C; font-weight: 600; }
+  html[data-shell="v2"][data-theme="dark"] .panel-header .btn-ghost,
+  html[data-shell="v2"][data-theme="oled"] .panel-header .btn-ghost { color: #F28585; }
+  html[data-shell="v2"] .sets-grid { gap: 8px; max-height: none; overflow: visible; }
+  html[data-shell="v2"] .set-item {
+    min-height: 56px;
+    padding: 10px var(--card-pad);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: background-color var(--dur-fast) var(--ease-effects), border-color var(--dur-fast) var(--ease-effects), transform var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"] .set-item:hover { background: var(--bg-elevated); }
+  html[data-shell="v2"] .set-item:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .set-item.selected { border-color: #C8A975; background: #F3E7CF; color: #3F2E10; }
+  html[data-shell="v2"][data-theme="dark"] .set-item.selected,
+  html[data-shell="v2"][data-theme="oled"] .set-item.selected { background: #4A3A22; color: #F3E7CF; }
+  html[data-shell="v2"] .set-checkbox { width: 22px; height: 22px; border-radius: var(--radius-full); border-color: var(--border-strong); }
+  html[data-shell="v2"] .set-item.selected .set-checkbox { background: #B91C1C; border-color: #B91C1C; }
+  html[data-shell="v2"][data-theme="dark"] .set-item.selected .set-checkbox,
+  html[data-shell="v2"][data-theme="oled"] .set-item.selected .set-checkbox { background: #E04848; border-color: #E04848; }
+  html[data-shell="v2"] .set-chars { font-family: var(--font-kana); font-size: 1.125rem; unicode-bidi: isolate; }
+  html[data-shell="v2"] .set-item.selected .set-chars { color: inherit; opacity: 0.8; }
+  html[data-shell="v2"] .set-count { font-family: var(--font-digits); font-variant-numeric: tabular-nums; background: var(--bg-inset); color: var(--text-secondary); }
+  html[data-shell="v2"] .set-item.selected .set-count { background: rgba(60, 35, 20, 0.08); color: inherit; }
+  html[data-shell="v2"][data-theme="dark"] .set-item.selected .set-count,
+  html[data-shell="v2"][data-theme="oled"] .set-item.selected .set-count { background: rgba(255, 240, 225, 0.12); }
+  html[data-shell="v2"] .custom-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; max-height: none; overflow: visible; }
+  html[data-shell="v2"] .char-tile {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: background-color var(--dur-fast) var(--ease-effects), border-color var(--dur-fast) var(--ease-effects), transform var(--dur-press) var(--ease-out-quint);
+  }
+  html[data-shell="v2"] .char-tile:hover { background: var(--bg-elevated); transform: none; }
+  html[data-shell="v2"] .char-tile:active { transform: scale(var(--press-scale)); }
+  html[data-shell="v2"] .char-tile.selected { border-color: #C8A975; background: #F3E7CF; }
+  html[data-shell="v2"][data-theme="dark"] .char-tile.selected,
+  html[data-shell="v2"][data-theme="oled"] .char-tile.selected { background: #4A3A22; }
+  html[data-shell="v2"] .char-tile .jp { font-family: var(--font-kana); font-size: 1.625rem; }
+  html[data-shell="v2"] .char-tile.selected .jp { color: #3F2E10; }
+  html[data-shell="v2"][data-theme="dark"] .char-tile.selected .jp,
+  html[data-shell="v2"][data-theme="oled"] .char-tile.selected .jp { color: #F3E7CF; }
+  html[data-shell="v2"] .char-tile .romaji { font-family: var(--font-digits); font-size: 0.625rem; letter-spacing: 0; }
+  @media (hover: hover) {
+    html[data-shell="v2"] .set-item:hover:not(.selected),
+    html[data-shell="v2"] .char-tile:hover:not(.selected) { border-color: #C8A975; }
+  }
+  /* while the Start CTA sits in the dock shelf, the sticky footer steps aside and the page clears the taller dock */
+  html[data-shell="v2"][data-shelf] #screen-select .select-footer { display: none; }
+  html[data-shell="v2"][data-shelf] #screen-select > .container { padding-block-end: calc(var(--content-pad-bottom) + var(--dock-shelf-h) + 16px); }
+  html[data-shell="v2"] .shelf-start {
+    display: flex;
+    align-items: center;
+    gap: var(--card-gap);
+    width: 100%;
+    animation: shelf-in var(--dur-spring-soft) var(--ease-spring-soft) both;
+  }
+  html[data-shell="v2"] .shelf-start .selection-meta { flex: 1 1 auto; display: grid; gap: 2px; min-width: 0; }
+  html[data-shell="v2"] .shelf-start .selection-count {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  html[data-shell="v2"] .shelf-start .selection-difficulty { font-size: 0.75rem; color: var(--text-caption); }
+  /* pin the box: .btn-lg's block padding would otherwise grow the dock past the
+     clearance --dock-shelf-h reserves, and Arabic sets a taller line box */
+  html[data-shell="v2"] .shelf-start #btn-start { flex: none; min-height: 48px; padding-block: 0; padding-inline: 22px; line-height: 1.2; }
+  @keyframes shelf-in { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+
   /* ---------- results sheet: game variant (mini stat tiles) ---------- */
   .sheet--results .results-stats {
     display: grid;
@@ -185,5 +380,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .sheet--results .rstat { animation: none; }
+    html[data-shell="v2"] .shelf-start { animation: none; }
+    html[data-shell="v2"] .forecast-bar { transition: none; }
   }
 }

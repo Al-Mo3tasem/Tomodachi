@@ -220,7 +220,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - Orientation: pages 5-7 render EN and AR, AR reviewed for translationese (documented), reachable from the meta menu; reduced-motion: sheets crossfade only.
 - axe on lesson/results sheets; .is-correct/.is-wrong text >= 4.5:1 both themes; AR screenshot review of the feedback sheet (no clipped Cairo/Plex glyphs).
 
-### Batch 8 — Game surfaces: one glass HUD chip, inline flash, results/pause/stall sheets, celebrations, keyboard-safe typed mode — SHIPPED (8a 0db1b62 · 8b see log)  _(2 days (done))_
+### Batch 8 — Game surfaces: one glass HUD chip, inline flash, results/pause/stall sheets, celebrations, keyboard-safe typed mode — SHIPPED (8a 0db1b62 · 8b 16b6173)  _(2 days (done))_
 
 **Goal:** Pick 20 + 10 + 6 (timed games): Zen/Survival/Duel/Co-op get one .hud-chip.glass over an opaque answer area, the inline flash stays, results/pause/stall become sheets with tiered celebration, typed mode survives the keyboard.
 
@@ -238,7 +238,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - APK: typed mode keyboard open never covers the input (screenshot); haptics on verdicts; HUD chip >= 55fps median on a 4 GB Android (remote perf trace); reduced-motion: tickers set final values instantly, confetti suppressed.
 - Glass budget game/duel/coop = 1; axe on results sheets; prod-shell-unchanged green.
 
-### Batch 9 — Course and Practice tabs, setup screen with dock shelf  _(1.5 days)_
+### Batch 9 — Course and Practice tabs, setup screen with dock shelf — SHIPPED (see log)  _(1.5 days (done))_
 
 **Goal:** Picks 7 and 21: Course = rings + heatmap + filtered lesson browser + Continue hero; Practice = due count + 7-day forecast + session caps + last-session summary + Zen/Survival tiles; #screen-select uses the dock shelf for Start.
 

@@ -79,6 +79,7 @@
     --dock-inset-x: 16px;
     --dock-inset-bottom: max(12px, var(--safe-bottom));
     --dock-radius: 28px;
+    --dock-shelf-h: 0px;        /* the dock's optional shelf row; set while one is mounted */
     --topbar-h: 56px;
     --topbar-title-h: 44px;
     --topbar-h-collapsed: 48px;

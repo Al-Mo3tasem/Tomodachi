@@ -11,7 +11,7 @@ import { test, expect, show, signIn } from './fixtures.mjs';
 
 test.use({ shell: 'v2' });
 
-const PROGRESS_FIELDS = ['completedLessons', 'srs', 'activity', 'activityKinds'];
+const PROGRESS_FIELDS = ['completedLessons', 'srs', 'activity', 'activityKinds', 'seenMeta'];
 
 async function ver(page) {
   return page.evaluate(() => (document.querySelector('script[src*="js/app.js"]')?.getAttribute('src') || '').split('v=')[1]);

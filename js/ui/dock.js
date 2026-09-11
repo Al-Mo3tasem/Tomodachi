@@ -14,11 +14,11 @@
 //   • Friends has no root screen yet: it opens Home and scrolls to the friend bar
 // ============================================
 
-import { $ } from '../core/core.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
-import { setTab, currentTab, navigate, TABS } from '../core/nav.js?v=20260911b';
-import { applyTranslations } from '../i18n/apply.js?v=20260911b';
-import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260911b';
+import { $ } from '../core/core.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
+import { setTab, currentTab, navigate, TABS } from '../core/nav.js?v=20260911c';
+import { applyTranslations } from '../i18n/apply.js?v=20260911c';
+import { getI18n, onLocaleChange } from '../i18n/index.js?v=20260911c';
 
 let dock = null;
 let indicator = null;

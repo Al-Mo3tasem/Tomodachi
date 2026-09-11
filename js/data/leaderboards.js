@@ -5,13 +5,13 @@
 // as history grows. Covers Survival Rush (solo) and Sync Match (co-op).
 // ============================================
 
-import { state, $ } from '../core/core.js?v=20260911b';
-import { getPref, setPref } from '../core/prefs.js?v=20260911b';
-import { fmtNumber, fmtDate } from '../core/format.js?v=20260911b';
-import { mountSkeleton } from '../ui/skeleton.js?v=20260911b';
-import { navigate } from '../core/nav.js?v=20260911b';
-import { db, doc, getDoc, setDoc } from './firebase.js?v=20260911b';
-import { t } from '../i18n/index.js?v=20260911b';
+import { state, $ } from '../core/core.js?v=20260911c';
+import { getPref, setPref } from '../core/prefs.js?v=20260911c';
+import { fmtNumber, fmtDate } from '../core/format.js?v=20260911c';
+import { mountSkeleton } from '../ui/skeleton.js?v=20260911c';
+import { navigate } from '../core/nav.js?v=20260911c';
+import { db, doc, getDoc, setDoc } from './firebase.js?v=20260911c';
+import { t } from '../i18n/index.js?v=20260911c';
 
 export const BRACKETS = [5, 10, 15, 25, 46];
 const MAX_ENTRIES = 10;

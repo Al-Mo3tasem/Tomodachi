@@ -53,6 +53,9 @@
     color: var(--text-primary);
   }
   .dock-shelf[hidden] { display: none; }
+  /* js/ui/practice.js flags the root while the shelf carries the Start CTA, so
+     the screen padding and the toast rail both clear the taller dock. */
+  html[data-shell="v2"][data-shelf] { --dock-shelf-h: 64px; }
 
   .dock-tabs {
     position: relative;
@@ -237,8 +240,9 @@
   }
 }
 
-/* Until batch 9 moves the Start CTA into the dock shelf, the sticky select
-   footer rides above the dock instead of under it. */
+/* The Start CTA lives in the dock shelf while #screen-select is on top (batch
+   9, js/ui/practice.js). Whenever it is not — a direct showScreen never mounts
+   the shelf — the sticky footer rides above the dock instead of under it. */
 @layer components {
   html[data-shell="v2"] .select-footer {
     bottom: calc(var(--dock-h) + var(--dock-inset-bottom) + var(--space-2));

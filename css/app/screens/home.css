@@ -162,8 +162,8 @@
   html[data-shell="v2"] .friend-card.is-ghost .friend-avatar { background: transparent; border-style: dashed; color: var(--text-secondary); font-size: 1.25rem; }
   html[data-shell="v2"] .friend-card.is-ghost .friend-name { color: var(--text-secondary); }
 
-  /* the legacy modes card stays reachable on Home until batch 9 moves it */
-  html[data-shell="v2"] .home .modes-card { border-radius: var(--radius-lg); }
+  /* the legacy dashboard grid (modes card) has no place on Home: Practice owns the modes, Me the cards */
+  html[data-shell="v2"] #screen-dashboard .dashboard-grid { display: none; }
 
   /* ---------- course view: rings + heatmap ---------- */
   html[data-shell="v2"] .track-rings {

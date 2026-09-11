@@ -76,5 +76,74 @@
       "label": 3,
       "meta-viewport": 1
     }
+  },
+  "v2-en-light": {
+    "screen-dashboard": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-course": {
+      "meta-viewport": 1
+    },
+    "screen-practice": {
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 9,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "v2-en-dark": {
+    "screen-dashboard": {
+      "color-contrast": 3,
+      "meta-viewport": 1
+    },
+    "screen-course": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-practice": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "color-contrast": 10,
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "v2-ar-light": {
+    "screen-dashboard": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-course": {
+      "meta-viewport": 1
+    },
+    "screen-practice": {
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "label": 3,
+      "meta-viewport": 1
+    }
+  },
+  "v2-ar-dark": {
+    "screen-dashboard": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-course": {
+      "meta-viewport": 1
+    },
+    "screen-practice": {
+      "color-contrast": 1,
+      "meta-viewport": 1
+    },
+    "screen-settings": {
+      "label": 3,
+      "meta-viewport": 1
+    }
   }
 }

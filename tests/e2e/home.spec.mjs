@@ -56,15 +56,16 @@ test.describe('home', () => {
     await expect(page.locator('#home-today')).toBeHidden();
     await expect(page.locator('#track-rings .track-ring')).toHaveCount(5);
     expect(await page.locator('#home-heatmap .heat-cell').count()).toBeGreaterThanOrEqual(84);
-    const ringOff = await page.locator('.track-ring[data-track="course"]').evaluate((el) => el.style.getPropertyValue('--ring-off'));
+    // scope to Home's rings: the Course tab renders an identical set
+    const ringOff = await page.locator('#track-rings .track-ring[data-track="course"]').evaluate((el) => el.style.getPropertyValue('--ring-off'));
     expect(ringOff).not.toBe('');
-    await page.click('.track-ring[data-track="hiragana"]');
-    await expect(page.locator('#screen-lessons-list.active')).toBeVisible();
-    await expect(page.locator('#lessons-filter')).toBeVisible();
-    const filtered = await page.locator('#lessons-list .lessons-row').count();
-    await page.click('#lessons-filter-clear');
-    await expect(page.locator('#lessons-filter')).toBeHidden();
-    const all = await page.locator('#lessons-list .lessons-row').count();
+    await page.click('#track-rings .track-ring[data-track="hiragana"]');
+    await expect(page.locator('#screen-course.active')).toBeVisible();          // batch 9: the Course tab is the browser
+    await expect(page.locator('#course-filter')).toBeVisible();
+    const filtered = await page.locator('#course-rows .lesson-row').count();
+    await page.click('#course-filter-clear');
+    await expect(page.locator('#course-filter')).toBeHidden();
+    const all = await page.locator('#course-rows .lesson-row').count();
     expect(all).toBeGreaterThan(filtered);
     await show(page, 'screen-dashboard');
     await page.click('#home-switch .seg-btn[data-view="today"]');
@@ -77,11 +78,11 @@ test.describe('home', () => {
     await page.click('.dock-tab[data-tab="home"]');
     await expect(page.locator('#screen-dashboard.active')).toBeVisible();
     await page.click('.tile[data-tile="course"]');
-    await expect(page.locator('#screen-lessons-list.active')).toBeVisible();
+    await expect(page.locator('#screen-course.active')).toBeVisible();
     await page.click('.dock-tab[data-tab="home"]');
     await expect(page.locator('#screen-dashboard.active')).toBeVisible();
     await page.click('.tile[data-tile="practice"]');
-    await expect(page.locator('#screen-select.active')).toBeVisible();
+    await expect(page.locator('#screen-practice.active')).toBeVisible();
     await show(page, 'screen-settings');
     for (const id of ['stat-total', 'lb-preview', 'history-list']) {
       await expect(page.locator(`#screen-settings #${id}`)).toHaveCount(1);

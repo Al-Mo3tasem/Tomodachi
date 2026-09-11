@@ -8,9 +8,9 @@
 // two actions. Sits on the sheet primitive; v1 keeps its done cards.
 // ============================================
 
-import { openSheet, closeSheet } from './sheet.js?v=20260911b';
-import { countUp } from './numbers.js?v=20260911b';
-import { haptic } from '../core/haptics.js?v=20260911b';
+import { openSheet, closeSheet } from './sheet.js?v=20260911c';
+import { countUp } from './numbers.js?v=20260911c';
+import { haptic } from '../core/haptics.js?v=20260911c';
 
 const v2 = () => document.documentElement.dataset.shell === 'v2';
 const ART = { normal: '🎉', perfect: '🌸' };

@@ -6,6 +6,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { test, expect, boot, show } from './fixtures.mjs';
 
 const FILE = 'tests/e2e/__baselines__/glass-budget.json';
+// v1 only: #screen-course / #screen-practice are v2 surfaces this page never
+// builds, so their budget is asserted in course.spec / practice.spec instead.
 const SCREENS = ['screen-dashboard', 'screen-select', 'screen-settings', 'screen-leaderboard'];
 
 async function countGlass(page) {

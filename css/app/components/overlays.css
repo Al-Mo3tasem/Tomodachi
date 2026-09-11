@@ -201,8 +201,9 @@
   /* ---------- toasts (v2): one pill above the dock, errors/undo only ---------- */
   html[data-shell="v2"] #toast-container {
     top: auto;
-    /* dock rows + its two hairline borders + inset, then a 12px gap */
-    bottom: calc(var(--dock-h) + 2px + var(--dock-inset-bottom) + 12px);
+    /* dock rows + its two hairline borders + inset, then a 12px gap; --dock-shelf-h
+       is 0 unless the dock is carrying a shelf (css/app/shell.css) */
+    bottom: calc(var(--dock-h) + var(--dock-shelf-h) + 2px + var(--dock-inset-bottom) + 12px);
     inset-inline: var(--gutter);
     z-index: var(--z-toast);
     align-items: center;

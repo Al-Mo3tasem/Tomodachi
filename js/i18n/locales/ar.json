@@ -796,6 +796,36 @@
     "done_title": "أنهيت المراجعة!",
     "back": "اللوحة الرئيسية"
   },
+  "course": {
+    "title": "المسار",
+    "eyebrow_done": "اكتمل المسار",
+    "row_done": "مكتمل",
+    "row_current": "الدرس التالي",
+    "row_locked": "مقفل"
+  },
+  "practice": {
+    "title": "تدريب",
+    "forecast_title": "الأيام السبعة القادمة",
+    "cap": "تقتصر كل جلسة على {{cap}} عنصرًا",
+    "cap_more_zero": "لا عناصر أخرى في الانتظار",
+    "cap_more_one": "عنصر واحد آخر ينتظر الجلسة التالية",
+    "cap_more_two": "عنصران آخران ينتظران الجلسة التالية",
+    "cap_more_few": "{{count}} عناصر أخرى تنتظر الجلسة التالية",
+    "cap_more_many": "{{count}} عنصرًا آخر ينتظر الجلسة التالية",
+    "cap_more_other": "{{count}} عنصر آخر ينتظر الجلسة التالية",
+    "next_due_zero": "لا مراجعات {{when}}",
+    "next_due_one": "مراجعة واحدة {{when}}",
+    "next_due_two": "مراجعتان {{when}}",
+    "next_due_few": "{{count}} مراجعات {{when}}",
+    "next_due_many": "{{count}} مراجعة {{when}}",
+    "next_due_other": "{{count}} مراجعة {{when}}",
+    "nothing_scheduled": "لا مراجعات مجدولة بعد — أكمِل درسًا لتبدأ المراجعة",
+    "last_title": "آخر جولة",
+    "accuracy": "الدقة",
+    "games": "الألعاب",
+    "leaderboard": "لوحة ترتيب تحدي البقاء",
+    "leaderboard_sub": "أفضل النتائج بحسب حجم المجموعة"
+  },
   "dock": {
     "aria": "التنقل الرئيسي",
     "home": "الرئيسية",

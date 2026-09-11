@@ -778,6 +778,28 @@
     "done_title": "Review complete!",
     "back": "Dashboard"
   },
+  "course": {
+    "title": "Course",
+    "eyebrow_done": "Course complete",
+    "row_done": "Completed",
+    "row_current": "Up next",
+    "row_locked": "Locked"
+  },
+  "practice": {
+    "title": "Practice",
+    "forecast_title": "Next 7 days",
+    "cap": "Sessions are capped at {{cap}} items",
+    "cap_more_one": "{{count}} more will wait for the next session",
+    "cap_more_other": "{{count}} more will wait for the next session",
+    "next_due_one": "{{count}} review {{when}}",
+    "next_due_other": "{{count}} reviews {{when}}",
+    "nothing_scheduled": "Nothing scheduled yet — finish a lesson to start reviewing",
+    "last_title": "Last run",
+    "accuracy": "accuracy",
+    "games": "Games",
+    "leaderboard": "Survival leaderboard",
+    "leaderboard_sub": "Best scores by set size"
+  },
   "dock": {
     "aria": "Main navigation",
     "home": "Home",

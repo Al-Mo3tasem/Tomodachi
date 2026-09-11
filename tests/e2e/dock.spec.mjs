@@ -43,7 +43,7 @@ test.describe('dock + top bar', () => {
   test('settings pushed from Practice returns to Practice; browser back works', async ({ page }) => {
     await signIn(page);
     await page.click('.dock-tab[data-tab="practice"]');
-    await expect(page.locator('#screen-select.active')).toBeVisible();
+    await expect(page.locator('#screen-practice.active')).toBeVisible();
     await page.click('.dock-tab[data-tab="home"]');
     await page.click('#btn-settings');
     await expect(page.locator('#screen-settings.active')).toBeVisible();

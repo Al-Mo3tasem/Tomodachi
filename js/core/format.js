@@ -7,7 +7,7 @@
 //   import of the i18n module, so this file is unit-testable in Node.
 // ============================================
 
-import { getPref } from './prefs.js?v=20260911b';
+import { getPref } from './prefs.js?v=20260911c';
 
 function lang() {
   try { return (document.documentElement.getAttribute('lang') || 'en').split('-')[0]; } catch (_e) { return 'en'; }
@@ -61,6 +61,13 @@ export function fmtDate(date, opts = { year: 'numeric', month: 'short', day: 'nu
   const d = date instanceof Date ? date : new Date(date);
   if (Number.isNaN(d.getTime())) return '';
   return new Intl.DateTimeFormat(numberLocale(), opts).format(d);
+}
+
+/** Whole days from today → "today" / "tomorrow" / "in 3 days" / "3 days ago" (language + digits). */
+export function fmtRelativeDays(days) {
+  const d = Math.round(Number(days) || 0);
+  try { return new Intl.RelativeTimeFormat(numberLocale(), { numeric: 'auto' }).format(d, 'day'); }
+  catch (_e) { return fmtCount(d); }
 }
 
 /**

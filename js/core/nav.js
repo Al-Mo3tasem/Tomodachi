@@ -14,7 +14,7 @@
 // on the GitHub Pages sub-path can never 404); popstate → back().
 // ============================================
 
-import { showScreen } from './core.js?v=20260911b';
+import { showScreen } from './core.js?v=20260911c';
 
 export const TABS = ['home', 'course', 'practice', 'friends', 'me'];
 
@@ -33,6 +33,7 @@ export function setBackGuard(fn) { backGuard = typeof fn === 'function' ? fn : n
 export function suppressNextPop() { suppressPop++; }
 
 const hasDoc = () => typeof document !== 'undefined';
+const shellV2 = () => hasDoc() && document.documentElement.dataset.shell === 'v2';
 const win = () => (typeof window !== 'undefined' ? window : null);
 
 export function registerScreen(id, opts = {}) {
@@ -116,12 +117,43 @@ export function navigate(id, { replace = false, reset = false, push = false, tab
   const targetTab = forceTab || ((push || (meta && meta.immersive)) ? tab : (meta && meta.tab)) || tab;
   rememberScroll();
   const switching = targetTab !== tab;
+  // The three rules below shape the v2 tab stacks. They stay OFF on v1: prod
+  // ships v1 and its back-button behaviour must not move under this batch.
+  const cur = currentId ? screens.get(currentId) : null;
+  let seeded = false;
+  if (shellV2()) {
+    // A finished immersive screen (results → Home) must not linger on its tab:
+    // the next tap on that tab would resurrect a dead game. Drop it on the way out.
+    if (cur && cur.immersive && meta && meta.root && !push && !replace) {
+      while (stacks[tab].length && (screens.get(stacks[tab][stacks[tab].length - 1].id) || {}).immersive) stacks[tab].pop();
+    }
+    // Re-entering the screen already on top (play again, next lesson) replaces it
+    // instead of stacking a second copy that back() would then revisit.
+    const top = stacks[targetTab][stacks[targetTab].length - 1];
+    if (!replace && !reset && !push && top && top.id === id && !(meta && meta.root)) replace = true;
+    // A registered child screen opened on a tab nobody has visited yet sits on
+    // that tab's root, so back() has somewhere to land.
+    if (!push && !replace && !reset && meta && meta.tab && !meta.immersive && !stacks[targetTab].length && roots[targetTab] && roots[targetTab] !== id) {
+      stacks[targetTab].push({ id: roots[targetTab], scrollY: 0 });
+      seeded = true;
+    }
+  }
   let kind;
   if (replace && stacks[targetTab].length) { stacks[targetTab][stacks[targetTab].length - 1] = { id, scrollY: 0 }; kind = 'replace'; }
   else if (!push && ((meta && meta.root) || reset)) { stacks[targetTab] = [{ id, scrollY: 0 }]; kind = switching ? 'tab' : 'replace'; }
   else { stacks[targetTab].push({ id, scrollY: 0 }); kind = switching ? 'tab' : 'push'; }
+  // A replace can leave the SAME id directly underneath (lesson → checkpoint
+  // page → next lesson, where the page is replaced by the lesson). Going back
+  // would then land on a screen whose runtime onLeave has just abandoned.
+  if (shellV2() && kind === 'replace' && stacks[targetTab].length > 1
+      && stacks[targetTab][stacks[targetTab].length - 2].id === id) {
+    stacks[targetTab].splice(stacks[targetTab].length - 2, 1);
+  }
   tab = targetTab;
-  if (kind === 'push') pushHistory();
+  // A seeded root makes the stack two deep on a tab switch, which alone pushes
+  // no history entry — give it one so the hardware back pops the stack instead
+  // of leaving the app.
+  if (kind === 'push' || seeded) pushHistory();
   activate(id, kind);
   return true;
 }
