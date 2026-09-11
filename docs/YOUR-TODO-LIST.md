@@ -2,12 +2,15 @@
 
 ## 🟠 Native app phase (updated 2026-09-06) — open items
 
-1. **API-key referrers (blocks sign-in inside the app).** Google Cloud →
-   Credentials → the *Browser key (auto created by Firebase)* of
-   `tomodachi-prod` and `tomodachi-staging` → Websites → add
-   `capacitor://localhost/*`, `http://localhost/*`, `https://localhost/*`.
-   Step-by-step in `docs/NATIVE-BUILD.md` ("Lead checklist"). Tell me when done
-   so I can retest sign-in on the emulator.
+1. **API-key referrers — NOT blocking your testing any more.** I measured all
+   three projects on 2026-09-11: **`tomodachi-dev` already accepts
+   `https://localhost`, `capacitor://localhost` and `http://localhost:8744`**,
+   so the dev APK signs in today with no action from you. `tomodachi-staging`
+   and `tomodachi-prod` still reject all three, so this is only needed before a
+   staging or production build goes to testers: Google Cloud → Credentials →
+   the *Browser key (auto created by Firebase)* of each project → Websites →
+   add `capacitor://localhost/*`, `http://localhost/*`, `https://localhost/*`.
+   Step-by-step in `docs/NATIVE-BUILD.md` ("Lead checklist").
 2. **Send `docs/IOS-APPLE-ACCOUNT-CHECKLIST.md` to your friend** (the Apple
    developer account owner). iOS/TestFlight cannot start until those items land.
 3. **Arabic copy check (30 s):** the game-setup duration chips now read
