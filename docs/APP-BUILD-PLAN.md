@@ -238,7 +238,7 @@ Per-env feature flag with a pre-paint attribute, a hardened override, template s
 - APK: typed mode keyboard open never covers the input (screenshot); haptics on verdicts; HUD chip >= 55fps median on a 4 GB Android (remote perf trace); reduced-motion: tickers set final values instantly, confetti suppressed.
 - Glass budget game/duel/coop = 1; axe on results sheets; prod-shell-unchanged green.
 
-### Batch 9 — Course and Practice tabs, setup screen with dock shelf — SHIPPED (see log)  _(1.5 days (done))_
+### Batch 9 — Course and Practice tabs, setup screen with dock shelf — SHIPPED (3553ba2)  _(1.5 days (done))_
 
 **Goal:** Picks 7 and 21: Course = rings + heatmap + filtered lesson browser + Continue hero; Practice = due count + 7-day forecast + session caps + last-session summary + Zen/Survival tiles; #screen-select uses the dock shelf for Start.
 

@@ -18,7 +18,10 @@
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
     "lint:css": "node scripts/dev/lint-css.mjs",
-    "lint:gates": "node scripts/dev/lint-gates.mjs"
+    "lint:gates": "node scripts/dev/lint-gates.mjs",
+    "build:www:dev": "node scripts/native/build-www.mjs --env=dev",
+    "native:sync:dev": "npm run build:www:dev && npx cap sync",
+    "android:debug:dev": "npm run native:sync:dev && node scripts/native/gradle.mjs assembleDebug"
   },
   "repository": {
     "type": "git",

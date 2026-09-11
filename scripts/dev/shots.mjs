@@ -37,12 +37,18 @@ for (const [lang, theme] of [['en', 'light'], ['ar', 'light'], ['en', 'dark'], [
   await page.waitForTimeout(500);
   await page.screenshot({ path: join(OUT, `home-scrolled-${tag}.png`) });
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.click('.dock-tab[data-tab="me"]');
-  await page.waitForTimeout(500);
-  await page.screenshot({ path: join(OUT, `me-${tag}.png`) });
+  await page.click('.dock-tab[data-tab="course"]');
+  await page.waitForTimeout(1200);                       // the tab loads the catalog on first entry
+  await page.screenshot({ path: join(OUT, `course-${tag}.png`) });
   await page.click('.dock-tab[data-tab="practice"]');
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(800);
   await page.screenshot({ path: join(OUT, `practice-${tag}.png`) });
+  await page.click('#practice-tiles .mode-tile[data-mode="zen"]');
+  await page.waitForTimeout(800);                        // setup: the Start CTA rides in the dock shelf
+  await page.screenshot({ path: join(OUT, `setup-${tag}.png`) });
+  await page.click('.dock-tab[data-tab="me"]');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: join(OUT, `me-${tag}.png`) });
   await ctx.close();
   console.log(`captured ${tag}`);
 }
